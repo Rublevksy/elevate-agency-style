@@ -63,11 +63,11 @@ function Home() {
             <p className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-6">
               Tvoříme weby, <span className="text-primary">které vydělávají.</span>
             </p>
-            <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-lg mx-auto lg:mx-0">
-              Pomáháme firmám růst online.
+            <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
+              Pomáháme firmám získávat klienty online.
             </p>
 
-            <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+            <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8">
               <Link to="/contact" className="btn-primary group">
                 Získat nabídku
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
@@ -76,6 +76,14 @@ function Home() {
                 Naše práce
               </Link>
             </div>
+
+            <p className="text-xs md:text-sm uppercase tracking-[0.18em] text-muted-foreground">
+              <span className="text-foreground font-medium">4+ let</span> zkušeností
+              <span className="mx-2 text-primary">•</span>
+              <span className="text-foreground font-medium">50+</span> projektů
+              <span className="mx-2 text-primary">•</span>
+              Odpověď do <span className="text-foreground font-medium">24 hodin</span>
+            </p>
           </div>
 
           <div className="relative">
@@ -170,8 +178,11 @@ function Home() {
             <div className="absolute inset-0 grid-bg opacity-20 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]" />
             <div className="relative">
               <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight">Máš projekt?</h2>
-              <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-xl mx-auto">
-                Pojďme ho posunout na další úroveň.
+              <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-xl mx-auto">
+                Navrhneme ti řešení zdarma.
+              </p>
+              <p className="text-sm uppercase tracking-[0.2em] text-primary mb-12">
+                Odpovíme do 24 hodin
               </p>
               <Link to="/contact" className="btn-primary group mx-auto inline-flex">
                 Získat nabídku
