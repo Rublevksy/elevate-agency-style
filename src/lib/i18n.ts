@@ -10,6 +10,10 @@ type ServiceDetail = {
   slug: ServiceSlug;
   title: string;
   intro: string;
+  headline: string;
+  problem: string;
+  audience: string[];
+  results: { n: string; l: string }[];
   process: string[];
   benefits: string[];
   examples: string[];
