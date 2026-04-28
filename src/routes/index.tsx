@@ -58,16 +58,16 @@ function Home() {
               Digitální agentura
             </div>
 
-            <h1 className="mb-8 flex justify-center lg:justify-start">
+            <h1 className="mb-10 flex justify-center lg:justify-start">
               <span className="sr-only">ELEVATE</span>
               <img
                 src={heroLogo}
                 alt="ELEVATE"
-                width={500}
-                height={200}
+                width={1200}
+                height={280}
                 decoding="async"
                 fetchPriority="high"
-                className="w-[260px] sm:w-[340px] md:w-[420px] lg:w-[480px] h-auto object-contain select-none [filter:drop-shadow(0_0_28px_rgba(59,130,246,0.18))]"
+                className="w-[300px] sm:w-[400px] md:w-[500px] lg:w-[560px] h-auto object-contain select-none [filter:drop-shadow(0_0_18px_rgba(59,130,246,0.12))]"
                 draggable={false}
               />
             </h1>
