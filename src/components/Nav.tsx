@@ -21,8 +21,8 @@ const PRICING_LINKS = [
 export function Nav() {
   const { lang, setLang, t } = useT();
 
-  const linkCls = "text-muted-foreground hover:text-foreground transition-colors";
-  const activeCls = "text-foreground";
+  const linkCls = "nav-link text-muted-foreground hover:text-foreground transition-colors";
+  const activeCls = "is-active text-foreground";
   const triggerCls = `${linkCls} inline-flex items-center gap-1`;
 
   return (
