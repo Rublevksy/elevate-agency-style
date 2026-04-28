@@ -1,23 +1,19 @@
+import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { Logo } from "@/components/Logo";
-import heroMockup from "@/assets/hero-mockup.jpg";
+import { Hero3D } from "@/components/Hero3D";
 
 export function Hero() {
   const { t } = useT();
-  const scroll = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <section id="top" className="relative pt-36 pb-28 md:pt-48 md:pb-40 overflow-hidden">
-      {/* animated grid */}
       <div className="absolute inset-0 grid-bg opacity-50 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_75%)]" />
-      {/* moving lines */}
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent shimmer" />
-      {/* soft glow */}
       <div className="absolute top-1/3 -left-40 h-[28rem] w-[28rem] rounded-full bg-primary/15 blur-[140px]" />
       <div className="absolute bottom-0 right-0 h-[20rem] w-[20rem] rounded-full bg-primary/10 blur-[140px]" />
 
-      {/* huge watermark logo */}
       <div
         aria-hidden
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] max-w-[1400px] opacity-[0.035]"
@@ -45,33 +41,18 @@ export function Hero() {
           </p>
 
           <div className="flex flex-wrap gap-4">
-            <button
-              onClick={() => scroll("contact")}
-              className="btn-primary group"
-            >
+            <Link to="/contact" className="btn-primary group">
               {t.hero.cta1}
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button
-              onClick={() => scroll("portfolio")}
-              className="btn-outline"
-            >
+            </Link>
+            <Link to="/projects" className="btn-outline">
               {t.hero.cta2}
-            </button>
+            </Link>
           </div>
         </div>
 
         <div className="reveal is-visible relative" style={{ animationDelay: "0.15s" }}>
-          <div className="absolute -inset-6 bg-gradient-to-tr from-primary/20 to-transparent blur-3xl opacity-70" />
-          <div className="relative rounded-2xl overflow-hidden border border-border bg-surface shadow-2xl">
-            <img
-              src={heroMockup}
-              alt="ELEVATE — modern dashboard mockup"
-              width={1280}
-              height={960}
-              className="w-full h-auto"
-            />
-          </div>
+          <Hero3D />
         </div>
       </div>
     </section>
