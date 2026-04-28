@@ -31,18 +31,28 @@ export function Footer() {
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-5">{t.footer.contact}</p>
           <ul className="space-y-3 text-sm text-foreground">
-            <li className="flex items-center gap-2">
-              <Mail className="h-4 w-4 text-primary" strokeWidth={1.5} />
-              <span>hello@elevate.studio</span>
+            <li>
+              <a
+                href="mailto:developer@elevateit.cz"
+                className="inline-flex items-center gap-2 hover:text-primary transition-colors story-link"
+              >
+                <Mail className="h-4 w-4 text-primary" strokeWidth={1.5} />
+                <span>developer@elevateit.cz</span>
+              </a>
             </li>
             <li className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-primary" strokeWidth={1.5} />
               <span>Praha, CZ</span>
             </li>
             <li>
-              <a href="#" className="inline-flex items-center gap-2 hover:text-primary transition-colors">
+              <a
+                href="https://instagram.com/elevate.itcz"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 hover:text-primary transition-colors story-link"
+              >
                 <Instagram className="h-4 w-4 text-primary" strokeWidth={1.5} />
-                <span>@elevate.studio</span>
+                <span>@elevate.itcz</span>
               </a>
             </li>
           </ul>
