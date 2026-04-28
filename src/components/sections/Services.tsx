@@ -114,7 +114,7 @@ export function Services() {
               <Link
                 key={s.title}
                 to={to}
-                className="reveal hover-lift group p-6 rounded-xl border border-border bg-surface/50 backdrop-blur-sm relative overflow-hidden block"
+                className="reveal hover-lift group p-6 rounded-xl border border-border bg-surface/50 backdrop-blur-sm relative overflow-hidden block transition-all duration-300 hover:border-primary/50 hover:shadow-[0_20px_60px_-20px_rgba(59,130,246,0.45)]"
               >
                 <div className="relative overflow-hidden rounded-lg mb-6">
                   <div className="transition-transform duration-500 group-hover:scale-110">
