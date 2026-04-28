@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, Globe, ShoppingBag, Sparkles } from "lucide-react";
 import { Logo } from "@/components/Logo";
+import { Hero3DCube } from "@/components/Hero3DCube";
 import { PROJECTS, ProjectVisual } from "@/lib/projects";
 
 export const Route = createFileRoute("/")({
@@ -49,30 +50,36 @@ function Home() {
           <Logo className="w-full h-auto" alt="" />
         </div>
 
-        <div className="container-luxe relative text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-10">
-            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-            Digitální agentura
+        <div className="container-luxe relative grid lg:grid-cols-[1.05fr_1fr] gap-16 lg:gap-12 items-center">
+          <div className="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-10">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              Digitální agentura
+            </div>
+
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-foreground mb-6">
+              ELEVATE
+            </h1>
+            <p className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-6">
+              Tvoříme weby, <span className="text-primary">které vydělávají.</span>
+            </p>
+            <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-lg mx-auto lg:mx-0">
+              Pomáháme firmám růst online.
+            </p>
+
+            <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
+              <Link to="/contact" className="btn-primary group">
+                Získat nabídku
+                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+              </Link>
+              <Link to="/projects" className="btn-outline">
+                Naše práce
+              </Link>
+            </div>
           </div>
 
-          <h1 className="text-6xl md:text-8xl font-bold tracking-tight text-foreground mb-6">
-            ELEVATE
-          </h1>
-          <p className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-6">
-            Tvoříme weby, <span className="text-primary">které vydělávají.</span>
-          </p>
-          <p className="text-base md:text-lg text-muted-foreground mb-12 max-w-lg mx-auto">
-            Pomáháme firmám růst online.
-          </p>
-
-          <div className="flex flex-wrap gap-4 justify-center">
-            <Link to="/contact" className="btn-primary group">
-              Získat nabídku
-              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Link>
-            <Link to="/projects" className="btn-outline">
-              Naše práce
-            </Link>
+          <div className="relative">
+            <Hero3DCube />
           </div>
         </div>
       </section>
