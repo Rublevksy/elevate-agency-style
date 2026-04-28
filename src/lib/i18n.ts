@@ -22,17 +22,29 @@ type ServiceDetail = {
 
 type FaqItem = { q: string; a: string };
 
+type SalesContent = {
+  headline: string;
+  problem: string;
+  audience: string[];
+  results: { n: string; l: string }[];
+};
+
 const buildServiceDetails = (
   raw: { title: string; desc: string }[],
   process: string[],
-  benefits: { web: string[]; eshop: string[]; branding: string[]; design: string[] },
-  examples: { web: string[]; eshop: string[]; branding: string[]; design: string[] },
-  pricing: { web: string; eshop: string; branding: string; design: string },
+  benefits: Record<ServiceSlug, string[]>,
+  examples: Record<ServiceSlug, string[]>,
+  pricing: Record<ServiceSlug, string>,
+  sales: Record<ServiceSlug, SalesContent>,
 ): ServiceDetail[] =>
   SERVICE_SLUGS.map((slug, i) => ({
     slug,
     title: raw[i].title,
     intro: raw[i].desc,
+    headline: sales[slug].headline,
+    problem: sales[slug].problem,
+    audience: sales[slug].audience,
+    results: sales[slug].results,
     process,
     benefits: benefits[slug],
     examples: examples[slug],
