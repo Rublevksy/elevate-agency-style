@@ -635,6 +635,48 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       branding: "from 15 000 CZK",
       design: "from 5 000 CZK",
     },
+    {
+      web: {
+        headline: "A website that brings clients — not just visitors.",
+        problem: "Most corporate websites look nice but don't sell. Slow load times, weak SEO and unclear structure quietly lose you leads every day.",
+        audience: ["Companies aiming to grow online", "Professional services and B2B", "Startups ready to scale"],
+        results: [
+          { n: "+120%", l: "more inquiries" },
+          { n: "<2s", l: "page load" },
+          { n: "Top 10", l: "Google ranking" },
+        ],
+      },
+      eshop: {
+        headline: "An e-commerce store that actually sells.",
+        problem: "Template e-shops have low conversion and clumsy admin. Customers drop off in checkout — and you lose revenue.",
+        audience: ["Brands with their own product", "Growing D2C stores", "Companies leaving marketplaces"],
+        results: [
+          { n: "+85%", l: "conversion rate" },
+          { n: "-40%", l: "cart abandonment" },
+          { n: "3×", l: "higher AOV" },
+        ],
+      },
+      branding: {
+        headline: "A brand customers remember.",
+        problem: "Without a strong identity you blend in. Inconsistent visuals lower trust and perceived value.",
+        audience: ["New companies and rebrands", "Premium brands", "Product and service creators"],
+        results: [
+          { n: "+60%", l: "brand recognition" },
+          { n: "100%", l: "channel consistency" },
+          { n: "Premium", l: "value perception" },
+        ],
+      },
+      design: {
+        headline: "Design that sells and builds trust.",
+        problem: "Amateur graphics ruin even a great product. You lose attention before the first sentence is read.",
+        audience: ["Marketing teams", "Startups and SaaS", "Companies with regular comms"],
+        results: [
+          { n: "+45%", l: "social engagement" },
+          { n: "2×", l: "faster production" },
+          { n: "100%", l: "brand consistency" },
+        ],
+      },
+    },
   ),
   RU: buildServiceDetails(
     translations.RU.services.items as unknown as { title: string; desc: string }[],
