@@ -10,6 +10,10 @@ type ServiceDetail = {
   slug: ServiceSlug;
   title: string;
   intro: string;
+  headline: string;
+  problem: string;
+  audience: string[];
+  results: { n: string; l: string }[];
   process: string[];
   benefits: string[];
   examples: string[];
@@ -18,17 +22,29 @@ type ServiceDetail = {
 
 type FaqItem = { q: string; a: string };
 
+type SalesContent = {
+  headline: string;
+  problem: string;
+  audience: string[];
+  results: { n: string; l: string }[];
+};
+
 const buildServiceDetails = (
   raw: { title: string; desc: string }[],
   process: string[],
-  benefits: { web: string[]; eshop: string[]; branding: string[]; design: string[] },
-  examples: { web: string[]; eshop: string[]; branding: string[]; design: string[] },
-  pricing: { web: string; eshop: string; branding: string; design: string },
+  benefits: Record<ServiceSlug, string[]>,
+  examples: Record<ServiceSlug, string[]>,
+  pricing: Record<ServiceSlug, string>,
+  sales: Record<ServiceSlug, SalesContent>,
 ): ServiceDetail[] =>
   SERVICE_SLUGS.map((slug, i) => ({
     slug,
     title: raw[i].title,
     intro: raw[i].desc,
+    headline: sales[slug].headline,
+    problem: sales[slug].problem,
+    audience: sales[slug].audience,
+    results: sales[slug].results,
     process,
     benefits: benefits[slug],
     examples: examples[slug],
@@ -86,8 +102,16 @@ export const translations = {
         benefits: "Co získáte",
         examples: "Ukázky",
         pricing: "Cena",
-        cta: "Mám zájem",
+        cta: "Získat nabídku",
         back: "Všechny služby",
+        problem: "Problém, který řešíme",
+        audience: "Pro koho je to",
+        results: "Co můžete čekat",
+        reply: "Odpovíme do 24 hodin",
+        free: "Nezávazná konzultace zdarma",
+        individual: "Individuální přístup",
+        exclusivity: "Pracujeme jen s omezeným počtem klientů.",
+        startingAt: "Od",
       },
     },
     why: {
@@ -215,8 +239,16 @@ export const translations = {
         benefits: "Benefits",
         examples: "Examples",
         pricing: "Pricing",
-        cta: "Get started",
+        cta: "Get a quote",
         back: "All services",
+        problem: "The problem we solve",
+        audience: "Who it's for",
+        results: "What you can expect",
+        reply: "We reply within 24 hours",
+        free: "Free, no-obligation consultation",
+        individual: "Individual approach",
+        exclusivity: "We only work with a limited number of clients.",
+        startingAt: "From",
       },
     },
     why: {
@@ -325,8 +357,16 @@ export const translations = {
         benefits: "Что вы получите",
         examples: "Примеры",
         pricing: "Цена",
-        cta: "Оставить заявку",
+        cta: "Получить предложение",
         back: "Все услуги",
+        problem: "Какую проблему решаем",
+        audience: "Для кого это",
+        results: "Чего ожидать",
+        reply: "Ответим в течение 24 часов",
+        free: "Бесплатная консультация",
+        individual: "Индивидуальный подход",
+        exclusivity: "Работаем с ограниченным числом клиентов.",
+        startingAt: "От",
       },
     },
     why: {
@@ -435,8 +475,16 @@ export const translations = {
         benefits: "Переваги",
         examples: "Приклади",
         pricing: "Ціна",
-        cta: "Залишити заявку",
+        cta: "Отримати пропозицію",
         back: "Усі послуги",
+        problem: "Яку проблему вирішуємо",
+        audience: "Для кого це",
+        results: "На що очікувати",
+        reply: "Відповімо протягом 24 годин",
+        free: "Безкоштовна консультація",
+        individual: "Індивідуальний підхід",
+        exclusivity: "Працюємо з обмеженою кількістю клієнтів.",
+        startingAt: "Від",
       },
     },
     why: {
@@ -523,6 +571,48 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       branding: "od 15 000 Kč",
       design: "od 5 000 Kč",
     },
+    {
+      web: {
+        headline: "Web, který přivádí klienty — ne jen návštěvy.",
+        problem: "Většina firemních webů vypadá hezky, ale neprodává. Pomalé načítání, slabé SEO a nejasná struktura ztrácejí denně potenciální klienty.",
+        audience: ["Firmy s ambicí růst online", "Profesionální služby a B2B", "Startupy připravené na škálování"],
+        results: [
+          { n: "+120%", l: "více poptávek" },
+          { n: "<2s", l: "rychlost načítání" },
+          { n: "Top 10", l: "pozice v Google" },
+        ],
+      },
+      eshop: {
+        headline: "E-shop, který skutečně prodává.",
+        problem: "Šablonové e-shopy mají nízkou konverzi a komplikovanou správu. Zákazníci odcházejí v košíku a vy přicházíte o tržby.",
+        audience: ["Značky s vlastním produktem", "Rostoucí D2C e-shopy", "Firmy přecházející z marketplace"],
+        results: [
+          { n: "+85%", l: "konverzní poměr" },
+          { n: "-40%", l: "opuštěných košíků" },
+          { n: "3×", l: "vyšší AOV" },
+        ],
+      },
+      branding: {
+        headline: "Značka, kterou si zákazníci zapamatují.",
+        problem: "Bez silné identity splynete s konkurencí. Nekonzistentní vizuál snižuje důvěru a hodnotu vaší značky.",
+        audience: ["Nové firmy a rebranding", "Premium značky", "Tvůrci produktů a služeb"],
+        results: [
+          { n: "+60%", l: "rozpoznatelnost značky" },
+          { n: "100%", l: "konzistence napříč kanály" },
+          { n: "Premium", l: "vnímání hodnoty" },
+        ],
+      },
+      design: {
+        headline: "Design, který prodává a buduje důvěru.",
+        problem: "Amatérská grafika kazí dojem i u skvělého produktu. Ztrácíte pozornost dříve, než přečtou první větu.",
+        audience: ["Marketingové týmy", "Startupy a SaaS", "Firmy s pravidelnou komunikací"],
+        results: [
+          { n: "+45%", l: "engagement na sítích" },
+          { n: "2×", l: "rychlejší výroba" },
+          { n: "100%", l: "brand konzistence" },
+        ],
+      },
+    },
   ),
   EN: buildServiceDetails(
     translations.EN.services.items as unknown as { title: string; desc: string }[],
@@ -544,6 +634,48 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       eshop: "from 35 000 CZK",
       branding: "from 15 000 CZK",
       design: "from 5 000 CZK",
+    },
+    {
+      web: {
+        headline: "A website that brings clients — not just visitors.",
+        problem: "Most corporate websites look nice but don't sell. Slow load times, weak SEO and unclear structure quietly lose you leads every day.",
+        audience: ["Companies aiming to grow online", "Professional services and B2B", "Startups ready to scale"],
+        results: [
+          { n: "+120%", l: "more inquiries" },
+          { n: "<2s", l: "page load" },
+          { n: "Top 10", l: "Google ranking" },
+        ],
+      },
+      eshop: {
+        headline: "An e-commerce store that actually sells.",
+        problem: "Template e-shops have low conversion and clumsy admin. Customers drop off in checkout — and you lose revenue.",
+        audience: ["Brands with their own product", "Growing D2C stores", "Companies leaving marketplaces"],
+        results: [
+          { n: "+85%", l: "conversion rate" },
+          { n: "-40%", l: "cart abandonment" },
+          { n: "3×", l: "higher AOV" },
+        ],
+      },
+      branding: {
+        headline: "A brand customers remember.",
+        problem: "Without a strong identity you blend in. Inconsistent visuals lower trust and perceived value.",
+        audience: ["New companies and rebrands", "Premium brands", "Product and service creators"],
+        results: [
+          { n: "+60%", l: "brand recognition" },
+          { n: "100%", l: "channel consistency" },
+          { n: "Premium", l: "value perception" },
+        ],
+      },
+      design: {
+        headline: "Design that sells and builds trust.",
+        problem: "Amateur graphics ruin even a great product. You lose attention before the first sentence is read.",
+        audience: ["Marketing teams", "Startups and SaaS", "Companies with regular comms"],
+        results: [
+          { n: "+45%", l: "social engagement" },
+          { n: "2×", l: "faster production" },
+          { n: "100%", l: "brand consistency" },
+        ],
+      },
     },
   ),
   RU: buildServiceDetails(
@@ -567,6 +699,48 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       branding: "от 15 000 CZK",
       design: "от 5 000 CZK",
     },
+    {
+      web: {
+        headline: "Сайт, который приводит клиентов — не просто визиты.",
+        problem: "Большинство корпоративных сайтов выглядят красиво, но не продают. Медленная загрузка, слабое SEO и нечёткая структура каждый день теряют заявки.",
+        audience: ["Компании с амбициями расти онлайн", "Профессиональные услуги и B2B", "Стартапы, готовые масштабироваться"],
+        results: [
+          { n: "+120%", l: "больше заявок" },
+          { n: "<2с", l: "загрузка страниц" },
+          { n: "Топ 10", l: "позиции в Google" },
+        ],
+      },
+      eshop: {
+        headline: "Магазин, который реально продаёт.",
+        problem: "Шаблонные магазины дают низкую конверсию и неудобную админку. Клиенты уходят на оплате — а вы теряете выручку.",
+        audience: ["Бренды с собственным продуктом", "Растущие D2C-магазины", "Компании, уходящие с маркетплейсов"],
+        results: [
+          { n: "+85%", l: "конверсия" },
+          { n: "-40%", l: "брошенных корзин" },
+          { n: "3×", l: "выше средний чек" },
+        ],
+      },
+      branding: {
+        headline: "Бренд, который запоминают.",
+        problem: "Без сильной идентичности вы сливаетесь с конкурентами. Несогласованный визуал снижает доверие и ценность.",
+        audience: ["Новые компании и ребрендинг", "Премиум-бренды", "Создатели продуктов и услуг"],
+        results: [
+          { n: "+60%", l: "узнаваемость" },
+          { n: "100%", l: "согласованность" },
+          { n: "Premium", l: "восприятие" },
+        ],
+      },
+      design: {
+        headline: "Дизайн, который продаёт и формирует доверие.",
+        problem: "Любительская графика портит впечатление от любого продукта. Внимание уходит до первой строки.",
+        audience: ["Маркетинговые команды", "Стартапы и SaaS", "Компании с регулярными коммуникациями"],
+        results: [
+          { n: "+45%", l: "вовлечённость" },
+          { n: "2×", l: "быстрее производство" },
+          { n: "100%", l: "консистентность" },
+        ],
+      },
+    },
   ),
   UA: buildServiceDetails(
     translations.UA.services.items as unknown as { title: string; desc: string }[],
@@ -588,6 +762,48 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       eshop: "від 35 000 CZK",
       branding: "від 15 000 CZK",
       design: "від 5 000 CZK",
+    },
+    {
+      web: {
+        headline: "Сайт, який приводить клієнтів — не просто візити.",
+        problem: "Більшість корпоративних сайтів виглядають гарно, але не продають. Повільне завантаження, слабке SEO та нечітка структура щодня втрачають заявки.",
+        audience: ["Компанії з амбіціями зростати онлайн", "Професійні послуги і B2B", "Стартапи, готові масштабуватись"],
+        results: [
+          { n: "+120%", l: "більше заявок" },
+          { n: "<2с", l: "завантаження" },
+          { n: "Топ 10", l: "позиції в Google" },
+        ],
+      },
+      eshop: {
+        headline: "Магазин, який реально продає.",
+        problem: "Шаблонні магазини мають низьку конверсію та незручну адмінку. Клієнти йдуть на оплаті — а ви втрачаєте виручку.",
+        audience: ["Бренди з власним продуктом", "D2C-магазини, що ростуть", "Компанії, що йдуть з маркетплейсів"],
+        results: [
+          { n: "+85%", l: "конверсія" },
+          { n: "-40%", l: "покинутих кошиків" },
+          { n: "3×", l: "вищий середній чек" },
+        ],
+      },
+      branding: {
+        headline: "Бренд, який запам'ятовують.",
+        problem: "Без сильної ідентичності ви зливаєтесь з конкурентами. Неузгоджений візуал знижує довіру та цінність.",
+        audience: ["Нові компанії та ребрендинг", "Преміум-бренди", "Творці продуктів і послуг"],
+        results: [
+          { n: "+60%", l: "впізнаваність" },
+          { n: "100%", l: "узгодженість" },
+          { n: "Premium", l: "сприйняття" },
+        ],
+      },
+      design: {
+        headline: "Дизайн, який продає та формує довіру.",
+        problem: "Аматорська графіка псує враження від будь-якого продукту. Увага зникає до першого речення.",
+        audience: ["Маркетингові команди", "Стартапи і SaaS", "Компанії з регулярними комунікаціями"],
+        results: [
+          { n: "+45%", l: "залученість" },
+          { n: "2×", l: "швидше виробництво" },
+          { n: "100%", l: "узгодженість" },
+        ],
+      },
     },
   ),
 };
