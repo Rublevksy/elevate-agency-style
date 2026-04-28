@@ -4,7 +4,7 @@ import { useT } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 
 export function Contact() {
-  const { t } = useT();
+  const { t, lang } = useT();
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -88,7 +88,7 @@ export function Contact() {
               </div>
               <div className="md:col-span-2 mt-2">
                 <button type="submit" disabled={loading} className="btn-gradient">
-                  {loading ? sendingLabel[t.contact.langCode ?? "CZ"] ?? "Odesílám..." : t.contact.submit}
+                  {loading ? sendingLabel[lang] ?? "Odesílám..." : t.contact.submit}
                 </button>
               </div>
             </form>
