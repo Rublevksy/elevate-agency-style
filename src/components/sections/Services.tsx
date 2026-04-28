@@ -73,8 +73,8 @@ const PREVIEWS = [WebPreview, EshopPreview, BrandingPreview, DesignPreview];
 
 const RESULT_HEADLINES = [
   "Weby, které přivádí klienty",
-  "E-shopy, které prodávají",
-  "Značka, kterou si zapamatují",
+  "E-shopy, které vydělávají",
+  "Značka, kterou si lidé zapamatují",
   "Vizuály, které prodávají",
 ];
 
