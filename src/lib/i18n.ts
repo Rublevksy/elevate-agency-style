@@ -14,6 +14,30 @@ export const translations = {
       cta2: "Naše práce",
     },
     trust: { years: "4+ let zkušeností", projects: "50+ projektů", clients: "Klienti v EU" },
+    about: {
+      eyebrow: "O nás",
+      title: "Digitální agentura zaměřená na výkon.",
+      body: "Nevytváříme jen design — stavíme řešení, která přinášejí měřitelné výsledky. Spojujeme strategii, design a technologii do jednoho celku, který pracuje pro vaše podnikání.",
+    },
+    results: {
+      eyebrow: "Čísla",
+      title: "Výsledky, které mluví za nás",
+      items: [
+        { n: "50+", l: "Dokončených projektů" },
+        { n: "4+", l: "Roky zkušeností" },
+        { n: "100%", l: "Spokojených klientů" },
+        { n: "12", l: "Zemí v EU" },
+      ],
+    },
+    guarantee: {
+      eyebrow: "Záruky",
+      title: "Co od nás můžete čekat",
+      items: [
+        { t: "Odpověď do 24 hodin", d: "Nikdy nezůstanete bez odpovědi déle než jeden pracovní den." },
+        { t: "Individuální přístup", d: "Žádné šablony. Každý projekt řešíme od nuly." },
+        { t: "Řešení na míru", d: "Stavíme přesně to, co váš byznys potřebuje." },
+      ],
+    },
     services: {
       title: "Služby",
       subtitle: "Co pro vás můžeme udělat",
@@ -41,6 +65,12 @@ export const translations = {
       title: "Portfolio",
       subtitle: "Vybrané projekty",
       view: "Zobrazit projekt",
+      items: [
+        { name: "Nordic Store", tag: "E-shop", result: "+120% konverze" },
+        { name: "Corvex", tag: "Web", result: "Nový brand launch" },
+        { name: "Tinesort", tag: "SaaS", result: "+40% retence uživatelů" },
+        { name: "Patecura", tag: "Branding", result: "Kompletní identita" },
+      ],
     },
     pricing: {
       title: "Ceník",
@@ -94,6 +124,30 @@ export const translations = {
       cta2: "Our work",
     },
     trust: { years: "4+ years of experience", projects: "50+ projects", clients: "EU clients" },
+    about: {
+      eyebrow: "About",
+      title: "A digital agency focused on performance.",
+      body: "We don't just design — we build solutions that deliver measurable results. Strategy, design and technology combined into one system that works for your business.",
+    },
+    results: {
+      eyebrow: "Numbers",
+      title: "Results that speak for us",
+      items: [
+        { n: "50+", l: "Projects delivered" },
+        { n: "4+", l: "Years of experience" },
+        { n: "100%", l: "Client satisfaction" },
+        { n: "12", l: "Countries in EU" },
+      ],
+    },
+    guarantee: {
+      eyebrow: "Guarantees",
+      title: "What you can expect",
+      items: [
+        { t: "Reply within 24 hours", d: "You'll never wait more than one business day." },
+        { t: "Individual approach", d: "No templates. Every project starts from scratch." },
+        { t: "Tailored solutions", d: "We build exactly what your business needs." },
+      ],
+    },
     services: {
       title: "Services",
       subtitle: "What we can do for you",
@@ -114,7 +168,15 @@ export const translations = {
       ],
     },
     process: { title: "Process", steps: ["Consultation", "Proposal", "Development", "Launch"] },
-    portfolio: { title: "Portfolio", subtitle: "Selected projects", view: "View project" },
+    portfolio: {
+      title: "Portfolio", subtitle: "Selected projects", view: "View project",
+      items: [
+        { name: "Nordic Store", tag: "E-commerce", result: "+120% conversion" },
+        { name: "Corvex", tag: "Web", result: "New brand launch" },
+        { name: "Tinesort", tag: "SaaS", result: "+40% user retention" },
+        { name: "Patecura", tag: "Branding", result: "Full identity" },
+      ],
+    },
     pricing: {
       title: "Pricing", subtitle: "Transparent prices", from: "from", custom: "custom", cta: "Get a quote",
       plans: [
@@ -154,6 +216,30 @@ export const translations = {
       cta2: "Наши работы",
     },
     trust: { years: "4+ года опыта", projects: "50+ проектов", clients: "Клиенты в ЕС" },
+    about: {
+      eyebrow: "О нас",
+      title: "Цифровое агентство, ориентированное на результат.",
+      body: "Мы не просто рисуем — мы строим решения, дающие измеримый результат. Стратегия, дизайн и технологии в единой системе для вашего бизнеса.",
+    },
+    results: {
+      eyebrow: "Цифры",
+      title: "Результаты говорят за нас",
+      items: [
+        { n: "50+", l: "Реализованных проектов" },
+        { n: "4+", l: "Года опыта" },
+        { n: "100%", l: "Довольных клиентов" },
+        { n: "12", l: "Стран в ЕС" },
+      ],
+    },
+    guarantee: {
+      eyebrow: "Гарантии",
+      title: "Что вы получите",
+      items: [
+        { t: "Ответ в течение 24 часов", d: "Вы не будете ждать дольше одного рабочего дня." },
+        { t: "Индивидуальный подход", d: "Без шаблонов. Каждый проект — с нуля." },
+        { t: "Решения под задачу", d: "Делаем ровно то, что нужно вашему бизнесу." },
+      ],
+    },
     services: {
       title: "Услуги", subtitle: "Что мы можем сделать для вас",
       items: [
@@ -173,7 +259,15 @@ export const translations = {
       ],
     },
     process: { title: "Процесс", steps: ["Консультация", "Решение", "Разработка", "Запуск"] },
-    portfolio: { title: "Портфолио", subtitle: "Избранные проекты", view: "Смотреть проект" },
+    portfolio: {
+      title: "Портфолио", subtitle: "Избранные проекты", view: "Смотреть проект",
+      items: [
+        { name: "Nordic Store", tag: "E-commerce", result: "+120% конверсии" },
+        { name: "Corvex", tag: "Web", result: "Запуск нового бренда" },
+        { name: "Tinesort", tag: "SaaS", result: "+40% удержания" },
+        { name: "Patecura", tag: "Брендинг", result: "Полная айдентика" },
+      ],
+    },
     pricing: {
       title: "Цены", subtitle: "Прозрачные цены", from: "от", custom: "по запросу", cta: "Получить предложение",
       plans: [
@@ -213,6 +307,30 @@ export const translations = {
       cta2: "Наші роботи",
     },
     trust: { years: "4+ роки досвіду", projects: "50+ проєктів", clients: "Клієнти в ЄС" },
+    about: {
+      eyebrow: "Про нас",
+      title: "Цифрова агенція, орієнтована на результат.",
+      body: "Ми не просто малюємо — ми будуємо рішення, що дають вимірний результат. Стратегія, дизайн і технології в єдиній системі для вашого бізнесу.",
+    },
+    results: {
+      eyebrow: "Цифри",
+      title: "Результати говорять за нас",
+      items: [
+        { n: "50+", l: "Реалізованих проєктів" },
+        { n: "4+", l: "Роки досвіду" },
+        { n: "100%", l: "Задоволених клієнтів" },
+        { n: "12", l: "Країн у ЄС" },
+      ],
+    },
+    guarantee: {
+      eyebrow: "Гарантії",
+      title: "Що ви отримаєте",
+      items: [
+        { t: "Відповідь протягом 24 годин", d: "Ви не чекатимете довше за один робочий день." },
+        { t: "Індивідуальний підхід", d: "Без шаблонів. Кожен проєкт — з нуля." },
+        { t: "Рішення під задачу", d: "Робимо саме те, що потрібно вашому бізнесу." },
+      ],
+    },
     services: {
       title: "Послуги", subtitle: "Що ми можемо зробити для вас",
       items: [
@@ -232,7 +350,15 @@ export const translations = {
       ],
     },
     process: { title: "Процес", steps: ["Консультація", "Рішення", "Розробка", "Запуск"] },
-    portfolio: { title: "Портфоліо", subtitle: "Вибрані проєкти", view: "Дивитись проєкт" },
+    portfolio: {
+      title: "Портфоліо", subtitle: "Вибрані проєкти", view: "Дивитись проєкт",
+      items: [
+        { name: "Nordic Store", tag: "E-commerce", result: "+120% конверсії" },
+        { name: "Corvex", tag: "Web", result: "Запуск нового бренду" },
+        { name: "Tinesort", tag: "SaaS", result: "+40% утримання" },
+        { name: "Patecura", tag: "Брендинг", result: "Повна айдентика" },
+      ],
+    },
     pricing: {
       title: "Ціни", subtitle: "Прозорі ціни", from: "від", custom: "за запитом", cta: "Отримати пропозицію",
       plans: [
