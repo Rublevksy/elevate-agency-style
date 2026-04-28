@@ -14,8 +14,8 @@ export function WhyUs() {
           {t.why.items.map((it, i) => {
             const Icon = ICONS[i];
             return (
-              <div key={it.t}>
-                <Icon className="h-6 w-6 text-primary mb-6" strokeWidth={1.5} />
+              <div key={it.t} className="reveal" style={{ animationDelay: `${i * 0.06}s` }}>
+                <Icon className="h-5 w-5 text-primary mb-6" strokeWidth={1.5} />
                 <h3 className="text-base font-bold text-foreground mb-2">{it.t}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed">{it.d}</p>
               </div>
