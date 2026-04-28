@@ -108,7 +108,7 @@ function BrandingServicePage() {
             <p className="text-sm text-muted-foreground mb-8">Pracujeme s omezeným počtem klientů.</p>
             <div className="flex flex-wrap gap-3">
               <Link to="/contact" className="btn-primary">Získat nabídku</Link>
-              <Link to="/pricing" className="btn-outline">Zobrazit ceník</Link>
+              <Link to="/pricing/branding" className="btn-outline">Zobrazit ceník</Link>
             </div>
           </div>
         </div>

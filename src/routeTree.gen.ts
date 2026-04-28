@@ -20,6 +20,9 @@ import { Route as ServicesEshopRouteImport } from './routes/services.eshop'
 import { Route as ServicesDesignRouteImport } from './routes/services.design'
 import { Route as ServicesBrandingRouteImport } from './routes/services.branding'
 import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
+import { Route as PricingWebRouteImport } from './routes/pricing.web'
+import { Route as PricingEshopRouteImport } from './routes/pricing.eshop'
+import { Route as PricingBrandingRouteImport } from './routes/pricing.branding'
 
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
@@ -76,14 +79,32 @@ const ProjectsSlugRoute = ProjectsSlugRouteImport.update({
   path: '/$slug',
   getParentRoute: () => ProjectsRoute,
 } as any)
+const PricingWebRoute = PricingWebRouteImport.update({
+  id: '/web',
+  path: '/web',
+  getParentRoute: () => PricingRoute,
+} as any)
+const PricingEshopRoute = PricingEshopRouteImport.update({
+  id: '/eshop',
+  path: '/eshop',
+  getParentRoute: () => PricingRoute,
+} as any)
+const PricingBrandingRoute = PricingBrandingRouteImport.update({
+  id: '/branding',
+  path: '/branding',
+  getParentRoute: () => PricingRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/pricing': typeof PricingRoute
+  '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/pricing/branding': typeof PricingBrandingRoute
+  '/pricing/eshop': typeof PricingEshopRoute
+  '/pricing/web': typeof PricingWebRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/services/branding': typeof ServicesBrandingRoute
   '/services/design': typeof ServicesDesignRoute
@@ -94,9 +115,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/pricing': typeof PricingRoute
+  '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/pricing/branding': typeof PricingBrandingRoute
+  '/pricing/eshop': typeof PricingEshopRoute
+  '/pricing/web': typeof PricingWebRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/services/branding': typeof ServicesBrandingRoute
   '/services/design': typeof ServicesDesignRoute
@@ -108,9 +132,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/contact': typeof ContactRoute
-  '/pricing': typeof PricingRoute
+  '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/pricing/branding': typeof PricingBrandingRoute
+  '/pricing/eshop': typeof PricingEshopRoute
+  '/pricing/web': typeof PricingWebRoute
   '/projects/$slug': typeof ProjectsSlugRoute
   '/services/branding': typeof ServicesBrandingRoute
   '/services/design': typeof ServicesDesignRoute
@@ -126,6 +153,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/projects'
     | '/services'
+    | '/pricing/branding'
+    | '/pricing/eshop'
+    | '/pricing/web'
     | '/projects/$slug'
     | '/services/branding'
     | '/services/design'
@@ -139,6 +169,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/projects'
     | '/services'
+    | '/pricing/branding'
+    | '/pricing/eshop'
+    | '/pricing/web'
     | '/projects/$slug'
     | '/services/branding'
     | '/services/design'
@@ -152,6 +185,9 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/projects'
     | '/services'
+    | '/pricing/branding'
+    | '/pricing/eshop'
+    | '/pricing/web'
     | '/projects/$slug'
     | '/services/branding'
     | '/services/design'
@@ -163,7 +199,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   ContactRoute: typeof ContactRoute
-  PricingRoute: typeof PricingRoute
+  PricingRoute: typeof PricingRouteWithChildren
   ProjectsRoute: typeof ProjectsRouteWithChildren
   ServicesRoute: typeof ServicesRouteWithChildren
 }
@@ -247,8 +283,44 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProjectsSlugRouteImport
       parentRoute: typeof ProjectsRoute
     }
+    '/pricing/web': {
+      id: '/pricing/web'
+      path: '/web'
+      fullPath: '/pricing/web'
+      preLoaderRoute: typeof PricingWebRouteImport
+      parentRoute: typeof PricingRoute
+    }
+    '/pricing/eshop': {
+      id: '/pricing/eshop'
+      path: '/eshop'
+      fullPath: '/pricing/eshop'
+      preLoaderRoute: typeof PricingEshopRouteImport
+      parentRoute: typeof PricingRoute
+    }
+    '/pricing/branding': {
+      id: '/pricing/branding'
+      path: '/branding'
+      fullPath: '/pricing/branding'
+      preLoaderRoute: typeof PricingBrandingRouteImport
+      parentRoute: typeof PricingRoute
+    }
   }
 }
+
+interface PricingRouteChildren {
+  PricingBrandingRoute: typeof PricingBrandingRoute
+  PricingEshopRoute: typeof PricingEshopRoute
+  PricingWebRoute: typeof PricingWebRoute
+}
+
+const PricingRouteChildren: PricingRouteChildren = {
+  PricingBrandingRoute: PricingBrandingRoute,
+  PricingEshopRoute: PricingEshopRoute,
+  PricingWebRoute: PricingWebRoute,
+}
+
+const PricingRouteWithChildren =
+  PricingRoute._addFileChildren(PricingRouteChildren)
 
 interface ProjectsRouteChildren {
   ProjectsSlugRoute: typeof ProjectsSlugRoute
@@ -284,7 +356,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   ContactRoute: ContactRoute,
-  PricingRoute: PricingRoute,
+  PricingRoute: PricingRouteWithChildren,
   ProjectsRoute: ProjectsRouteWithChildren,
   ServicesRoute: ServicesRouteWithChildren,
 }

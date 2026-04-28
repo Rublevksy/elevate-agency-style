@@ -120,7 +120,7 @@ function WebServicePage() {
           </div>
           <div className="flex flex-wrap gap-3">
             <Link to="/contact" className="btn-primary">Získat nabídku</Link>
-            <Link to="/pricing" className="btn-outline">Zobrazit ceník</Link>
+            <Link to="/pricing/web" className="btn-outline">Zobrazit ceník</Link>
           </div>
         </div>
       </section>
