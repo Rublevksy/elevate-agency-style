@@ -1,10 +1,18 @@
 import { Check } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 
+const PLAN_DESCRIPTIONS: Record<string, string> = {
+  START: "Pro firmy, které chtějí jednoduchou prezentaci se silným prvním dojmem.",
+  BUSINESS: "Pro firmy, které potřebují web, který reálně přivádí zákazníky.",
+  PRO: "Pro náročné projekty — e-shopy, integrace a komplexní řešení na míru.",
+};
+
+const POPULAR_LABEL = "Nejčastější volba";
+
 export function Pricing() {
   const { t } = useT();
-  const scroll = () => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <section id="pricing" className="py-28 md:py-36 border-t border-border bg-surface/30">
@@ -23,12 +31,15 @@ export function Pricing() {
                 }`}
               >
                 {featured && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-[10px] uppercase tracking-widest font-bold">
-                    Popular
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-[10px] uppercase tracking-widest font-bold whitespace-nowrap">
+                    {POPULAR_LABEL}
                   </div>
                 )}
                 <h3 className="text-sm font-bold tracking-[0.2em] text-muted-foreground">{plan.name}</h3>
-                <div className="mt-4 mb-8">
+                <p className="mt-3 text-sm text-muted-foreground/90 leading-relaxed min-h-[3.5rem]">
+                  {PLAN_DESCRIPTIONS[plan.name] ?? ""}
+                </p>
+                <div className="mt-5 mb-8">
                   {plan.price ? (
                     <>
                       <span className="text-xs text-muted-foreground">{t.pricing.from} </span>
@@ -46,16 +57,16 @@ export function Pricing() {
                     </li>
                   ))}
                 </ul>
-                <button
-                  onClick={scroll}
-                  className={`w-full py-3 rounded-lg text-sm font-medium transition-all ${
+                <Link
+                  to="/contact"
+                  className={`w-full py-3 rounded-lg text-sm font-medium transition-all text-center ${
                     featured
                       ? "bg-primary text-primary-foreground hover:bg-primary/90"
                       : "border border-border text-foreground hover:border-primary/60 hover:text-primary"
                   }`}
                 >
                   {t.pricing.cta}
-                </button>
+                </Link>
               </div>
             );
           })}

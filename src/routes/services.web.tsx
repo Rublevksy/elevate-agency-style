@@ -118,7 +118,10 @@ function WebServicePage() {
             <h2 className="text-5xl font-bold text-foreground tracking-tight">od 10 000 Kč</h2>
             <p className="mt-3 text-sm text-muted-foreground">Pracujeme s omezeným počtem klientů.</p>
           </div>
-          <Link to="/contact" className="btn-primary">Získat nabídku</Link>
+          <div className="flex flex-wrap gap-3">
+            <Link to="/contact" className="btn-primary">Získat nabídku</Link>
+            <Link to="/pricing" className="btn-outline">Zobrazit ceník</Link>
+          </div>
         </div>
       </section>
     </>
