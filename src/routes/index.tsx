@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight, Globe, ShoppingBag, Sparkles } from "lucide-r
 import { Logo } from "@/components/Logo";
 import { Hero3DCube } from "@/components/Hero3DCube";
 import { PROJECTS, ProjectVisual } from "@/lib/projects";
-import heroLogo from "@/assets/elevate-hero-logo.png";
+import heroLogo from "@/assets/elevate-logo.svg";
 
 export const Route = createFileRoute("/")({
   component: Home,
