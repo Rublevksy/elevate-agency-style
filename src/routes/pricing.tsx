@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { Pricing } from "@/components/sections/Pricing";
 
 export const Route = createFileRoute("/pricing")({
@@ -14,6 +14,12 @@ export const Route = createFileRoute("/pricing")({
 });
 
 function PricingPage() {
+  const location = useLocation();
+
+  if (location.pathname !== "/pricing") {
+    return <Outlet />;
+  }
+
   return (
     <>
       <section className="page-top pb-12 md:pb-16 relative overflow-hidden">
