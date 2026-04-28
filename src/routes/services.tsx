@@ -1,12 +1,80 @@
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
-import { ArrowUpRight, Monitor, Palette, ShoppingBag, Sparkles } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
 
+function WebPreview() {
+  return (
+    <div className="rounded-lg border border-border bg-background/80 overflow-hidden">
+      <div className="flex items-center gap-1.5 px-4 py-3 border-b border-border bg-surface/60">
+        <span className="h-2 w-2 rounded-full bg-foreground/30" />
+        <span className="h-2 w-2 rounded-full bg-foreground/30" />
+        <span className="h-2 w-2 rounded-full bg-foreground/30" />
+      </div>
+      <div className="p-5 space-y-3">
+        <div className="h-3 w-2/3 rounded bg-foreground/30" />
+        <div className="h-2 w-1/2 rounded bg-foreground/15" />
+        <div className="grid grid-cols-3 gap-2 mt-4">
+          <div className="h-14 rounded bg-primary/35" />
+          <div className="h-14 rounded bg-foreground/10" />
+          <div className="h-14 rounded bg-primary/20" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function EshopPreview() {
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      {[0, 1, 2, 3, 4, 5].map((i) => (
+        <div key={i} className="rounded-lg border border-border bg-surface/40 overflow-hidden">
+          <div className="aspect-square bg-gradient-to-br from-primary/30 via-primary/10 to-transparent" />
+          <div className="p-2 space-y-1">
+            <div className="h-1.5 w-3/4 rounded bg-foreground/20" />
+            <div className="h-1.5 w-1/2 rounded bg-primary/60" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function BrandingPreview() {
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      <div className="aspect-square rounded-lg border border-border bg-background grid place-items-center text-3xl font-bold tracking-tighter text-foreground">N</div>
+      <div className="aspect-square rounded-lg border border-border bg-foreground grid place-items-center text-3xl text-primary">◆</div>
+      <div className="aspect-square rounded-lg border border-border bg-gradient-to-br from-primary/30 to-transparent grid place-items-center text-xl italic font-bold text-foreground" style={{ fontFamily: "Georgia, serif" }}>Pa</div>
+      <div className="aspect-square rounded-lg border border-border bg-background grid place-items-center">
+        <div className="h-10 w-10 rounded-md bg-gradient-to-br from-primary to-primary/40" />
+      </div>
+      <div className="aspect-square rounded-lg border border-border bg-surface/40 grid place-items-center text-xs font-mono text-muted-foreground">CORVEX</div>
+      <div className="aspect-square rounded-lg border border-border bg-background grid place-items-center">
+        <div className="h-8 w-8 rounded-full border-2 border-primary" />
+      </div>
+    </div>
+  );
+}
+
+function DesignPreview() {
+  return (
+    <div className="grid grid-cols-3 gap-2">
+      <div className="col-span-2 aspect-[16/10] rounded-lg bg-gradient-to-br from-primary/40 via-primary/15 to-transparent border border-border" />
+      <div className="aspect-square rounded-full bg-primary/30 border border-border" />
+      <div className="aspect-square rounded-lg bg-foreground/10 border border-border" />
+      <div className="col-span-2 aspect-[16/10] rounded-lg border border-border bg-surface/60 flex items-center px-4 gap-3">
+        <div className="h-2.5 w-1/3 rounded bg-foreground/30" />
+        <div className="h-2.5 w-1/4 rounded bg-primary/60" />
+      </div>
+    </div>
+  );
+}
+
 const SERVICE_CARDS = [
-  { to: "/services/web", Icon: Monitor, title: "Webové stránky", desc: "Prezentační weby, které přivádí poptávky a budují důvěru." },
-  { to: "/services/eshop", Icon: ShoppingBag, title: "E-shopy", desc: "Prodejní řešení navržená pro objednávky, košík a růst obratu." },
-  { to: "/services/branding", Icon: Sparkles, title: "Branding & logo", desc: "Vizuální identita, kterou si zákazníci zapamatují." },
-  { to: "/services/design", Icon: Palette, title: "Grafika", desc: "Kampaně, bannery a materiály s prémiovým vizuálním dojmem." },
+  { to: "/services/web", Preview: WebPreview, title: "Weby, které přivádí klienty", desc: "Prezentační weby, které přivádí poptávky a budují důvěru." },
+  { to: "/services/eshop", Preview: EshopPreview, title: "E-shopy, které prodávají", desc: "Prodejní řešení navržená pro objednávky, košík a růst obratu." },
+  { to: "/services/branding", Preview: BrandingPreview, title: "Značka, kterou si lidé zapamatují", desc: "Vizuální identita, kterou si zákazníci zapamatují." },
+  { to: "/services/design", Preview: DesignPreview, title: "Vizuály, které prodávají", desc: "Kampaně, bannery a materiály s prémiovým vizuálním dojmem." },
 ] as const;
 
 export const Route = createFileRoute("/services")({
