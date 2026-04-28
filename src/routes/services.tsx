@@ -72,7 +72,7 @@ function DesignPreview() {
 
 const SERVICE_CARDS = [
   { to: "/services/web", Preview: WebPreview, title: "Weby, které přivádí klienty", desc: "Prezentační weby, které přivádí poptávky a budují důvěru." },
-  { to: "/services/eshop", Preview: EshopPreview, title: "E-shopy, které prodávají", desc: "Prodejní řešení navržená pro objednávky, košík a růst obratu." },
+  { to: "/services/eshop", Preview: EshopPreview, title: "E-shopy, které vydělávají", desc: "Prodejní řešení navržená pro objednávky, košík a růst obratu." },
   { to: "/services/branding", Preview: BrandingPreview, title: "Značka, kterou si lidé zapamatují", desc: "Vizuální identita, kterou si zákazníci zapamatují." },
   { to: "/services/design", Preview: DesignPreview, title: "Vizuály, které prodávají", desc: "Kampaně, bannery a materiály s prémiovým vizuálním dojmem." },
 ] as const;
