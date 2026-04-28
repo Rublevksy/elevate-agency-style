@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" fill="none" aria-label="ELEVATE">
+  <defs>
+    <linearGradient id="arrowGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7DD3FC"/>
+      <stop offset="55%" stop-color="#3B82F6"/>
+      <stop offset="100%" stop-color="#1D4ED8"/>
+    </linearGradient>
+  </defs>
+  <g fill="#FFFFFF">
+    <!-- E -->
+    <rect x="20"  y="120" width="120" height="22"/>
+    <rect x="20"  y="120" width="22"  height="120"/>
+    <rect x="20"  y="218" width="120" height="22"/>
+    <rect x="20"  y="170" width="92"  height="20"/>
+
+    <!-- L -->
+    <rect x="190" y="120" width="22"  height="120"/>
+    <rect x="190" y="218" width="110" height="22"/>
+
+    <!-- E -->
+    <rect x="350" y="120" width="120" height="22"/>
+    <rect x="350" y="120" width="22"  height="120"/>
+    <rect x="350" y="218" width="120" height="22"/>
+    <rect x="350" y="170" width="92"  height="20"/>
+
+    <!-- V -->
+    <polygon points="520,120 544,120 600,222 588,240 568,240 512,142"/>
+    <polygon points="688,120 664,120 608,222 620,240 640,240 696,142" />
+  </g>
+
+  <!-- A as upward arrow (blue gradient) -->
+  <g fill="url(#arrowGrad)">
+    <!-- left leg of A -->
+    <polygon points="745,240 805,40 825,40 770,240"/>
+    <!-- right leg of A -->
+    <polygon points="900,240 880,240 825,40 845,40"/>
+    <!-- crossbar -->
+    <rect x="775" y="170" width="80" height="14"/>
+    <!-- arrowhead -->
+    <polygon points="815,10 870,80 855,80 855,110 775,110 775,80 760,80"/>
+  </g>
+
+  <g fill="#FFFFFF">
+    <!-- T -->
+    <rect x="930" y="120" width="120" height="22"/>
+    <rect x="978" y="120" width="22"  height="120"/>
+
+    <!-- E -->
+    <rect x="1075" y="120" width="105" height="22"/>
+    <rect x="1075" y="120" width="22"  height="120"/>
+    <rect x="1075" y="218" width="105" height="22"/>
+    <rect x="1075" y="170" width="80"  height="20"/>
+  </g>
+</svg>
