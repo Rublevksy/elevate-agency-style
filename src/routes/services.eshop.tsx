@@ -121,7 +121,10 @@ function EshopServicePage() {
         <div className="container-luxe text-center">
           <p className="text-xs uppercase tracking-widest text-primary mb-4">Pracujeme s omezeným počtem klientů</p>
           <div className="text-7xl md:text-8xl font-bold tracking-tighter text-foreground mb-8">od 25 000 Kč</div>
-          <Link to="/contact" className="btn-primary"><CreditCard className="h-4 w-4" /> Získat nabídku</Link>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link to="/contact" className="btn-primary"><CreditCard className="h-4 w-4" /> Získat nabídku</Link>
+            <Link to="/pricing" className="btn-outline">Zobrazit ceník</Link>
+          </div>
         </div>
       </section>
     </>

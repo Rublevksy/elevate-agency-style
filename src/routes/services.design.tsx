@@ -51,7 +51,10 @@ function DesignServicePage() {
           <p className="text-xs uppercase tracking-widest text-primary mb-4">Nezávazná konzultace zdarma · Odpovíme do 24 hodin · Individuální přístup</p>
           <div className="text-6xl md:text-7xl font-bold tracking-tighter text-foreground mb-6">od 3 000 Kč</div>
           <p className="text-sm text-muted-foreground mb-8">Pracujeme s omezeným počtem klientů.</p>
-          <Link to="/contact" className="btn-primary">Získat nabídku</Link>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Link to="/contact" className="btn-primary">Získat nabídku</Link>
+            <Link to="/pricing" className="btn-outline">Zobrazit ceník</Link>
+          </div>
         </div>
       </section>
     </>

@@ -106,7 +106,10 @@ function BrandingServicePage() {
             <p className="text-xs uppercase tracking-widest text-muted-foreground mb-6">Odpovíme do 24 hodin · Individuální přístup</p>
             <div className="text-6xl font-bold tracking-tighter text-foreground mb-6">od 5 000 Kč</div>
             <p className="text-sm text-muted-foreground mb-8">Pracujeme s omezeným počtem klientů.</p>
-            <Link to="/contact" className="btn-primary">Získat nabídku</Link>
+            <div className="flex flex-wrap gap-3">
+              <Link to="/contact" className="btn-primary">Získat nabídku</Link>
+              <Link to="/pricing" className="btn-outline">Zobrazit ceník</Link>
+            </div>
           </div>
         </div>
       </section>
