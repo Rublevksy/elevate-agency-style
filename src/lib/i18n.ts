@@ -62,7 +62,7 @@ export const translations = {
       cta1: "Získat nabídku",
       cta2: "Naše práce",
     },
-    trust: { years: "4+ let zkušeností", projects: "50+ projektů", clients: "Klienti v EU" },
+    trust: { years: "4+ let zkušeností", projects: "50+ projektů", clients: "Klienti v EU", response: "Odpověď do 24 hodin" },
     about: {
       eyebrow: "O nás",
       title: "Digitální agentura zaměřená na výkon.",
@@ -199,7 +199,7 @@ export const translations = {
       cta1: "Get a quote",
       cta2: "Our work",
     },
-    trust: { years: "4+ years of experience", projects: "50+ projects", clients: "EU clients" },
+    trust: { years: "4+ years of experience", projects: "50+ projects", clients: "EU clients", response: "Reply within 24 hours" },
     about: {
       eyebrow: "About",
       title: "A digital agency focused on performance.",
@@ -318,7 +318,7 @@ export const translations = {
       cta1: "Получить предложение",
       cta2: "Наши работы",
     },
-    trust: { years: "4+ года опыта", projects: "50+ проектов", clients: "Клиенты в ЕС" },
+    trust: { years: "4+ года опыта", projects: "50+ проектов", clients: "Клиенты в ЕС", response: "Ответ в течение 24 часов" },
     about: {
       eyebrow: "О нас",
       title: "Цифровое агентство, ориентированное на результат.",
@@ -436,7 +436,7 @@ export const translations = {
       cta1: "Отримати пропозицію",
       cta2: "Наші роботи",
     },
-    trust: { years: "4+ роки досвіду", projects: "50+ проєктів", clients: "Клієнти в ЄС" },
+    trust: { years: "4+ роки досвіду", projects: "50+ проєктів", clients: "Клієнти в ЄС", response: "Відповідь протягом 24 годин" },
     about: {
       eyebrow: "Про нас",
       title: "Цифрова агенція, орієнтована на результат.",

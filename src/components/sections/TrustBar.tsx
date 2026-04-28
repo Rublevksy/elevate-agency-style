@@ -2,7 +2,7 @@ import { useT } from "@/lib/i18n";
 
 export function TrustBar() {
   const { t } = useT();
-  const items = [t.trust.years, t.trust.projects, t.trust.response ?? "Odpověď do 24 hodin"];
+  const items = [t.trust.years, t.trust.projects, t.trust.response];
   return (
     <section className="border-y border-border bg-surface/40">
       <div className="container-luxe grid grid-cols-1 md:grid-cols-3 gap-px md:gap-0 py-2">
