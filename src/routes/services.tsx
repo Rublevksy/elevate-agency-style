@@ -111,23 +111,26 @@ function ServicesPage() {
 
       <section className="pb-28 md:pb-36">
         <div className="container-luxe grid grid-cols-1 md:grid-cols-2 gap-8">
-          {SERVICE_CARDS.map((s, i) => {
-            const Icon = s.Icon;
+          {SERVICE_CARDS.map((s) => {
+            const Preview = s.Preview;
             return (
               <Link
                 key={s.title}
                 to={s.to}
-                className="reveal hover-lift group p-12 rounded-xl border border-border bg-surface/40 relative overflow-hidden block min-h-[280px]"
+                className="reveal hover-lift group p-8 rounded-xl border border-border bg-surface/40 relative overflow-hidden block"
               >
-                <span
-                  aria-hidden
-                  className="absolute -right-6 -bottom-12 text-[12rem] font-extrabold leading-none text-foreground/[0.03] select-none"
-                >
-                  E
-                </span>
-                <Icon className="h-6 w-6 text-primary mb-10 relative" strokeWidth={1.5} />
-                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 relative">{s.title}</h2>
-                <p className="text-base text-muted-foreground leading-relaxed relative max-w-md mb-8">{s.desc}</p>
+                <div className="relative overflow-hidden rounded-lg mb-8">
+                  <div className="transition-transform duration-500 group-hover:scale-105">
+                    <Preview />
+                  </div>
+                  <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
+                    <span className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-primary-foreground">
+                      Zobrazit službu <ArrowUpRight className="h-4 w-4" />
+                    </span>
+                  </div>
+                </div>
+                <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-3 relative">{s.title}</h2>
+                <p className="text-base text-muted-foreground leading-relaxed relative max-w-md mb-6">{s.desc}</p>
                 <span className="relative text-sm uppercase tracking-widest text-primary inline-flex items-center gap-2">
                   {t.services.learnMore}
                   <ArrowUpRight className="h-4 w-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
