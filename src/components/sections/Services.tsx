@@ -1,9 +1,10 @@
 import { Link } from "@tanstack/react-router";
 import { Monitor, ShoppingBag, Sparkles, Palette, ArrowUpRight } from "lucide-react";
-import { useT, SERVICE_SLUGS } from "@/lib/i18n";
+import { useT } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 
 const ICONS = [Monitor, ShoppingBag, Sparkles, Palette];
+const SERVICE_ROUTES = ["/services/web", "/services/eshop", "/services/branding", "/services/design"] as const;
 
 export function Services() {
   const { t } = useT();
@@ -14,12 +15,11 @@ export function Services() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10">
           {t.services.items.map((s, i) => {
             const Icon = ICONS[i];
-            const slug = SERVICE_SLUGS[i];
+            const to = SERVICE_ROUTES[i];
             return (
               <Link
                 key={s.title}
-                to="/services/$slug"
-                params={{ slug }}
+                to={to}
                 className="reveal hover-lift group p-10 rounded-xl border border-border bg-surface/50 backdrop-blur-sm relative overflow-hidden block"
               >
                 <span

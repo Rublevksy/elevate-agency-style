@@ -6,10 +6,10 @@ import { Logo } from "./Logo";
 const LANGS: Lang[] = ["CZ", "EN", "RU", "UA"];
 
 const SERVICE_LINKS = [
-  { slug: "web", labels: { CZ: "Webové stránky", EN: "Websites", RU: "Веб-сайты", UA: "Веб-сайти" } },
-  { slug: "eshop", labels: { CZ: "E-shopy", EN: "E-commerce", RU: "Интернет-магазины", UA: "Інтернет-магазини" } },
-  { slug: "branding", labels: { CZ: "Branding", EN: "Branding", RU: "Брендинг", UA: "Брендинг" } },
-  { slug: "design", labels: { CZ: "Grafika", EN: "Design", RU: "Дизайн", UA: "Дизайн" } },
+  { to: "/services/web", labels: { CZ: "Webové stránky", EN: "Websites", RU: "Веб-сайты", UA: "Веб-сайти" } },
+  { to: "/services/eshop", labels: { CZ: "E-shopy", EN: "E-commerce", RU: "Интернет-магазины", UA: "Інтернет-магазини" } },
+  { to: "/services/branding", labels: { CZ: "Branding", EN: "Branding", RU: "Брендинг", UA: "Брендинг" } },
+  { to: "/services/design", labels: { CZ: "Grafika", EN: "Design", RU: "Дизайн", UA: "Дизайн" } },
 ] as const;
 
 const PRICING_LINKS = [
@@ -54,9 +54,8 @@ export function Nav() {
               >
                 {SERVICE_LINKS.map((s) => (
                   <Link
-                    key={s.slug}
-                    to="/services/$slug"
-                    params={{ slug: s.slug }}
+                    key={s.to}
+                    to={s.to}
                     className="block rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
                   >
                     {s.labels[lang]}

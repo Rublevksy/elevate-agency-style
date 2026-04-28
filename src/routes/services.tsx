@@ -1,11 +1,13 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowUpRight, Monitor, ShoppingBag, Sparkles, Palette } from "lucide-react";
-import { useT, SERVICE_SLUGS } from "@/lib/i18n";
-import { Process } from "@/components/sections/Process";
-import { Guarantee } from "@/components/sections/Guarantee";
-import { CtaBanner } from "@/components/sections/CtaBanner";
+import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
+import { ArrowUpRight, Monitor, Palette, ShoppingBag, Sparkles } from "lucide-react";
+import { useT } from "@/lib/i18n";
 
-const ICONS = [Monitor, ShoppingBag, Sparkles, Palette];
+const SERVICE_CARDS = [
+  { to: "/services/web", Icon: Monitor, title: "Webové stránky", desc: "Prezentační weby, které přivádí poptávky a budují důvěru." },
+  { to: "/services/eshop", Icon: ShoppingBag, title: "E-shopy", desc: "Prodejní řešení navržená pro objednávky, košík a růst obratu." },
+  { to: "/services/branding", Icon: Sparkles, title: "Branding & logo", desc: "Vizuální identita, kterou si zákazníci zapamatují." },
+  { to: "/services/design", Icon: Palette, title: "Grafika", desc: "Kampaně, bannery a materiály s prémiovým vizuálním dojmem." },
+] as const;
 
 export const Route = createFileRoute("/services")({
   component: ServicesPage,
@@ -21,6 +23,12 @@ export const Route = createFileRoute("/services")({
 
 function ServicesPage() {
   const { t } = useT();
+  const location = useLocation();
+
+  if (location.pathname !== "/services") {
+    return <Outlet />;
+  }
+
   return (
     <>
       <section className="page-top pb-20 md:pb-28 relative overflow-hidden">
@@ -35,15 +43,13 @@ function ServicesPage() {
 
       <section className="pb-28 md:pb-36">
         <div className="container-luxe grid grid-cols-1 md:grid-cols-2 gap-8">
-          {t.services.items.map((s, i) => {
-            const Icon = ICONS[i];
-            const slug = SERVICE_SLUGS[i];
+          {SERVICE_CARDS.map((s, i) => {
+            const Icon = s.Icon;
             return (
               <Link
                 key={s.title}
-                to="/services/$slug"
-                params={{ slug }}
-                className="reveal hover-lift group p-12 rounded-2xl border border-border bg-surface/40 relative overflow-hidden block"
+                to={s.to}
+                className="reveal hover-lift group p-12 rounded-xl border border-border bg-surface/40 relative overflow-hidden block min-h-[280px]"
               >
                 <span
                   aria-hidden
@@ -63,10 +69,6 @@ function ServicesPage() {
           })}
         </div>
       </section>
-
-      <Process />
-      <Guarantee />
-      <CtaBanner />
     </>
   );
 }
