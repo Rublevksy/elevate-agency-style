@@ -1,34 +1,61 @@
-import { Check, MessageCircle, Clock, Sparkles } from "lucide-react";
+import { Check, MessageCircle, Clock, Sparkles, Globe, ShoppingBag, Palette } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 
-const PLAN_DESCRIPTIONS: Record<string, string> = {
-  START: "Pro firmy, které chtějí jednoduchou prezentaci se silným prvním dojmem.",
-  BUSINESS: "Pro firmy, které potřebují web, jenž reálně přivádí zákazníky a poptávky.",
-  PRO: "Pro náročné projekty — e-shopy, integrace a komplexní řešení na míru.",
+type Offer = {
+  key: string;
+  icon: React.ComponentType<{ className?: string }>;
+  name: string;
+  tagline: string;
+  features: string[];
+  price: string;
+  priceLabel: string;
 };
 
-const PLAN_BENEFITS: Record<string, string[]> = {
-  START: [
-    "Spuštění do 2 týdnů",
-    "Připraveno pro Google a vyhledávače",
-    "Profesionální první dojem",
-  ],
-  BUSINESS: [
-    "Více poptávek z webu",
-    "Měřitelné výsledky a analytika",
-    "Snadná správa obsahu",
-    "Růst návštěvnosti díky SEO",
-  ],
-  PRO: [
-    "Řešení postavené na míru",
-    "Vyšší obrat z e-shopu",
-    "Dlouhodobá technická podpora",
-  ],
-};
-
-const POPULAR_LABEL = "Nejčastější volba";
+const OFFERS: Offer[] = [
+  {
+    key: "web",
+    icon: Globe,
+    name: "Webové stránky",
+    tagline: "Moderní web, který přivádí klienty.",
+    features: [
+      "Design na míru",
+      "Responzivní zobrazení",
+      "SEO základ",
+      "Optimalizace rychlosti",
+    ],
+    price: "10 000 Kč",
+    priceLabel: "od",
+  },
+  {
+    key: "eshop",
+    icon: ShoppingBag,
+    name: "E-shop",
+    tagline: "Prodejní řešení připravené na růst.",
+    features: [
+      "Návrh struktury",
+      "Platební systémy",
+      "UX optimalizace",
+      "Mobilní verze",
+    ],
+    price: "25 000 Kč",
+    priceLabel: "od",
+  },
+  {
+    key: "branding",
+    icon: Palette,
+    name: "Logo & Branding",
+    tagline: "Vizuální identita, která zaujme.",
+    features: [
+      "Logo (více variant)",
+      "Barevná paleta",
+      "Vizuální styl",
+    ],
+    price: "5 000 Kč",
+    priceLabel: "od",
+  },
+];
 
 export function Pricing() {
   const { t } = useT();
@@ -37,62 +64,45 @@ export function Pricing() {
     <section id="pricing" className="py-28 md:py-36 border-t border-border bg-surface/30">
       <div className="container-luxe">
         <SectionHeading eyebrow="05" title={t.pricing.title} subtitle={t.pricing.subtitle} />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {t.pricing.plans.map((plan, i) => {
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {OFFERS.map((o, i) => {
+            const Icon = o.icon;
             const featured = i === 1;
-            const benefits = PLAN_BENEFITS[plan.name] ?? [];
             return (
               <div
-                key={plan.name}
-                className={`relative rounded-xl border p-8 flex flex-col ${
+                key={o.key}
+                className={`relative rounded-2xl border p-8 md:p-10 flex flex-col transition-all ${
                   featured
                     ? "border-primary/50 bg-surface-elevated glow-primary"
-                    : "border-border bg-surface"
+                    : "border-border bg-surface hover:border-primary/40"
                 }`}
               >
-                {featured && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-primary text-primary-foreground text-[10px] uppercase tracking-widest font-bold whitespace-nowrap">
-                    {POPULAR_LABEL}
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="h-11 w-11 rounded-lg bg-primary/10 border border-primary/20 grid place-items-center">
+                    <Icon className="h-5 w-5 text-primary" />
                   </div>
-                )}
-                <h3 className="text-sm font-bold tracking-[0.2em] text-muted-foreground">{plan.name}</h3>
-                <p className="mt-3 text-sm text-muted-foreground/90 leading-relaxed min-h-[3.5rem]">
-                  {PLAN_DESCRIPTIONS[plan.name] ?? ""}
-                </p>
-                <div className="mt-5 mb-6">
-                  {plan.price ? (
-                    <>
-                      <span className="text-xs text-muted-foreground">{t.pricing.from} </span>
-                      <span className="text-3xl font-bold text-foreground">{plan.price}</span>
-                    </>
-                  ) : (
-                    <span className="text-3xl font-bold text-foreground">{t.pricing.custom}</span>
-                  )}
+                  <h3 className="text-lg font-bold tracking-tight text-foreground">{o.name}</h3>
                 </div>
 
-                {benefits.length > 0 && (
-                  <div className="mb-6 rounded-lg border border-primary/20 bg-primary/5 p-4">
-                    <p className="text-[10px] uppercase tracking-widest text-primary font-bold mb-3">Co tím získáte</p>
-                    <ul className="space-y-2">
-                      {benefits.map((b) => (
-                        <li key={b} className="flex items-start gap-2 text-sm text-foreground/90">
-                          <Sparkles className="h-3.5 w-3.5 text-primary mt-0.5 shrink-0" />
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                <p className="text-sm text-muted-foreground leading-relaxed mb-8 min-h-[3rem]">
+                  {o.tagline}
+                </p>
 
-                <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-3">Obsah balíčku</p>
                 <ul className="space-y-3 mb-10 flex-1">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-3 text-sm text-muted-foreground">
-                      <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" strokeWidth={2} />
+                  {o.features.map((f) => (
+                    <li key={f} className="flex items-start gap-3 text-sm text-foreground/90">
+                      <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" strokeWidth={2.5} />
                       <span>{f}</span>
                     </li>
                   ))}
                 </ul>
+
+                <div className="mb-6 pt-6 border-t border-border">
+                  <span className="text-xs uppercase tracking-widest text-muted-foreground">{o.priceLabel} </span>
+                  <div className="text-3xl font-bold text-foreground mt-1">{o.price}</div>
+                </div>
+
                 <Link
                   to="/contact"
                   className={`w-full py-3 rounded-lg text-sm font-medium transition-all text-center ${
@@ -101,7 +111,7 @@ export function Pricing() {
                       : "border border-border text-foreground hover:border-primary/60 hover:text-primary"
                   }`}
                 >
-                  {t.pricing.cta}
+                  Získat nabídku
                 </Link>
               </div>
             );
@@ -116,7 +126,7 @@ export function Pricing() {
               Navrhneme vám řešení zdarma.
             </h3>
             <p className="text-muted-foreground max-w-xl mx-auto mb-8">
-              Řekněte nám, co potřebujete. Připravíme nezávazný návrh i orientační cenu — bez závazků.
+              Řekněte nám, co potřebujete. Připravíme nezávazný návrh i orientační cenu — odpovíme do 24 hodin.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3 mb-8 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-4 py-2">

@@ -50,6 +50,120 @@ const LABELS: Record<string, { did: string; results: string; case: string }> = {
 
 export { EXTRAS as PROJECT_EXTRAS, SLUGS as PROJECT_SLUGS, LABELS as PROJECT_LABELS, IMAGES as PROJECT_IMAGES };
 
+// Additional concept projects rendered with CSS-based previews (no image assets needed)
+type ExtraProject = {
+  name: string;
+  tag: string;
+  result: string;
+  desc: string;
+  preview: "web" | "eshop" | "branding" | "saas";
+  gradient: string;
+};
+
+const EXTRA_PROJECTS: ExtraProject[] = [
+  {
+    name: "Lumen Studio",
+    tag: "Web",
+    result: "+95% poptávek",
+    desc: "Prezentační web pro architektonické studio s důrazem na vizuál a SEO.",
+    preview: "web",
+    gradient: "from-primary/30 via-primary/5 to-transparent",
+  },
+  {
+    name: "Verda Market",
+    tag: "E-shop",
+    result: "+60% obrat",
+    desc: "Bio e-shop s důrazem na rychlost, mobilní UX a opakované nákupy.",
+    preview: "eshop",
+    gradient: "from-emerald-500/20 via-primary/10 to-transparent",
+  },
+  {
+    name: "Northwind",
+    tag: "Branding",
+    result: "Kompletní rebrand",
+    desc: "Nová identita pro logistickou firmu — logo, paleta a brand manuál.",
+    preview: "branding",
+    gradient: "from-amber-500/20 via-primary/10 to-transparent",
+  },
+  {
+    name: "Pulse CRM",
+    tag: "SaaS",
+    result: "+50% aktivace",
+    desc: "Onboarding flow a UI systém pro rostoucí B2B SaaS produkt.",
+    preview: "saas",
+    gradient: "from-fuchsia-500/20 via-primary/10 to-transparent",
+  },
+];
+
+function ConceptPreview({ kind }: { kind: ExtraProject["preview"] }) {
+  if (kind === "web") {
+    return (
+      <div className="absolute inset-0 p-6 flex flex-col gap-3">
+        <div className="h-2 w-24 rounded-full bg-foreground/20" />
+        <div className="h-3 w-44 rounded-full bg-foreground/30" />
+        <div className="mt-3 grid grid-cols-3 gap-2 flex-1">
+          <div className="rounded-md bg-surface-elevated/80 border border-border" />
+          <div className="rounded-md bg-surface-elevated/80 border border-border" />
+          <div className="rounded-md bg-primary/30 border border-primary/40" />
+        </div>
+      </div>
+    );
+  }
+  if (kind === "eshop") {
+    return (
+      <div className="absolute inset-0 p-6 grid grid-cols-3 gap-2">
+        {Array.from({ length: 6 }).map((_, i) => (
+          <div key={i} className="rounded-md bg-surface-elevated/80 border border-border flex flex-col">
+            <div className="flex-1 bg-gradient-to-br from-primary/20 to-transparent rounded-t-md" />
+            <div className="p-1.5 space-y-1">
+              <div className="h-1 w-3/4 rounded-full bg-foreground/30" />
+              <div className="h-1 w-1/2 rounded-full bg-primary/60" />
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  if (kind === "branding") {
+    return (
+      <div className="absolute inset-0 p-6 grid grid-cols-2 gap-3">
+        <div className="rounded-lg bg-surface-elevated/80 border border-border grid place-items-center">
+          <span className="text-3xl font-black tracking-tighter text-primary">N</span>
+        </div>
+        <div className="rounded-lg bg-primary/20 border border-primary/30 grid place-items-center">
+          <span className="text-xl font-bold text-foreground">north.</span>
+        </div>
+        <div className="col-span-2 flex gap-2">
+          {["bg-primary", "bg-foreground/80", "bg-primary/40", "bg-foreground/20"].map((c) => (
+            <div key={c} className={`flex-1 h-6 rounded ${c}`} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+  // saas
+  return (
+    <div className="absolute inset-0 p-6 flex flex-col gap-3">
+      <div className="flex items-center gap-2">
+        <div className="h-2 w-2 rounded-full bg-primary" />
+        <div className="h-2 w-20 rounded-full bg-foreground/30" />
+      </div>
+      <div className="grid grid-cols-3 gap-2">
+        {[60, 80, 45].map((h, i) => (
+          <div key={i} className="rounded-md bg-surface-elevated/80 border border-border p-2 flex flex-col justify-end">
+            <div className="rounded-sm bg-primary/60" style={{ height: `${h}%` }} />
+          </div>
+        ))}
+      </div>
+      <div className="flex-1 rounded-md bg-surface-elevated/60 border border-border p-2 space-y-1.5">
+        {[80, 60, 45].map((w, i) => (
+          <div key={i} className="h-1.5 rounded-full bg-foreground/20" style={{ width: `${w}%` }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Portfolio() {
   const { t, lang } = useT();
   const labels = LABELS[lang];
@@ -81,12 +195,18 @@ export function Portfolio() {
                   decoding="async"
                   width={1024}
                   height={768}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent opacity-90" />
                 <div className="absolute top-4 left-4">
                   <span className="text-[10px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-md bg-background/70 backdrop-blur border border-border text-primary">
                     {p.tag}
+                  </span>
+                </div>
+                <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
+                  <span className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-primary-foreground">
+                    {t.portfolio.view}
+                    <ArrowUpRight className="h-4 w-4" />
                   </span>
                 </div>
               </div>
@@ -124,6 +244,42 @@ export function Portfolio() {
                     {labels.case}
                     <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                   </Link>
+                </div>
+              </div>
+            </article>
+          ))}
+
+          {/* Concept projects (CSS-only previews) */}
+          {EXTRA_PROJECTS.map((p, i) => (
+            <article
+              key={p.name}
+              className="reveal group relative overflow-hidden rounded-2xl border border-border bg-surface hover-lift flex flex-col"
+              style={{ animationDelay: `${(projects.length + i) * 0.06}s` }}
+            >
+              <div className={`aspect-[4/3] overflow-hidden relative bg-gradient-to-br ${p.gradient} bg-surface-elevated`}>
+                <div className="absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
+                <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+                  <ConceptPreview kind={p.preview} />
+                </div>
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="text-[10px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-md bg-background/70 backdrop-blur border border-border text-primary">
+                    {p.tag}
+                  </span>
+                </div>
+                <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
+                  <span className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-primary-foreground">
+                    {t.portfolio.view}
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-6 md:p-8 flex flex-col gap-4 flex-1">
+                <h3 className="text-xl md:text-2xl font-bold text-foreground">{p.name}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+                <div className="mt-auto pt-4 border-t border-border flex items-center justify-between gap-4">
+                  <span className="text-sm font-semibold text-primary">{p.result}</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Koncept</span>
                 </div>
               </div>
             </article>
