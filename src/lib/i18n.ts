@@ -571,6 +571,48 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       branding: "od 15 000 Kč",
       design: "od 5 000 Kč",
     },
+    {
+      web: {
+        headline: "Web, který přivádí klienty — ne jen návštěvy.",
+        problem: "Většina firemních webů vypadá hezky, ale neprodává. Pomalé načítání, slabé SEO a nejasná struktura ztrácejí denně potenciální klienty.",
+        audience: ["Firmy s ambicí růst online", "Profesionální služby a B2B", "Startupy připravené na škálování"],
+        results: [
+          { n: "+120%", l: "více poptávek" },
+          { n: "<2s", l: "rychlost načítání" },
+          { n: "Top 10", l: "pozice v Google" },
+        ],
+      },
+      eshop: {
+        headline: "E-shop, který skutečně prodává.",
+        problem: "Šablonové e-shopy mají nízkou konverzi a komplikovanou správu. Zákazníci odcházejí v košíku a vy přicházíte o tržby.",
+        audience: ["Značky s vlastním produktem", "Rostoucí D2C e-shopy", "Firmy přecházející z marketplace"],
+        results: [
+          { n: "+85%", l: "konverzní poměr" },
+          { n: "-40%", l: "opuštěných košíků" },
+          { n: "3×", l: "vyšší AOV" },
+        ],
+      },
+      branding: {
+        headline: "Značka, kterou si zákazníci zapamatují.",
+        problem: "Bez silné identity splynete s konkurencí. Nekonzistentní vizuál snižuje důvěru a hodnotu vaší značky.",
+        audience: ["Nové firmy a rebranding", "Premium značky", "Tvůrci produktů a služeb"],
+        results: [
+          { n: "+60%", l: "rozpoznatelnost značky" },
+          { n: "100%", l: "konzistence napříč kanály" },
+          { n: "Premium", l: "vnímání hodnoty" },
+        ],
+      },
+      design: {
+        headline: "Design, který prodává a buduje důvěru.",
+        problem: "Amatérská grafika kazí dojem i u skvělého produktu. Ztrácíte pozornost dříve, než přečtou první větu.",
+        audience: ["Marketingové týmy", "Startupy a SaaS", "Firmy s pravidelnou komunikací"],
+        results: [
+          { n: "+45%", l: "engagement na sítích" },
+          { n: "2×", l: "rychlejší výroba" },
+          { n: "100%", l: "brand konzistence" },
+        ],
+      },
+    },
   ),
   EN: buildServiceDetails(
     translations.EN.services.items as unknown as { title: string; desc: string }[],
