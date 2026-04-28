@@ -193,3 +193,32 @@
     100% { background-position: 200% 0; }
   }
 }
+
+@layer utilities {
+  .hero3d-rotate {
+    animation: hero3dRotate 22s linear infinite;
+  }
+  @keyframes hero3dRotate {
+    0%   { transform: translate(-50%, -50%) rotateX(-15deg) rotateY(0deg); }
+    100% { transform: translate(-50%, -50%) rotateX(-15deg) rotateY(360deg); }
+  }
+  .hero3d-orbit {
+    animation: hero3dOrbit 12s linear infinite;
+  }
+  @keyframes hero3dOrbit {
+    0%   { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+  }
+  .hero3d-float {
+    animation: hero3dFloat 6s ease-in-out infinite;
+  }
+  @keyframes hero3dFloat {
+    0%, 100% { transform: translate(-50%, -52%); opacity: 0.6; }
+    50%      { transform: translate(-50%, -48%); opacity: 0.9; }
+  }
+  .h-18 { height: 4.5rem; }
+
+  /* Shared page header padding for routes (account for fixed nav) */
+  .page-top { padding-top: 8rem; }
+  @media (min-width: 768px) { .page-top { padding-top: 10rem; } }
+}
