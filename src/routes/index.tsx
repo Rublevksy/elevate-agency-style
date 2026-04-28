@@ -3,15 +3,19 @@ import { LangProvider } from "@/components/LangProvider";
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/sections/Hero";
 import { TrustBar } from "@/components/sections/TrustBar";
+import { About } from "@/components/sections/About";
 import { Services } from "@/components/sections/Services";
 import { WhyUs } from "@/components/sections/WhyUs";
 import { Process } from "@/components/sections/Process";
 import { Portfolio } from "@/components/sections/Portfolio";
+import { Results } from "@/components/sections/Results";
+import { Guarantee } from "@/components/sections/Guarantee";
 import { Pricing } from "@/components/sections/Pricing";
 import { Testimonials } from "@/components/sections/Testimonials";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { Contact } from "@/components/sections/Contact";
 import { Footer } from "@/components/sections/Footer";
+import { useReveal } from "@/hooks/use-reveal";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -25,25 +29,35 @@ export const Route = createFileRoute("/")({
   }),
 });
 
+function IndexContent() {
+  useReveal();
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <Nav />
+      <main>
+        <Hero />
+        <TrustBar />
+        <About />
+        <Services />
+        <Results />
+        <WhyUs />
+        <Process />
+        <Portfolio />
+        <Guarantee />
+        <Pricing />
+        <Testimonials />
+        <CtaBanner />
+        <Contact />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
 function Index() {
   return (
     <LangProvider>
-      <div className="min-h-screen bg-background text-foreground">
-        <Nav />
-        <main>
-          <Hero />
-          <TrustBar />
-          <Services />
-          <WhyUs />
-          <Process />
-          <Portfolio />
-          <Pricing />
-          <Testimonials />
-          <CtaBanner />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
+      <IndexContent />
     </LangProvider>
   );
 }
