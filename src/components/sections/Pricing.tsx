@@ -1,10 +1,18 @@
 import { Check } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 
+const PLAN_DESCRIPTIONS: Record<string, string> = {
+  START: "Pro firmy, které chtějí jednoduchou prezentaci se silným prvním dojmem.",
+  BUSINESS: "Pro firmy, které potřebují web, který reálně přivádí zákazníky.",
+  PRO: "Pro náročné projekty — e-shopy, integrace a komplexní řešení na míru.",
+};
+
+const POPULAR_LABEL = "Nejčastější volba";
+
 export function Pricing() {
   const { t } = useT();
-  const scroll = () => document.getElementById("contact")?.scrollIntoView({ behavior: "smooth" });
 
   return (
     <section id="pricing" className="py-28 md:py-36 border-t border-border bg-surface/30">
