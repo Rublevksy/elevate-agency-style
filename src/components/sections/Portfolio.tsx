@@ -195,12 +195,18 @@ export function Portfolio() {
                   decoding="async"
                   width={1024}
                   height={768}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-background/95 via-background/40 to-transparent opacity-90" />
                 <div className="absolute top-4 left-4">
                   <span className="text-[10px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-md bg-background/70 backdrop-blur border border-border text-primary">
                     {p.tag}
+                  </span>
+                </div>
+                <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
+                  <span className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-primary-foreground">
+                    {t.portfolio.view}
+                    <ArrowUpRight className="h-4 w-4" />
                   </span>
                 </div>
               </div>
@@ -238,6 +244,42 @@ export function Portfolio() {
                     {labels.case}
                     <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                   </Link>
+                </div>
+              </div>
+            </article>
+          ))}
+
+          {/* Concept projects (CSS-only previews) */}
+          {EXTRA_PROJECTS.map((p, i) => (
+            <article
+              key={p.name}
+              className="reveal group relative overflow-hidden rounded-2xl border border-border bg-surface hover-lift flex flex-col"
+              style={{ animationDelay: `${(projects.length + i) * 0.06}s` }}
+            >
+              <div className={`aspect-[4/3] overflow-hidden relative bg-gradient-to-br ${p.gradient} bg-surface-elevated`}>
+                <div className="absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
+                <div className="absolute inset-0 transition-transform duration-700 group-hover:scale-105">
+                  <ConceptPreview kind={p.preview} />
+                </div>
+                <div className="absolute top-4 left-4 z-10">
+                  <span className="text-[10px] uppercase tracking-[0.2em] px-2.5 py-1 rounded-md bg-background/70 backdrop-blur border border-border text-primary">
+                    {p.tag}
+                  </span>
+                </div>
+                <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
+                  <span className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-primary-foreground">
+                    {t.portfolio.view}
+                    <ArrowUpRight className="h-4 w-4" />
+                  </span>
+                </div>
+              </div>
+
+              <div className="p-6 md:p-8 flex flex-col gap-4 flex-1">
+                <h3 className="text-xl md:text-2xl font-bold text-foreground">{p.name}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{p.desc}</p>
+                <div className="mt-auto pt-4 border-t border-border flex items-center justify-between gap-4">
+                  <span className="text-sm font-semibold text-primary">{p.result}</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground">Koncept</span>
                 </div>
               </div>
             </article>
