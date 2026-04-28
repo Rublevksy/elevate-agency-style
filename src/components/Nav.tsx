@@ -13,9 +13,9 @@ const SERVICE_LINKS = [
 ] as const;
 
 const PRICING_LINKS = [
-  { hash: "weby", labels: { CZ: "Weby", EN: "Websites", RU: "Сайты", UA: "Сайти" } },
-  { hash: "eshopy", labels: { CZ: "E-shopy", EN: "E-commerce", RU: "Магазины", UA: "Магазини" } },
-  { hash: "design", labels: { CZ: "Design", EN: "Design", RU: "Дизайн", UA: "Дизайн" } },
+  { to: "/pricing/web", labels: { CZ: "Weby", EN: "Websites", RU: "Сайты", UA: "Сайти" } },
+  { to: "/pricing/eshop", labels: { CZ: "E-shopy", EN: "E-commerce", RU: "Магазины", UA: "Магазини" } },
+  { to: "/pricing/branding", labels: { CZ: "Branding", EN: "Branding", RU: "Брендинг", UA: "Брендинг" } },
 ] as const;
 
 export function Nav() {
@@ -82,9 +82,8 @@ export function Nav() {
               >
                 {PRICING_LINKS.map((p) => (
                   <Link
-                    key={p.hash}
-                    to="/pricing"
-                    hash={p.hash}
+                    key={p.to}
+                    to={p.to}
                     className="block rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
                   >
                     {p.labels[lang]}

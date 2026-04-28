@@ -252,7 +252,7 @@ function EshopServicePage() {
                 <Link to="/contact" className="btn-primary">
                   <CreditCard className="h-4 w-4" /> Chci nezávaznou nabídku
                 </Link>
-                <Link to="/pricing" className="btn-outline">Zobrazit ceník</Link>
+                <Link to="/pricing/eshop" className="btn-outline">Zobrazit ceník</Link>
               </div>
             </div>
           </div>

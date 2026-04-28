@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Outlet, useLocation } from "@tanstack/react-router";
 import { Portfolio } from "@/components/sections/Portfolio";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { Results } from "@/components/sections/Results";
@@ -18,6 +18,12 @@ export const Route = createFileRoute("/projects")({
 
 function ProjectsPage() {
   const { t } = useT();
+  const location = useLocation();
+
+  if (location.pathname !== "/projects") {
+    return <Outlet />;
+  }
+
   return (
     <>
       <section className="page-top pb-16 md:pb-20 relative overflow-hidden">
