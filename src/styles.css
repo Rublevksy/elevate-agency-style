@@ -218,6 +218,40 @@
   }
   .h-18 { height: 4.5rem; }
 
+  /* Hero floating dashboard animations */
+  .hero-float {
+    animation: heroFloat 7s ease-in-out infinite;
+  }
+  .hero-float-slow {
+    animation: heroFloat 9s ease-in-out infinite;
+    animation-delay: -2s;
+  }
+  .hero-float-fast {
+    animation: heroFloat 5s ease-in-out infinite;
+    animation-delay: -1s;
+  }
+  @keyframes heroFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  .hero-float, .hero-float-slow {
+    transform-origin: center;
+  }
+
+  /* Dropdown menu */
+  .nav-dropdown {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(8px);
+    transition: opacity 200ms ease, transform 200ms ease, visibility 200ms;
+  }
+  .nav-item:hover .nav-dropdown,
+  .nav-item:focus-within .nav-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
   /* Shared page header padding for routes (account for fixed nav) */
   .page-top { padding-top: 8rem; }
   @media (min-width: 768px) { .page-top { padding-top: 10rem; } }

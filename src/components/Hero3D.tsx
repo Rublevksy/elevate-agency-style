@@ -1,70 +1,150 @@
 /**
- * Hero3D — pure CSS 3D animated object (no extra deps).
- * A slow-rotating wireframe cube + floating sphere with brand-blue glow.
- * Designed to feel like a tech/digital agency without sci-fi heaviness.
+ * Hero3D — Floating dashboard / website UI mockup.
+ * Pure CSS + Tailwind, no external assets. Matches dark + blue brand.
+ * Subtle 3D tilt, gentle float, glowing accents.
  */
 export function Hero3D() {
   return (
-    <div className="relative aspect-square w-full max-w-[520px] mx-auto select-none">
+    <div className="relative aspect-[4/3] w-full max-w-[560px] mx-auto select-none">
       {/* Ambient glow */}
-      <div className="absolute inset-0 rounded-full bg-primary/20 blur-[120px]" />
-      <div className="absolute inset-10 rounded-full bg-primary/15 blur-[90px]" />
+      <div className="absolute -inset-10 rounded-[3rem] bg-primary/15 blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 h-56 w-56 rounded-full bg-primary/20 blur-[100px] pointer-events-none" />
 
-      {/* Stage */}
+      {/* Stage with perspective */}
       <div
         className="relative h-full w-full"
-        style={{ perspective: "1200px" }}
+        style={{ perspective: "1600px" }}
       >
-        {/* Rotating wireframe cube */}
+        {/* Back floating card (smaller, behind) */}
         <div
-          className="absolute left-1/2 top-1/2 h-[55%] w-[55%] -translate-x-1/2 -translate-y-1/2 hero3d-rotate"
-          style={{ transformStyle: "preserve-3d" }}
+          className="hero-float-slow absolute right-0 top-2 w-[55%] rounded-2xl border border-border bg-surface/80 backdrop-blur-xl p-4 shadow-2xl"
+          style={{
+            transform: "rotateY(-12deg) rotateX(6deg) translateZ(-40px)",
+            boxShadow:
+              "0 30px 80px -30px oklch(0.65 0.18 255 / 0.45), 0 0 0 1px oklch(1 0 0 / 0.04) inset",
+          }}
         >
-          {[
-            { t: "translateZ(140px)" },
-            { t: "translateZ(-140px) rotateY(180deg)" },
-            { t: "rotateY(90deg) translateZ(140px)" },
-            { t: "rotateY(-90deg) translateZ(140px)" },
-            { t: "rotateX(90deg) translateZ(140px)" },
-            { t: "rotateX(-90deg) translateZ(140px)" },
-          ].map((face, i) => (
-            <div
-              key={i}
-              className="absolute inset-0 border border-primary/40"
-              style={{
-                transform: face.t,
-                background:
-                  "linear-gradient(135deg, oklch(0.65 0.18 255 / 0.10), oklch(0.20 0.02 260 / 0.05))",
-                boxShadow:
-                  "inset 0 0 40px oklch(0.65 0.18 255 / 0.15), 0 0 30px oklch(0.65 0.18 255 / 0.15)",
-              }}
-            />
-          ))}
-
-          {/* Inner core sphere */}
-          <div
-            className="absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle at 30% 30%, oklch(0.85 0.15 250), oklch(0.55 0.20 255) 60%, oklch(0.25 0.08 260) 100%)",
-              boxShadow:
-                "0 0 40px oklch(0.65 0.18 255 / 0.7), 0 0 80px oklch(0.65 0.18 255 / 0.4)",
-            }}
-          />
+          <div className="flex items-center gap-1.5 mb-3">
+            <span className="h-1.5 w-1.5 rounded-full bg-foreground/30" />
+            <span className="h-1.5 w-1.5 rounded-full bg-foreground/30" />
+            <span className="h-1.5 w-1.5 rounded-full bg-foreground/30" />
+          </div>
+          <div className="space-y-2">
+            <div className="h-2 w-2/3 rounded-full bg-foreground/20" />
+            <div className="h-2 w-1/2 rounded-full bg-foreground/10" />
+          </div>
+          <div className="mt-4 grid grid-cols-3 gap-2">
+            {[0, 1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-12 rounded-md border border-border bg-background/40"
+              />
+            ))}
+          </div>
+          <div className="mt-3 h-16 rounded-md bg-gradient-to-br from-primary/30 to-primary/5 border border-primary/20" />
         </div>
 
-        {/* Floating orbiting dot */}
-        <div className="absolute left-1/2 top-1/2 h-[80%] w-[80%] -translate-x-1/2 -translate-y-1/2 hero3d-orbit pointer-events-none">
-          <div
-            className="absolute -top-1 left-1/2 h-2 w-2 -translate-x-1/2 rounded-full bg-primary"
-            style={{ boxShadow: "0 0 16px oklch(0.65 0.18 255 / 0.9)" }}
-          />
-        </div>
-
-        {/* Subtle ring */}
+        {/* Main browser/dashboard window */}
         <div
-          className="absolute left-1/2 top-1/2 h-[78%] w-[78%] -translate-x-1/2 -translate-y-1/2 rounded-full border border-primary/15 hero3d-float"
-        />
+          className="hero-float absolute left-0 bottom-0 w-[78%] rounded-2xl border border-border bg-surface/90 backdrop-blur-xl overflow-hidden shadow-2xl"
+          style={{
+            transform: "rotateY(8deg) rotateX(-4deg)",
+            boxShadow:
+              "0 50px 120px -30px oklch(0.65 0.18 255 / 0.55), 0 0 0 1px oklch(1 0 0 / 0.05) inset",
+          }}
+        >
+          {/* Browser chrome */}
+          <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-background/60">
+            <div className="flex items-center gap-1.5">
+              <span className="h-2.5 w-2.5 rounded-full bg-foreground/20" />
+              <span className="h-2.5 w-2.5 rounded-full bg-foreground/20" />
+              <span className="h-2.5 w-2.5 rounded-full bg-foreground/20" />
+            </div>
+            <div className="h-4 w-32 rounded-full bg-background/80 border border-border" />
+            <div className="h-2 w-8 rounded-full bg-foreground/10" />
+          </div>
+
+          {/* Content */}
+          <div className="p-5">
+            {/* Top KPIs */}
+            <div className="grid grid-cols-3 gap-3 mb-5">
+              {[
+                { v: "+128%", label: "Conversion" },
+                { v: "24.8k", label: "Visitors" },
+                { v: "4.9", label: "Rating" },
+              ].map((k, i) => (
+                <div
+                  key={i}
+                  className="rounded-lg border border-border bg-background/50 p-3"
+                >
+                  <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">
+                    {k.label}
+                  </div>
+                  <div className="text-sm font-semibold text-foreground">
+                    {k.v}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Chart */}
+            <div className="rounded-lg border border-border bg-background/50 p-4">
+              <div className="flex items-center justify-between mb-3">
+                <div className="h-2 w-20 rounded-full bg-foreground/20" />
+                <div className="h-2 w-10 rounded-full bg-primary/60" />
+              </div>
+              <svg viewBox="0 0 200 70" className="w-full h-16">
+                <defs>
+                  <linearGradient id="heroChartFill" x1="0" x2="0" y1="0" y2="1">
+                    <stop offset="0%" stopColor="oklch(0.65 0.18 255)" stopOpacity="0.45" />
+                    <stop offset="100%" stopColor="oklch(0.65 0.18 255)" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d="M0,55 L20,48 L40,52 L60,38 L80,42 L100,28 L120,32 L140,18 L160,22 L180,10 L200,14 L200,70 L0,70 Z"
+                  fill="url(#heroChartFill)"
+                />
+                <path
+                  d="M0,55 L20,48 L40,52 L60,38 L80,42 L100,28 L120,32 L140,18 L160,22 L180,10 L200,14"
+                  fill="none"
+                  stroke="oklch(0.65 0.18 255)"
+                  strokeWidth="1.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+
+            {/* Rows */}
+            <div className="mt-4 space-y-2">
+              {[80, 60, 70].map((w, i) => (
+                <div key={i} className="flex items-center gap-3">
+                  <div className="h-6 w-6 rounded-md bg-primary/15 border border-primary/20" />
+                  <div className="flex-1 h-2 rounded-full bg-foreground/10 overflow-hidden">
+                    <div
+                      className="h-full bg-gradient-to-r from-primary to-primary-glow"
+                      style={{ width: `${w}%` }}
+                    />
+                  </div>
+                  <div className="h-2 w-8 rounded-full bg-foreground/10" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Floating accent badge */}
+        <div
+          className="hero-float-fast absolute -top-2 left-[42%] flex items-center gap-2 rounded-full border border-primary/30 bg-background/80 backdrop-blur-md px-3 py-1.5 shadow-lg"
+          style={{
+            boxShadow: "0 10px 30px -10px oklch(0.65 0.18 255 / 0.6)",
+          }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+          <span className="text-[10px] font-medium tracking-wide text-foreground">
+            LIVE
+          </span>
+        </div>
       </div>
     </div>
   );
