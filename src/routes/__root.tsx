@@ -1,6 +1,10 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { LangProvider } from "@/components/LangProvider";
+import { Nav } from "@/components/Nav";
+import { Footer } from "@/components/sections/Footer";
+import { useReveal } from "@/hooks/use-reveal";
 
 function NotFoundComponent() {
   return (
@@ -29,21 +33,15 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "ELEVATE — Digitální agentura" },
+      { name: "description", content: "Tvoříme weby, které vydělávají. Pomáháme firmám růst online." },
+      { name: "author", content: "ELEVATE" },
+      { property: "og:title", content: "ELEVATE — Digitální agentura" },
+      { property: "og:description", content: "Tvoříme weby, které vydělávají." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
-    links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
-    ],
+    links: [{ rel: "stylesheet", href: appCss }],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -52,7 +50,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="cs">
       <head>
         <HeadContent />
       </head>
@@ -64,6 +62,23 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+function SiteShell() {
+  useReveal();
+  return (
+    <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <Nav />
+      <main className="flex-1">
+        <Outlet />
+      </main>
+      <Footer />
+    </div>
+  );
+}
+
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <LangProvider>
+      <SiteShell />
+    </LangProvider>
+  );
 }

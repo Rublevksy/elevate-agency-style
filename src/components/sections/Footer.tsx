@@ -1,10 +1,10 @@
+import { Link } from "@tanstack/react-router";
 import { Instagram, Mail, MapPin } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { Logo } from "@/components/Logo";
 
 export function Footer() {
   const { t } = useT();
-  const scroll = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   return (
     <footer className="border-t border-border bg-background relative overflow-hidden">
       <div
@@ -21,20 +21,28 @@ export function Footer() {
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-5">{t.footer.nav}</p>
           <ul className="space-y-3 text-sm">
-            <li><button onClick={() => scroll("services")} className="text-foreground hover:text-primary transition-colors">{t.nav.services}</button></li>
-            <li><button onClick={() => scroll("portfolio")} className="text-foreground hover:text-primary transition-colors">{t.nav.work}</button></li>
-            <li><button onClick={() => scroll("pricing")} className="text-foreground hover:text-primary transition-colors">{t.nav.pricing}</button></li>
-            <li><button onClick={() => scroll("contact")} className="text-foreground hover:text-primary transition-colors">{t.nav.contact}</button></li>
+            <li><Link to="/services" className="text-foreground hover:text-primary transition-colors">{t.nav.services}</Link></li>
+            <li><Link to="/projects" className="text-foreground hover:text-primary transition-colors">{t.nav.work}</Link></li>
+            <li><Link to="/pricing" className="text-foreground hover:text-primary transition-colors">{t.nav.pricing}</Link></li>
+            <li><Link to="/about" className="text-foreground hover:text-primary transition-colors">{t.nav.about}</Link></li>
+            <li><Link to="/contact" className="text-foreground hover:text-primary transition-colors">{t.nav.contact}</Link></li>
           </ul>
         </div>
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-5">{t.footer.contact}</p>
           <ul className="space-y-3 text-sm text-foreground">
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4 text-primary" strokeWidth={1.5} /><span>hello@elevate.studio</span></li>
-            <li className="flex items-center gap-2"><MapPin className="h-4 w-4 text-primary" strokeWidth={1.5} /><span>Praha, CZ</span></li>
+            <li className="flex items-center gap-2">
+              <Mail className="h-4 w-4 text-primary" strokeWidth={1.5} />
+              <span>hello@elevate.studio</span>
+            </li>
+            <li className="flex items-center gap-2">
+              <MapPin className="h-4 w-4 text-primary" strokeWidth={1.5} />
+              <span>Praha, CZ</span>
+            </li>
             <li>
               <a href="#" className="inline-flex items-center gap-2 hover:text-primary transition-colors">
-                <Instagram className="h-4 w-4 text-primary" strokeWidth={1.5} /><span>@elevate.studio</span>
+                <Instagram className="h-4 w-4 text-primary" strokeWidth={1.5} />
+                <span>@elevate.studio</span>
               </a>
             </li>
           </ul>
