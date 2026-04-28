@@ -1,54 +1,50 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 280" fill="none" aria-label="ELEVATE">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 280" fill="none" aria-label="ELEVATE">
   <defs>
     <linearGradient id="arrowGrad" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0%" stop-color="#7DD3FC"/>
-      <stop offset="55%" stop-color="#3B82F6"/>
+      <stop offset="50%" stop-color="#38BDF8"/>
       <stop offset="100%" stop-color="#1D4ED8"/>
     </linearGradient>
   </defs>
+
+  <!-- All letters are rendered as just two horizontal bars (top + bottom) -
+       the broken-stencil style where verticals are removed. Stroke height ~12. -->
   <g fill="#FFFFFF">
-    <!-- E -->
-    <rect x="20"  y="120" width="120" height="22"/>
-    <rect x="20"  y="120" width="22"  height="120"/>
-    <rect x="20"  y="218" width="120" height="22"/>
-    <rect x="20"  y="170" width="92"  height="20"/>
+    <!-- E (1) -->
+    <rect x="40"  y="170" width="120" height="12"/>
+    <rect x="40"  y="240" width="120" height="12"/>
 
     <!-- L -->
-    <rect x="190" y="120" width="22"  height="120"/>
-    <rect x="190" y="218" width="110" height="22"/>
+    <rect x="220" y="240" width="120" height="12"/>
 
-    <!-- E -->
-    <rect x="350" y="120" width="120" height="22"/>
-    <rect x="350" y="120" width="22"  height="120"/>
-    <rect x="350" y="218" width="120" height="22"/>
-    <rect x="350" y="170" width="92"  height="20"/>
+    <!-- E (2) -->
+    <rect x="400" y="170" width="120" height="12"/>
+    <rect x="400" y="240" width="120" height="12"/>
 
-    <!-- V -->
-    <polygon points="520,120 544,120 600,222 588,240 568,240 512,142"/>
-    <polygon points="688,120 664,120 608,222 620,240 640,240 696,142" />
+    <!-- V (full diagonals, faint white) -->
+    <polygon points="580,170 600,170 660,252 640,252" />
+    <polygon points="720,170 700,170 640,252 660,252" />
   </g>
 
-  <!-- A as upward arrow (blue gradient) -->
+  <!-- A as upward-arrow (blue gradient, slight right tilt) -->
   <g fill="url(#arrowGrad)">
-    <!-- left leg of A -->
-    <polygon points="745,240 805,40 825,40 770,240"/>
-    <!-- right leg of A -->
-    <polygon points="900,240 880,240 825,40 845,40"/>
+    <!-- left leg -->
+    <polygon points="785,252 850,60 866,60 805,252" />
+    <!-- right leg -->
+    <polygon points="930,252 910,252 854,60 870,60" />
     <!-- crossbar -->
-    <rect x="775" y="170" width="80" height="14"/>
-    <!-- arrowhead -->
-    <polygon points="815,10 870,80 855,80 855,110 775,110 775,80 760,80"/>
+    <rect x="815" y="200" width="80" height="10"/>
+    <!-- arrowhead: triangle pointing up-right -->
+    <polygon points="862,18 920,82 895,82 895,108 825,108 825,82 800,82" />
   </g>
 
   <g fill="#FFFFFF">
     <!-- T -->
-    <rect x="930" y="120" width="120" height="22"/>
-    <rect x="978" y="120" width="22"  height="120"/>
+    <rect x="985"  y="170" width="120" height="12"/>
+    <rect x="1037" y="170" width="16"  height="82"/>
 
-    <!-- E -->
-    <rect x="1075" y="120" width="105" height="22"/>
-    <rect x="1075" y="120" width="22"  height="120"/>
-    <rect x="1075" y="218" width="105" height="22"/>
-    <rect x="1075" y="170" width="80"  height="20"/>
+    <!-- E (3) -->
+    <rect x="1170" y="170" width="120" height="12"/>
+    <rect x="1170" y="240" width="120" height="12"/>
   </g>
 </svg>
