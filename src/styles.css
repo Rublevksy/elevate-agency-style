@@ -122,11 +122,74 @@
     to { opacity: 1; transform: translateY(0); }
   }
   .hover-lift {
-    transition: transform 300ms ease, border-color 300ms ease, box-shadow 300ms ease;
+    transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1),
+                border-color 300ms ease, box-shadow 400ms ease;
   }
   .hover-lift:hover {
-    transform: translateY(-4px);
-    border-color: oklch(0.65 0.18 255 / 0.5);
-    box-shadow: 0 12px 40px -12px oklch(0.65 0.18 255 / 0.25);
+    transform: translateY(-6px);
+    border-color: oklch(0.65 0.18 255 / 0.45);
+    box-shadow: 0 20px 50px -20px oklch(0.65 0.18 255 / 0.35);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: var(--color-primary);
+    color: var(--color-primary-foreground);
+    padding: 0.95rem 1.6rem;
+    border-radius: 0.625rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    box-shadow: 0 0 0 1px oklch(0.65 0.18 255 / 0.4) inset,
+                0 10px 30px -8px oklch(0.65 0.18 255 / 0.55);
+    transition: transform 250ms ease, box-shadow 300ms ease, background-color 200ms ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    background-color: oklch(0.7 0.18 255);
+    box-shadow: 0 0 0 1px oklch(0.72 0.16 250 / 0.5) inset,
+                0 16px 50px -10px oklch(0.65 0.18 255 / 0.75);
+  }
+  .btn-outline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid var(--color-border);
+    color: var(--color-foreground);
+    padding: 0.95rem 1.6rem;
+    border-radius: 0.625rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    transition: border-color 250ms ease, color 250ms ease, transform 250ms ease;
+  }
+  .btn-outline:hover {
+    border-color: oklch(0.65 0.18 255 / 0.6);
+    color: var(--color-primary);
+    transform: translateY(-2px);
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 800ms cubic-bezier(0.22, 1, 0.36, 1),
+                transform 800ms cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Shimmer line */
+  .shimmer {
+    background-size: 200% 100%;
+    animation: shimmerMove 6s linear infinite;
+  }
+  @keyframes shimmerMove {
+    0% { background-position: -100% 0; }
+    100% { background-position: 200% 0; }
   }
 }
