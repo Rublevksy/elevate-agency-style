@@ -69,10 +69,18 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function SiteShell() {
   useReveal();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    window.scrollTo({ top: 0, left: 0, behavior: prefersReduced ? "auto" : "smooth" });
+  }, [pathname]);
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Nav />
-      <main className="flex-1">
+      <main key={pathname} className="flex-1 animate-fade-in">
         <Outlet />
       </main>
       <Footer />
