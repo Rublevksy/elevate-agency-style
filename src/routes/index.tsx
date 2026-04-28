@@ -178,8 +178,11 @@ function Home() {
             <div className="absolute inset-0 grid-bg opacity-20 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]" />
             <div className="relative">
               <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight">Máš projekt?</h2>
-              <p className="text-lg md:text-xl text-muted-foreground mb-12 max-w-xl mx-auto">
-                Pojďme ho posunout na další úroveň.
+              <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-xl mx-auto">
+                Navrhneme ti řešení zdarma.
+              </p>
+              <p className="text-sm uppercase tracking-[0.2em] text-primary mb-12">
+                Odpovíme do 24 hodin
               </p>
               <Link to="/contact" className="btn-primary group mx-auto inline-flex">
                 Získat nabídku
