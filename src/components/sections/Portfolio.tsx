@@ -15,7 +15,7 @@ export function Portfolio() {
           {PROJECTS.map((project, i) => (
             <article
               key={project.slug}
-              className="reveal group relative overflow-hidden rounded-xl border border-border bg-surface hover-lift flex flex-col"
+              className="reveal group relative overflow-hidden rounded-xl border border-border bg-surface flex flex-col transition-all duration-300 hover:border-primary/50 hover:shadow-[0_25px_70px_-25px_rgba(59,130,246,0.55)] hover:-translate-y-1"
               style={{ animationDelay: `${i * 0.06}s` }}
             >
               <Link to="/projects/$slug" params={{ slug: project.slug }} className="block aspect-[4/3] overflow-hidden relative">
