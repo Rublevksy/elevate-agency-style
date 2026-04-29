@@ -135,12 +135,13 @@ export function Nav() {
         </nav>
 
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1 text-xs font-medium">
+          {/* Languages — always visible (desktop + mobile) */}
+          <div className="flex items-center gap-0.5 text-xs font-medium">
             {LANGS.map((l, i) => (
               <div key={l} className="flex items-center">
                 <button
                   onClick={() => setLang(l)}
-                  className={`px-2 py-1 transition-colors ${
+                  className={`px-1.5 sm:px-2 py-1 transition-colors ${
                     lang === l ? "text-primary" : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
@@ -151,105 +152,69 @@ export function Nav() {
             ))}
           </div>
 
-          {/* Hamburger button — mobile only */}
+          {/* Hamburger / Close — mobile only, toggles in place */}
           <button
             type="button"
-            onClick={() => setMobileOpen(true)}
-            aria-label="Otevřít menu"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label={mobileOpen ? "Zavřít menu" : "Otevřít menu"}
             aria-expanded={mobileOpen}
             className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border/60 bg-background/40 backdrop-blur-md text-foreground hover:bg-accent/60 transition-colors"
           >
-            <Menu className="h-5 w-5" />
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
         </div>
       </div>
 
-      {/* Mobile slide-in menu */}
-      <div
-        className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-300 ${
-          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-        }`}
-        aria-hidden={!mobileOpen}
-      >
-        {/* Backdrop — dark, lightly blurred so content stays visible */}
+      {/* Mobile dropdown menu — slides down from header */}
+      <div className="md:hidden" aria-hidden={!mobileOpen}>
+        {/* Backdrop below the panel — dims hero but keeps content visible */}
         <div
           onClick={() => setMobileOpen(false)}
-          className={`absolute inset-0 bg-black/50 backdrop-blur-[3px] transition-opacity duration-300 ${
-            mobileOpen ? "opacity-100" : "opacity-0"
+          className={`fixed inset-0 top-20 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ${
+            mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           }`}
         />
 
-        {/* Slide-in panel — ~78% width, capped */}
+        {/* Dropdown panel — light, partial height */}
         <div
-          className={`absolute right-0 top-0 h-full w-[78%] max-w-[320px] bg-background/95 backdrop-blur-xl border-l border-border flex flex-col transform transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-            mobileOpen ? "translate-x-0" : "translate-x-full"
+          className={`absolute left-0 right-0 top-full z-50 origin-top overflow-hidden bg-background/98 backdrop-blur-2xl border-b border-border transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            mobileOpen ? "max-h-[80vh] opacity-100" : "max-h-0 opacity-0"
           }`}
-          style={{ boxShadow: "-20px 0 60px -20px oklch(0 0 0 / 0.6)" }}
+          style={{ boxShadow: "0 24px 50px -20px oklch(0 0 0 / 0.55)" }}
         >
-          {/* Header with close */}
-          <div className="flex items-center justify-between h-16 px-5 border-b border-border/50">
-            <Logo className="h-7 w-auto" />
-            <button
-              type="button"
-              onClick={() => setMobileOpen(false)}
-              aria-label="Zavřít menu"
-              className="inline-flex items-center justify-center h-10 w-10 rounded-lg text-foreground/80 hover:text-foreground hover:bg-accent/60 transition-colors"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-
-          {/* Links */}
-          <nav className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-1">
-            {[
-              { to: "/services", label: t.nav.services },
-              { to: "/projects", label: t.nav.work },
-              { to: "/pricing", label: t.nav.pricing },
-              { to: "/about", label: t.nav.about },
-              { to: "/contact", label: t.nav.contact },
-            ].map((item, idx) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={() => setMobileOpen(false)}
-                className="group flex items-center justify-between py-3.5 px-2 rounded-lg text-base text-foreground/90 hover:text-primary hover:bg-accent/40 transition-colors"
-                style={{
-                  animation: mobileOpen ? `fade-in 0.4s ease-out ${idx * 50}ms both` : undefined,
-                }}
-                activeProps={{ className: "is-active text-primary" }}
-              >
-                <span className="font-medium tracking-tight">{item.label}</span>
-                <ChevronDown className="h-4 w-4 -rotate-90 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
-              </Link>
-            ))}
-
-            {/* Language switch */}
-            <div className="mt-6 flex items-center justify-center gap-1 text-xs font-medium">
-              {LANGS.map((l, i) => (
-                <div key={l} className="flex items-center">
-                  <button
-                    onClick={() => setLang(l)}
-                    className={`px-3 py-1.5 transition-colors ${
-                      lang === l ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    {l}
-                  </button>
-                  {i < LANGS.length - 1 && <span className="text-border">|</span>}
-                </div>
+          <div className="px-6 py-8 flex flex-col">
+            <nav className="flex flex-col items-center gap-1">
+              {[
+                { to: "/services", label: t.nav.services },
+                { to: "/projects", label: t.nav.work },
+                { to: "/pricing", label: t.nav.pricing },
+                { to: "/about", label: t.nav.about },
+                { to: "/contact", label: t.nav.contact },
+              ].map((item, idx) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={() => setMobileOpen(false)}
+                  className="w-full text-center py-3.5 text-lg font-medium tracking-tight text-foreground/90 hover:text-primary transition-colors"
+                  style={{
+                    animation: mobileOpen ? `fade-in 0.4s ease-out ${idx * 50}ms both` : undefined,
+                  }}
+                  activeProps={{ className: "is-active text-primary" }}
+                >
+                  {item.label}
+                </Link>
               ))}
-            </div>
-          </nav>
+            </nav>
 
-          {/* Pinned CTA */}
-          <div className="px-5 py-4 border-t border-border/50 pb-[max(env(safe-area-inset-bottom),16px)]">
-            <Link
-              to="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="btn-primary w-full justify-center"
-            >
-              🚀 Získat nabídku
-            </Link>
+            <div className="mt-6 pb-[max(env(safe-area-inset-bottom),8px)]">
+              <Link
+                to="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="btn-primary w-full justify-center"
+              >
+                🚀 Získat nabídku
+              </Link>
+            </div>
           </div>
         </div>
       </div>
