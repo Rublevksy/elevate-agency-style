@@ -8,7 +8,7 @@ export function Hero() {
   const { t } = useT();
 
   return (
-    <section id="top" className="relative pt-36 pb-28 md:pt-48 md:pb-40 overflow-hidden">
+    <section id="top" className="relative pt-28 pb-20 md:pt-48 md:pb-40 overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-50 [mask-image:radial-gradient(ellipse_at_center,black_20%,transparent_75%)]" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent shimmer" />
       <div className="absolute top-1/3 -left-40 h-[28rem] w-[28rem] rounded-full bg-primary/15 blur-[140px]" />
