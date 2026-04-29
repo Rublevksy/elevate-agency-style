@@ -73,8 +73,9 @@ function SiteShell() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    window.scrollTo({ top: 0, left: 0, behavior: prefersReduced ? "auto" : "smooth" });
+    // Instant scroll to top on route change — smooth scroll caused a "stuck" feeling
+    // because it ran while the new page was still rendering.
+    window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [pathname]);
 
   return (
