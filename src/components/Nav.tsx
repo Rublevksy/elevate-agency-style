@@ -33,7 +33,7 @@ export function Nav() {
           className="flex items-center gap-2 transition-opacity hover:opacity-80"
           aria-label="ELEVATE — domů"
         >
-          <Logo className="h-14 md:h-16 w-auto" />
+          <Logo className="h-9 md:h-11 w-auto" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-9 text-sm">
