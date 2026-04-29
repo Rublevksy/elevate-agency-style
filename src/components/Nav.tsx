@@ -171,32 +171,36 @@ export function Nav() {
         }`}
         aria-hidden={!mobileOpen}
       >
-        {/* Backdrop */}
+        {/* Backdrop — dark, lightly blurred so content stays visible */}
         <div
           onClick={() => setMobileOpen(false)}
-          className="absolute inset-0 bg-background/80 backdrop-blur-xl"
+          className={`absolute inset-0 bg-black/50 backdrop-blur-[3px] transition-opacity duration-300 ${
+            mobileOpen ? "opacity-100" : "opacity-0"
+          }`}
         />
 
-        {/* Panel */}
+        {/* Slide-in panel — ~78% width, capped */}
         <div
-          className={`absolute right-0 top-0 h-full w-[88%] max-w-sm bg-background border-l border-border shadow-2xl transform transition-transform duration-300 ease-out ${
+          className={`absolute right-0 top-0 h-full w-[78%] max-w-[320px] bg-background/95 backdrop-blur-xl border-l border-border flex flex-col transform transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
             mobileOpen ? "translate-x-0" : "translate-x-full"
           }`}
-          style={{ boxShadow: "0 30px 80px -20px oklch(0 0 0 / 0.7)" }}
+          style={{ boxShadow: "-20px 0 60px -20px oklch(0 0 0 / 0.6)" }}
         >
-          <div className="flex items-center justify-between h-20 px-6 border-b border-border/60">
-            <Logo className="h-8 w-auto" />
+          {/* Header with close */}
+          <div className="flex items-center justify-between h-16 px-5 border-b border-border/50">
+            <Logo className="h-7 w-auto" />
             <button
               type="button"
               onClick={() => setMobileOpen(false)}
               aria-label="Zavřít menu"
-              className="inline-flex items-center justify-center h-10 w-10 rounded-lg text-foreground hover:bg-accent/60 transition-colors"
+              className="inline-flex items-center justify-center h-10 w-10 rounded-lg text-foreground/80 hover:text-foreground hover:bg-accent/60 transition-colors"
             >
               <X className="h-5 w-5" />
             </button>
           </div>
 
-          <nav className="flex flex-col px-6 py-8 gap-1 text-lg">
+          {/* Links */}
+          <nav className="flex-1 overflow-y-auto px-5 py-6 flex flex-col gap-1">
             {[
               { to: "/services", label: t.nav.services },
               { to: "/projects", label: t.nav.work },
@@ -208,27 +212,19 @@ export function Nav() {
                 key={item.to}
                 to={item.to}
                 onClick={() => setMobileOpen(false)}
-                className="group flex items-center justify-between py-4 border-b border-border/40 text-foreground/90 hover:text-primary transition-colors"
+                className="group flex items-center justify-between py-3.5 px-2 rounded-lg text-base text-foreground/90 hover:text-primary hover:bg-accent/40 transition-colors"
                 style={{
-                  animation: mobileOpen ? `fade-in 0.4s ease-out ${idx * 60}ms both` : undefined,
+                  animation: mobileOpen ? `fade-in 0.4s ease-out ${idx * 50}ms both` : undefined,
                 }}
                 activeProps={{ className: "is-active text-primary" }}
               >
                 <span className="font-medium tracking-tight">{item.label}</span>
-                <ChevronDown className="h-4 w-4 -rotate-90 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+                <ChevronDown className="h-4 w-4 -rotate-90 opacity-40 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
               </Link>
             ))}
 
-            <Link
-              to="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="btn-primary mt-8 justify-center w-full"
-            >
-              🚀 Získat nabídku
-            </Link>
-
-            {/* Language switch (mobile) */}
-            <div className="mt-8 flex items-center justify-center gap-1 text-xs font-medium">
+            {/* Language switch */}
+            <div className="mt-6 flex items-center justify-center gap-1 text-xs font-medium">
               {LANGS.map((l, i) => (
                 <div key={l} className="flex items-center">
                   <button
@@ -244,6 +240,17 @@ export function Nav() {
               ))}
             </div>
           </nav>
+
+          {/* Pinned CTA */}
+          <div className="px-5 py-4 border-t border-border/50 pb-[max(env(safe-area-inset-bottom),16px)]">
+            <Link
+              to="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="btn-primary w-full justify-center"
+            >
+              🚀 Získat nabídku
+            </Link>
+          </div>
         </div>
       </div>
     </header>
