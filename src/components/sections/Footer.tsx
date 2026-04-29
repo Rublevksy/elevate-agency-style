@@ -40,13 +40,13 @@ export function Footer() {
             </li>
             <li>
               <a
-                href="https://instagram.com/elevate.itcz"
+                href="https://www.instagram.com/elevateit.cz/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 hover:text-primary transition-colors story-link"
               >
                 <Instagram className="h-4 w-4 text-primary" strokeWidth={1.5} />
-                <span>@elevate.itcz</span>
+                <span>@elevateit.cz</span>
               </a>
             </li>
           </ul>
