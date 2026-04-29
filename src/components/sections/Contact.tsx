@@ -53,18 +53,19 @@ export function Contact() {
     }
     setErrors({});
     setLoading(true);
+    const formEl = e.currentTarget;
     try {
       await sendContactToTelegram({
         data: {
-          name: result.data.name,
-          email: result.data.email,
-          phone: result.data.phone || "",
+          name: data.name,
+          email: data.email,
+          phone: data.phone || "",
           service,
           budget,
-          message: result.data.message,
+          message: data.message,
         },
       });
-      e.currentTarget.reset();
+      formEl.reset();
       setService("");
       setBudget(35000);
       setCaptcha(false);
