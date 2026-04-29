@@ -3,6 +3,8 @@ import { z } from "zod";
 import { ArrowRight, Globe, ShoppingBag, Sparkles, Shield, Check } from "lucide-react";
 import { useT } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
+import { sendContactToTelegram } from "@/server/telegram.functions";
+import { toast } from "sonner";
 
 const SERVICES = [
   { id: "Web", label: "Web", icon: Globe },
@@ -51,9 +53,29 @@ export function Contact() {
     }
     setErrors({});
     setLoading(true);
-    await new Promise((r) => setTimeout(r, 900));
-    setLoading(false);
-    setSubmitted(true);
+    const formEl = e.currentTarget;
+    try {
+      await sendContactToTelegram({
+        data: {
+          name: data.name,
+          email: data.email,
+          phone: data.phone || "",
+          service,
+          budget,
+          message: data.message,
+        },
+      });
+      formEl.reset();
+      setService("");
+      setBudget(35000);
+      setCaptcha(false);
+      setSubmitted(true);
+    } catch (err) {
+      console.error(err);
+      toast.error("Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const sendingLabel: Record<string, string> = {
@@ -72,8 +94,23 @@ export function Contact() {
 
         <div className="max-w-3xl">
           {submitted ? (
-            <div className="p-12 rounded-2xl border border-primary/40 bg-surface text-center glow-primary">
-              <p className="text-xl font-bold text-foreground">{t.contact.success}</p>
+            <div className="p-12 md:p-16 rounded-3xl border border-primary/40 bg-surface text-center glow-primary animate-scale-in">
+              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/15 ring-4 ring-primary/30">
+                <Check className="h-10 w-10 text-primary animate-scale-in" strokeWidth={3} />
+              </div>
+              <p className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+                Zpráva byla odeslána
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Ozveme se vám do 24 hodin.
+              </p>
+              <button
+                type="button"
+                onClick={() => setSubmitted(false)}
+                className="mt-8 text-xs uppercase tracking-widest text-primary hover:text-foreground transition-colors story-link"
+              >
+                Odeslat další zprávu
+              </button>
             </div>
           ) : (
             <>
