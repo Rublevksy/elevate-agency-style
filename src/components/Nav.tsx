@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { ChevronDown } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
 import { Logo } from "./Logo";
 
