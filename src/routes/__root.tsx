@@ -73,10 +73,26 @@ function SiteShell() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    // Instant scroll to top on route change — smooth scroll caused a "stuck" feeling
-    // because it ran while the new page was still rendering.
+    // Instant scroll to top on route change
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
   }, [pathname]);
+
+  // Also scroll up immediately on click of any internal nav link (before the route resolves),
+  // so the user sees instant feedback even if the next page is still loading.
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onClick = (e: MouseEvent) => {
+      const target = (e.target as HTMLElement | null)?.closest("a");
+      if (!target) return;
+      const href = target.getAttribute("href");
+      if (!href || !href.startsWith("/") || href.startsWith("//")) return;
+      if (target.getAttribute("target") === "_blank") return;
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+      window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    };
+    document.addEventListener("click", onClick, true);
+    return () => document.removeEventListener("click", onClick, true);
+  }, []);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
