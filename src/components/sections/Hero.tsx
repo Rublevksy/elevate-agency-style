@@ -14,13 +14,6 @@ export function Hero() {
       <div className="absolute top-1/3 -left-40 h-[28rem] w-[28rem] rounded-full bg-primary/15 blur-[140px]" />
       <div className="absolute bottom-0 right-0 h-[20rem] w-[20rem] rounded-full bg-primary/10 blur-[140px]" />
 
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[110%] max-w-[1400px] opacity-[0.035]"
-      >
-        <Logo className="w-full h-auto" alt="" />
-      </div>
-
       <div className="container-luxe relative grid lg:grid-cols-2 gap-20 items-center">
         <div className="reveal is-visible">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-xs uppercase tracking-widest text-muted-foreground mb-10">
@@ -28,9 +21,8 @@ export function Hero() {
             {t.hero.tag}
           </div>
 
-          <div className="mb-8">
-            <Logo className="h-14 md:h-20 w-auto" />
-          </div>
+          <div className="mb-8 h-14 md:h-20" aria-hidden />
+
 
           <p className="text-3xl md:text-5xl font-bold text-foreground tracking-tight leading-[1.1] mb-5">
             {t.hero.title1} <br />

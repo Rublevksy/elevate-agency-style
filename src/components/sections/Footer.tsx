@@ -7,15 +7,9 @@ export function Footer() {
   const { t } = useT();
   return (
     <footer className="border-t border-border bg-background relative overflow-hidden">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -bottom-24 left-1/2 -translate-x-1/2 w-[120%] max-w-[1600px] opacity-[0.025]"
-      >
-        <Logo className="w-full h-auto" alt="" />
-      </div>
       <div className="container-luxe py-24 grid grid-cols-1 md:grid-cols-4 gap-14 relative">
         <div className="md:col-span-2">
-          <Logo className="h-10 w-auto mb-5" />
+          <div className="h-10 w-[180px] mb-5" aria-hidden />
           <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">{t.hero.subtitle}</p>
         </div>
         <div>
