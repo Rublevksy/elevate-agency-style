@@ -330,4 +330,71 @@
     box-shadow: 0 0 0 4px oklch(0.65 0.18 255 / 0.15),
                 0 0 30px -8px oklch(0.65 0.18 255 / 0.45);
   }
+
+  /* Pro variant — premium contact form */
+  .field-input-pro {
+    width: 100%;
+    background-color: oklch(0.16 0.02 260 / 0.6);
+    border: 1px solid var(--color-border);
+    border-radius: 0.85rem;
+    padding: 0.95rem 1.1rem;
+    font-size: 0.95rem;
+    color: var(--color-foreground);
+    transition: border-color 220ms ease, box-shadow 260ms ease,
+                background-color 220ms ease, transform 220ms ease;
+  }
+  .field-input-pro::placeholder { color: oklch(0.72 0.015 260 / 0.4); }
+  .field-input-pro:hover {
+    border-color: oklch(0.65 0.18 255 / 0.35);
+  }
+  .field-input-pro:focus {
+    outline: none;
+    border-color: oklch(0.65 0.18 255 / 0.8);
+    background-color: oklch(0.20 0.02 260 / 0.8);
+    box-shadow: 0 0 0 4px oklch(0.65 0.18 255 / 0.18),
+                0 0 40px -8px oklch(0.65 0.18 255 / 0.55);
+  }
+
+  /* Premium range slider */
+  .range-pro {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    height: 24px;
+    cursor: pointer;
+  }
+  .range-pro::-webkit-slider-runnable-track {
+    height: 8px;
+    background: transparent;
+  }
+  .range-pro::-moz-range-track {
+    height: 8px;
+    background: transparent;
+  }
+  .range-pro::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    background: oklch(0.95 0.02 260);
+    border: 3px solid oklch(0.65 0.18 255);
+    box-shadow: 0 0 0 6px oklch(0.65 0.18 255 / 0.15),
+                0 4px 20px -4px oklch(0.65 0.18 255 / 0.6);
+    margin-top: -8px;
+    transition: transform 180ms ease, box-shadow 200ms ease;
+  }
+  .range-pro::-webkit-slider-thumb:hover {
+    transform: scale(1.12);
+  }
+  .range-pro::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 9999px;
+    background: oklch(0.95 0.02 260);
+    border: 3px solid oklch(0.65 0.18 255);
+    box-shadow: 0 0 0 6px oklch(0.65 0.18 255 / 0.15),
+                0 4px 20px -4px oklch(0.65 0.18 255 / 0.6);
+    transition: transform 180ms ease;
+  }
 }
