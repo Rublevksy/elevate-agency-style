@@ -291,9 +291,10 @@ export function Contact() {
               </button>
 
               <p className="text-xs text-center text-muted-foreground">
-                Odpovídáme do 24 hodin · Vaše údaje jsou v bezpečí
+                Žádný spam. Jen konkrétní nabídka.
               </p>
             </form>
+            </>
           )}
         </div>
       </div>
