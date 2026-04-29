@@ -16,9 +16,17 @@ export function Hero() {
 
       <div className="container-luxe relative grid lg:grid-cols-2 gap-20 items-center">
         <div className="reveal is-visible">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-xs uppercase tracking-widest text-muted-foreground mb-10">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-xs uppercase tracking-widest text-muted-foreground mb-6 md:mb-10">
             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
             {t.hero.tag}
+          </div>
+
+          {/* Mobile-only top CTA — keeps the conversion above the fold */}
+          <div className="md:hidden mb-8">
+            <Link to="/contact" className="btn-primary group w-full justify-center">
+              🚀 Získat nabídku
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
 
           <div className="relative mb-10">
