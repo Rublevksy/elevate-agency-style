@@ -9,7 +9,7 @@ export function Footer() {
     <footer className="border-t border-border bg-background relative overflow-hidden">
       <div className="container-luxe py-24 grid grid-cols-1 md:grid-cols-4 gap-14 relative">
         <div className="md:col-span-2">
-          <div className="h-10 w-[180px] mb-5" aria-hidden />
+          <Logo className="h-10 w-auto mb-5" />
           <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">{t.hero.subtitle}</p>
         </div>
         <div>

@@ -21,7 +21,9 @@ export function Hero() {
             {t.hero.tag}
           </div>
 
-          <div className="mb-8 h-14 md:h-20" aria-hidden />
+          <div className="mb-8">
+            <Logo className="h-14 md:h-20 w-auto" />
+          </div>
 
 
           <p className="text-3xl md:text-5xl font-bold text-foreground tracking-tight leading-[1.1] mb-5">
