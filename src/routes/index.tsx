@@ -3,7 +3,7 @@ import { ArrowRight, ArrowUpRight, Globe, ShoppingBag, Sparkles } from "lucide-r
 import { Logo } from "@/components/Logo";
 import { Hero3DCube } from "@/components/Hero3DCube";
 import { PROJECTS, ProjectVisual } from "@/lib/projects";
-import heroLogo from "@/assets/elevate-logo.svg";
+import heroLogo from "@/assets/elevate-logo.png";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -58,19 +58,18 @@ function Home() {
               Digitální agentura
             </div>
 
-            <h1 className="mb-10 flex justify-center lg:justify-start">
-              <span className="sr-only">ELEVATE</span>
+            <div className="mb-10 flex justify-center lg:justify-start">
               <img
                 src={heroLogo}
                 alt="ELEVATE"
-                width={1200}
-                height={280}
+                width={929}
+                height={202}
                 decoding="async"
                 fetchPriority="high"
-                className="w-[300px] sm:w-[400px] md:w-[500px] lg:w-[560px] h-auto object-contain select-none [filter:drop-shadow(0_0_18px_rgba(59,130,246,0.12))]"
+                className="w-[320px] sm:w-[430px] md:w-[560px] lg:w-[640px] max-w-full h-auto object-contain select-none"
                 draggable={false}
               />
-            </h1>
+            </div>
             <p className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-6">
               Tvoříme weby, <span className="text-primary">které vydělávají.</span>
             </p>
