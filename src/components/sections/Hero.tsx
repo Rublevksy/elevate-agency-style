@@ -21,8 +21,9 @@ export function Hero() {
             {t.hero.tag}
           </div>
 
-          <div className="mb-10">
-            <Logo className="w-full max-w-[500px] md:max-w-[640px] h-auto" />
+          <div className="relative mb-10">
+            <div aria-hidden className="pointer-events-none absolute -inset-x-12 -inset-y-10 bg-[radial-gradient(ellipse_at_center,oklch(0.65_0.18_255/0.35),transparent_70%)] blur-3xl" />
+            <Logo className="relative w-full max-w-[500px] md:max-w-[640px] h-auto" />
           </div>
 
 
