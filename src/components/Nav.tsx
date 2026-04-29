@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ChevronDown } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
@@ -20,13 +21,27 @@ const PRICING_LINKS = [
 
 export function Nav() {
   const { lang, setLang, t } = useT();
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 12);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const linkCls = "nav-link text-muted-foreground hover:text-foreground transition-colors";
   const activeCls = "is-active text-foreground";
   const triggerCls = `${linkCls} inline-flex items-center gap-1`;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
+        scrolled
+          ? "backdrop-blur-2xl bg-background/85 border-border shadow-[0_8px_30px_-12px_oklch(0_0_0/0.6)]"
+          : "backdrop-blur-xl bg-background/60 border-transparent"
+      }`}
+    >
       <div className="container-luxe flex h-20 md:h-24 items-center justify-between py-3">
         <Link
           to="/"

@@ -76,6 +76,11 @@ export function Contact() {
               <p className="text-xl font-bold text-foreground">{t.contact.success}</p>
             </div>
           ) : (
+            <>
+            <p className="text-sm md:text-base text-muted-foreground mb-6 flex items-center gap-2">
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              Ozveme se do 24 hodin. Nezávazně a zdarma.
+            </p>
             <form
               onSubmit={onSubmit}
               className="rounded-3xl border border-border/60 bg-surface/40 backdrop-blur p-6 md:p-10 space-y-10 shadow-2xl"
@@ -286,9 +291,10 @@ export function Contact() {
               </button>
 
               <p className="text-xs text-center text-muted-foreground">
-                Odpovídáme do 24 hodin · Vaše údaje jsou v bezpečí
+                Žádný spam. Jen konkrétní nabídka.
               </p>
             </form>
+            </>
           )}
         </div>
       </div>
