@@ -21,8 +21,8 @@ export function Hero() {
             {t.hero.tag}
           </div>
 
-          <div className="mb-8">
-            <Logo className="h-14 md:h-20 w-auto" />
+          <div className="mb-10">
+            <Logo className="w-full max-w-[500px] md:max-w-[640px] h-auto" />
           </div>
 
 

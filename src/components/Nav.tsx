@@ -27,13 +27,13 @@ export function Nav() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-background/70 border-b border-border">
-      <div className="container-luxe flex h-18 md:h-20 items-center justify-between py-3">
+      <div className="container-luxe flex h-20 md:h-24 items-center justify-between py-3">
         <Link
           to="/"
           className="flex items-center gap-2 transition-opacity hover:opacity-80"
           aria-label="ELEVATE — domů"
         >
-          <Logo className="h-11 md:h-12 w-auto" />
+          <Logo className="h-14 md:h-16 w-auto" />
         </Link>
 
         <nav className="hidden md:flex items-center gap-9 text-sm">
