@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Link } from "@tanstack/react-router";
-import { ChevronDown } from "lucide-react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { ChevronDown, Menu, X } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
 import { Logo } from "./Logo";
 
@@ -22,6 +22,8 @@ const PRICING_LINKS = [
 export function Nav() {
   const { lang, setLang, t } = useT();
   const [scrolled, setScrolled] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -29,6 +31,22 @@ export function Nav() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [pathname]);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => {
+        document.body.style.overflow = prev;
+      };
+    }
+  }, [mobileOpen]);
 
   const linkCls = "nav-link text-muted-foreground hover:text-foreground transition-colors";
   const activeCls = "is-active text-foreground";
@@ -116,20 +134,116 @@ export function Nav() {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-1 text-xs font-medium">
-          {LANGS.map((l, i) => (
-            <div key={l} className="flex items-center">
-              <button
-                onClick={() => setLang(l)}
-                className={`px-2 py-1 transition-colors ${
-                  lang === l ? "text-primary" : "text-muted-foreground hover:text-foreground"
-                }`}
+        <div className="flex items-center gap-2">
+          <div className="hidden sm:flex items-center gap-1 text-xs font-medium">
+            {LANGS.map((l, i) => (
+              <div key={l} className="flex items-center">
+                <button
+                  onClick={() => setLang(l)}
+                  className={`px-2 py-1 transition-colors ${
+                    lang === l ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {l}
+                </button>
+                {i < LANGS.length - 1 && <span className="text-border">|</span>}
+              </div>
+            ))}
+          </div>
+
+          {/* Hamburger button — mobile only */}
+          <button
+            type="button"
+            onClick={() => setMobileOpen(true)}
+            aria-label="Otevřít menu"
+            aria-expanded={mobileOpen}
+            className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border/60 bg-background/40 backdrop-blur-md text-foreground hover:bg-accent/60 transition-colors"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile slide-in menu */}
+      <div
+        className={`md:hidden fixed inset-0 z-[60] transition-opacity duration-300 ${
+          mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        aria-hidden={!mobileOpen}
+      >
+        {/* Backdrop */}
+        <div
+          onClick={() => setMobileOpen(false)}
+          className="absolute inset-0 bg-background/80 backdrop-blur-xl"
+        />
+
+        {/* Panel */}
+        <div
+          className={`absolute right-0 top-0 h-full w-[88%] max-w-sm bg-background border-l border-border shadow-2xl transform transition-transform duration-300 ease-out ${
+            mobileOpen ? "translate-x-0" : "translate-x-full"
+          }`}
+          style={{ boxShadow: "0 30px 80px -20px oklch(0 0 0 / 0.7)" }}
+        >
+          <div className="flex items-center justify-between h-20 px-6 border-b border-border/60">
+            <Logo className="h-8 w-auto" />
+            <button
+              type="button"
+              onClick={() => setMobileOpen(false)}
+              aria-label="Zavřít menu"
+              className="inline-flex items-center justify-center h-10 w-10 rounded-lg text-foreground hover:bg-accent/60 transition-colors"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <nav className="flex flex-col px-6 py-8 gap-1 text-lg">
+            {[
+              { to: "/services", label: t.nav.services },
+              { to: "/projects", label: t.nav.work },
+              { to: "/pricing", label: t.nav.pricing },
+              { to: "/about", label: t.nav.about },
+              { to: "/contact", label: t.nav.contact },
+            ].map((item, idx) => (
+              <Link
+                key={item.to}
+                to={item.to}
+                onClick={() => setMobileOpen(false)}
+                className="group flex items-center justify-between py-4 border-b border-border/40 text-foreground/90 hover:text-primary transition-colors"
+                style={{
+                  animation: mobileOpen ? `fade-in 0.4s ease-out ${idx * 60}ms both` : undefined,
+                }}
+                activeProps={{ className: "is-active text-primary" }}
               >
-                {l}
-              </button>
-              {i < LANGS.length - 1 && <span className="text-border">|</span>}
+                <span className="font-medium tracking-tight">{item.label}</span>
+                <ChevronDown className="h-4 w-4 -rotate-90 opacity-50 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+              </Link>
+            ))}
+
+            <Link
+              to="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="btn-primary mt-8 justify-center w-full"
+            >
+              🚀 Získat nabídku
+            </Link>
+
+            {/* Language switch (mobile) */}
+            <div className="mt-8 flex items-center justify-center gap-1 text-xs font-medium">
+              {LANGS.map((l, i) => (
+                <div key={l} className="flex items-center">
+                  <button
+                    onClick={() => setLang(l)}
+                    className={`px-3 py-1.5 transition-colors ${
+                      lang === l ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {l}
+                  </button>
+                  {i < LANGS.length - 1 && <span className="text-border">|</span>}
+                </div>
+              ))}
             </div>
-          ))}
+          </nav>
         </div>
       </div>
     </header>
