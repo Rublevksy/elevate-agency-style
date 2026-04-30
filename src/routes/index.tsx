@@ -48,14 +48,6 @@ function Home() {
               {t.home.tag}
             </div>
 
-            {/* Mobile-only top CTA — visible without scrolling */}
-            <div className="lg:hidden mb-8">
-              <Link to="/contact" className="btn-primary group w-full justify-center">
-                {t.common.getQuoteEmoji}
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-            </div>
-
             <div className="mb-8 md:mb-10 flex justify-center lg:justify-start">
               <img
                 src={heroLogo}
