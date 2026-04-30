@@ -1,18 +1,20 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
-import { PROJECTS, ProjectVisual } from "@/lib/projects";
+import { ProjectVisual } from "@/lib/projects";
+import { useLocalizedProjects } from "@/lib/projects-i18n";
 import { SectionHeading } from "./SectionHeading";
 
 export function Portfolio() {
   const { t } = useT();
+  const projects = useLocalizedProjects();
 
   return (
     <section id="portfolio" className="py-32 md:py-40 border-t border-border">
       <div className="container-luxe">
         <SectionHeading eyebrow="04" title={t.portfolio.title} subtitle={t.portfolioPage.subtitleSection} />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {PROJECTS.map((project, i) => (
+          {projects.map((project, i) => (
             <article
               key={project.slug}
               className="reveal group relative overflow-hidden rounded-xl border border-border bg-surface flex flex-col transition-all duration-300 hover:border-primary/50 hover:shadow-[0_25px_70px_-25px_rgba(59,130,246,0.55)] hover:-translate-y-1"
