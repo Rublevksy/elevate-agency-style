@@ -24,7 +24,7 @@ export function Hero() {
           {/* Mobile-only top CTA — keeps the conversion above the fold */}
           <div className="md:hidden mb-8">
             <Link to="/contact" className="btn-primary group w-full justify-center">
-              🚀 Získat nabídku
+              {t.common.getQuoteEmoji}
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
