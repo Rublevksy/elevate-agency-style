@@ -244,12 +244,16 @@
     visibility: hidden;
     transform: translateY(8px);
     transition: opacity 200ms ease, transform 200ms ease, visibility 200ms;
+    z-index: 60;
+    pointer-events: none;
   }
   .nav-item:hover .nav-dropdown,
-  .nav-item:focus-within .nav-dropdown {
+  .nav-item:focus-within .nav-dropdown,
+  .nav-item.is-open .nav-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+    pointer-events: auto;
   }
 
   /* Shared page header padding for routes (account for fixed nav) */

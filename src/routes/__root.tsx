@@ -6,6 +6,7 @@ import { LangProvider } from "@/components/LangProvider";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { useReveal } from "@/hooks/use-reveal";
+import { useT } from "@/lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -68,8 +69,9 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function SiteShell() {
-  useReveal();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  useReveal(pathname);
+  const { t } = useT();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -107,7 +109,7 @@ function SiteShell() {
             to="/contact"
             className="btn-primary w-full justify-center pointer-events-auto shadow-[0_10px_30px_-10px_oklch(0.65_0.18_255/0.6)]"
           >
-            🚀 Získat nabídku
+            {t.common.getQuoteEmoji}
           </Link>
         </div>
       )}

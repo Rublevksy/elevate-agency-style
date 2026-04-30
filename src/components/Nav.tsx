@@ -212,7 +212,7 @@ export function Nav() {
                 onClick={() => setMobileOpen(false)}
                 className="btn-primary w-full justify-center"
               >
-                🚀 Získat nabídku
+                {t.common.getQuoteEmoji}
               </Link>
             </div>
           </div>
