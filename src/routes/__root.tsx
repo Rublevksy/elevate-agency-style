@@ -68,8 +68,8 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function SiteShell() {
+  useReveal();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
-  useReveal(pathname);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -97,10 +97,20 @@ function SiteShell() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <Nav />
-      <main key={pathname} className="flex-1 animate-fade-in">
+      <main key={pathname} className="flex-1 animate-fade-in pb-20 md:pb-0">
         <Outlet />
       </main>
       <Footer />
+      {pathname !== "/contact" && (
+        <div className="md:hidden fixed bottom-0 inset-x-0 z-40 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none">
+          <Link
+            to="/contact"
+            className="btn-primary w-full justify-center pointer-events-auto shadow-[0_10px_30px_-10px_oklch(0.65_0.18_255/0.6)]"
+          >
+            🚀 Získat nabídku
+          </Link>
+        </div>
+      )}
     </div>
   );
 }

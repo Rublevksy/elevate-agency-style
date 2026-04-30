@@ -1,20 +1,18 @@
 import { ArrowUpRight } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { useT } from "@/lib/i18n";
-import { ProjectVisual } from "@/lib/projects";
-import { useLocalizedProjects } from "@/lib/projects-i18n";
+import { PROJECTS, ProjectVisual } from "@/lib/projects";
 import { SectionHeading } from "./SectionHeading";
 
 export function Portfolio() {
   const { t } = useT();
-  const projects = useLocalizedProjects();
 
   return (
     <section id="portfolio" className="py-32 md:py-40 border-t border-border">
       <div className="container-luxe">
-        <SectionHeading eyebrow="04" title={t.portfolio.title} subtitle={t.portfolioPage.subtitleSection} />
+        <SectionHeading eyebrow="04" title={t.portfolio.title} subtitle="Reálné ukázky práce, problémů a výsledků" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, i) => (
+          {PROJECTS.map((project, i) => (
             <article
               key={project.slug}
               className="reveal group relative overflow-hidden rounded-xl border border-border bg-surface flex flex-col transition-all duration-300 hover:border-primary/50 hover:shadow-[0_25px_70px_-25px_rgba(59,130,246,0.55)] hover:-translate-y-1"
@@ -32,7 +30,7 @@ export function Portfolio() {
                 </div>
                 <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
                   <span className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-primary-foreground">
-                    {t.common.viewProject}
+                    Zobrazit projekt
                     <ArrowUpRight className="h-4 w-4" />
                   </span>
                 </div>
@@ -49,7 +47,7 @@ export function Portfolio() {
 
                 <div className="grid grid-cols-2 gap-5 pt-4 border-t border-border">
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">{t.common.work}</p>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">Práce</p>
                     <ul className="space-y-1">
                       {project.work.slice(0, 3).map((item) => (
                         <li key={item} className="text-xs text-foreground/80">{item}</li>
@@ -57,7 +55,7 @@ export function Portfolio() {
                     </ul>
                   </div>
                   <div>
-                    <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">{t.common.results}</p>
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-muted-foreground mb-2">Výsledky</p>
                     <ul className="space-y-1">
                       {project.results.slice(0, 3).map((result) => (
                         <li key={`${result.value}-${result.label}`} className="text-xs font-medium text-primary">
@@ -74,7 +72,7 @@ export function Portfolio() {
                     params={{ slug: project.slug }}
                     className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground hover:text-primary transition-colors group/btn"
                   >
-                    {t.common.details}
+                    Podrobnosti
                     <ArrowUpRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />
                   </Link>
                 </div>
