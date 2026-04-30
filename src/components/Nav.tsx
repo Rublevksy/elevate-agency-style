@@ -108,16 +108,16 @@ export function Nav() {
               {t.nav.pricing}
               <ChevronDown className="h-3.5 w-3.5 opacity-70" />
             </Link>
-            <div className="nav-dropdown absolute left-1/2 -translate-x-1/2 top-full pt-3">
+            <div className="nav-dropdown absolute left-1/2 -translate-x-1/2 top-full pt-4">
               <div
-                className="min-w-[200px] rounded-xl border border-border bg-popover/95 backdrop-blur-xl p-2 shadow-2xl"
+                className="min-w-[240px] rounded-xl border border-border bg-popover/95 backdrop-blur-xl p-3 shadow-2xl"
                 style={{ boxShadow: "0 30px 60px -20px oklch(0 0 0 / 0.6), 0 0 0 1px oklch(0.65 0.18 255 / 0.08) inset" }}
               >
                 {PRICING_LINKS.map((p) => (
                   <Link
                     key={p.to}
                     to={p.to}
-                    className="block rounded-lg px-3 py-2.5 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
+                    className="block rounded-lg px-4 py-3 text-sm text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors"
                   >
                     {p.labels[lang]}
                   </Link>
