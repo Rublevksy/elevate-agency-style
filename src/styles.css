@@ -243,9 +243,18 @@
     opacity: 0;
     visibility: hidden;
     transform: translateY(8px);
-    transition: opacity 200ms ease, transform 200ms ease, visibility 200ms;
+    transition: opacity 220ms ease, transform 220ms ease, visibility 220ms;
     z-index: 60;
     pointer-events: none;
+  }
+  /* Invisible bridge to keep dropdown open while moving the cursor */
+  .nav-dropdown::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -12px;
+    height: 16px;
   }
   .nav-item:hover .nav-dropdown,
   .nav-item:focus-within .nav-dropdown,
