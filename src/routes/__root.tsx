@@ -106,6 +106,18 @@ function SiteShell() {
   );
 }
 
+function FloatingCta() {
+  const [show, setShow] = useEffect as never;
+  return null;
+}
+
+// Floating mobile CTA: only visible after scrolling past the hero (>=window height)
+function FloatingCtaImpl() {
+  const [visible, setVisible] = (require("react") as typeof import("react")).useState(false);
+  // not used
+  return visible ? null : null;
+}
+
 function RootComponent() {
   return (
     <LangProvider>
