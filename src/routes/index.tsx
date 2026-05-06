@@ -138,6 +138,9 @@ function Home() {
         </div>
       </section>
 
+      {/* TECH STACK */}
+      <TechStack />
+
       {/* PORTFOLIO — only 3 */}
       <section className="py-28 md:py-36 border-t border-border">
         <div className="container-luxe">
@@ -190,15 +193,15 @@ function Home() {
             <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-primary/20 blur-[140px]" />
             <div className="absolute inset-0 grid-bg opacity-20 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]" />
             <div className="relative">
-              <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight">Máš projekt?</h2>
+              <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight">{t.cta.title}</h2>
               <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-xl mx-auto">
-                Navrhneme ti řešení zdarma.
+                {t.cta.subtitle}
               </p>
               <p className="text-sm uppercase tracking-[0.2em] text-primary mb-12">
-                Odpovíme do 24 hodin
+                {t.trust.response}
               </p>
               <Link to="/contact" className="btn-primary group mx-auto inline-flex">
-                Získat nabídku
+                {t.hero.cta1}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
