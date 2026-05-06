@@ -27,6 +27,7 @@ function ContactPage() {
           <h1 className="text-5xl md:text-7xl font-bold text-foreground tracking-tight max-w-3xl">
             {t.contact.subtitle}
           </h1>
+          <div className="mt-6"><CapacityBadge /></div>
         </div>
       </section>
       <Contact />
