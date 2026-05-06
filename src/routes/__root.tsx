@@ -9,6 +9,7 @@ import { useReveal } from "@/hooks/use-reveal";
 import { WhatsAppFab } from "@/components/WhatsAppFab";
 import { CookieBanner } from "@/components/CookieBanner";
 import { ExitIntentModal } from "@/components/ExitIntentModal";
+import { useT } from "@/lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -142,8 +143,7 @@ function FloatingCta() {
 }
 
 function FloatingCtaLabel() {
-  // Lazy import to avoid coupling order; uses context
-  const { t } = (typeof window !== "undefined" ? require("@/lib/i18n").useT() : { t: { hero: { cta1: "Get a quote" } } });
+  const { t } = useT();
   return <span>{t.hero.cta1}</span>;
 }
 
