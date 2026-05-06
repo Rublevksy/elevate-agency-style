@@ -129,7 +129,7 @@ function SiteShell() {
       </main>
       <Footer />
       {pathname !== "/contact" && <FloatingCta />}
-      <WhatsAppFab />
+      <ContactWidget />
       <ExitIntentModal />
       <CookieBanner />
     </div>
