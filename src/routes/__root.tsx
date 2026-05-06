@@ -1,5 +1,5 @@
 import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 import appCss from "../styles.css?url";
 import { LangProvider } from "@/components/LangProvider";
@@ -101,16 +101,36 @@ function SiteShell() {
         <Outlet />
       </main>
       <Footer />
-      {pathname !== "/contact" && pathname !== "/" && (
-        <div className="md:hidden fixed bottom-0 inset-x-0 z-40 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none">
-          <Link
-            to="/contact"
-            className="btn-primary w-full justify-center pointer-events-auto shadow-[0_10px_30px_-10px_oklch(0.65_0.18_255/0.6)]"
-          >
-            🚀 Získat nabídku
-          </Link>
-        </div>
-      )}
+      {pathname !== "/contact" && <FloatingCta />}
+    </div>
+  );
+}
+
+// Floating mobile CTA: only visible after scrolling past the hero (>=window height).
+// Hidden on /contact. On /, only appears once user scrolls past the hero — so it
+// never overlaps with the in-hero CTA at the top.
+function FloatingCta() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const onScroll = () => {
+      // Show after the user has scrolled roughly past the first viewport
+      setVisible(window.scrollY > Math.max(window.innerHeight * 0.6, 400));
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (!visible) return null;
+  return (
+    <div className="md:hidden fixed bottom-0 inset-x-0 z-40 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none">
+      <Link
+        to="/contact"
+        className="btn-primary w-full justify-center pointer-events-auto shadow-[0_10px_30px_-10px_oklch(0.65_0.18_255/0.6)]"
+      >
+        🚀 Získat nabídku
+      </Link>
     </div>
   );
 }
