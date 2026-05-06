@@ -123,6 +123,7 @@ function SiteShell() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <TopProgressBar />
       <Nav />
       <main key={pathname} className="flex-1 animate-fade-in pb-20 md:pb-0">
         <Outlet />
