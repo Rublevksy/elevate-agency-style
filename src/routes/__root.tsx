@@ -135,10 +135,16 @@ function FloatingCta() {
         to="/contact"
         className="btn-primary w-full justify-center pointer-events-auto shadow-[0_10px_30px_-10px_oklch(0.65_0.18_255/0.6)]"
       >
-        🚀 Získat nabídku
+        🚀 <FloatingCtaLabel />
       </Link>
     </div>
   );
+}
+
+function FloatingCtaLabel() {
+  // Lazy import to avoid coupling order; uses context
+  const { t } = (typeof window !== "undefined" ? require("@/lib/i18n").useT() : { t: { hero: { cta1: "Get a quote" } } });
+  return <span>{t.hero.cta1}</span>;
 }
 
 function RootComponent() {
