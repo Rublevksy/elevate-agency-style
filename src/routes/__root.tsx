@@ -6,6 +6,9 @@ import { LangProvider } from "@/components/LangProvider";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { useReveal } from "@/hooks/use-reveal";
+import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { CookieBanner } from "@/components/CookieBanner";
+import { ExitIntentModal } from "@/components/ExitIntentModal";
 
 function NotFoundComponent() {
   return (
@@ -102,6 +105,9 @@ function SiteShell() {
       </main>
       <Footer />
       {pathname !== "/contact" && <FloatingCta />}
+      <WhatsAppFab />
+      <ExitIntentModal />
+      <CookieBanner />
     </div>
   );
 }
