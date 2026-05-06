@@ -6,10 +6,27 @@ import { LangProvider } from "@/components/LangProvider";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { useReveal } from "@/hooks/use-reveal";
-import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { ContactWidget } from "@/components/ContactWidget";
 import { CookieBanner } from "@/components/CookieBanner";
 import { ExitIntentModal } from "@/components/ExitIntentModal";
+import { TopProgressBar } from "@/components/TopProgressBar";
 import { useT } from "@/lib/i18n";
+
+const STRUCTURED_DATA = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "ELEVATE",
+  description: "Digitální agentura. Weby, e-shopy a branding.",
+  url: "https://elevateit.cz",
+  email: "developer@elevateit.cz",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Praha",
+    addressCountry: "CZ",
+  },
+  sameAs: ["https://www.instagram.com/elevateit.cz/"],
+  serviceType: ["Web design", "E-commerce", "Branding"],
+});
 
 function NotFoundComponent() {
   return (
