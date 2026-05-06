@@ -6,10 +6,27 @@ import { LangProvider } from "@/components/LangProvider";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { useReveal } from "@/hooks/use-reveal";
-import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { ContactWidget } from "@/components/ContactWidget";
 import { CookieBanner } from "@/components/CookieBanner";
 import { ExitIntentModal } from "@/components/ExitIntentModal";
+import { TopProgressBar } from "@/components/TopProgressBar";
 import { useT } from "@/lib/i18n";
+
+const STRUCTURED_DATA = JSON.stringify({
+  "@context": "https://schema.org",
+  "@type": "LocalBusiness",
+  name: "ELEVATE",
+  description: "Digitální agentura. Weby, e-shopy a branding.",
+  url: "https://elevateit.cz",
+  email: "developer@elevateit.cz",
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Praha",
+    addressCountry: "CZ",
+  },
+  sameAs: ["https://www.instagram.com/elevateit.cz/"],
+  serviceType: ["Web design", "E-commerce", "Branding"],
+});
 
 function NotFoundComponent() {
   return (
@@ -51,6 +68,12 @@ export const Route = createRootRoute({
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c8aa125-3a10-46cb-a0b7-54bd47b7fa1a/id-preview-0bb11058--8909fd69-7455-4ab1-9c3a-d6cf0cfb51c8.lovable.app-1777372763384.png" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: STRUCTURED_DATA,
+      },
+    ],
   }),
   shellComponent: RootShell,
   component: RootComponent,
@@ -100,13 +123,14 @@ function SiteShell() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
+      <TopProgressBar />
       <Nav />
       <main key={pathname} className="flex-1 animate-fade-in pb-20 md:pb-0">
         <Outlet />
       </main>
       <Footer />
       {pathname !== "/contact" && <FloatingCta />}
-      <WhatsAppFab />
+      <ContactWidget />
       <ExitIntentModal />
       <CookieBanner />
     </div>

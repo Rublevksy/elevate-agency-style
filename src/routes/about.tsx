@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sparkles, MessageCircle, Award, Users, Clock, Zap, ShieldCheck } from "lucide-react";
 import { Guarantee } from "@/components/sections/Guarantee";
 import { CtaBanner } from "@/components/sections/CtaBanner";
+import { Counter } from "@/components/Counter";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -16,9 +17,9 @@ export const Route = createFileRoute("/about")({
 });
 
 const STATS = [
-  { icon: Award, n: "4+", l: "let zkušeností" },
-  { icon: Users, n: "50+", l: "realizovaných projektů" },
-  { icon: Sparkles, n: "12+", l: "oborů a odvětví" },
+  { icon: Award, n: 4, suffix: "+", l: "let zkušeností" },
+  { icon: Users, n: 50, suffix: "+", l: "realizovaných projektů" },
+  { icon: Sparkles, n: 12, suffix: "+", l: "oborů a odvětví" },
 ];
 
 const VALUES = [
@@ -70,7 +71,9 @@ function AboutPage() {
                   <div className="h-11 w-11 rounded-lg bg-primary/10 border border-primary/20 grid place-items-center mb-6">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>
-                  <div className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">{s.n}</div>
+                  <div className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+                    <Counter end={s.n} suffix={s.suffix} />
+                  </div>
                   <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest">{s.l}</p>
                 </div>
               );

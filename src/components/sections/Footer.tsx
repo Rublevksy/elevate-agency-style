@@ -1,10 +1,23 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Mail, MapPin } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { Instagram, Mail, MapPin, Send } from "lucide-react";
+import { useT, type Lang } from "@/lib/i18n";
 import { Logo } from "@/components/Logo";
 
+const IG_LABEL: Record<Lang, string> = {
+  CZ: "Sledujte nás na Instagramu",
+  EN: "Follow us on Instagram",
+  RU: "Мы в Instagram",
+  UA: "Ми в Instagram",
+};
+const TG_LABEL: Record<Lang, string> = {
+  CZ: "Napište nám na Telegramu",
+  EN: "Message us on Telegram",
+  RU: "Напишите нам в Telegram",
+  UA: "Напишіть нам у Telegram",
+};
+
 export function Footer() {
-  const { t } = useT();
+  const { t, lang } = useT();
   return (
     <footer className="border-t border-border bg-background relative overflow-hidden">
       <div className="container-luxe py-24 grid grid-cols-1 md:grid-cols-4 gap-14 relative">
@@ -38,18 +51,30 @@ export function Footer() {
               <MapPin className="h-4 w-4 text-primary" strokeWidth={1.5} />
               <span>Praha, CZ</span>
             </li>
-            <li>
+          </ul>
+          <div className="mt-5">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">{t.footer.follow}</p>
+            <div className="flex items-center gap-2">
               <a
                 href="https://www.instagram.com/elevateit.cz/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 hover:text-primary transition-colors story-link"
+                aria-label={IG_LABEL[lang]}
+                className="grid place-items-center h-9 w-9 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
               >
-                <Instagram className="h-4 w-4 text-primary" strokeWidth={1.5} />
-                <span>@elevateit.cz</span>
+                <Instagram className="h-[18px] w-[18px]" strokeWidth={1.6} />
               </a>
-            </li>
-          </ul>
+              <a
+                href="https://t.me/elevateit"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={TG_LABEL[lang]}
+                className="grid place-items-center h-9 w-9 rounded-lg border border-border text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
+              >
+                <Send className="h-[18px] w-[18px]" strokeWidth={1.6} />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
       <div className="border-t border-border relative">

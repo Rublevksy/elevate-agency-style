@@ -4,6 +4,9 @@ import { Logo } from "@/components/Logo";
 import { Hero3DCube } from "@/components/Hero3DCube";
 import { PROJECTS, ProjectVisual } from "@/lib/projects";
 import { TechStack } from "@/components/sections/TechStack";
+import { IndustryStrip } from "@/components/sections/IndustryStrip";
+import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
+import { InstagramStrip } from "@/components/sections/InstagramStrip";
 import { useT } from "@/lib/i18n";
 import heroLogo from "@/assets/elevate-logo.png";
 
@@ -105,6 +108,9 @@ function Home() {
         </div>
       </section>
 
+      {/* INDUSTRY STRIP */}
+      <IndustryStrip />
+
       {/* SERVICES — only 3 */}
       <section className="py-28 md:py-36 border-t border-border">
         <div className="container-luxe">
@@ -140,6 +146,9 @@ function Home() {
 
       {/* TECH STACK */}
       <TechStack />
+
+      {/* HOW WE WORK */}
+      <ProcessTimeline />
 
       {/* PORTFOLIO — only 3 */}
       <section className="py-28 md:py-36 border-t border-border">
@@ -185,6 +194,9 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* INSTAGRAM */}
+      <InstagramStrip />
 
       {/* CTA */}
       <section className="py-28 md:py-36 border-t border-border">
