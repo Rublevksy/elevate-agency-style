@@ -19,6 +19,12 @@ const BUDGET_STEP = 5000;
 const formatCZK = (n: number) =>
   new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(n) + " Kč";
 
+function makeChallenge() {
+  const a = Math.floor(Math.random() * 8) + 2;
+  const b = Math.floor(Math.random() * 8) + 2;
+  return { a, b };
+}
+
 export function Contact() {
   const { t, lang } = useT();
   const [submitted, setSubmitted] = useState(false);
@@ -26,7 +32,9 @@ export function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [service, setService] = useState<string>("");
   const [budget, setBudget] = useState<number>(35000);
-  const [captcha, setCaptcha] = useState(false);
+  const [challenge, setChallenge] = useState(() => makeChallenge());
+  const [challengeAnswer, setChallengeAnswer] = useState("");
+  const [hp, setHp] = useState(""); // honeypot
 
   const schema = z.object({
     name: z.string().trim().min(1, "Zadejte jméno").max(100),
@@ -46,9 +54,17 @@ export function Contact() {
     if (!result.success) {
       for (const issue of result.error.issues) errs[issue.path[0] as string] = issue.message;
     }
-    if (!captcha) errs.captcha = "Potvrďte, že nejste robot";
+    if (hp) {
+      // Bot detected via honeypot — silently drop
+      return;
+    }
+    if (Number(challengeAnswer) !== challenge.a + challenge.b) {
+      errs.captcha = "Nesprávná odpověď, zkuste to znovu";
+    }
     if (Object.keys(errs).length) {
       setErrors(errs);
+      setChallenge(makeChallenge());
+      setChallengeAnswer("");
       return;
     }
     setErrors({});
@@ -68,8 +84,10 @@ export function Contact() {
       formEl.reset();
       setService("");
       setBudget(35000);
-      setCaptcha(false);
+      setChallenge(makeChallenge());
+      setChallengeAnswer("");
       setSubmitted(true);
+      toast.success("Zpráva byla odeslána. Ozveme se do 24 hodin.");
     } catch (err) {
       console.error(err);
       toast.error("Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.");
