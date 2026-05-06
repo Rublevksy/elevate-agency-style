@@ -4,6 +4,9 @@ import { Logo } from "@/components/Logo";
 import { Hero3DCube } from "@/components/Hero3DCube";
 import { PROJECTS, ProjectVisual } from "@/lib/projects";
 import { TechStack } from "@/components/sections/TechStack";
+import { IndustryStrip } from "@/components/sections/IndustryStrip";
+import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
+import { InstagramStrip } from "@/components/sections/InstagramStrip";
 import { useT } from "@/lib/i18n";
 import heroLogo from "@/assets/elevate-logo.png";
 
