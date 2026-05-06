@@ -42,7 +42,7 @@ export function Portfolio() {
                     <h3 className="text-xl md:text-2xl font-bold text-foreground mb-2">{project.name}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{project.description}</p>
                   </div>
-                  <span className="shrink-0 text-sm font-semibold text-primary">{project.result}</span>
+                  <span className="pulse-once shrink-0 text-sm font-semibold text-primary inline-block">{project.result}</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-5 pt-4 border-t border-border">
