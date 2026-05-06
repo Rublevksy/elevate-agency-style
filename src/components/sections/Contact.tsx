@@ -19,6 +19,12 @@ const BUDGET_STEP = 5000;
 const formatCZK = (n: number) =>
   new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(n) + " Kč";
 
+function makeChallenge() {
+  const a = Math.floor(Math.random() * 8) + 2;
+  const b = Math.floor(Math.random() * 8) + 2;
+  return { a, b };
+}
+
 export function Contact() {
   const { t, lang } = useT();
   const [submitted, setSubmitted] = useState(false);
@@ -26,7 +32,9 @@ export function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [service, setService] = useState<string>("");
   const [budget, setBudget] = useState<number>(35000);
-  const [captcha, setCaptcha] = useState(false);
+  const [challenge, setChallenge] = useState(() => makeChallenge());
+  const [challengeAnswer, setChallengeAnswer] = useState("");
+  const [hp, setHp] = useState(""); // honeypot
 
   const schema = z.object({
     name: z.string().trim().min(1, "Zadejte jméno").max(100),
@@ -46,9 +54,17 @@ export function Contact() {
     if (!result.success) {
       for (const issue of result.error.issues) errs[issue.path[0] as string] = issue.message;
     }
-    if (!captcha) errs.captcha = "Potvrďte, že nejste robot";
+    if (hp) {
+      // Bot detected via honeypot — silently drop
+      return;
+    }
+    if (Number(challengeAnswer) !== challenge.a + challenge.b) {
+      errs.captcha = "Nesprávná odpověď, zkuste to znovu";
+    }
     if (Object.keys(errs).length) {
       setErrors(errs);
+      setChallenge(makeChallenge());
+      setChallengeAnswer("");
       return;
     }
     setErrors({});
@@ -68,8 +84,10 @@ export function Contact() {
       formEl.reset();
       setService("");
       setBudget(35000);
-      setCaptcha(false);
+      setChallenge(makeChallenge());
+      setChallengeAnswer("");
       setSubmitted(true);
+      toast.success("Zpráva byla odeslána. Ozveme se do 24 hodin.");
     } catch (err) {
       console.error(err);
       toast.error("Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.");
@@ -230,7 +248,7 @@ export function Contact() {
                       {formatCZK(budget)}
                     </span>
                   </div>
-                  <div className="relative">
+                  <div className="relative h-11">
                     <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 rounded-full bg-border overflow-hidden pointer-events-none">
                       <div
                         className="h-full bg-gradient-to-r from-primary to-primary/60 transition-all"
@@ -245,12 +263,15 @@ export function Contact() {
                       step={BUDGET_STEP}
                       value={budget}
                       onChange={(e) => setBudget(Number(e.target.value))}
+                      aria-label="Orientační rozpočet"
                       className="range-pro relative w-full"
                     />
                   </div>
-                  <div className="flex justify-between mt-3 text-xs text-muted-foreground tabular-nums">
-                    <span>{formatCZK(BUDGET_MIN)}</span>
-                    <span>{formatCZK(BUDGET_MAX)}+</span>
+                  <div className="flex justify-between mt-2 text-[11px] text-muted-foreground tabular-nums">
+                    <span>10k</span>
+                    <span>35k</span>
+                    <span>60k</span>
+                    <span>100k+</span>
                   </div>
                 </div>
               </div>
@@ -281,32 +302,33 @@ export function Contact() {
                 </div>
               </div>
 
-              {/* Captcha */}
+              {/* Honeypot — hidden from users, bots fill it */}
+              <input
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={hp}
+                onChange={(e) => setHp(e.target.value)}
+                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                aria-hidden="true"
+              />
+
+              {/* Math challenge — lightweight bot protection */}
               <div>
-                <label
-                  className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                    captcha
-                      ? "border-primary bg-primary/5"
-                      : "border-border bg-background/40 hover:border-primary/40"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={captcha}
-                    onChange={(e) => setCaptcha(e.target.checked)}
-                    className="sr-only"
-                  />
-                  <span
-                    className={`flex h-6 w-6 items-center justify-center rounded-md border-2 transition-all ${
-                      captcha
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-background"
-                    }`}
-                  >
-                    {captcha && <Check className="h-4 w-4" />}
+                <label className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl border border-border bg-background/40">
+                  <span className="flex items-center gap-2 text-sm text-foreground flex-1">
+                    <Shield className="h-5 w-5 text-primary" />
+                    Ověření: kolik je <b className="tabular-nums">{challenge.a} + {challenge.b}</b>?
                   </span>
-                  <span className="text-sm text-foreground flex-1">Nejsem robot</span>
-                  <Shield className="h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={challengeAnswer}
+                    onChange={(e) => setChallengeAnswer(e.target.value)}
+                    placeholder="?"
+                    className="field-input-pro sm:w-28"
+                    aria-label="Odpověď na ověřovací otázku"
+                  />
                 </label>
                 {errors.captcha && (
                   <p className="text-xs text-destructive mt-2">{errors.captcha}</p>

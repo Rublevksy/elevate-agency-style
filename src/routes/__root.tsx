@@ -101,7 +101,7 @@ function SiteShell() {
         <Outlet />
       </main>
       <Footer />
-      {pathname !== "/contact" && (
+      {pathname !== "/contact" && pathname !== "/" && (
         <div className="md:hidden fixed bottom-0 inset-x-0 z-40 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none">
           <Link
             to="/contact"

@@ -1,7 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sparkles, MessageCircle, Award, Users, Clock, Zap, ShieldCheck } from "lucide-react";
-import { Results } from "@/components/sections/Results";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { Guarantee } from "@/components/sections/Guarantee";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 
@@ -163,9 +161,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <Results />
       <Guarantee />
-      <Testimonials />
       <CtaBanner />
     </>
   );

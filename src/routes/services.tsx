@@ -42,13 +42,21 @@ function EshopPreview() {
 function BrandingPreview() {
   return (
     <div className="grid grid-cols-3 gap-2">
-      <div className="aspect-square rounded-lg border border-border bg-background grid place-items-center text-3xl font-bold tracking-tighter text-foreground">N</div>
-      <div className="aspect-square rounded-lg border border-border bg-foreground grid place-items-center text-3xl text-primary">◆</div>
-      <div className="aspect-square rounded-lg border border-border bg-gradient-to-br from-primary/30 to-transparent grid place-items-center text-xl italic font-bold text-foreground" style={{ fontFamily: "Georgia, serif" }}>Pa</div>
       <div className="aspect-square rounded-lg border border-border bg-background grid place-items-center">
         <div className="h-10 w-10 rounded-md bg-gradient-to-br from-primary to-primary/40" />
       </div>
-      <div className="aspect-square rounded-lg border border-border bg-surface/40 grid place-items-center text-xs font-mono text-muted-foreground">CORVEX</div>
+      <div className="aspect-square rounded-lg border border-border bg-foreground grid place-items-center">
+        <div className="h-8 w-8 rotate-45 bg-primary/80" />
+      </div>
+      <div className="aspect-square rounded-lg border border-border bg-gradient-to-br from-primary/30 to-transparent grid place-items-center">
+        <div className="h-10 w-10 rounded-full bg-foreground/10 border border-foreground/20" />
+      </div>
+      <div className="aspect-square rounded-lg border border-border bg-background grid place-items-center">
+        <div className="h-10 w-10 rounded-md bg-gradient-to-br from-primary to-primary/40" />
+      </div>
+      <div className="aspect-square rounded-lg border border-border bg-surface/40 grid place-items-center">
+        <div className="h-2 w-10 rounded-full bg-primary/60" />
+      </div>
       <div className="aspect-square rounded-lg border border-border bg-background grid place-items-center">
         <div className="h-8 w-8 rounded-full border-2 border-primary" />
       </div>
