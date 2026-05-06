@@ -16,12 +16,16 @@ function readInitial(): Lang {
 }
 
 export function LangProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>(readInitial);
+  // Always start with CZ on first render to match SSR; hydrate from
+  // localStorage in useEffect after mount to avoid hydration mismatches.
+  const [lang, setLangState] = useState<Lang>("CZ");
 
-  // Hydrate from localStorage after mount (covers SSR initial render)
   useEffect(() => {
     const initial = readInitial();
     if (initial !== lang) setLangState(initial);
+    if (typeof document !== "undefined") {
+      document.documentElement.lang = initial.toLowerCase();
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
