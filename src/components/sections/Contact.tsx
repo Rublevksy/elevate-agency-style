@@ -230,7 +230,7 @@ export function Contact() {
                       {formatCZK(budget)}
                     </span>
                   </div>
-                  <div className="relative">
+                  <div className="relative h-11">
                     <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 rounded-full bg-border overflow-hidden pointer-events-none">
                       <div
                         className="h-full bg-gradient-to-r from-primary to-primary/60 transition-all"
@@ -245,12 +245,15 @@ export function Contact() {
                       step={BUDGET_STEP}
                       value={budget}
                       onChange={(e) => setBudget(Number(e.target.value))}
+                      aria-label="Orientační rozpočet"
                       className="range-pro relative w-full"
                     />
                   </div>
-                  <div className="flex justify-between mt-3 text-xs text-muted-foreground tabular-nums">
-                    <span>{formatCZK(BUDGET_MIN)}</span>
-                    <span>{formatCZK(BUDGET_MAX)}+</span>
+                  <div className="flex justify-between mt-2 text-[11px] text-muted-foreground tabular-nums">
+                    <span>10k</span>
+                    <span>35k</span>
+                    <span>60k</span>
+                    <span>100k+</span>
                   </div>
                 </div>
               </div>
