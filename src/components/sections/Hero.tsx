@@ -54,7 +54,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="reveal is-visible relative" style={{ animationDelay: "0.15s" }}>
+        <div className="reveal is-visible relative hidden md:block motion-reduce:hidden" style={{ animationDelay: "0.15s" }}>
           <Hero3D />
         </div>
       </div>
