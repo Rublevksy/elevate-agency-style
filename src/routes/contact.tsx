@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Contact } from "@/components/sections/Contact";
 import { Guarantee } from "@/components/sections/Guarantee";
+import { CapacityBadge } from "@/components/CapacityBadge";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/contact")({
@@ -26,6 +27,7 @@ function ContactPage() {
           <h1 className="text-5xl md:text-7xl font-bold text-foreground tracking-tight max-w-3xl">
             {t.contact.subtitle}
           </h1>
+          <div className="mt-6"><CapacityBadge /></div>
         </div>
       </section>
       <Contact />

@@ -6,6 +6,10 @@ import { LangProvider } from "@/components/LangProvider";
 import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { useReveal } from "@/hooks/use-reveal";
+import { WhatsAppFab } from "@/components/WhatsAppFab";
+import { CookieBanner } from "@/components/CookieBanner";
+import { ExitIntentModal } from "@/components/ExitIntentModal";
+import { useT } from "@/lib/i18n";
 
 function NotFoundComponent() {
   return (
@@ -102,6 +106,9 @@ function SiteShell() {
       </main>
       <Footer />
       {pathname !== "/contact" && <FloatingCta />}
+      <WhatsAppFab />
+      <ExitIntentModal />
+      <CookieBanner />
     </div>
   );
 }
@@ -129,10 +136,15 @@ function FloatingCta() {
         to="/contact"
         className="btn-primary w-full justify-center pointer-events-auto shadow-[0_10px_30px_-10px_oklch(0.65_0.18_255/0.6)]"
       >
-        🚀 Získat nabídku
+        🚀 <FloatingCtaLabel />
       </Link>
     </div>
   );
+}
+
+function FloatingCtaLabel() {
+  const { t } = useT();
+  return <span>{t.hero.cta1}</span>;
 }
 
 function RootComponent() {

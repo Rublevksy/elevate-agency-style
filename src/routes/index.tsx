@@ -3,6 +3,8 @@ import { ArrowRight, ArrowUpRight, Globe, ShoppingBag, Sparkles } from "lucide-r
 import { Logo } from "@/components/Logo";
 import { Hero3DCube } from "@/components/Hero3DCube";
 import { PROJECTS, ProjectVisual } from "@/lib/projects";
+import { TechStack } from "@/components/sections/TechStack";
+import { useT } from "@/lib/i18n";
 import heroLogo from "@/assets/elevate-logo.png";
 
 export const Route = createFileRoute("/")({
@@ -39,6 +41,7 @@ const SERVICES = [
 ];
 
 function Home() {
+  const { t } = useT();
   const featured = PROJECTS.slice(0, 3);
 
   return (
@@ -55,13 +58,13 @@ function Home() {
           <div className="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-10">
               <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Digitální agentura
+              {t.hero.tag}
             </div>
 
             <div className="mb-10 flex justify-center lg:justify-start">
               <img
                 src={heroLogo}
-                alt="ELEVATE"
+                alt="ELEVATE logo"
                 width={929}
                 height={202}
                 decoding="async"
@@ -71,28 +74,28 @@ function Home() {
               />
             </div>
             <p className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-6">
-              Tvoříme weby, <span className="text-primary">které vydělávají.</span>
+              {t.hero.title1} <span className="text-primary">{t.hero.title2}</span>
             </p>
             <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
-              Pomáháme firmám získávat klienty online.
+              {t.hero.subtitle}
             </p>
 
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8">
               <Link to="/contact" className="btn-primary group">
-                Získat nabídku
+                {t.hero.cta1}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link to="/projects" className="btn-outline">
-                Naše práce
+                {t.hero.cta2}
               </Link>
             </div>
 
             <p className="text-xs md:text-sm uppercase tracking-[0.18em] text-muted-foreground">
-              <span className="text-foreground font-medium">4+ let</span> zkušeností
+              <span className="text-foreground font-medium">{t.trust.years}</span>
               <span className="mx-2 text-primary">•</span>
-              <span className="text-foreground font-medium">50+</span> projektů
+              <span className="text-foreground font-medium">{t.trust.projects}</span>
               <span className="mx-2 text-primary">•</span>
-              Odpověď do <span className="text-foreground font-medium">24 hodin</span>
+              {t.trust.response}
             </p>
           </div>
 
@@ -134,6 +137,9 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* TECH STACK */}
+      <TechStack />
 
       {/* PORTFOLIO — only 3 */}
       <section className="py-28 md:py-36 border-t border-border">
@@ -187,15 +193,15 @@ function Home() {
             <div className="absolute -top-32 left-1/2 -translate-x-1/2 h-72 w-72 rounded-full bg-primary/20 blur-[140px]" />
             <div className="absolute inset-0 grid-bg opacity-20 [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]" />
             <div className="relative">
-              <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight">Máš projekt?</h2>
+              <h2 className="text-4xl md:text-6xl font-bold text-foreground mb-5 tracking-tight">{t.cta.title}</h2>
               <p className="text-lg md:text-xl text-muted-foreground mb-4 max-w-xl mx-auto">
-                Navrhneme ti řešení zdarma.
+                {t.cta.subtitle}
               </p>
               <p className="text-sm uppercase tracking-[0.2em] text-primary mb-12">
-                Odpovíme do 24 hodin
+                {t.trust.response}
               </p>
               <Link to="/contact" className="btn-primary group mx-auto inline-flex">
-                Získat nabídku
+                {t.hero.cta1}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
