@@ -147,6 +147,9 @@ function Home() {
       {/* TECH STACK */}
       <TechStack />
 
+      {/* HOW WE WORK */}
+      <ProcessTimeline />
+
       {/* PORTFOLIO — only 3 */}
       <section className="py-28 md:py-36 border-t border-border">
         <div className="container-luxe">
