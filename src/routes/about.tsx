@@ -71,7 +71,9 @@ function AboutPage() {
                   <div className="h-11 w-11 rounded-lg bg-primary/10 border border-primary/20 grid place-items-center mb-6">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>
-                  <div className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">{s.n}</div>
+                  <div className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
+                    <Counter end={s.n} suffix={s.suffix} />
+                  </div>
                   <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest">{s.l}</p>
                 </div>
               );
