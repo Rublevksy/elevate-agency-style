@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sparkles, MessageCircle, Award, Users, Clock, Zap, ShieldCheck } from "lucide-react";
 import { Guarantee } from "@/components/sections/Guarantee";
 import { CtaBanner } from "@/components/sections/CtaBanner";
+import { Counter } from "@/components/Counter";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
