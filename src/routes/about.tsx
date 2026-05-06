@@ -17,9 +17,9 @@ export const Route = createFileRoute("/about")({
 });
 
 const STATS = [
-  { icon: Award, n: "4+", l: "let zkušeností" },
-  { icon: Users, n: "50+", l: "realizovaných projektů" },
-  { icon: Sparkles, n: "12+", l: "oborů a odvětví" },
+  { icon: Award, n: 4, suffix: "+", l: "let zkušeností" },
+  { icon: Users, n: 50, suffix: "+", l: "realizovaných projektů" },
+  { icon: Sparkles, n: 12, suffix: "+", l: "oborů a odvětví" },
 ];
 
 const VALUES = [
