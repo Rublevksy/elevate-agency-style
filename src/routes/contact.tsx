@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Contact } from "@/components/sections/Contact";
 import { Guarantee } from "@/components/sections/Guarantee";
+import { CapacityBadge } from "@/components/CapacityBadge";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/contact")({
