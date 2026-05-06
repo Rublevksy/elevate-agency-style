@@ -195,6 +195,9 @@ function Home() {
         </div>
       </section>
 
+      {/* INSTAGRAM */}
+      <InstagramStrip />
+
       {/* CTA */}
       <section className="py-28 md:py-36 border-t border-border">
         <div className="container-luxe">
