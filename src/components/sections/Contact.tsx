@@ -302,32 +302,33 @@ export function Contact() {
                 </div>
               </div>
 
-              {/* Captcha */}
+              {/* Honeypot — hidden from users, bots fill it */}
+              <input
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={hp}
+                onChange={(e) => setHp(e.target.value)}
+                className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                aria-hidden="true"
+              />
+
+              {/* Math challenge — lightweight bot protection */}
               <div>
-                <label
-                  className={`flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-all ${
-                    captcha
-                      ? "border-primary bg-primary/5"
-                      : "border-border bg-background/40 hover:border-primary/40"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={captcha}
-                    onChange={(e) => setCaptcha(e.target.checked)}
-                    className="sr-only"
-                  />
-                  <span
-                    className={`flex h-6 w-6 items-center justify-center rounded-md border-2 transition-all ${
-                      captcha
-                        ? "border-primary bg-primary text-primary-foreground"
-                        : "border-border bg-background"
-                    }`}
-                  >
-                    {captcha && <Check className="h-4 w-4" />}
+                <label className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl border border-border bg-background/40">
+                  <span className="flex items-center gap-2 text-sm text-foreground flex-1">
+                    <Shield className="h-5 w-5 text-primary" />
+                    Ověření: kolik je <b className="tabular-nums">{challenge.a} + {challenge.b}</b>?
                   </span>
-                  <span className="text-sm text-foreground flex-1">Nejsem robot</span>
-                  <Shield className="h-5 w-5 text-muted-foreground" />
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    value={challengeAnswer}
+                    onChange={(e) => setChallengeAnswer(e.target.value)}
+                    placeholder="?"
+                    className="field-input-pro sm:w-28"
+                    aria-label="Odpověď na ověřovací otázku"
+                  />
                 </label>
                 {errors.captcha && (
                   <p className="text-xs text-destructive mt-2">{errors.captcha}</p>
