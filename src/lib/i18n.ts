@@ -152,11 +152,7 @@ export const translations = {
     },
     testimonials: {
       title: "Reference",
-      items: [
-        { q: "Profesionální přístup a rychlá komunikace.", a: "Jan Novák", r: "CEO, TechCo" },
-        { q: "Web nám přinesl nové klienty.", a: "Petra Svobodová", r: "Majitelka, Studio K" },
-        { q: "Skvělý tým, doporučuji každému.", a: "Martin Dvořák", r: "Marketing, BrandX" },
-      ],
+      items: [],
     },
     cta: {
       title: "Máš projekt?",
@@ -280,11 +276,7 @@ export const translations = {
     },
     testimonials: {
       title: "Testimonials",
-      items: [
-        { q: "Professional approach and fast communication.", a: "Jan Novák", r: "CEO, TechCo" },
-        { q: "The website brought us new clients.", a: "Petra Svobodová", r: "Owner, Studio K" },
-        { q: "Great team, highly recommended.", a: "Martin Dvořák", r: "Marketing, BrandX" },
-      ],
+      items: [],
     },
     cta: { title: "Got a project?", subtitle: "Let's take it to the next level.", btn: "Free consultation" },
     faq: {
@@ -398,11 +390,7 @@ export const translations = {
     },
     testimonials: {
       title: "Отзывы",
-      items: [
-        { q: "Профессиональный подход и быстрая коммуникация.", a: "Ян Новак", r: "CEO, TechCo" },
-        { q: "Сайт принёс нам новых клиентов.", a: "Петра Свободова", r: "Владелец, Studio K" },
-        { q: "Отличная команда, рекомендую.", a: "Мартин Дворжак", r: "Маркетинг, BrandX" },
-      ],
+      items: [],
     },
     cta: { title: "Есть проект?", subtitle: "Поднимем его на новый уровень.", btn: "Бесплатная консультация" },
     faq: {
@@ -516,11 +504,7 @@ export const translations = {
     },
     testimonials: {
       title: "Відгуки",
-      items: [
-        { q: "Професійний підхід і швидка комунікація.", a: "Ян Новак", r: "CEO, TechCo" },
-        { q: "Сайт приніс нам нових клієнтів.", a: "Петра Свободова", r: "Власниця, Studio K" },
-        { q: "Чудова команда, рекомендую.", a: "Мартін Дворжак", r: "Маркетинг, BrandX" },
-      ],
+      items: [],
     },
     cta: { title: "Маєш проєкт?", subtitle: "Виведемо його на новий рівень.", btn: "Безкоштовна консультація" },
     faq: {
