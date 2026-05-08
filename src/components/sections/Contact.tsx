@@ -1,10 +1,35 @@
 import { useState, type FormEvent } from "react";
 import { z } from "zod";
-import { ArrowRight, Globe, ShoppingBag, Sparkles, Shield, Check } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { ArrowRight, Globe, ShoppingBag, Sparkles, Check } from "lucide-react";
+import { useT, type Lang } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 import { sendContactToTelegram } from "@/server/telegram.functions";
 import { toast } from "sonner";
+
+const SUCCESS_TITLE: Record<Lang, string> = {
+  CZ: "Zpráva odeslána!",
+  EN: "Message sent!",
+  RU: "Сообщение отправлено!",
+  UA: "Повідомлення надіслано!",
+};
+const SUCCESS_BODY: Record<Lang, string> = {
+  CZ: "Ozveme se do 24 hodin.",
+  EN: "We'll get back to you within 24 hours.",
+  RU: "Ответим в течение 24 часов.",
+  UA: "Відповімо протягом 24 годин.",
+};
+const ERR: Record<Lang, { name: string; email: string; service: string; message: string }> = {
+  CZ: { name: "Zadejte jméno", email: "Neplatný e-mail", service: "Vyberte službu", message: "Napište zprávu" },
+  EN: { name: "Enter your name", email: "Invalid email", service: "Pick a service", message: "Write a message" },
+  RU: { name: "Введите имя", email: "Неверный e-mail", service: "Выберите услугу", message: "Напишите сообщение" },
+  UA: { name: "Введіть імʼя", email: "Невірний e-mail", service: "Оберіть послугу", message: "Напишіть повідомлення" },
+};
+const SEND_AGAIN: Record<Lang, string> = {
+  CZ: "Odeslat další zprávu",
+  EN: "Send another message",
+  RU: "Отправить ещё",
+  UA: "Надіслати ще",
+};
 
 const SERVICES = [
   { id: "Web", label: "Web", icon: Globe },
