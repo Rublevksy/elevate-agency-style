@@ -321,27 +321,6 @@ export function Contact() {
                 aria-hidden="true"
               />
 
-              {/* Math challenge — lightweight bot protection */}
-              <div>
-                <label className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl border border-border bg-background/40">
-                  <span className="flex items-center gap-2 text-sm text-foreground flex-1">
-                    <Shield className="h-5 w-5 text-primary" />
-                    Ověření: kolik je <b className="tabular-nums">{challenge.a} + {challenge.b}</b>?
-                  </span>
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    value={challengeAnswer}
-                    onChange={(e) => setChallengeAnswer(e.target.value)}
-                    placeholder="?"
-                    className="field-input-pro sm:w-28"
-                    aria-label="Odpověď na ověřovací otázku"
-                  />
-                </label>
-                {errors.captcha && (
-                  <p className="text-xs text-destructive mt-2">{errors.captcha}</p>
-                )}
-              </div>
 
               {/* CTA */}
               <button
