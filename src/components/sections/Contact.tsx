@@ -1,10 +1,35 @@
 import { useState, type FormEvent } from "react";
 import { z } from "zod";
-import { ArrowRight, Globe, ShoppingBag, Sparkles, Shield, Check } from "lucide-react";
-import { useT } from "@/lib/i18n";
+import { ArrowRight, Globe, ShoppingBag, Sparkles, Check } from "lucide-react";
+import { useT, type Lang } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 import { sendContactToTelegram } from "@/server/telegram.functions";
 import { toast } from "sonner";
+
+const SUCCESS_TITLE: Record<Lang, string> = {
+  CZ: "Zpráva odeslána!",
+  EN: "Message sent!",
+  RU: "Сообщение отправлено!",
+  UA: "Повідомлення надіслано!",
+};
+const SUCCESS_BODY: Record<Lang, string> = {
+  CZ: "Ozveme se do 24 hodin.",
+  EN: "We'll get back to you within 24 hours.",
+  RU: "Ответим в течение 24 часов.",
+  UA: "Відповімо протягом 24 годин.",
+};
+const ERR: Record<Lang, { name: string; email: string; service: string; message: string }> = {
+  CZ: { name: "Zadejte jméno", email: "Neplatný e-mail", service: "Vyberte službu", message: "Napište zprávu" },
+  EN: { name: "Enter your name", email: "Invalid email", service: "Pick a service", message: "Write a message" },
+  RU: { name: "Введите имя", email: "Неверный e-mail", service: "Выберите услугу", message: "Напишите сообщение" },
+  UA: { name: "Введіть імʼя", email: "Невірний e-mail", service: "Оберіть послугу", message: "Напишіть повідомлення" },
+};
+const SEND_AGAIN: Record<Lang, string> = {
+  CZ: "Odeslat další zprávu",
+  EN: "Send another message",
+  RU: "Отправить ещё",
+  UA: "Надіслати ще",
+};
 
 const SERVICES = [
   { id: "Web", label: "Web", icon: Globe },
@@ -19,12 +44,6 @@ const BUDGET_STEP = 5000;
 const formatCZK = (n: number) =>
   new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(n) + " Kč";
 
-function makeChallenge() {
-  const a = Math.floor(Math.random() * 8) + 2;
-  const b = Math.floor(Math.random() * 8) + 2;
-  return { a, b };
-}
-
 export function Contact() {
   const { t, lang } = useT();
   const [submitted, setSubmitted] = useState(false);
@@ -32,44 +51,35 @@ export function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [service, setService] = useState<string>("");
   const [budget, setBudget] = useState<number>(35000);
-  const [challenge, setChallenge] = useState(() => makeChallenge());
-  const [challengeAnswer, setChallengeAnswer] = useState("");
   const [hp, setHp] = useState(""); // honeypot
 
   const schema = z.object({
-    name: z.string().trim().min(1, "Zadejte jméno").max(100),
-    email: z.string().trim().email("Neplatný e-mail").max(255),
+    name: z.string().trim().min(1, ERR[lang].name).max(100),
+    email: z.string().trim().email(ERR[lang].email).max(255),
     phone: z.string().trim().max(40).optional().or(z.literal("")),
-    service: z.string().min(1, "Vyberte službu"),
-    message: z.string().trim().min(1, "Napište zprávu").max(1000),
+    service: z.string().min(1, ERR[lang].service),
+    message: z.string().trim().min(1, ERR[lang].message).max(1000),
   });
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const data = Object.fromEntries(fd) as Record<string, string>;
-    data.service = service;
-    const result = schema.safeParse(data);
-    const errs: Record<string, string> = {};
-    if (!result.success) {
-      for (const issue of result.error.issues) errs[issue.path[0] as string] = issue.message;
-    }
+    const formEl = e.currentTarget;
     if (hp) {
       // Bot detected via honeypot — silently drop
       return;
     }
-    if (Number(challengeAnswer) !== challenge.a + challenge.b) {
-      errs.captcha = "Nesprávná odpověď, zkuste to znovu";
-    }
-    if (Object.keys(errs).length) {
+    const fd = new FormData(formEl);
+    const data = Object.fromEntries(fd) as Record<string, string>;
+    data.service = service;
+    const result = schema.safeParse(data);
+    if (!result.success) {
+      const errs: Record<string, string> = {};
+      for (const issue of result.error.issues) errs[issue.path[0] as string] = issue.message;
       setErrors(errs);
-      setChallenge(makeChallenge());
-      setChallengeAnswer("");
       return;
     }
     setErrors({});
     setLoading(true);
-    const formEl = e.currentTarget;
     try {
       await sendContactToTelegram({
         data: {
@@ -84,13 +94,11 @@ export function Contact() {
       formEl.reset();
       setService("");
       setBudget(35000);
-      setChallenge(makeChallenge());
-      setChallengeAnswer("");
       setSubmitted(true);
-      toast.success("Zpráva byla odeslána. Ozveme se do 24 hodin.");
+      toast.success(`${SUCCESS_TITLE[lang]} ${SUCCESS_BODY[lang]}`);
     } catch (err) {
       console.error(err);
-      toast.error("Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.");
+      toast.error("Failed to send. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -117,17 +125,17 @@ export function Contact() {
                 <Check className="h-10 w-10 text-primary animate-scale-in" strokeWidth={3} />
               </div>
               <p className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-                Zpráva byla odeslána
+                {SUCCESS_TITLE[lang]}
               </p>
               <p className="text-sm text-muted-foreground">
-                Ozveme se vám do 24 hodin.
+                {SUCCESS_BODY[lang]}
               </p>
               <button
                 type="button"
                 onClick={() => setSubmitted(false)}
                 className="mt-8 text-xs uppercase tracking-widest text-primary hover:text-foreground transition-colors story-link"
               >
-                Odeslat další zprávu
+                {SEND_AGAIN[lang]}
               </button>
             </div>
           ) : (
@@ -158,7 +166,7 @@ export function Contact() {
                       name="name"
                       maxLength={100}
                       placeholder="Jan Novák"
-                      className="field-input-pro"
+                      className={`field-input-pro ${errors.name ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                     />
                     {errors.name && (
                       <p className="text-xs text-destructive mt-1">{errors.name}</p>
@@ -173,7 +181,7 @@ export function Contact() {
                       type="email"
                       maxLength={255}
                       placeholder="jan@firma.cz"
-                      className="field-input-pro"
+                      className={`field-input-pro ${errors.email ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                     />
                     {errors.email && (
                       <p className="text-xs text-destructive mt-1">{errors.email}</p>
@@ -313,27 +321,6 @@ export function Contact() {
                 aria-hidden="true"
               />
 
-              {/* Math challenge — lightweight bot protection */}
-              <div>
-                <label className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 rounded-xl border border-border bg-background/40">
-                  <span className="flex items-center gap-2 text-sm text-foreground flex-1">
-                    <Shield className="h-5 w-5 text-primary" />
-                    Ověření: kolik je <b className="tabular-nums">{challenge.a} + {challenge.b}</b>?
-                  </span>
-                  <input
-                    type="number"
-                    inputMode="numeric"
-                    value={challengeAnswer}
-                    onChange={(e) => setChallengeAnswer(e.target.value)}
-                    placeholder="?"
-                    className="field-input-pro sm:w-28"
-                    aria-label="Odpověď na ověřovací otázku"
-                  />
-                </label>
-                {errors.captcha && (
-                  <p className="text-xs text-destructive mt-2">{errors.captcha}</p>
-                )}
-              </div>
 
               {/* CTA */}
               <button

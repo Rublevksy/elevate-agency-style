@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Sparkles, MessageCircle, Award, Users, Clock, Zap, ShieldCheck } from "lucide-react";
+import { Sparkles, MessageCircle, Award, Users, Clock, Zap, ShieldCheck, TrendingUp, Quote, ArrowRight } from "lucide-react";
 import { Guarantee } from "@/components/sections/Guarantee";
 import { CtaBanner } from "@/components/sections/CtaBanner";
 import { Counter } from "@/components/Counter";
+import { useT, type Lang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -17,30 +18,89 @@ export const Route = createFileRoute("/about")({
 });
 
 const STATS = [
-  { icon: Award, n: 4, suffix: "+", l: "let zkušeností" },
-  { icon: Users, n: 50, suffix: "+", l: "realizovaných projektů" },
-  { icon: Sparkles, n: 12, suffix: "+", l: "oborů a odvětví" },
-];
+  { icon: Award, n: 4, suffix: "+", l: { CZ: "let zkušeností", EN: "years of experience", RU: "года опыта", UA: "роки досвіду" } },
+  { icon: Users, n: 50, suffix: "+", l: { CZ: "realizovaných projektů", EN: "projects delivered", RU: "реализованных проектов", UA: "реалізованих проєктів" } },
+  { icon: Sparkles, n: 12, suffix: "+", l: { CZ: "oborů a odvětví", EN: "industries served", RU: "отраслей", UA: "галузей" } },
+] as const;
 
-const VALUES = [
+const VALUES_HEADING: Record<Lang, { eyebrow: string; title: string }> = {
+  CZ: { eyebrow: "Naše hodnoty", title: "V čem jsme jiní" },
+  EN: { eyebrow: "Our values", title: "What sets us apart" },
+  RU: { eyebrow: "Наши ценности", title: "В чём мы отличаемся" },
+  UA: { eyebrow: "Наші цінності", title: "Чим ми відрізняємось" },
+};
+
+const VALUES: { icon: typeof Sparkles; t: Record<Lang, string>; d: Record<Lang, string> }[] = [
   {
     icon: Sparkles,
-    title: "Individuální přístup",
-    desc: "Žádné šablony. Každý projekt řešíme od základu podle vašich cílů.",
+    t: { CZ: "Individuální přístup", EN: "Individual approach", RU: "Индивидуальный подход", UA: "Індивідуальний підхід" },
+    d: {
+      CZ: "Žádné šablony. Každý projekt řešíme od základu podle vašich cílů.",
+      EN: "No templates. Every project starts from scratch, built around your goals.",
+      RU: "Без шаблонов. Каждый проект — с нуля под ваши цели.",
+      UA: "Без шаблонів. Кожен проєкт — з нуля під ваші цілі.",
+    },
   },
   {
     icon: Zap,
-    title: "Rychlá komunikace",
-    desc: "Odpovídáme do 24 hodin. Vždy víte, na čem jsme a co bude dál.",
+    t: { CZ: "Rychlá komunikace", EN: "Fast communication", RU: "Быстрая коммуникация", UA: "Швидка комунікація" },
+    d: {
+      CZ: "Odpovídáme do 24 hodin. Vždy víte, na čem jsme.",
+      EN: "We reply within 24 hours. You always know where we stand.",
+      RU: "Отвечаем в течение 24 часов. Вы всегда в курсе.",
+      UA: "Відповідаємо протягом 24 годин. Ви завжди в курсі.",
+    },
   },
   {
     icon: ShieldCheck,
-    title: "Důraz na kvalitu",
-    desc: "Stavíme řešení, která dlouhodobě fungují — vizuálně i technicky.",
+    t: { CZ: "Kvalita kódu i designu", EN: "Quality of code and design", RU: "Качество кода и дизайна", UA: "Якість коду та дизайну" },
+    d: {
+      CZ: "Stavíme řešení, která vypadají skvěle a technicky fungují dlouhodobě.",
+      EN: "We build solutions that look great and stand the test of time technically.",
+      RU: "Создаём решения, которые отлично выглядят и работают долго.",
+      UA: "Створюємо рішення, які чудово виглядають і працюють довго.",
+    },
+  },
+  {
+    icon: TrendingUp,
+    t: { CZ: "Měřitelné výsledky", EN: "Measurable results", RU: "Измеримые результаты", UA: "Вимірні результати" },
+    d: {
+      CZ: "Navrhujeme s ohledem na konverze, ne jen estetiku.",
+      EN: "We design for conversions, not just aesthetics.",
+      RU: "Проектируем с прицелом на конверсию, а не только эстетику.",
+      UA: "Проєктуємо з прицілом на конверсію, не лише естетику.",
+    },
   },
 ];
 
+const TESTIMONIALS_SOON: Record<Lang, { title: string; body: string; cta: string }> = {
+  CZ: {
+    title: "Reference brzy přibudou",
+    body: "Reference brzy přibudou. Zatím nás poznejte přes naše projekty.",
+    cta: "Zobrazit projekty",
+  },
+  EN: {
+    title: "Testimonials coming soon",
+    body: "Testimonials coming soon. Get to know us through our projects.",
+    cta: "View projects",
+  },
+  RU: {
+    title: "Отзывы скоро появятся",
+    body: "Отзывы скоро появятся. Пока познакомьтесь с нашими проектами.",
+    cta: "Смотреть проекты",
+  },
+  UA: {
+    title: "Відгуки незабаром",
+    body: "Відгуки незабаром. Поки що познайомтеся з нашими проектами.",
+    cta: "Дивитись проєкти",
+  },
+};
+
 function AboutPage() {
+  const { lang } = useT();
+  const vh = VALUES_HEADING[lang];
+  const ts = TESTIMONIALS_SOON[lang];
+
   return (
     <>
       {/* HERO */}
@@ -63,9 +123,10 @@ function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {STATS.map((s) => {
               const Icon = s.icon;
+              const label = s.l[lang];
               return (
                 <div
-                  key={s.l}
+                  key={label}
                   className="rounded-2xl border border-border bg-surface p-8 hover:border-primary/40 transition-colors"
                 >
                   <div className="h-11 w-11 rounded-lg bg-primary/10 border border-primary/20 grid place-items-center mb-6">
@@ -74,7 +135,7 @@ function AboutPage() {
                   <div className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
                     <Counter end={s.n} suffix={s.suffix} />
                   </div>
-                  <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest">{s.l}</p>
+                  <p className="mt-2 text-sm text-muted-foreground uppercase tracking-widest">{label}</p>
                 </div>
               );
             })}
@@ -106,27 +167,46 @@ function AboutPage() {
       <section className="py-20 md:py-28 border-t border-border bg-surface/30">
         <div className="container-luxe">
           <div className="max-w-2xl mb-12 md:mb-16">
-            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">Naše hodnoty</p>
+            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">{vh.eyebrow}</p>
             <h2 className="text-3xl md:text-5xl font-bold text-foreground tracking-tight">
-              V čem jsme jiní
+              {vh.title}
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {VALUES.map((v) => {
               const Icon = v.icon;
               return (
                 <div
-                  key={v.title}
+                  key={v.t.EN}
                   className="rounded-2xl border border-border bg-surface p-8 hover:border-primary/40 transition-colors"
                 >
                   <div className="h-11 w-11 rounded-lg bg-primary/10 border border-primary/20 grid place-items-center mb-6">
                     <Icon className="h-5 w-5 text-primary" />
                   </div>
-                  <h3 className="text-lg font-bold text-foreground mb-3">{v.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{v.desc}</p>
+                  <h3 className="text-lg font-bold text-foreground mb-3">{v.t[lang]}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{v.d[lang]}</p>
                 </div>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS — COMING SOON */}
+      <section className="py-20 md:py-28 border-t border-border">
+        <div className="container-luxe">
+          <div className="max-w-2xl mx-auto rounded-2xl border border-border bg-surface/40 p-12 md:p-16 text-center">
+            <Quote className="h-8 w-8 text-primary mx-auto mb-6" strokeWidth={1.4} />
+            <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4 tracking-tight">
+              {ts.title}
+            </h2>
+            <p className="text-base text-muted-foreground leading-relaxed mb-8 max-w-md mx-auto">
+              {ts.body}
+            </p>
+            <Link to="/projects" className="btn-primary inline-flex group">
+              {ts.cta}
+              <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+            </Link>
           </div>
         </div>
       </section>
