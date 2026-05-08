@@ -166,7 +166,7 @@ export function Contact() {
                       name="name"
                       maxLength={100}
                       placeholder="Jan Novák"
-                      className="field-input-pro"
+                      className={`field-input-pro ${errors.name ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                     />
                     {errors.name && (
                       <p className="text-xs text-destructive mt-1">{errors.name}</p>
@@ -181,7 +181,7 @@ export function Contact() {
                       type="email"
                       maxLength={255}
                       placeholder="jan@firma.cz"
-                      className="field-input-pro"
+                      className={`field-input-pro ${errors.email ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                     />
                     {errors.email && (
                       <p className="text-xs text-destructive mt-1">{errors.email}</p>
