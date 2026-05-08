@@ -18,11 +18,17 @@ const SUCCESS_BODY: Record<Lang, string> = {
   RU: "Ответим в течение 24 часов.",
   UA: "Відповімо протягом 24 годин.",
 };
-const ERR: Record<Lang, { name: string; email: string; service: string; message: string }> = {
-  CZ: { name: "Zadejte jméno", email: "Neplatný e-mail", service: "Vyberte službu", message: "Napište zprávu" },
-  EN: { name: "Enter your name", email: "Invalid email", service: "Pick a service", message: "Write a message" },
-  RU: { name: "Введите имя", email: "Неверный e-mail", service: "Выберите услугу", message: "Напишите сообщение" },
-  UA: { name: "Введіть імʼя", email: "Невірний e-mail", service: "Оберіть послугу", message: "Напишіть повідомлення" },
+const REQ: Record<Lang, string> = {
+  CZ: "Toto pole je povinné",
+  EN: "This field is required",
+  RU: "Это поле обязательно",
+  UA: "Це поле обов'язкове",
+};
+const EMAIL_INVALID: Record<Lang, string> = {
+  CZ: "Neplatný e-mail",
+  EN: "Invalid email",
+  RU: "Неверный e-mail",
+  UA: "Невірний e-mail",
 };
 const SEND_AGAIN: Record<Lang, string> = {
   CZ: "Odeslat další zprávu",
@@ -54,11 +60,11 @@ export function Contact() {
   const [hp, setHp] = useState(""); // honeypot
 
   const schema = z.object({
-    name: z.string().trim().min(1, ERR[lang].name).max(100),
-    email: z.string().trim().email(ERR[lang].email).max(255),
+    name: z.string().trim().min(1, REQ[lang]).max(100),
+    email: z.string().trim().min(1, REQ[lang]).email(EMAIL_INVALID[lang]).max(255),
     phone: z.string().trim().max(40).optional().or(z.literal("")),
-    service: z.string().min(1, ERR[lang].service),
-    message: z.string().trim().min(1, ERR[lang].message).max(1000),
+    service: z.string().min(1, REQ[lang]),
+    message: z.string().trim().min(1, REQ[lang]).max(1000),
   });
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -165,7 +171,7 @@ export function Contact() {
                     <input
                       name="name"
                       maxLength={100}
-                      placeholder="Jan Novák"
+                      placeholder={t.contact.name}
                       className={`field-input-pro ${errors.name ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                     />
                     {errors.name && (
