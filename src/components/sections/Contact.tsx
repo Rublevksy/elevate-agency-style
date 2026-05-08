@@ -125,17 +125,17 @@ export function Contact() {
                 <Check className="h-10 w-10 text-primary animate-scale-in" strokeWidth={3} />
               </div>
               <p className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-                Zpráva byla odeslána
+                {SUCCESS_TITLE[lang]}
               </p>
               <p className="text-sm text-muted-foreground">
-                Ozveme se vám do 24 hodin.
+                {SUCCESS_BODY[lang]}
               </p>
               <button
                 type="button"
                 onClick={() => setSubmitted(false)}
                 className="mt-8 text-xs uppercase tracking-widest text-primary hover:text-foreground transition-colors story-link"
               >
-                Odeslat další zprávu
+                {SEND_AGAIN[lang]}
               </button>
             </div>
           ) : (
