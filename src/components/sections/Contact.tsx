@@ -44,12 +44,6 @@ const BUDGET_STEP = 5000;
 const formatCZK = (n: number) =>
   new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(n) + " Kč";
 
-function makeChallenge() {
-  const a = Math.floor(Math.random() * 8) + 2;
-  const b = Math.floor(Math.random() * 8) + 2;
-  return { a, b };
-}
-
 export function Contact() {
   const { t, lang } = useT();
   const [submitted, setSubmitted] = useState(false);
@@ -57,44 +51,35 @@ export function Contact() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [service, setService] = useState<string>("");
   const [budget, setBudget] = useState<number>(35000);
-  const [challenge, setChallenge] = useState(() => makeChallenge());
-  const [challengeAnswer, setChallengeAnswer] = useState("");
   const [hp, setHp] = useState(""); // honeypot
 
   const schema = z.object({
-    name: z.string().trim().min(1, "Zadejte jméno").max(100),
-    email: z.string().trim().email("Neplatný e-mail").max(255),
+    name: z.string().trim().min(1, ERR[lang].name).max(100),
+    email: z.string().trim().email(ERR[lang].email).max(255),
     phone: z.string().trim().max(40).optional().or(z.literal("")),
-    service: z.string().min(1, "Vyberte službu"),
-    message: z.string().trim().min(1, "Napište zprávu").max(1000),
+    service: z.string().min(1, ERR[lang].service),
+    message: z.string().trim().min(1, ERR[lang].message).max(1000),
   });
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const data = Object.fromEntries(fd) as Record<string, string>;
-    data.service = service;
-    const result = schema.safeParse(data);
-    const errs: Record<string, string> = {};
-    if (!result.success) {
-      for (const issue of result.error.issues) errs[issue.path[0] as string] = issue.message;
-    }
+    const formEl = e.currentTarget;
     if (hp) {
       // Bot detected via honeypot — silently drop
       return;
     }
-    if (Number(challengeAnswer) !== challenge.a + challenge.b) {
-      errs.captcha = "Nesprávná odpověď, zkuste to znovu";
-    }
-    if (Object.keys(errs).length) {
+    const fd = new FormData(formEl);
+    const data = Object.fromEntries(fd) as Record<string, string>;
+    data.service = service;
+    const result = schema.safeParse(data);
+    if (!result.success) {
+      const errs: Record<string, string> = {};
+      for (const issue of result.error.issues) errs[issue.path[0] as string] = issue.message;
       setErrors(errs);
-      setChallenge(makeChallenge());
-      setChallengeAnswer("");
       return;
     }
     setErrors({});
     setLoading(true);
-    const formEl = e.currentTarget;
     try {
       await sendContactToTelegram({
         data: {
@@ -109,13 +94,11 @@ export function Contact() {
       formEl.reset();
       setService("");
       setBudget(35000);
-      setChallenge(makeChallenge());
-      setChallengeAnswer("");
       setSubmitted(true);
-      toast.success("Zpráva byla odeslána. Ozveme se do 24 hodin.");
+      toast.success(`${SUCCESS_TITLE[lang]} ${SUCCESS_BODY[lang]}`);
     } catch (err) {
       console.error(err);
-      toast.error("Zprávu se nepodařilo odeslat. Zkuste to prosím znovu.");
+      toast.error("Failed to send. Please try again.");
     } finally {
       setLoading(false);
     }
