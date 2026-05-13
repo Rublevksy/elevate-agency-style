@@ -82,19 +82,19 @@ function ProjectDetail() {
           <div className="grid lg:grid-cols-12 gap-10 md:gap-14">
             <div className="lg:col-span-7 space-y-10">
               <article className="rounded-xl border border-border bg-surface/45 p-8 md:p-10">
-                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Problem</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{t.ui.projectProblemEyebrow}</p>
                 <h2 className="text-3xl font-bold text-foreground tracking-tight mb-4">{t.ui.projectChallengeTitle}</h2>
                 <p className="text-muted-foreground leading-relaxed">{project.problem}</p>
               </article>
 
               <article className="rounded-xl border border-border bg-surface/45 p-8 md:p-10">
-                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Solution</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{t.ui.projectSolutionEyebrow}</p>
                 <h2 className="text-3xl font-bold text-foreground tracking-tight mb-4">{t.ui.projectSolutionTitle}</h2>
                 <p className="text-muted-foreground leading-relaxed">{project.solution}</p>
               </article>
 
               <article className="rounded-xl border border-border bg-surface/45 p-8 md:p-10">
-                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Work</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{t.ui.projectWorkEyebrow}</p>
                 <h2 className="text-3xl font-bold text-foreground tracking-tight mb-6">{t.ui.projectWorkTitle}</h2>
                 <ul className="grid sm:grid-cols-2 gap-3">
                   {project.work.map((item) => (
