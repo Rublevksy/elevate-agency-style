@@ -13,21 +13,20 @@ export type ProjectSlug =
   | "northwind"
   | "pulse-crm";
 
-export type ProjectCase = {
+export type ProjectCategory = "Web" | "E-shop" | "Branding" | "SaaS";
+
+// Stable, language-independent project data.
+// Localized name/description/result/problem/solution/work/results
+// live in src/lib/projects-i18n.ts.
+export type ProjectBase = {
   slug: ProjectSlug;
   name: string;
-  category: "Web" | "E-shop" | "Branding" | "SaaS";
-  description: string;
-  result: string;
+  category: ProjectCategory;
   image?: string;
   preview: "image" | "web" | "eshop" | "branding" | "saas";
-  problem: string;
-  solution: string;
-  work: string[];
-  results: { value: string; label: string }[];
 };
 
-export const PROJECTS: ProjectCase[] = [
+export const PROJECTS_BASE: ProjectBase[] = [
   {
     slug: "nordic-store",
     name: "Nordic Store",
