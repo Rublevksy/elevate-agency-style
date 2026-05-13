@@ -1,15 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { PricingDetailPage } from "@/components/PricingDetailPage";
-import { PRICING_PAGES } from "@/lib/pricing";
 
 export const Route = createFileRoute("/pricing/web")({
   component: WebPricingPage,
   head: () => ({
     meta: [
       { title: "Ceník webových stránek — ELEVATE" },
-      { name: "description", content: "Webové stránky od 10 000 Kč: UX, design, vývoj, SEO základ a měření poptávek." },
+      { name: "description", content: "Webové stránky od 5 000 Kč: UX, design, vývoj, SEO základ a měření poptávek." },
       { property: "og:title", content: "Ceník webových stránek — ELEVATE" },
-      { property: "og:description", content: "Profesionální web, který přivádí poptávky — od 10 000 Kč." },
+      { property: "og:description", content: "Profesionální web, který přivádí poptávky — od 5 000 Kč." },
       { property: "og:url", content: "https://elevateit.cz/pricing/web" },
     ],
     links: [{ rel: "canonical", href: "https://elevateit.cz/pricing/web" }],
@@ -17,5 +16,5 @@ export const Route = createFileRoute("/pricing/web")({
 });
 
 function WebPricingPage() {
-  return <PricingDetailPage offer={PRICING_PAGES.web} visual="browser" />;
+  return <PricingDetailPage slug="web" visual="browser" />;
 }
