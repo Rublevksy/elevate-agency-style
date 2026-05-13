@@ -112,7 +112,7 @@ function ProjectDetail() {
                 <div className="rounded-xl border border-border bg-background/70 p-8">
                   <div className="flex items-center gap-3 mb-7">
                     <TrendingUp className="h-6 w-6 text-primary" />
-                    <p className="text-xs uppercase tracking-[0.25em] text-primary">Results</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-primary">{t.ui.projectResultsEyebrow}</p>
                   </div>
                   <div className="grid gap-4">
                     {project.results.map((result) => (
