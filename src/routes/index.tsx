@@ -30,7 +30,7 @@ const SERVICE_ROUTES = ["/services/web", "/services/eshop", "/services/branding"
 
 function Home() {
   const { t } = useT();
-  const featured = PROJECTS.slice(0, 3);
+  const featured = useProjects().slice(0, 3);
   const services = t.ui.homeServiceCards.map((card, i) => ({
     icon: SERVICE_ICONS[i],
     title: card.title,
