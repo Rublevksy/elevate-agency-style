@@ -213,27 +213,26 @@ function AboutPage() {
           <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 via-surface to-transparent p-10 md:p-16 text-center relative overflow-hidden">
             <div className="absolute inset-0 grid-bg opacity-20 [mask-image:radial-gradient(ellipse_at_center,black,transparent_70%)]" />
             <div className="relative max-w-3xl mx-auto">
-              <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Limitovaná spolupráce</p>
+              <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{t.ui.aboutLimitedEyebrow}</p>
               <h2 className="text-3xl md:text-5xl font-bold text-foreground tracking-tight leading-tight mb-6">
-                Pracujeme pouze s omezeným počtem klientů.
+                {t.ui.aboutLimitedTitle}
               </h2>
               <p className="text-lg text-muted-foreground leading-relaxed mb-8">
-                Abychom každému projektu mohli věnovat maximální pozornost, přijímáme jen několik nových
-                spoluprací měsíčně.
+                {t.ui.aboutLimitedDesc}
               </p>
               <div className="flex flex-wrap items-center justify-center gap-3 mb-8 text-xs text-muted-foreground">
                 <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-4 py-2">
-                  <Clock className="h-3.5 w-3.5 text-primary" /> Odpovíme do 24 hodin
+                  <Clock className="h-3.5 w-3.5 text-primary" /> {t.ui.aboutChip1}
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-4 py-2">
-                  <MessageCircle className="h-3.5 w-3.5 text-primary" /> Nezávazná konzultace zdarma
+                  <MessageCircle className="h-3.5 w-3.5 text-primary" /> {t.ui.aboutChip2}
                 </span>
                 <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-4 py-2">
-                  <Sparkles className="h-3.5 w-3.5 text-primary" /> Individuální přístup
+                  <Sparkles className="h-3.5 w-3.5 text-primary" /> {t.ui.aboutChip3}
                 </span>
               </div>
               <Link to="/contact" className="btn-primary">
-                Domluvit konzultaci
+                {t.ui.aboutBookCta}
               </Link>
             </div>
           </div>
