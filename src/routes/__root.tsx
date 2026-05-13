@@ -66,6 +66,7 @@ export const Route = createRootRoute({
       { name: "twitter:description", content: "Tvoříme weby, které vydělávají. Pomáháme firmám růst online." },
       { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c8aa125-3a10-46cb-a0b7-54bd47b7fa1a/id-preview-0bb11058--8909fd69-7455-4ab1-9c3a-d6cf0cfb51c8.lovable.app-1777372763384.png" },
       { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c8aa125-3a10-46cb-a0b7-54bd47b7fa1a/id-preview-0bb11058--8909fd69-7455-4ab1-9c3a-d6cf0cfb51c8.lovable.app-1777372763384.png" },
+      { name: "google-site-verification", content: "kzWWGfct_dpRjw9ivUmnzMG5nIGhvfp0OmnTb7wN1xM" },
     ],
     links: [{ rel: "stylesheet", href: appCss }],
     scripts: [
