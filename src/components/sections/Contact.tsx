@@ -148,7 +148,7 @@ export function Contact() {
             <>
             <p className="text-sm md:text-base text-muted-foreground mb-6 flex items-center gap-2">
               <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              Ozveme se do 24 hodin. Nezávazně a zdarma.
+              {t.ui.contactReplyHint}
             </p>
             <form
               onSubmit={onSubmit}
@@ -159,7 +159,7 @@ export function Contact() {
                 <div className="flex items-center gap-3">
                   <span className="h-px flex-1 bg-border" />
                   <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                    01 — Kontakt
+                    {t.ui.contactStep1}
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
@@ -212,7 +212,7 @@ export function Contact() {
                 <div className="flex items-center gap-3">
                   <span className="h-px flex-1 bg-border" />
                   <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                    02 — Služba
+                    {t.ui.contactStep2}
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
@@ -249,14 +249,14 @@ export function Contact() {
                 <div className="flex items-center gap-3">
                   <span className="h-px flex-1 bg-border" />
                   <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                    03 — Rozpočet
+                    {t.ui.contactStep3}
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
                 <div className="rounded-2xl border border-border bg-background/40 p-6">
                   <div className="flex items-baseline justify-between mb-5">
                     <span className="text-xs uppercase tracking-widest text-muted-foreground">
-                      Orientační rozpočet
+                      {t.ui.contactBudgetLabel}
                     </span>
                     <span className="text-2xl md:text-3xl font-bold text-foreground tabular-nums">
                       {formatCZK(budget)}
@@ -277,7 +277,7 @@ export function Contact() {
                       step={BUDGET_STEP}
                       value={budget}
                       onChange={(e) => setBudget(Number(e.target.value))}
-                      aria-label="Orientační rozpočet"
+                      aria-label={t.ui.contactBudgetLabel}
                       className="range-pro relative w-full"
                     />
                   </div>
@@ -295,7 +295,7 @@ export function Contact() {
                 <div className="flex items-center gap-3">
                   <span className="h-px flex-1 bg-border" />
                   <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                    04 — Projekt
+                    {t.ui.contactStep4}
                   </span>
                   <span className="h-px flex-1 bg-border" />
                 </div>
@@ -307,7 +307,7 @@ export function Contact() {
                     name="message"
                     rows={5}
                     maxLength={1000}
-                    placeholder="Stručně popište váš projekt, cíle a termíny…"
+                    placeholder={t.ui.contactMessagePlaceholder}
                     className="field-input-pro resize-none"
                   />
                   {errors.message && (
@@ -336,14 +336,14 @@ export function Contact() {
               >
                 <span>
                   {loading
-                    ? sendingLabel[lang] ?? "Odesílám..."
-                    : "Získat nezávaznou nabídku"}
+                    ? sendingLabel[lang] ?? t.ui.contactSending
+                    : t.ui.contactSubmitMain}
                 </span>
                 <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
               </button>
 
               <p className="text-xs text-center text-muted-foreground">
-                Žádný spam. Jen konkrétní nabídka.
+                {t.ui.contactNoSpam}
               </p>
             </form>
             </>
