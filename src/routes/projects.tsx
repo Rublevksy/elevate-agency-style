@@ -12,7 +12,9 @@ export const Route = createFileRoute("/projects")({
       { name: "description", content: "Vybrané projekty: weby, e-shopy a branding s měřitelnými výsledky." },
       { property: "og:title", content: "Projekty — ELEVATE" },
       { property: "og:description", content: "Vybrané projekty s měřitelnými výsledky." },
+      { property: "og:url", content: "https://elevateit.cz/projects" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/projects" }],
   }),
 });
 

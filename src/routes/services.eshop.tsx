@@ -26,7 +26,9 @@ export const Route = createFileRoute("/services/eshop")({
       { name: "description", content: "Stavíme výkonné e-shopy zaměřené na konverze, objednávky a růst obratu. Od návrhu přes UX po napojení plateb." },
       { property: "og:title", content: "E-shop, který vydělává — ELEVATE" },
       { property: "og:description", content: "Výkonný e-shop od 25 000 Kč — UX, platby, produktová optimalizace a měřitelné výsledky." },
+      { property: "og:url", content: "https://elevateit.cz/services/eshop" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/services/eshop" }],
   }),
 });
 

@@ -9,10 +9,12 @@ export const Route = createFileRoute("/contact")({
   head: () => ({
     meta: [
       { title: "Kontakt — ELEVATE" },
-      { name: "description", content: "Pošlete nám poptávku. Odpovíme do 24 hodin." },
+      { name: "description", content: "Pošlete nám poptávku na web, e-shop nebo branding. Odpovíme do 24 hodin a navrhneme další kroky pro váš projekt." },
       { property: "og:title", content: "Kontakt — ELEVATE" },
-      { property: "og:description", content: "Pošlete nám poptávku. Odpovíme do 24 hodin." },
+      { property: "og:description", content: "Pošlete nám poptávku na web, e-shop nebo branding. Odpovíme do 24 hodin a navrhneme další kroky pro váš projekt." },
+      { property: "og:url", content: "https://elevateit.cz/contact" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/contact" }],
   }),
 });
 

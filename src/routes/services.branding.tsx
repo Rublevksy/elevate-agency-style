@@ -9,7 +9,9 @@ export const Route = createFileRoute("/services/branding")({
       { name: "description", content: "Logo a branding od 5 000 Kč — logo, barvy, typografie a prémiová vizuální identita." },
       { property: "og:title", content: "Značka, kterou si lidé zapamatují — ELEVATE" },
       { property: "og:description", content: "Branding pro profesionální image a silnější rozpoznatelnost značky." },
+      { property: "og:url", content: "https://elevateit.cz/services/branding" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/services/branding" }],
   }),
 });
 
