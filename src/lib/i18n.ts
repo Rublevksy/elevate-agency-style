@@ -163,7 +163,7 @@ export const translations = {
       eyebrow: "FAQ",
       title: "Časté dotazy",
       items: [
-        { q: "Kolik stojí web?", a: "Ceny začínají od 10 000 Kč za jednoduchý web. Komplexní řešení tvoříme na míru po konzultaci." },
+        { q: "Kolik stojí web?", a: "Ceny začínají od 5 000 Kč web. Komplexní řešení tvoříme na míru po konzultaci." },
         { q: "Jak dlouho trvá vývoj?", a: "Standardní web 2–4 týdny, e-shop 4–8 týdnů. Termín vždy potvrdíme předem." },
         { q: "Co od vás potřebuji dodat?", a: "Stačí představa o cílech a obsahu. Vše ostatní (texty, fotky, strategii) zvládneme společně." },
         { q: "Pracujete i po spuštění?", a: "Ano, nabízíme dlouhodobou podporu, údržbu a růstové úpravy." },
@@ -283,7 +283,7 @@ export const translations = {
       eyebrow: "FAQ",
       title: "Frequently asked questions",
       items: [
-        { q: "How much does a website cost?", a: "Prices start at 10 000 CZK for a simple website. Complex projects are quoted after a consultation." },
+        { q: "How much does a website cost?", a: "Prices start at 5 000 CZK for a simple website. Complex projects are quoted after a consultation." },
         { q: "How long does development take?", a: "A standard website takes 2–4 weeks, an e-shop 4–8 weeks. Timeline is always confirmed up front." },
         { q: "What do you need from us?", a: "Just an idea of your goals and content. We'll handle copy, photography and strategy together." },
         { q: "Do you support the site after launch?", a: "Yes, we offer long-term support, maintenance and growth iterations." },
@@ -397,7 +397,7 @@ export const translations = {
       eyebrow: "FAQ",
       title: "Частые вопросы",
       items: [
-        { q: "Сколько стоит сайт?", a: "Цены начинаются от 10 000 CZK за простой сайт. Сложные проекты — после консультации." },
+        { q: "Сколько стоит сайт?", a: "Цены начинаются от 5 000 CZK за простой сайт. Сложные проекты — после консультации." },
         { q: "Сколько занимает разработка?", a: "Стандартный сайт 2–4 недели, магазин 4–8 недель. Сроки подтверждаем заранее." },
         { q: "Что нужно от вас?", a: "Понимание целей и контента. Тексты, фото и стратегию проработаем вместе." },
         { q: "Поддерживаете сайт после запуска?", a: "Да, предлагаем долгосрочную поддержку и развитие." },
@@ -511,7 +511,7 @@ export const translations = {
       eyebrow: "FAQ",
       title: "Часті питання",
       items: [
-        { q: "Скільки коштує сайт?", a: "Ціни починаються від 10 000 CZK за простий сайт. Складні — після консультації." },
+        { q: "Скільки коштує сайт?", a: "Ціни починаються від 5 000 CZK за простий сайт. Складні — після консультації." },
         { q: "Скільки триває розробка?", a: "Стандартний сайт 2–4 тижні, магазин 4–8 тижнів. Терміни підтверджуємо заздалегідь." },
         { q: "Що потрібно від вас?", a: "Розуміння цілей і контенту. Тексти, фото та стратегію опрацюємо разом." },
         { q: "Підтримуєте сайт після запуску?", a: "Так, пропонуємо довгострокову підтримку і розвиток." },

@@ -18,7 +18,7 @@ const STRUCTURED_DATA = JSON.stringify({
   name: "ELEVATE",
   description: "Digitální agentura. Weby, e-shopy a branding.",
   url: "https://elevateit.cz",
-  email: "developer@elevateit.cz",
+  email: "elevateitcz@gmail.com",
   address: {
     "@type": "PostalAddress",
     addressLocality: "Praha",
