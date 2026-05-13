@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Check, Target, TrendingUp } from "lucide-react";
 import { CtaBanner } from "@/components/sections/CtaBanner";
-import { PROJECTS, PROJECT_SLUGS, ProjectVisual, type ProjectSlug } from "@/lib/projects";
+import { PROJECTS_BASE, PROJECT_SLUGS, ProjectVisual, type ProjectSlug } from "@/lib/projects";
+import { getProjects, useProject } from "@/lib/projects-i18n";
 import { useT } from "@/lib/i18n";
 
 function ProjectNotFound() {
@@ -25,14 +26,15 @@ export const Route = createFileRoute("/projects/$slug")({
     return { slug: params.slug as ProjectSlug };
   },
   head: ({ params }) => {
-    const project = PROJECTS.find((item) => item.slug === params.slug);
+    const base = PROJECTS_BASE.find((item) => item.slug === params.slug);
+    const cz = getProjects("CZ").find((item) => item.slug === params.slug);
     const url = `https://elevateit.cz/projects/${params.slug}`;
     return {
       meta: [
-        { title: `${project?.name ?? "Projekt"} — ELEVATE` },
-        { name: "description", content: project?.description ?? "Případová studie projektu s měřitelnými výsledky." },
-        { property: "og:title", content: `${project?.name ?? "Projekt"} — ELEVATE` },
-        { property: "og:description", content: project?.description ?? "Případová studie projektu s měřitelnými výsledky." },
+        { title: `${base?.name ?? "Projekt"} — ELEVATE` },
+        { name: "description", content: cz?.description ?? "Případová studie projektu s měřitelnými výsledky." },
+        { property: "og:title", content: `${base?.name ?? "Projekt"} — ELEVATE` },
+        { property: "og:description", content: cz?.description ?? "Případová studie projektu s měřitelnými výsledky." },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
       ],
@@ -43,7 +45,7 @@ export const Route = createFileRoute("/projects/$slug")({
 
 function ProjectDetail() {
   const { slug } = Route.useLoaderData();
-  const project = PROJECTS.find((item) => item.slug === slug)!;
+  const project = useProject(slug)!;
   const { t } = useT();
 
   return (
