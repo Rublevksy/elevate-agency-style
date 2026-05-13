@@ -99,7 +99,7 @@ const TESTIMONIALS_SOON: Record<Lang, { title: string; body: string; cta: string
 };
 
 function AboutPage() {
-  const { lang } = useT();
+  const { lang, t } = useT();
   const vh = VALUES_HEADING[lang];
   const ts = TESTIMONIALS_SOON[lang];
 
