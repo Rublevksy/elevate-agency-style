@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -24,6 +25,11 @@ import { Route as PricingWebRouteImport } from './routes/pricing.web'
 import { Route as PricingEshopRouteImport } from './routes/pricing.eshop'
 import { Route as PricingBrandingRouteImport } from './routes/pricing.branding'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/pricing/branding': typeof PricingBrandingRoute
   '/pricing/eshop': typeof PricingEshopRoute
   '/pricing/web': typeof PricingWebRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/pricing/branding': typeof PricingBrandingRoute
   '/pricing/eshop': typeof PricingEshopRoute
   '/pricing/web': typeof PricingWebRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/pricing/branding': typeof PricingBrandingRoute
   '/pricing/eshop': typeof PricingEshopRoute
   '/pricing/web': typeof PricingWebRoute
@@ -153,6 +162,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/pricing/branding'
     | '/pricing/eshop'
     | '/pricing/web'
@@ -169,6 +179,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/pricing/branding'
     | '/pricing/eshop'
     | '/pricing/web'
@@ -185,6 +196,7 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/projects'
     | '/services'
+    | '/sitemap.xml'
     | '/pricing/branding'
     | '/pricing/eshop'
     | '/pricing/web'
@@ -202,10 +214,18 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRouteWithChildren
   ProjectsRoute: typeof ProjectsRouteWithChildren
   ServicesRoute: typeof ServicesRouteWithChildren
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
@@ -359,16 +379,8 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRouteWithChildren,
   ProjectsRoute: ProjectsRouteWithChildren,
   ServicesRoute: ServicesRouteWithChildren,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
