@@ -24,13 +24,17 @@ export const Route = createFileRoute("/projects/$slug")({
   },
   head: ({ params }) => {
     const project = PROJECTS.find((item) => item.slug === params.slug);
+    const url = `https://elevateit.cz/projects/${params.slug}`;
     return {
       meta: [
         { title: `${project?.name ?? "Projekt"} — ELEVATE` },
         { name: "description", content: project?.description ?? "Případová studie projektu s měřitelnými výsledky." },
         { property: "og:title", content: `${project?.name ?? "Projekt"} — ELEVATE` },
         { property: "og:description", content: project?.description ?? "Případová studie projektu s měřitelnými výsledky." },
+        { property: "og:url", content: url },
+        { property: "og:type", content: "article" },
       ],
+      links: [{ rel: "canonical", href: url }],
     };
   },
 });

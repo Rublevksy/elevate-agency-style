@@ -9,7 +9,9 @@ export const Route = createFileRoute("/services/design")({
       { name: "description", content: "Prémiová grafika pro kampaně, sociální sítě a tiskové materiály." },
       { property: "og:title", content: "Grafika, která prodává — ELEVATE" },
       { property: "og:description", content: "Vizuály, které sjednotí komunikaci a pomohou kampaním působit profesionálně." },
+      { property: "og:url", content: "https://elevateit.cz/services/design" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/services/design" }],
   }),
 });
 

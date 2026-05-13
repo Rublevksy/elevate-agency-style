@@ -10,7 +10,9 @@ export const Route = createFileRoute("/pricing/web")({
       { name: "description", content: "Webové stránky od 10 000 Kč: UX, design, vývoj, SEO základ a měření poptávek." },
       { property: "og:title", content: "Ceník webových stránek — ELEVATE" },
       { property: "og:description", content: "Profesionální web, který přivádí poptávky — od 10 000 Kč." },
+      { property: "og:url", content: "https://elevateit.cz/pricing/web" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/pricing/web" }],
   }),
 });
 

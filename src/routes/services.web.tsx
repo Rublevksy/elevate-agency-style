@@ -9,7 +9,9 @@ export const Route = createFileRoute("/services/web")({
       { name: "description", content: "Webové stránky na míru od 10 000 Kč — design, responzivita a SEO základ pro více poptávek." },
       { property: "og:title", content: "Weby, které přivádí klienty — ELEVATE" },
       { property: "og:description", content: "Prezentační weby zaměřené na důvěru, poptávky a rychlé načítání." },
+      { property: "og:url", content: "https://elevateit.cz/services/web" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/services/web" }],
   }),
 });
 

@@ -18,7 +18,9 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "Digitální agentura. Weby, e-shopy a branding, které přivádí klienty a zvyšují tržby." },
       { property: "og:title", content: "ELEVATE — Tvoříme weby, které vydělávají" },
       { property: "og:description", content: "Pomáháme firmám růst online." },
+      { property: "og:url", content: "https://elevateit.cz/" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/" }],
   }),
 });
 

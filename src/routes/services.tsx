@@ -93,7 +93,9 @@ export const Route = createFileRoute("/services")({
       { name: "description", content: "Webové stránky, e-shopy, branding a design pro firmy, které chtějí růst." },
       { property: "og:title", content: "Služby — ELEVATE" },
       { property: "og:description", content: "Webové stránky, e-shopy, branding a design." },
+      { property: "og:url", content: "https://elevateit.cz/services" },
     ],
+    links: [{ rel: "canonical", href: "https://elevateit.cz/services" }],
   }),
 });
 
