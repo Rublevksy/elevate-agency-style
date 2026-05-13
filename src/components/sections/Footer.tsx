@@ -40,11 +40,11 @@ export function Footer() {
           <ul className="space-y-3 text-sm text-foreground">
             <li>
               <a
-                href="mailto:developer@elevateit.cz"
+                href="mailto:elevateitcz@gmail.com"
                 className="inline-flex items-center gap-2 hover:text-primary transition-colors story-link"
               >
                 <Mail className="h-4 w-4 text-primary" strokeWidth={1.5} />
-                <span>developer@elevateit.cz</span>
+                <span>elevateitcz@gmail.com</span>
               </a>
             </li>
             <li className="flex items-center gap-2">

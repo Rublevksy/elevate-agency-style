@@ -1,6 +1,7 @@
 import { createFileRoute, Link, Outlet, useLocation } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { useT } from "@/lib/i18n";
+import { usePages } from "@/lib/pages-i18n";
 
 function WebPreview() {
   return (
@@ -78,12 +79,7 @@ function DesignPreview() {
   );
 }
 
-const SERVICE_CARDS = [
-  { to: "/services/web", Preview: WebPreview, title: "Weby, které přivádí klienty", desc: "Prezentační weby, které přivádí poptávky a budují důvěru." },
-  { to: "/services/eshop", Preview: EshopPreview, title: "E-shopy, které vydělávají", desc: "Prodejní řešení navržená pro objednávky, košík a růst obratu." },
-  { to: "/services/branding", Preview: BrandingPreview, title: "Značka, kterou si lidé zapamatují", desc: "Vizuální identita, kterou si zákazníci zapamatují." },
-  { to: "/services/design", Preview: DesignPreview, title: "Vizuály, které prodávají", desc: "Kampaně, bannery a materiály s prémiovým vizuálním dojmem." },
-] as const;
+const SERVICE_PREVIEWS = [WebPreview, EshopPreview, BrandingPreview, DesignPreview] as const;
 
 export const Route = createFileRoute("/services")({
   component: ServicesPage,
@@ -100,7 +96,8 @@ export const Route = createFileRoute("/services")({
 });
 
 function ServicesPage() {
-  const { t } = useT();
+  const { t, lang } = useT();
+  const pages = usePages(lang);
   const location = useLocation();
 
   if (location.pathname !== "/services") {
@@ -121,11 +118,11 @@ function ServicesPage() {
 
       <section className="pb-28 md:pb-36">
         <div className="container-luxe grid grid-cols-1 md:grid-cols-2 gap-8">
-          {SERVICE_CARDS.map((s) => {
-            const Preview = s.Preview;
+          {pages.servicesIndex.cards.map((s, idx) => {
+            const Preview = SERVICE_PREVIEWS[idx];
             return (
               <Link
-                key={s.title}
+                key={s.to}
                 to={s.to}
                 className="reveal hover-lift group p-8 rounded-xl border border-border bg-surface/40 relative overflow-hidden block"
               >
@@ -135,7 +132,7 @@ function ServicesPage() {
                   </div>
                   <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
                     <span className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-primary-foreground">
-                      Zobrazit službu <ArrowUpRight className="h-4 w-4" />
+                      {pages.common.showService} <ArrowUpRight className="h-4 w-4" />
                     </span>
                   </div>
                 </div>

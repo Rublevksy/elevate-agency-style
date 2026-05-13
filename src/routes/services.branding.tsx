@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Aperture, ArrowLeft, ArrowRight, Check, Palette, Type } from "lucide-react";
+import { useT } from "@/lib/i18n";
+import { usePages } from "@/lib/pages-i18n";
 
 export const Route = createFileRoute("/services/branding")({
   component: BrandingServicePage,
   head: () => ({
     meta: [
       { title: "Značka, kterou si lidé zapamatují — ELEVATE" },
-      { name: "description", content: "Logo a branding od 5 000 Kč — logo, barvy, typografie a prémiová vizuální identita." },
+      { name: "description", content: "Logo a branding od 2 000 Kč — logo, barvy, typografie a prémiová vizuální identita." },
       { property: "og:title", content: "Značka, kterou si lidé zapamatují — ELEVATE" },
       { property: "og:description", content: "Branding pro profesionální image a silnější rozpoznatelnost značky." },
       { property: "og:url", content: "https://elevateit.cz/services/branding" },
@@ -15,7 +17,15 @@ export const Route = createFileRoute("/services/branding")({
   }),
 });
 
+const ITEM_ICONS = [Aperture, Palette, Type];
+
 function BrandingServicePage() {
+  const { lang } = useT();
+  const pages = usePages(lang);
+  const s = pages.servicesBranding;
+  const c = pages.common;
+  const price = pages.pricingPages.branding.price;
+
   return (
     <>
       <section className="page-top pb-20 md:pb-28 relative overflow-hidden">
@@ -30,18 +40,14 @@ function BrandingServicePage() {
           </aside>
           <div className="lg:col-span-10">
             <Link to="/services" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary/80 hover:text-foreground transition-colors mb-12">
-              <ArrowLeft className="h-3.5 w-3.5" /> Všechny služby
+              <ArrowLeft className="h-3.5 w-3.5" /> {c.backToServices}
             </Link>
-            <p className="text-xs font-mono uppercase tracking-[0.3em] text-primary mb-6">Branding & logo</p>
-            <h1 className="text-6xl md:text-8xl font-bold text-foreground tracking-tighter mb-10 leading-[0.95] max-w-5xl">
-              Značka, kterou si lidé zapamatují
-            </h1>
-            <p className="text-xl italic text-muted-foreground max-w-2xl mb-10">
-              Tvoříme vizuální identitu, která působí profesionálně, konzistentně a okamžitě odlišuje vaši firmu od konkurence.
-            </p>
+            <p className="text-xs font-mono uppercase tracking-[0.3em] text-primary mb-6">{s.eyebrow}</p>
+            <h1 className="text-6xl md:text-8xl font-bold text-foreground tracking-tighter mb-10 leading-[0.95] max-w-5xl">{s.h1}</h1>
+            <p className="text-xl italic text-muted-foreground max-w-2xl mb-10">{s.intro}</p>
             <div className="flex flex-wrap items-center gap-6">
-              <Link to="/contact" className="btn-primary group">Získat nabídku <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" /></Link>
-              <span className="text-sm text-muted-foreground">od <b className="text-foreground">5 000 Kč</b></span>
+              <Link to="/contact" className="btn-primary group">{c.getQuote} <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" /></Link>
+              <span className="text-sm text-muted-foreground"><b className="text-foreground">{price}</b></span>
             </div>
           </div>
         </div>
@@ -50,18 +56,21 @@ function BrandingServicePage() {
       <section className="py-24 md:py-32 border-t border-border">
         <div className="container-luxe grid lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4">
-            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-6">Co tvoříme</p>
-            <p className="text-3xl md:text-4xl font-bold text-foreground leading-tight italic">Silná identita zvyšuje důvěru ještě před první schůzkou.</p>
+            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-6">{s.creating}</p>
+            <p className="text-3xl md:text-4xl font-bold text-foreground leading-tight italic">{s.sectionTitle}</p>
           </div>
           <div className="lg:col-span-8 divide-y divide-border border-y border-border">
-            {[{ Icon: Aperture, t: "logo" }, { Icon: Palette, t: "barvy" }, { Icon: Type, t: "typografie" }].map(({ Icon, t }, i) => (
-              <div key={t} className="py-7 flex items-center gap-6">
-                <span className="text-xs font-mono text-primary/70 w-10">0{i + 1}</span>
-                <Icon className="h-6 w-6 text-primary" />
-                <span className="text-2xl font-bold text-foreground flex-1">{t}</span>
-                <Check className="h-5 w-5 text-primary" />
-              </div>
-            ))}
+            {s.items.map((item, i) => {
+              const Icon = ITEM_ICONS[i];
+              return (
+                <div key={item} className="py-7 flex items-center gap-6">
+                  <span className="text-xs font-mono text-primary/70 w-10">0{i + 1}</span>
+                  <Icon className="h-6 w-6 text-primary" />
+                  <span className="text-2xl font-bold text-foreground flex-1">{item}</span>
+                  <Check className="h-5 w-5 text-primary" />
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -70,11 +79,11 @@ function BrandingServicePage() {
         <div className="container-luxe">
           <div className="flex items-end justify-between gap-8 flex-wrap mb-12">
             <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">Varianty</p>
-              <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">Logo systém pro různé situace.</h2>
-              <p className="text-muted-foreground mt-4 max-w-xl">Ukázka různých stylů — od minimalistických wordmarků po monogramy a symbolické značky.</p>
+              <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">{s.variantsLabel}</p>
+              <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">{s.variantsTitle}</h2>
+              <p className="text-muted-foreground mt-4 max-w-xl">{s.variantsText}</p>
             </div>
-            <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">8 stylů · wordmark · monogram · ikona · 3D</p>
+            <p className="text-[10px] font-mono uppercase tracking-widest text-muted-foreground">{s.variantsMeta}</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
@@ -87,14 +96,10 @@ function BrandingServicePage() {
               { label: "minimal", bg: "bg-gradient-to-br from-surface to-background", content: <div className="text-2xl font-light tracking-[0.4em] text-foreground">L U M E N</div> },
               { label: "symbol", bg: "bg-background", content: <div className="flex flex-col items-center gap-2"><div className="relative h-12 w-12"><div className="absolute inset-0 rounded-full border-2 border-primary" /><div className="absolute inset-2 rounded-full bg-primary/30" /><div className="absolute inset-4 rounded-full bg-primary shadow-[0_0_15px_rgba(59,130,246,0.7)]" /></div><span className="text-xs font-mono uppercase tracking-widest text-foreground">Pulse</span></div> },
             ].map((logo, i) => (
-              <div
-                key={i}
-                className="group aspect-square rounded-xl border border-border overflow-hidden relative transition-all duration-300 hover:border-primary/60 hover:shadow-[0_15px_50px_-15px_rgba(59,130,246,0.5)] hover:-translate-y-1"
-              >
+              <div key={i} className="group aspect-square rounded-xl border border-border overflow-hidden relative transition-all duration-300 hover:border-primary/60 hover:shadow-[0_15px_50px_-15px_rgba(59,130,246,0.5)] hover:-translate-y-1">
                 <div className={`absolute inset-0 ${logo.bg} grid place-items-center p-4 transition-transform duration-500 group-hover:scale-105`}>
                   {logo.content}
                 </div>
-                <div aria-hidden className="pointer-events-none absolute -top-10 -right-10 h-24 w-24 rounded-full bg-primary/0 group-hover:bg-primary/30 blur-3xl transition-all duration-500" />
                 <span className="absolute bottom-2 left-3 text-[9px] font-mono uppercase tracking-[0.25em] text-muted-foreground/70 opacity-0 group-hover:opacity-100 transition-opacity">{logo.label}</span>
               </div>
             ))}
@@ -105,18 +110,18 @@ function BrandingServicePage() {
       <section className="py-24 md:py-32 border-t border-border">
         <div className="container-luxe grid md:grid-cols-2 gap-px bg-border rounded-xl overflow-hidden">
           <div className="bg-background p-12">
-            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-8">Výsledek</p>
-            <h2 className="text-5xl font-bold text-foreground tracking-tight mb-5">+ profesionální image</h2>
-            <p className="text-muted-foreground">Značka působí jednotně na webu, sociálních sítích, vizitkách i v prezentacích.</p>
+            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-8">{s.resultLabel}</p>
+            <h2 className="text-5xl font-bold text-foreground tracking-tight mb-5">{s.resultBig}</h2>
+            <p className="text-muted-foreground">{s.resultText}</p>
           </div>
           <div className="bg-surface/40 p-12">
-            <p className="text-xs uppercase tracking-widest text-primary mb-6">Nezávazná konzultace zdarma</p>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-6">Odpovíme do 24 hodin · Individuální přístup</p>
-            <div className="text-6xl font-bold tracking-tighter text-foreground mb-6">od 5 000 Kč</div>
-            <p className="text-sm text-muted-foreground mb-8">Pracujeme s omezeným počtem klientů.</p>
+            <p className="text-xs uppercase tracking-widest text-primary mb-6">{c.consultation}</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-6">{c.reply24h} · {c.individual}</p>
+            <div className="text-6xl font-bold tracking-tighter text-foreground mb-6">{price}</div>
+            <p className="text-sm text-muted-foreground mb-8">{c.limitedClients}</p>
             <div className="flex flex-wrap gap-3">
-              <Link to="/contact" className="btn-primary">Získat nabídku</Link>
-              <Link to="/pricing/branding" className="btn-outline">Zobrazit ceník</Link>
+              <Link to="/contact" className="btn-primary">{c.getQuote}</Link>
+              <Link to="/pricing/branding" className="btn-outline">{c.viewPricing}</Link>
             </div>
           </div>
         </div>
