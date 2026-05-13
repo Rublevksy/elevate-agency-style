@@ -96,7 +96,8 @@ export const Route = createFileRoute("/services")({
 });
 
 function ServicesPage() {
-  const { t } = useT();
+  const { t, lang } = useT();
+  const pages = usePages(lang);
   const location = useLocation();
 
   if (location.pathname !== "/services") {
@@ -117,11 +118,11 @@ function ServicesPage() {
 
       <section className="pb-28 md:pb-36">
         <div className="container-luxe grid grid-cols-1 md:grid-cols-2 gap-8">
-          {SERVICE_CARDS.map((s) => {
-            const Preview = s.Preview;
+          {pages.servicesIndex.cards.map((s, idx) => {
+            const Preview = SERVICE_PREVIEWS[idx];
             return (
               <Link
-                key={s.title}
+                key={s.to}
                 to={s.to}
                 className="reveal hover-lift group p-8 rounded-xl border border-border bg-surface/40 relative overflow-hidden block"
               >
@@ -131,7 +132,7 @@ function ServicesPage() {
                   </div>
                   <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
                     <span className="inline-flex items-center gap-2 text-sm uppercase tracking-widest font-semibold text-primary-foreground">
-                      Zobrazit službu <ArrowUpRight className="h-4 w-4" />
+                      {pages.common.showService} <ArrowUpRight className="h-4 w-4" />
                     </span>
                   </div>
                 </div>
