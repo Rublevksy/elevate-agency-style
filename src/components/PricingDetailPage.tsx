@@ -1,9 +1,11 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Check, Clock, MessageCircle, Sparkles, Target, TrendingUp } from "lucide-react";
 import { type PricingPage } from "@/lib/pricing";
+import { useT } from "@/lib/i18n";
+import { usePages } from "@/lib/pages-i18n";
 
 type PricingDetailPageProps = {
-  offer: PricingPage;
+  slug: "web" | "eshop" | "branding";
   visual: "browser" | "shop" | "brand";
 };
 
@@ -73,7 +75,13 @@ function PricingVisual({ visual }: { visual: PricingDetailPageProps["visual"] })
   );
 }
 
-export function PricingDetailPage({ offer, visual }: PricingDetailPageProps) {
+export function PricingDetailPage({ slug, visual }: PricingDetailPageProps) {
+  const { lang } = useT();
+  const pages = usePages(lang);
+  const offer: PricingPage = pages.pricingPages[slug];
+  const c = pages.common;
+  const d = pages.pricingDetail;
+
   return (
     <>
       <section className="page-top pb-20 md:pb-28 relative overflow-hidden">
@@ -81,7 +89,7 @@ export function PricingDetailPage({ offer, visual }: PricingDetailPageProps) {
         <div className="container-luxe relative grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-7">
             <Link to="/pricing" className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-primary/80 hover:text-foreground transition-colors mb-12">
-              <ArrowLeft className="h-3.5 w-3.5" /> Všechny ceníky
+              <ArrowLeft className="h-3.5 w-3.5" /> {c.backToPricing}
             </Link>
             <p className="text-xs uppercase tracking-[0.3em] text-primary mb-6">{offer.eyebrow}</p>
             <h1 className="text-5xl md:text-7xl font-bold text-foreground tracking-tight max-w-4xl mb-8 leading-[1.05]">
@@ -90,22 +98,22 @@ export function PricingDetailPage({ offer, visual }: PricingDetailPageProps) {
             <p className="text-lg text-muted-foreground max-w-2xl mb-10 leading-relaxed">{offer.description}</p>
             <div className="flex flex-wrap gap-3 mb-10">
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-4 py-2 text-xs text-muted-foreground">
-                <MessageCircle className="h-3.5 w-3.5 text-primary" /> Nezávazná konzultace zdarma
+                <MessageCircle className="h-3.5 w-3.5 text-primary" /> {c.consultation}
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-4 py-2 text-xs text-muted-foreground">
-                <Clock className="h-3.5 w-3.5 text-primary" /> Odpovíme do 24 hodin
+                <Clock className="h-3.5 w-3.5 text-primary" /> {c.reply24h}
               </span>
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-surface/60 px-4 py-2 text-xs text-muted-foreground">
-                <Sparkles className="h-3.5 w-3.5 text-primary" /> Individuální přístup
+                <Sparkles className="h-3.5 w-3.5 text-primary" /> {c.individual}
               </span>
             </div>
             <div className="flex flex-wrap items-center gap-6">
               <Link to="/contact" className="btn-primary group">
-                Získat nabídku
+                {c.getQuote}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <div>
-                <p className="text-xs uppercase tracking-widest text-primary mb-1">Cena</p>
+                <p className="text-xs uppercase tracking-widest text-primary mb-1">{d.priceLabel}</p>
                 <p className="text-3xl font-bold text-foreground">{offer.price}</p>
               </div>
             </div>
@@ -119,8 +127,8 @@ export function PricingDetailPage({ offer, visual }: PricingDetailPageProps) {
       <section className="py-24 md:py-32 border-t border-border">
         <div className="container-luxe grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-4">
-            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Popis</p>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">Pro koho dává smysl</h2>
+            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{d.bestForLabel}</p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">{d.bestForTitle}</h2>
             <p className="text-muted-foreground leading-relaxed">{offer.bestFor}</p>
           </div>
           <div className="lg:col-span-8 grid sm:grid-cols-2 gap-4">
@@ -137,8 +145,8 @@ export function PricingDetailPage({ offer, visual }: PricingDetailPageProps) {
       <section className="py-24 md:py-32 border-t border-border bg-surface/30">
         <div className="container-luxe grid lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-5">
-            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Výsledky</p>
-            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">Co má investice přinést</h2>
+            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{d.resultsLabel}</p>
+            <h2 className="text-4xl md:text-5xl font-bold tracking-tight text-foreground mb-6">{d.resultsTitle}</h2>
             <p className="text-muted-foreground leading-relaxed">{offer.note}</p>
           </div>
           <div className="lg:col-span-7 grid sm:grid-cols-3 gap-5">
@@ -161,13 +169,11 @@ export function PricingDetailPage({ offer, visual }: PricingDetailPageProps) {
               <Target className="h-8 w-8 text-primary mx-auto mb-6" />
               <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">{offer.price}</p>
               <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight mb-5">
-                Chcete přesnou cenu pro váš projekt?
+                {d.finalCtaTitle}
               </h2>
-              <p className="text-muted-foreground mb-9">
-                Po krátké konzultaci vám pošleme konkrétní návrh rozsahu, ceny a nejbližšího termínu.
-              </p>
+              <p className="text-muted-foreground mb-9">{d.finalCtaText}</p>
               <Link to="/contact" className="btn-primary group mx-auto">
-                Chci nezávazný návrh
+                {d.finalCtaBtn}
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
