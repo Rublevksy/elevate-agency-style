@@ -39,7 +39,9 @@ export const PROJECTS_BASE: ProjectBase[] = [
 
 export const PROJECT_SLUGS: ProjectSlug[] = PROJECTS_BASE.map((p) => p.slug);
 
-export function ProjectVisual({ project, mode = "card" }: { project: ProjectBase; mode?: "card" | "hero" }) {
+type VisualProject = { name: string; preview: ProjectBase["preview"]; image?: string };
+
+export function ProjectVisual({ project, mode = "card" }: { project: VisualProject; mode?: "card" | "hero" }) {
   if (project.preview === "image" && project.image) {
     return (
       <img
