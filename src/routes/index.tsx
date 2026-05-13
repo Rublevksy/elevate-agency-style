@@ -2,7 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, Globe, ShoppingBag, Sparkles } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { Hero3DCube } from "@/components/Hero3DCube";
-import { PROJECTS, ProjectVisual } from "@/lib/projects";
+import { ProjectVisual } from "@/lib/projects";
+import { useProjects } from "@/lib/projects-i18n";
 import { TechStack } from "@/components/sections/TechStack";
 import { IndustryStrip } from "@/components/sections/IndustryStrip";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
@@ -29,7 +30,7 @@ const SERVICE_ROUTES = ["/services/web", "/services/eshop", "/services/branding"
 
 function Home() {
   const { t } = useT();
-  const featured = PROJECTS.slice(0, 3);
+  const featured = useProjects().slice(0, 3);
   const services = t.ui.homeServiceCards.map((card, i) => ({
     icon: SERVICE_ICONS[i],
     title: card.title,

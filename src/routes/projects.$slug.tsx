@@ -1,7 +1,8 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Check, Target, TrendingUp } from "lucide-react";
 import { CtaBanner } from "@/components/sections/CtaBanner";
-import { PROJECTS, PROJECT_SLUGS, ProjectVisual, type ProjectSlug } from "@/lib/projects";
+import { PROJECTS_BASE, PROJECT_SLUGS, ProjectVisual, type ProjectSlug } from "@/lib/projects";
+import { getProjects, useProject } from "@/lib/projects-i18n";
 import { useT } from "@/lib/i18n";
 
 function ProjectNotFound() {
@@ -25,14 +26,15 @@ export const Route = createFileRoute("/projects/$slug")({
     return { slug: params.slug as ProjectSlug };
   },
   head: ({ params }) => {
-    const project = PROJECTS.find((item) => item.slug === params.slug);
+    const base = PROJECTS_BASE.find((item) => item.slug === params.slug);
+    const cz = getProjects("CZ").find((item) => item.slug === params.slug);
     const url = `https://elevateit.cz/projects/${params.slug}`;
     return {
       meta: [
-        { title: `${project?.name ?? "Projekt"} — ELEVATE` },
-        { name: "description", content: project?.description ?? "Případová studie projektu s měřitelnými výsledky." },
-        { property: "og:title", content: `${project?.name ?? "Projekt"} — ELEVATE` },
-        { property: "og:description", content: project?.description ?? "Případová studie projektu s měřitelnými výsledky." },
+        { title: `${base?.name ?? "Projekt"} — ELEVATE` },
+        { name: "description", content: cz?.description ?? "Případová studie projektu s měřitelnými výsledky." },
+        { property: "og:title", content: `${base?.name ?? "Projekt"} — ELEVATE` },
+        { property: "og:description", content: cz?.description ?? "Případová studie projektu s měřitelnými výsledky." },
         { property: "og:url", content: url },
         { property: "og:type", content: "article" },
       ],
@@ -43,7 +45,7 @@ export const Route = createFileRoute("/projects/$slug")({
 
 function ProjectDetail() {
   const { slug } = Route.useLoaderData();
-  const project = PROJECTS.find((item) => item.slug === slug)!;
+  const project = useProject(slug)!;
   const { t } = useT();
 
   return (
@@ -80,19 +82,19 @@ function ProjectDetail() {
           <div className="grid lg:grid-cols-12 gap-10 md:gap-14">
             <div className="lg:col-span-7 space-y-10">
               <article className="rounded-xl border border-border bg-surface/45 p-8 md:p-10">
-                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Problem</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{t.ui.projectProblemEyebrow}</p>
                 <h2 className="text-3xl font-bold text-foreground tracking-tight mb-4">{t.ui.projectChallengeTitle}</h2>
                 <p className="text-muted-foreground leading-relaxed">{project.problem}</p>
               </article>
 
               <article className="rounded-xl border border-border bg-surface/45 p-8 md:p-10">
-                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Solution</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{t.ui.projectSolutionEyebrow}</p>
                 <h2 className="text-3xl font-bold text-foreground tracking-tight mb-4">{t.ui.projectSolutionTitle}</h2>
                 <p className="text-muted-foreground leading-relaxed">{project.solution}</p>
               </article>
 
               <article className="rounded-xl border border-border bg-surface/45 p-8 md:p-10">
-                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">Work</p>
+                <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{t.ui.projectWorkEyebrow}</p>
                 <h2 className="text-3xl font-bold text-foreground tracking-tight mb-6">{t.ui.projectWorkTitle}</h2>
                 <ul className="grid sm:grid-cols-2 gap-3">
                   {project.work.map((item) => (
@@ -110,7 +112,7 @@ function ProjectDetail() {
                 <div className="rounded-xl border border-border bg-background/70 p-8">
                   <div className="flex items-center gap-3 mb-7">
                     <TrendingUp className="h-6 w-6 text-primary" />
-                    <p className="text-xs uppercase tracking-[0.25em] text-primary">Results</p>
+                    <p className="text-xs uppercase tracking-[0.25em] text-primary">{t.ui.projectResultsEyebrow}</p>
                   </div>
                   <div className="grid gap-4">
                     {project.results.map((result) => (

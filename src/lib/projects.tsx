@@ -13,158 +13,35 @@ export type ProjectSlug =
   | "northwind"
   | "pulse-crm";
 
-export type ProjectCase = {
+export type ProjectCategory = "Web" | "E-shop" | "Branding" | "SaaS";
+
+// Stable, language-independent project data.
+// Localized name/description/result/problem/solution/work/results
+// live in src/lib/projects-i18n.ts. Use useProjects() / getProjects(lang).
+export type ProjectBase = {
   slug: ProjectSlug;
   name: string;
-  category: "Web" | "E-shop" | "Branding" | "SaaS";
-  description: string;
-  result: string;
+  category: ProjectCategory;
   image?: string;
   preview: "image" | "web" | "eshop" | "branding" | "saas";
-  problem: string;
-  solution: string;
-  work: string[];
-  results: { value: string; label: string }[];
 };
 
-export const PROJECTS: ProjectCase[] = [
-  {
-    slug: "nordic-store",
-    name: "Nordic Store",
-    category: "E-shop",
-    description: "Redesign módního e-shopu s důrazem na rychlejší nákup a vyšší konverze.",
-    result: "+120% konverze",
-    image: p1,
-    preview: "image",
-    problem: "E-shop měl vysokou návštěvnost, ale zákazníci odcházeli z produktových stránek a nedokončovali objednávky.",
-    solution: "Zjednodušili jsme kategorii, produktový detail i checkout. Přidali jsme jasné signály důvěry a rychlejší cestu k nákupu.",
-    work: ["UX audit a nákupní cesta", "Redesign produktových stránek", "Vývoj rychlého e-shopu", "Konverzní optimalizace checkoutu"],
-    results: [
-      { value: "+120%", label: "konverze" },
-      { value: "+80%", label: "organická návštěvnost" },
-      { value: "−38%", label: "opuštěných košíků" },
-    ],
-  },
-  {
-    slug: "corvex",
-    name: "Corvex",
-    category: "Web",
-    description: "Firemní web pro technologickou společnost, který jasně vysvětluje nabídku a generuje leady.",
-    result: "+45% poptávek",
-    image: p2,
-    preview: "image",
-    problem: "Původní web působil nejasně, nepředával důvěru a návštěvníci nerozuměli hodnotě služby.",
-    solution: "Postavili jsme nový obsahový tok, silnější vizuální hierarchii a kontaktní body na klíčových místech webu.",
-    work: ["Informační architektura", "UX/UI web design", "Frontend vývoj", "SEO základ a měření poptávek"],
-    results: [
-      { value: "+45%", label: "poptávek" },
-      { value: "<2s", label: "načtení stránky" },
-      { value: "+32%", label: "čas na webu" },
-    ],
-  },
-  {
-    slug: "tinesort",
-    name: "Tinesort",
-    category: "SaaS",
-    description: "Produktové UI a onboarding pro B2B platformu, která potřebovala rychleji aktivovat nové uživatele.",
-    result: "+40% retence",
-    image: p3,
-    preview: "image",
-    problem: "Noví uživatelé se ztráceli v produktu a aktivace po registraci byla příliš nízká.",
-    solution: "Navrhli jsme přehlednější dashboard, onboarding kroky a UI systém pro další rozvoj produktu.",
-    work: ["Produktový UX výzkum", "SaaS dashboard", "Onboarding flow", "Design systém"],
-    results: [
-      { value: "+40%", label: "retence" },
-      { value: "−30%", label: "churn" },
-      { value: "+50%", label: "aktivace" },
-    ],
-  },
-  {
-    slug: "patecura",
-    name: "Patecura",
-    category: "Branding",
-    description: "Kompletní identita pro prémiovou wellness značku — logo, barvy, typografie a brand manuál.",
-    result: "Kompletní identita",
-    image: p4,
-    preview: "image",
-    problem: "Značka působila nekonzistentně a v digitální komunikaci nebyla snadno rozpoznatelná.",
-    solution: "Vytvořili jsme jednotný vizuální systém s jasnými pravidly pro web, tisk i sociální sítě.",
-    work: ["Strategie značky", "Logo systém", "Barevná paleta a typografie", "Brand manuál"],
-    results: [
-      { value: "100%", label: "konzistence" },
-      { value: "+ důvěra", label: "při prvním kontaktu" },
-      { value: "ready", label: "pro web i tisk" },
-    ],
-  },
-  {
-    slug: "lumen-studio",
-    name: "Lumen Studio",
-    category: "Web",
-    description: "Prezentační web pro architektonické studio s důrazem na portfolio, důvěru a poptávky.",
-    result: "+95% poptávek",
-    preview: "web",
-    problem: "Studio mělo kvalitní práci, ale web nepůsobil prémiově a nevedl návštěvníky ke konzultaci.",
-    solution: "Navrhli jsme vizuální portfolio systém, jasné služby a kontaktní CTA v návaznosti na typ projektu.",
-    work: ["UX struktura portfolia", "Prémiový web design", "Rychlý frontend", "SEO pro lokální služby"],
-    results: [
-      { value: "+95%", label: "poptávek" },
-      { value: "+52%", label: "zobrazení projektů" },
-      { value: "<2s", label: "rychlost" },
-    ],
-  },
-  {
-    slug: "verda-market",
-    name: "Verda Market",
-    category: "E-shop",
-    description: "Bio e-shop optimalizovaný pro mobilní nákupy, opakované objednávky a rychlý checkout.",
-    result: "+60% obrat",
-    preview: "eshop",
-    problem: "Mobilní zákazníci nedokončovali nákup a produktová nabídka byla špatně filtrovatelná.",
-    solution: "Zjednodušili jsme katalog, filtry, produktové karty i checkout s důrazem na opakovaný nákup.",
-    work: ["Mobilní UX e-shopu", "Produktový grid", "Filtry a vyhledávání", "Měření objednávek"],
-    results: [
-      { value: "+60%", label: "obrat" },
-      { value: "+34%", label: "mobilní konverze" },
-      { value: "−28%", label: "opuštění košíku" },
-    ],
-  },
-  {
-    slug: "northwind",
-    name: "Northwind",
-    category: "Branding",
-    description: "Rebrand logistické firmy, který sjednotil vizuální styl napříč webem, prezentacemi a obchodem.",
-    result: "Kompletní rebrand",
-    preview: "branding",
-    problem: "Firma rostla, ale její vizuální komunikace působila roztříštěně a neodpovídala velikosti byznysu.",
-    solution: "Vytvořili jsme moderní identitu, systém loga a jasná pravidla pro obchodní materiály i web.",
-    work: ["Brand audit", "Logo a symbol", "Vizuální systém", "Obchodní prezentace"],
-    results: [
-      { value: "1 systém", label: "pro všechny kanály" },
-      { value: "+ důvěra", label: "u B2B klientů" },
-      { value: "30+", label: "brand assetů" },
-    ],
-  },
-  {
-    slug: "pulse-crm",
-    name: "Pulse CRM",
-    category: "SaaS",
-    description: "Dashboard a onboarding flow pro CRM produkt, který potřeboval rychlejší aktivaci týmů.",
-    result: "+50% aktivace",
-    preview: "saas",
-    problem: "Uživatelé po registraci neviděli jasný další krok a týmy produkt nasazovaly příliš pomalu.",
-    solution: "Navrhli jsme nový dashboard, onboarding checklist a metriky, které vedou uživatele k první hodnotě.",
-    work: ["UX audit aplikace", "Dashboard UI", "Onboarding checklist", "Design komponent"],
-    results: [
-      { value: "+50%", label: "aktivace" },
-      { value: "−35%", label: "čas k první hodnotě" },
-      { value: "+22%", label: "týmové přijetí" },
-    ],
-  },
+export const PROJECTS_BASE: ProjectBase[] = [
+  { slug: "nordic-store", name: "Nordic Store", category: "E-shop", image: p1, preview: "image" },
+  { slug: "corvex", name: "Corvex", category: "Web", image: p2, preview: "image" },
+  { slug: "tinesort", name: "Tinesort", category: "SaaS", image: p3, preview: "image" },
+  { slug: "patecura", name: "Patecura", category: "Branding", image: p4, preview: "image" },
+  { slug: "lumen-studio", name: "Lumen Studio", category: "Web", preview: "web" },
+  { slug: "verda-market", name: "Verda Market", category: "E-shop", preview: "eshop" },
+  { slug: "northwind", name: "Northwind", category: "Branding", preview: "branding" },
+  { slug: "pulse-crm", name: "Pulse CRM", category: "SaaS", preview: "saas" },
 ];
 
-export const PROJECT_SLUGS = PROJECTS.map((project) => project.slug);
+export const PROJECT_SLUGS: ProjectSlug[] = PROJECTS_BASE.map((p) => p.slug);
 
-export function ProjectVisual({ project, mode = "card" }: { project: ProjectCase; mode?: "card" | "hero" }) {
+type VisualProject = { name: string; preview: ProjectBase["preview"]; image?: string };
+
+export function ProjectVisual({ project, mode = "card" }: { project: VisualProject; mode?: "card" | "hero" }) {
   if (project.preview === "image" && project.image) {
     return (
       <img
