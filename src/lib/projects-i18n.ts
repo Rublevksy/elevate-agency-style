@@ -1,8 +1,7 @@
 import { useT, type Lang } from "@/lib/i18n";
 import { PROJECTS_BASE, type ProjectBase, type ProjectSlug, type ProjectCategory } from "@/lib/projects";
 
-export type LocalizedProject = ProjectBase & {
-  name: string;
+export type LocalizedProject = Omit<ProjectBase, "category"> & {
   category: string;
   description: string;
   result: string;
