@@ -93,15 +93,9 @@ function DesignPreview() {
 
 const PREVIEWS = [WebPreview, EshopPreview, BrandingPreview, DesignPreview];
 
-const RESULT_HEADLINES = [
-  "Weby, které přivádí klienty",
-  "E-shopy, které vydělávají",
-  "Značka, kterou si lidé zapamatují",
-  "Vizuály, které prodávají",
-];
-
 export function Services() {
   const { t } = useT();
+  const headlines = t.ui.serviceResultHeadlines;
   return (
     <section id="services" className="py-32 md:py-40 border-t border-border">
       <div className="container-luxe">
@@ -122,11 +116,11 @@ export function Services() {
                   </div>
                   <div className="absolute inset-0 bg-primary/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 grid place-items-center">
                     <span className="inline-flex items-center gap-2 text-xs uppercase tracking-widest font-semibold text-primary-foreground">
-                      Zobrazit službu <ArrowUpRight className="h-3.5 w-3.5" />
+                      {t.ui.servicesHover} <ArrowUpRight className="h-3.5 w-3.5" />
                     </span>
                   </div>
                 </div>
-                <h3 className="text-lg font-bold text-foreground mb-2 relative">{RESULT_HEADLINES[i] ?? s.title}</h3>
+                <h3 className="text-lg font-bold text-foreground mb-2 relative">{headlines[i] ?? s.title}</h3>
                 <p className="text-sm text-muted-foreground leading-relaxed relative">{s.desc}</p>
               </Link>
             );
