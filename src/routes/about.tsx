@@ -109,12 +109,12 @@ function AboutPage() {
       <section className="page-top pb-16 md:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_top,black_10%,transparent_70%)]" />
         <div className="container-luxe relative">
-          <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">O nás</p>
+          <p className="text-xs uppercase tracking-[0.25em] text-primary mb-5">{t.about.eyebrow}</p>
           <h1 className="text-5xl md:text-7xl font-bold text-foreground tracking-tight leading-[1.05] max-w-4xl">
-            Jsme digitální agentura zaměřená na výsledky.
+            {t.about.title}
           </h1>
           <p className="mt-8 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-            Tvoříme webové stránky a digitální řešení, která reálně pomáhají firmám růst — ne jen vypadat dobře.
+            {t.about.body}
           </p>
         </div>
       </section>
