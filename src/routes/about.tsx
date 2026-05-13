@@ -149,18 +149,12 @@ function AboutPage() {
       <section className="py-20 md:py-28 border-t border-border">
         <div className="container-luxe grid lg:grid-cols-12 gap-12 items-start">
           <div className="lg:col-span-4">
-            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">Náš přístup</p>
+            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">{t.ui.aboutApproachEyebrow}</p>
             <div className="h-px w-12 bg-primary" />
           </div>
           <div className="lg:col-span-8 space-y-6 text-lg text-muted-foreground leading-relaxed">
-            <p>
-              Spojujeme strategii, design a technologii do jednoho celku, který pracuje pro vaše podnikání. Nejde nám
-              o líbivý vizuál — jde nám o měřitelné výsledky.
-            </p>
-            <p>
-              Pracujeme s klienty z různých oborů — od profesionálních služeb a B2B firem až po e-commerce značky.
-              Každý projekt začíná pochopením byznysu, ne výběrem barev.
-            </p>
+            <p>{t.ui.aboutApproachP1}</p>
+            <p>{t.ui.aboutApproachP2}</p>
           </div>
         </div>
       </section>
