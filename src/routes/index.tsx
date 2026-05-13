@@ -24,30 +24,18 @@ export const Route = createFileRoute("/")({
   }),
 });
 
-const SERVICES = [
-  {
-    icon: Globe,
-    title: "Weby, které přivádí klienty",
-    desc: "Rychlé weby zaměřené na konverzi a růst.",
-    to: "/services/web" as const,
-  },
-  {
-    icon: ShoppingBag,
-    title: "E-shopy, které vydělávají",
-    desc: "Optimalizované pro nákup od první návštěvy.",
-    to: "/services/eshop" as const,
-  },
-  {
-    icon: Sparkles,
-    title: "Branding",
-    desc: "Značka, kterou si lidé zapamatují.",
-    to: "/services/branding" as const,
-  },
-];
+const SERVICE_ICONS = [Globe, ShoppingBag, Sparkles];
+const SERVICE_ROUTES = ["/services/web", "/services/eshop", "/services/branding"] as const;
 
 function Home() {
   const { t } = useT();
   const featured = PROJECTS.slice(0, 3);
+  const services = t.ui.homeServiceCards.map((card, i) => ({
+    icon: SERVICE_ICONS[i],
+    title: card.title,
+    desc: card.desc,
+    to: SERVICE_ROUTES[i],
+  }));
 
   return (
     <>
@@ -117,12 +105,12 @@ function Home() {
       <section className="py-28 md:py-36 border-t border-border">
         <div className="container-luxe">
           <div className="max-w-2xl mx-auto text-center mb-20">
-            <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-4">Co děláme</p>
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">Služby zaměřené na výsledky</h2>
+            <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-4">{t.ui.homeServicesEyebrow}</p>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">{t.ui.homeServicesTitle}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-            {SERVICES.map((s) => {
+            {services.map((s) => {
               const Icon = s.icon;
               return (
                 <Link
@@ -131,12 +119,12 @@ function Home() {
                   className="group relative p-10 rounded-xl border border-border bg-surface/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:-translate-y-1 hover:shadow-[0_25px_70px_-25px_rgba(59,130,246,0.55)]"
                 >
                   <div className="h-12 w-12 rounded-lg border border-border bg-background grid place-items-center mb-8 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Icon className="h-5 w-5" />
+                    {Icon && <Icon className="h-5 w-5" />}
                   </div>
                   <h3 className="text-xl font-bold text-foreground mb-3">{s.title}</h3>
                   <p className="text-sm text-muted-foreground leading-relaxed mb-8">{s.desc}</p>
                   <span className="inline-flex items-center gap-1.5 text-sm font-medium text-foreground group-hover:text-primary transition-colors">
-                    Zjistit více
+                    {t.ui.homeServicesLearn}
                     <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </span>
                 </Link>
@@ -156,8 +144,8 @@ function Home() {
       <section className="py-28 md:py-36 border-t border-border">
         <div className="container-luxe">
           <div className="max-w-2xl mx-auto text-center mb-20">
-            <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-4">Vybrané projekty</p>
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">Práce, která přináší výsledky</h2>
+            <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-4">{t.ui.homeWorkEyebrow}</p>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight text-foreground">{t.ui.homeWorkTitle}</h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
@@ -190,7 +178,7 @@ function Home() {
 
           <div className="text-center mt-16">
             <Link to="/projects" className="btn-outline inline-flex">
-              Zobrazit všechny projekty
+              {t.ui.homeWorkViewAll}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
