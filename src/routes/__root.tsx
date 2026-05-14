@@ -12,21 +12,47 @@ import { ExitIntentModal } from "@/components/ExitIntentModal";
 import { TopProgressBar } from "@/components/TopProgressBar";
 import { useT } from "@/lib/i18n";
 
-const STRUCTURED_DATA = JSON.stringify({
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  name: "ELEVATE",
-  description: "Digitální agentura. Weby, e-shopy a branding.",
-  url: "https://elevateit.cz",
-  email: "elevateitcz@gmail.com",
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Praha",
-    addressCountry: "CZ",
+const STRUCTURED_DATA = JSON.stringify([
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "ElevateIT",
+    legalName: "ElevateIT",
+    url: "https://elevateit.cz",
+    logo: "https://elevateit.cz/android-chrome-512x512.png",
+    email: "elevateitcz@gmail.com",
+    sameAs: ["https://www.instagram.com/elevateit.cz/"],
   },
-  sameAs: ["https://www.instagram.com/elevateit.cz/"],
-  serviceType: ["Web design", "E-commerce", "Branding"],
-});
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "ElevateIT",
+    url: "https://elevateit.cz",
+    inLanguage: "cs-CZ",
+    potentialAction: {
+      "@type": "SearchAction",
+      target: "https://elevateit.cz/?q={search_term_string}",
+      "query-input": "required name=search_term_string",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    name: "ElevateIT",
+    description: "Weby, e-shopy a digitální identita zaměřená na výkon.",
+    url: "https://elevateit.cz",
+    image: "https://elevateit.cz/android-chrome-512x512.png",
+    email: "elevateitcz@gmail.com",
+    address: {
+      "@type": "PostalAddress",
+      addressLocality: "Praha",
+      addressCountry: "CZ",
+    },
+    areaServed: "CZ",
+    sameAs: ["https://www.instagram.com/elevateit.cz/"],
+    serviceType: ["Web design", "E-commerce", "Branding"],
+  },
+]);
 
 function NotFoundComponent() {
   return (
@@ -55,20 +81,31 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "ELEVATE — Digitální agentura" },
-      { name: "description", content: "Tvoříme weby, které vydělávají. Pomáháme firmám růst online." },
-      { name: "author", content: "ELEVATE" },
-      { property: "og:title", content: "ELEVATE — Digitální agentura" },
-      { property: "og:description", content: "Tvoříme weby, které vydělávají. Pomáháme firmám růst online." },
+      { name: "theme-color", content: "#0b0f17" },
+      { name: "application-name", content: "ElevateIT" },
+      { name: "apple-mobile-web-app-title", content: "ElevateIT" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "author", content: "ElevateIT" },
+      { property: "og:site_name", content: "ElevateIT" },
       { property: "og:type", content: "website" },
+      { property: "og:locale", content: "cs_CZ" },
+      { property: "og:image", content: "https://elevateit.cz/og-image.png" },
+      { property: "og:image:width", content: "512" },
+      { property: "og:image:height", content: "512" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "ELEVATE — Digitální agentura" },
-      { name: "twitter:description", content: "Tvoříme weby, které vydělávají. Pomáháme firmám růst online." },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c8aa125-3a10-46cb-a0b7-54bd47b7fa1a/id-preview-0bb11058--8909fd69-7455-4ab1-9c3a-d6cf0cfb51c8.lovable.app-1777372763384.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/7c8aa125-3a10-46cb-a0b7-54bd47b7fa1a/id-preview-0bb11058--8909fd69-7455-4ab1-9c3a-d6cf0cfb51c8.lovable.app-1777372763384.png" },
+      { name: "twitter:image", content: "https://elevateit.cz/og-image.png" },
       { name: "google-site-verification", content: "kzWWGfct_dpRjw9ivUmnzMG5nIGhvfp0OmnTb7wN1xM" },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png" },
+      { rel: "mask-icon", href: "/safari-pinned-tab.svg", color: "#1d4ed8" },
+      { rel: "manifest", href: "/site.webmanifest" },
+    ],
     scripts: [
       {
         type: "application/ld+json",
