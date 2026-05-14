@@ -15,11 +15,13 @@ export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "ELEVATE — Tvoříme weby, které vydělávají" },
-      { name: "description", content: "Digitální agentura. Weby, e-shopy a branding, které přivádí klienty a zvyšují tržby." },
-      { property: "og:title", content: "ELEVATE — Tvoříme weby, které vydělávají" },
-      { property: "og:description", content: "Pomáháme firmám růst online." },
+      { title: "ElevateIT — Weby a digitální identita zaměřená na výkon" },
+      { name: "description", content: "Navrhujeme moderní weby, e-shopy a digitální značky zaměřené na růst, důvěru a výsledky. UX, development a branding pro firmy, které chtějí růst online." },
+      { property: "og:title", content: "ElevateIT — Weby a digitální identita zaměřená na výkon" },
+      { property: "og:description", content: "Moderní weby, e-shopy a branding zaměřené na růst, důvěru a měřitelné výsledky." },
       { property: "og:url", content: "https://elevateit.cz/" },
+      { name: "twitter:title", content: "ElevateIT — Weby a digitální identita zaměřená na výkon" },
+      { name: "twitter:description", content: "Moderní weby, e-shopy a branding zaměřené na růst a měřitelné výsledky." },
     ],
     links: [{ rel: "canonical", href: "https://elevateit.cz/" }],
   }),
