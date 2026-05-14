@@ -21,7 +21,7 @@ export function IndustryStrip() {
           {ITEMS.map((it) => (
             <span
               key={it}
-              className="inline-flex items-center px-4 py-2 rounded-full border border-border bg-surface/40 text-[11px] uppercase tracking-[0.18em] text-muted-foreground opacity-50 hover:opacity-100 hover:text-foreground transition-opacity"
+              className="inline-flex items-center px-4 py-2 rounded-full border border-border bg-surface/40 text-[11px] uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground transition-colors"
             >
               {it}
             </span>
