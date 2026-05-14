@@ -55,12 +55,12 @@ export const translations = {
   CZ: {
     nav: { home: "Domů", services: "Služby", work: "Projekty", pricing: "Ceník", about: "O nás", contact: "Kontakt" },
     hero: {
-      tag: "Digitální agentura",
-      title1: "Tvoříme weby,",
-      title2: "které vydělávají.",
-      subtitle: "Pomáháme firmám růst online.",
-      cta1: "Získat nabídku",
-      cta2: "Naše práce",
+      tag: "Nezávislé digitální studio · Praha",
+      title1: "Digitální produkty,",
+      title2: "které posouvají byznys.",
+      subtitle: "Strategie, UX a vývoj v jednom týmu. Pro firmy, které berou web jako investici, ne jako náklad.",
+      cta1: "Domluvit konzultaci",
+      cta2: "Vybrané projekty",
     },
     trust: { years: "4+ let zkušeností", projects: "50+ projektů", clients: "Klienti v EU", response: "Odpověď do 24 hodin" },
     about: {
@@ -245,12 +245,12 @@ export const translations = {
   EN: {
     nav: { home: "Home", services: "Services", work: "Projects", pricing: "Pricing", about: "About", contact: "Contact" },
     hero: {
-      tag: "Digital agency",
-      title1: "We build websites",
-      title2: "that earn.",
-      subtitle: "Helping businesses grow online.",
-      cta1: "Get a quote",
-      cta2: "Our work",
+      tag: "Independent digital studio · Prague",
+      title1: "Digital products",
+      title2: "that move business forward.",
+      subtitle: "Strategy, UX and engineering in one team. For companies that treat a website as an investment, not a cost.",
+      cta1: "Book a consultation",
+      cta2: "Selected work",
     },
     trust: { years: "4+ years of experience", projects: "50+ projects", clients: "EU clients", response: "Reply within 24 hours" },
     about: {
@@ -417,12 +417,12 @@ export const translations = {
   RU: {
     nav: { home: "Главная", services: "Услуги", work: "Проекты", pricing: "Цены", about: "О нас", contact: "Контакты" },
     hero: {
-      tag: "Цифровое агентство",
-      title1: "Создаём сайты,",
-      title2: "которые приносят прибыль.",
-      subtitle: "Помогаем бизнесу расти онлайн.",
-      cta1: "Получить предложение",
-      cta2: "Наши работы",
+      tag: "Независимая цифровая студия · Прага",
+      title1: "Цифровые продукты,",
+      title2: "которые двигают бизнес вперёд.",
+      subtitle: "Стратегия, UX и разработка в одной команде. Для компаний, для которых сайт — инвестиция, а не расход.",
+      cta1: "Записаться на консультацию",
+      cta2: "Избранные работы",
     },
     trust: { years: "4+ года опыта", projects: "50+ проектов", clients: "Клиенты в ЕС", response: "Ответ в течение 24 часов" },
     about: {
@@ -588,12 +588,12 @@ export const translations = {
   UA: {
     nav: { home: "Головна", services: "Послуги", work: "Проєкти", pricing: "Ціни", about: "Про нас", contact: "Контакти" },
     hero: {
-      tag: "Цифрова агенція",
-      title1: "Створюємо сайти,",
-      title2: "що приносять прибуток.",
-      subtitle: "Допомагаємо бізнесу рости онлайн.",
-      cta1: "Отримати пропозицію",
-      cta2: "Наші роботи",
+      tag: "Незалежна цифрова студія · Прага",
+      title1: "Цифрові продукти,",
+      title2: "що рухають бізнес уперед.",
+      subtitle: "Стратегія, UX і розробка в одній команді. Для компаній, для яких сайт — інвестиція, а не витрата.",
+      cta1: "Записатися на консультацію",
+      cta2: "Вибрані роботи",
     },
     trust: { years: "4+ роки досвіду", projects: "50+ проєктів", clients: "Клієнти в ЄС", response: "Відповідь протягом 24 годин" },
     about: {
