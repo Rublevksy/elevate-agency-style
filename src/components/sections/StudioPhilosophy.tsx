@@ -31,17 +31,17 @@ const PILLARS: Record<Lang, Pillar[]> = {
     { t: "Transparentní spolupráce", d: "Pravidelné check-iny, jasné termíny, bez schovávání problémů. Klient vždy ví, na čem je." },
   ],
   EN: [
-    { t: "Business first, pixels second", d: "We start with “what should this site earn?”. Design is a consequence of strategy, not decoration." },
+    { t: "Business first, pixels second", d: "We start with the question: what should this site actually earn? Design is a consequence of strategy, not decoration." },
     { t: "UX built on decisions", d: "Every element has a reason to exist. Hierarchy, contrast and flow are settled before Figma opens." },
     { t: "Transparent collaboration", d: "Regular check-ins, clear deadlines, no hiding problems. The client always knows where we stand." },
   ],
   RU: [
-    { t: "Сначала бизнес, потом пиксели", d: "Начинаем с вопроса «что сайт должен зарабатывать?». Дизайн — следствие стратегии, а не декор." },
+    { t: "Сначала бизнес, потом пиксели", d: "Начинаем с вопроса: что сайт должен зарабатывать? Дизайн — следствие стратегии, а не декор." },
     { t: "UX на решениях, не на трендах", d: "У каждого элемента есть причина. Иерархия, контраст и поток — до Figma." },
     { t: "Прозрачная работа", d: "Регулярные созвоны, чёткие сроки, без замалчивания проблем. Клиент всегда в курсе." },
   ],
   UA: [
-    { t: "Спочатку бізнес, потім пікселі", d: "Починаємо з питання «що сайт має заробляти?». Дизайн — наслідок стратегії, а не декор." },
+    { t: "Спочатку бізнес, потім пікселі", d: "Починаємо з питання: що сайт має заробляти? Дизайн — наслідок стратегії, а не декор." },
     { t: "UX на рішеннях, не на трендах", d: "Кожен елемент має причину. Ієрархія, контраст і потік — до Figma." },
     { t: "Прозора співпраця", d: "Регулярні зідзвони, чіткі дедлайни, без замовчування проблем. Клієнт завжди в курсі." },
   ],
