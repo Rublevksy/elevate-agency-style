@@ -26,7 +26,7 @@ const LEAD: Record<Lang, string> = {
 
 const PILLARS: Record<Lang, Pillar[]> = {
   CZ: [
-    { t: "Byznys první, pixely druhé", d: "Začínáme otázkou „co má web vydělat?". Design je důsledek strategie, ne dekorace." },
+    { t: "Byznys první, pixely druhé", d: "Začínáme otázkou: co má web reálně vydělat? Design je důsledek strategie, ne dekorace." },
     { t: "UX postavené na rozhodnutích", d: "Každý prvek má důvod existovat. Hierarchie, kontrast a flow řešíme dřív, než otevřeme Figmu." },
     { t: "Transparentní spolupráce", d: "Pravidelné check-iny, jasné termíny, bez schovávání problémů. Klient vždy ví, na čem je." },
   ],
