@@ -7,6 +7,7 @@ import { useProjects } from "@/lib/projects-i18n";
 import { TechStack } from "@/components/sections/TechStack";
 import { IndustryStrip } from "@/components/sections/IndustryStrip";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
+import { StudioPhilosophy } from "@/components/sections/StudioPhilosophy";
 import { InstagramStrip } from "@/components/sections/InstagramStrip";
 import { useT } from "@/lib/i18n";
 import heroLogo from "@/assets/elevate-logo.png";
@@ -139,6 +140,9 @@ function Home() {
 
       {/* TECH STACK */}
       <TechStack />
+
+      {/* STUDIO PHILOSOPHY */}
+      <StudioPhilosophy />
 
       {/* HOW WE WORK */}
       <ProcessTimeline />

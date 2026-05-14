@@ -1,41 +1,45 @@
-import { Phone, PenLine, Monitor, Rocket } from "lucide-react";
+import { Compass, PenLine, Palette, Code2, Rocket } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
 
 type Step = { t: string; d: string };
 const STEPS: Record<Lang, Step[]> = {
   CZ: [
-    { t: "Konzultace zdarma", d: "15minutový hovor. Pochopíme váš projekt." },
-    { t: "Návrh do 48 hodin", d: "Wireframe a struktura ještě před designem." },
-    { t: "Design & vývoj", d: "Prémiový design a rychlý frontendový vývoj." },
-    { t: "Spuštění + podpora", d: "Nasazení a 30 dní podpory zdarma." },
+    { t: "Strategie", d: "Pochopíme byznys, cíle a cílovou skupinu. Definujeme, co má web reálně přinést." },
+    { t: "UX & wireframe", d: "Informační architektura a klikatelný prototyp dřív, než kdokoli kreslí pixely." },
+    { t: "Design", d: "Vizuální identita a UI systém zaměřený na důvěru, čitelnost a konverzi." },
+    { t: "Vývoj", d: "Rychlý, čistý kód. SEO, výkon a přístupnost jako standard, ne nadstavba." },
+    { t: "Launch & optimalizace", d: "Spuštění, měření a iterace podle reálných dat z prvních týdnů." },
   ],
   EN: [
-    { t: "Free consultation", d: "15-minute call. We understand your project." },
-    { t: "Proposal in 48h", d: "Wireframe and structure before design." },
-    { t: "Design & dev", d: "Premium design and fast frontend development." },
-    { t: "Launch + support", d: "Deployment and 30 days free support." },
+    { t: "Strategy", d: "We learn the business, goals and audience. We define what the site actually needs to deliver." },
+    { t: "UX & wireframe", d: "Information architecture and a clickable prototype before anyone draws pixels." },
+    { t: "Design", d: "Visual identity and a UI system built for trust, readability and conversion." },
+    { t: "Engineering", d: "Fast, clean code. SEO, performance and accessibility as a standard, not an extra." },
+    { t: "Launch & optimization", d: "Ship, measure, and iterate based on real data from the first weeks." },
   ],
   RU: [
-    { t: "Бесплатная консультация", d: "15 минут. Разбираемся в проекте." },
-    { t: "Предложение за 48ч", d: "Структура и прототип до дизайна." },
-    { t: "Дизайн и разработка", d: "Премиум дизайн и быстрая разработка." },
-    { t: "Запуск + поддержка", d: "Запуск и 30 дней поддержки бесплатно." },
+    { t: "Стратегия", d: "Понимаем бизнес, цели и аудиторию. Определяем, что сайт должен дать на самом деле." },
+    { t: "UX и прототип", d: "Информационная архитектура и кликабельный прототип до пикселей." },
+    { t: "Дизайн", d: "Визуальная идентичность и UI-система для доверия, читаемости и конверсии." },
+    { t: "Разработка", d: "Быстрый и чистый код. SEO, производительность и доступность как стандарт." },
+    { t: "Запуск и оптимизация", d: "Запуск, измерения и итерации по данным первых недель." },
   ],
   UA: [
-    { t: "Безкоштовна консультація", d: "15 хвилин. Розбираємося в проекті." },
-    { t: "Пропозиція за 48г", d: "Структура і прототип до дизайну." },
-    { t: "Дизайн і розробка", d: "Преміум дизайн і швидка розробка." },
-    { t: "Запуск + підтримка", d: "Запуск і 30 днів підтримки безкоштовно." },
+    { t: "Стратегія", d: "Розуміємо бізнес, цілі та аудиторію. Визначаємо, що сайт має реально дати." },
+    { t: "UX і прототип", d: "Інформаційна архітектура і клікабельний прототип до пікселів." },
+    { t: "Дизайн", d: "Візуальна ідентичність та UI-система для довіри, читабельності й конверсії." },
+    { t: "Розробка", d: "Швидкий і чистий код. SEO, продуктивність і доступність як стандарт." },
+    { t: "Запуск і оптимізація", d: "Запуск, вимірювання та ітерації за даними перших тижнів." },
   ],
 };
 const TITLE: Record<Lang, string> = {
-  CZ: "Jak spolupráce vypadá",
-  EN: "How we work",
-  RU: "Как мы работаем",
-  UA: "Як ми працюємо",
+  CZ: "Jak postupujeme od nápadu k výsledku",
+  EN: "How we move from idea to result",
+  RU: "Как мы идём от идеи к результату",
+  UA: "Як ми йдемо від ідеї до результату",
 };
 const EYEBROW: Record<Lang, string> = { CZ: "Proces", EN: "Process", RU: "Процесс", UA: "Процес" };
-const ICONS = [Phone, PenLine, Monitor, Rocket];
+const ICONS = [Compass, PenLine, Palette, Code2, Rocket];
 
 export function ProcessTimeline() {
   const { lang } = useT();
@@ -52,9 +56,9 @@ export function ProcessTimeline() {
           </h2>
         </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-6">
+        <div className="relative grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-6">
           <div
-            className="hidden md:block absolute top-7 left-[12%] right-[12%] h-px bg-border overflow-hidden"
+            className="hidden md:block absolute top-7 left-[10%] right-[10%] h-px bg-border overflow-hidden"
             aria-hidden
           >
             <div className="h-full w-full bg-gradient-to-r from-primary via-primary to-primary/30 origin-left animate-[timelineGrow_1.4s_ease-out_forwards] scale-x-0" />
