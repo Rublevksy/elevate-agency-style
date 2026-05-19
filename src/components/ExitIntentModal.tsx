@@ -58,6 +58,7 @@ export function ExitIntentModal() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder={c.placeholder}
+                aria-label={c.placeholder}
                 className="w-full rounded-md border border-border bg-surface px-4 py-3 text-sm text-foreground outline-none focus:border-primary"
               />
               <button type="submit" className="btn-primary w-full justify-center">{c.submit}</button>

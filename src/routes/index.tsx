@@ -16,12 +16,12 @@ export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "ElevateIT — Weby a digitální identita pro firmy, které chtějí růst" },
+      { title: "ElevateIT — Weby a digitální identita pro růst firem" },
       { name: "description", content: "Navrhujeme moderní weby, e-shopy a digitální značky zaměřené na růst, důvěru a výkon. UX, development a branding pro firmy které chtějí výsledky." },
-      { property: "og:title", content: "ElevateIT — Weby a digitální identita pro firmy, které chtějí růst" },
+      { property: "og:title", content: "ElevateIT — Weby a digitální identita pro růst firem" },
       { property: "og:description", content: "Navrhujeme moderní weby, e-shopy a digitální značky zaměřené na růst, důvěru a výkon. UX, development a branding pro firmy které chtějí výsledky." },
       { property: "og:url", content: "https://elevateit.cz/" },
-      { name: "twitter:title", content: "ElevateIT — Weby a digitální identita pro firmy, které chtějí růst" },
+      { name: "twitter:title", content: "ElevateIT — Weby a digitální identita pro růst firem" },
       { name: "twitter:description", content: "Navrhujeme moderní weby, e-shopy a digitální značky zaměřené na růst, důvěru a výkon." },
     ],
     links: [{ rel: "canonical", href: "https://elevateit.cz/" }],
@@ -70,9 +70,9 @@ function Home() {
                 draggable={false}
               />
             </div>
-            <p className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-6">
+            <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-6">
               {t.hero.title1} <span className="text-primary">{t.hero.title2}</span>
-            </p>
+            </h1>
             <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
               {t.hero.subtitle}
             </p>

@@ -359,7 +359,7 @@ export const translations = {
     ui: {
       homeServicesEyebrow: "What we do",
       homeServicesTitle: "Services focused on results",
-      homeServicesLearn: "Learn more",
+      homeServicesLearn: "View service details",
       homeWorkEyebrow: "Selected projects",
       homeWorkTitle: "Work that delivers results",
       homeWorkViewAll: "View all projects",
