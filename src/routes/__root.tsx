@@ -103,13 +103,15 @@ export const Route = createRootRoute({
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", type: "image/x-icon", href: "/favicon.ico?v=2" },
-      { rel: "shortcut icon", type: "image/x-icon", href: "/favicon.ico?v=2" },
-      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png?v=2" },
-      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png?v=2" },
-      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png?v=2" },
-      { rel: "mask-icon", href: "/safari-pinned-tab.svg?v=2", color: "#1d4ed8" },
-      { rel: "manifest", href: "/site.webmanifest" },
+      { rel: "icon", type: "image/x-icon", href: "/favicon.ico?v=3" },
+      { rel: "shortcut icon", type: "image/x-icon", href: "/favicon.ico?v=3" },
+      { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png?v=3" },
+      { rel: "icon", type: "image/png", sizes: "32x32", href: "/favicon-32x32.png?v=3" },
+      { rel: "icon", type: "image/png", sizes: "192x192", href: "/android-chrome-192x192.png?v=3" },
+      { rel: "icon", type: "image/png", sizes: "512x512", href: "/android-chrome-512x512.png?v=3" },
+      { rel: "apple-touch-icon", sizes: "180x180", href: "/apple-touch-icon.png?v=3" },
+      { rel: "mask-icon", href: "/safari-pinned-tab.svg?v=3", color: "#1d4ed8" },
+      { rel: "manifest", href: "/site.webmanifest?v=3" },
     ],
     scripts: [
       {
