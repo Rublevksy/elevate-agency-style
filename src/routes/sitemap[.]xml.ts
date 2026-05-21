@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 import { PROJECT_SLUGS } from "@/lib/projects";
+import { INSIGHT_SLUGS } from "@/lib/insights";
 
 const BASE_URL = "https://elevateit.cz";
 
@@ -28,10 +29,17 @@ export const Route = createFileRoute("/sitemap.xml")({
           { path: "/pricing/branding", changefreq: "monthly", priority: "0.7" },
           { path: "/projects", changefreq: "weekly", priority: "0.8" },
           { path: "/contact", changefreq: "monthly", priority: "0.7" },
+          { path: "/audit", changefreq: "monthly", priority: "0.9" },
+          { path: "/insights", changefreq: "weekly", priority: "0.8" },
           ...PROJECT_SLUGS.map((slug) => ({
             path: `/projects/${slug}`,
             changefreq: "monthly" as const,
             priority: "0.6",
+          })),
+          ...INSIGHT_SLUGS.map((slug) => ({
+            path: `/insights/${slug}`,
+            changefreq: "monthly" as const,
+            priority: "0.7",
           })),
         ];
 

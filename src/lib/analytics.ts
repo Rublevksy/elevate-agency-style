@@ -25,8 +25,12 @@ let initialized = false;
 let consentGranted = false;
 
 function hasCookieConsent(): boolean {
-  if (typeof document === "undefined") return false;
-  return /(^|; )cookie-consent=accepted/.test(document.cookie);
+  if (typeof window === "undefined") return false;
+  try {
+    return window.localStorage.getItem("elevate-cookies") === "accept";
+  } catch {
+    return false;
+  }
 }
 
 function injectGA4(id: string) {
