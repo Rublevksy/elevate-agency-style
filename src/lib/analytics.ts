@@ -18,7 +18,9 @@ declare global {
   }
 }
 
-const GA4_ID = (import.meta.env.VITE_GA4_ID as string | undefined)?.trim();
+// Public GA4 Measurement ID — safe to embed (it's a publishable identifier).
+// Override per-env via VITE_GA4_ID if needed.
+const GA4_ID = ((import.meta.env.VITE_GA4_ID as string | undefined)?.trim()) || "G-TVD3K5G5GF";
 const CLARITY_ID = (import.meta.env.VITE_CLARITY_ID as string | undefined)?.trim();
 
 let initialized = false;
@@ -43,7 +45,7 @@ function injectGA4(id: string) {
 
   const s2 = document.createElement("script");
   s2.dataset.ga4Init = "true";
-  s2.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('js',new Date());gtag('config','${id}',{anonymize_ip:true,send_page_view:true});`;
+  s2.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('consent','default',{analytics_storage:'granted'});gtag('js',new Date());gtag('config','${id}',{anonymize_ip:true,send_page_view:false});`;
   document.head.appendChild(s2);
 }
 
@@ -72,6 +74,10 @@ export function grantAnalyticsConsent() {
   consentGranted = true;
   if (GA4_ID) injectGA4(GA4_ID);
   if (CLARITY_ID) injectClarity(CLARITY_ID);
+  // Fire pageview for the current page now that consent is granted.
+  try {
+    trackPageView(window.location.pathname + window.location.search, document.title);
+  } catch {/* ignore */}
 }
 
 /** Track an event. Funnels to GA4 + Clarity + dataLayer. No-op without IDs. */
