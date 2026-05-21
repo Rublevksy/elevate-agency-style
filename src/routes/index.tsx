@@ -8,6 +8,7 @@ import { TechStack } from "@/components/sections/TechStack";
 import { IndustryStrip } from "@/components/sections/IndustryStrip";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { StudioPhilosophy } from "@/components/sections/StudioPhilosophy";
+import { Collaboration } from "@/components/sections/Collaboration";
 import { InstagramStrip } from "@/components/sections/InstagramStrip";
 import { useT } from "@/lib/i18n";
 import heroLogo from "@/assets/elevate-logo.png";
@@ -146,6 +147,10 @@ function Home() {
 
       {/* HOW WE WORK */}
       <ProcessTimeline />
+
+      {/* COLLABORATION */}
+      <Collaboration />
+
 
       {/* PORTFOLIO — only 3 */}
       <section className="py-28 md:py-36 border-t border-border">
