@@ -74,6 +74,10 @@ export function grantAnalyticsConsent() {
   consentGranted = true;
   if (GA4_ID) injectGA4(GA4_ID);
   if (CLARITY_ID) injectClarity(CLARITY_ID);
+  // Fire pageview for the current page now that consent is granted.
+  try {
+    trackPageView(window.location.pathname + window.location.search, document.title);
+  } catch {/* ignore */}
 }
 
 /** Track an event. Funnels to GA4 + Clarity + dataLayer. No-op without IDs. */
