@@ -45,7 +45,7 @@ function injectGA4(id: string) {
 
   const s2 = document.createElement("script");
   s2.dataset.ga4Init = "true";
-  s2.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('js',new Date());gtag('config','${id}',{anonymize_ip:true,send_page_view:true});`;
+  s2.text = `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}window.gtag=gtag;gtag('consent','default',{analytics_storage:'granted'});gtag('js',new Date());gtag('config','${id}',{anonymize_ip:true,send_page_view:false});`;
   document.head.appendChild(s2);
 }
 
