@@ -21,7 +21,7 @@ declare global {
 // Public GA4 Measurement ID — safe to embed (it's a publishable identifier).
 // Override per-env via VITE_GA4_ID if needed.
 const GA4_ID = ((import.meta.env.VITE_GA4_ID as string | undefined)?.trim()) || "G-TVD3K5G5GF";
-const CLARITY_ID = (import.meta.env.VITE_CLARITY_ID as string | undefined)?.trim();
+const CLARITY_ID = ((import.meta.env.VITE_CLARITY_ID as string | undefined)?.trim()) || "wuhmbie592";
 
 let initialized = false;
 let consentGranted = false;
