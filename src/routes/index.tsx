@@ -17,13 +17,13 @@ export const Route = createFileRoute("/")({
   component: Home,
   head: () => ({
     meta: [
-      { title: "ElevateIT — Weby a digitální identita pro růst firem" },
-      { name: "description", content: "Navrhujeme moderní weby, e-shopy a digitální značky zaměřené na růst, důvěru a výkon. UX, development a branding pro firmy které chtějí výsledky." },
-      { property: "og:title", content: "ElevateIT — Weby a digitální identita pro růst firem" },
-      { property: "og:description", content: "Navrhujeme moderní weby, e-shopy a digitální značky zaměřené na růst, důvěru a výkon. UX, development a branding pro firmy které chtějí výsledky." },
+      { title: "ELEVATE — Webdesign, UX a vývoj moderních webů" },
+      { name: "description", content: "Moderní weby a UX strategie pro firmy, které chtějí růst online. Audit zdarma do 48 hodin." },
+      { property: "og:title", content: "ELEVATE — Webdesign, UX a vývoj moderních webů" },
+      { property: "og:description", content: "Moderní weby a UX strategie pro firmy, které chtějí růst online. Audit zdarma do 48 hodin." },
       { property: "og:url", content: "https://elevateit.cz/" },
-      { name: "twitter:title", content: "ElevateIT — Weby a digitální identita pro růst firem" },
-      { name: "twitter:description", content: "Navrhujeme moderní weby, e-shopy a digitální značky zaměřené na růst, důvěru a výkon." },
+      { name: "twitter:title", content: "ELEVATE — Webdesign, UX a vývoj moderních webů" },
+      { name: "twitter:description", content: "Moderní weby a UX strategie pro firmy, které chtějí růst online. Audit zdarma do 48 hodin." },
     ],
     links: [{ rel: "canonical", href: "https://elevateit.cz/" }],
   }),
@@ -90,10 +90,10 @@ function Home() {
 
             <p className="text-xs md:text-sm uppercase tracking-[0.18em] text-muted-foreground">
               <span className="text-foreground font-medium">{t.trust.years}</span>
-              <span className="mx-2 text-primary">•</span>
+              {" "}<span className="mx-2 text-primary">•</span>{" "}
               <span className="text-foreground font-medium">{t.trust.projects}</span>
-              <span className="mx-2 text-primary">•</span>
-              {t.trust.response}
+              {" "}<span className="mx-2 text-primary">•</span>{" "}
+              <span>{t.trust.response}</span>
             </p>
           </div>
 
