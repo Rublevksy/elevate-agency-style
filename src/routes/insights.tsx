@@ -1,54 +1,65 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Clock } from "lucide-react";
-import { INSIGHTS } from "@/lib/insights";
-import { useT } from "@/lib/i18n";
+import { getInsightsForLang } from "@/lib/insights";
+import { useT, type Lang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/insights")({
   component: InsightsPage,
-  head: () => ({
-    meta: [
-      { title: "Insights — ElevateIT" },
-      {
-        name: "description",
-        content:
-          "Pohled na moderní web design, UX, konverzi a digitální strategii. Otevřené názory bez marketingového balastu.",
-      },
-      { property: "og:title", content: "Insights — ElevateIT" },
-      {
-        property: "og:description",
-        content:
-          "Pohled na moderní web design, UX, konverzi a digitální strategii.",
-      },
-      { property: "og:url", content: "https://elevateit.cz/insights" },
-    ],
-    links: [{ rel: "canonical", href: "https://elevateit.cz/insights" }],
-    scripts: [
-      {
-        type: "application/ld+json",
-        children: JSON.stringify({
-          "@context": "https://schema.org",
-          "@type": "Blog",
-          name: "ElevateIT Insights",
-          url: "https://elevateit.cz/insights",
-          inLanguage: "cs-CZ",
-          publisher: { "@type": "Organization", name: "ElevateIT" },
-          blogPost: INSIGHTS.map((i) => ({
-            "@type": "BlogPosting",
-            headline: i.title,
-            datePublished: i.publishedAt,
-            url: `https://elevateit.cz/insights/${i.slug}`,
-            description: i.excerpt,
-          })),
-        }),
-      },
-    ],
-  }),
+  head: () => {
+    // Use CZ as canonical for SEO meta; per-locale routing isn't URL-based.
+    const items = getInsightsForLang("CZ");
+    return {
+      meta: [
+        { title: "Insights — ElevateIT" },
+        {
+          name: "description",
+          content:
+            "Pohled na moderní web design, UX, konverzi a digitální strategii. Otevřené názory bez marketingového balastu.",
+        },
+        { property: "og:title", content: "Insights — ElevateIT" },
+        {
+          property: "og:description",
+          content:
+            "Pohled na moderní web design, UX, konverzi a digitální strategii.",
+        },
+        { property: "og:url", content: "https://elevateit.cz/insights" },
+      ],
+      links: [{ rel: "canonical", href: "https://elevateit.cz/insights" }],
+      scripts: [
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Blog",
+            name: "ElevateIT Insights",
+            url: "https://elevateit.cz/insights",
+            inLanguage: "cs-CZ",
+            publisher: { "@type": "Organization", name: "ElevateIT" },
+            blogPost: items.map((i) => ({
+              "@type": "BlogPosting",
+              headline: i.title,
+              datePublished: i.publishedAt,
+              url: `https://elevateit.cz/insights/${i.slug}`,
+              description: i.excerpt,
+            })),
+          }),
+        },
+      ],
+    };
+  },
 });
+
+const LOCALE_MAP: Record<Lang, string> = {
+  CZ: "cs-CZ",
+  EN: "en-GB",
+  RU: "ru-RU",
+  UA: "uk-UA",
+};
 
 function InsightsPage() {
   const { lang, t } = useT();
-  const locale = lang === "CZ" ? "cs-CZ" : lang === "EN" ? "en-GB" : lang === "RU" ? "ru-RU" : "uk-UA";
-  const formatter = new Intl.DateTimeFormat(locale, {
+  const items = getInsightsForLang(lang);
+  const formatter = new Intl.DateTimeFormat(LOCALE_MAP[lang], {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -72,9 +83,9 @@ function InsightsPage() {
       <section className="py-16 md:py-24 border-t border-border">
         <div className="container-luxe">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {INSIGHTS.map((i) => (
+            {items.map((i) => (
               <Link
-                key={i.slug}
+                key={i.id}
                 to="/insights/$slug"
                 params={{ slug: i.slug }}
                 className="group flex flex-col p-8 rounded-xl border border-border bg-surface/40 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_25px_70px_-25px_rgba(59,130,246,0.45)]"

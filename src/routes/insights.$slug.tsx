@@ -1,19 +1,24 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, useNavigate } from "@tanstack/react-router";
+import { useEffect } from "react";
 import { ArrowLeft, ArrowRight, Clock } from "lucide-react";
-import { getInsight, INSIGHTS, type Insight } from "@/lib/insights";
+import {
+  INSIGHTS,
+  getInsightByAnySlug,
+  getInsightById,
+  type ResolvedInsight,
+} from "@/lib/insights";
+import { useT, type Lang } from "@/lib/i18n";
 
 export const Route = createFileRoute("/insights/$slug")({
   loader: ({ params }) => {
-    const post = getInsight(params.slug);
+    const post = getInsightByAnySlug(params.slug);
     if (!post) throw notFound();
     return { post };
   },
   head: ({ params, loaderData }) => {
     const post = loaderData?.post;
     if (!post) {
-      return {
-        meta: [{ title: "Insight — ElevateIT" }],
-      };
+      return { meta: [{ title: "Insight — ElevateIT" }] };
     }
     const url = `https://elevateit.cz/insights/${params.slug}`;
     const ld: Record<string, unknown>[] = [
@@ -24,7 +29,6 @@ export const Route = createFileRoute("/insights/$slug")({
         description: post.excerpt,
         datePublished: post.publishedAt,
         dateModified: post.publishedAt,
-        inLanguage: "cs-CZ",
         author: { "@type": "Organization", name: "ElevateIT" },
         publisher: {
           "@type": "Organization",
@@ -50,7 +54,7 @@ export const Route = createFileRoute("/insights/$slug")({
       ld.push({
         "@context": "https://schema.org",
         "@type": "FAQPage",
-        mainEntity: post.faq.map((f) => ({
+        mainEntity: post.faq.map((f: { q: string; a: string }) => ({
           "@type": "Question",
           name: f.q,
           acceptedAnswer: { "@type": "Answer", text: f.a },
@@ -80,24 +84,103 @@ export const Route = createFileRoute("/insights/$slug")({
   component: InsightPage,
   notFoundComponent: () => (
     <div className="page-top container-luxe">
-      <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">Insight nenalezen</p>
+      <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">404</p>
       <h1 className="text-3xl md:text-5xl font-bold text-foreground mb-8">
-        Tenhle článek neexistuje.
+        404
       </h1>
       <Link to="/insights" className="btn-outline inline-flex">
         <ArrowLeft className="h-4 w-4" />
-        Všechny insights
+        Insights
       </Link>
     </div>
   ),
 });
 
+const LOCALE_MAP: Record<Lang, string> = {
+  CZ: "cs-CZ",
+  EN: "en-GB",
+  RU: "ru-RU",
+  UA: "uk-UA",
+};
+
+const READ_LABEL: Record<Lang, string> = {
+  CZ: "min čtení",
+  EN: "min read",
+  RU: "мин чтения",
+  UA: "хв читання",
+};
+
+const FAQ_LABEL: Record<Lang, string> = {
+  CZ: "Časté dotazy",
+  EN: "Frequently asked",
+  RU: "Частые вопросы",
+  UA: "Часті питання",
+};
+
+const BACK_LABEL: Record<Lang, string> = {
+  CZ: "Všechny insights",
+  EN: "All insights",
+  RU: "Все статьи",
+  UA: "Усі статті",
+};
+
+const RELATED_LABEL: Record<Lang, string> = {
+  CZ: "Související",
+  EN: "Related",
+  RU: "Похожее",
+  UA: "Схоже",
+};
+
+const CTA_TITLE: Record<Lang, string> = {
+  CZ: "Chcete vědět, jak si stojí váš web?",
+  EN: "Want to know where your website stands?",
+  RU: "Хотите узнать, как обстоят дела с вашим сайтом?",
+  UA: "Хочете дізнатися, як справи з вашим сайтом?",
+};
+
+const CTA_DESC: Record<Lang, string> = {
+  CZ: "Pošlete nám URL a do 48 hodin dostanete konkrétní pohled na UX, výkon a konverzní potenciál.",
+  EN: "Send us the URL — within 48 hours you'll receive a concrete take on UX, performance and conversion potential.",
+  RU: "Пришлите URL — в течение 48 часов получите конкретный взгляд на UX, скорость и конверсионный потенциал.",
+  UA: "Надішліть URL — упродовж 48 годин отримаєте конкретний погляд на UX, швидкість і конверсійний потенціал.",
+};
+
+const CTA_BTN: Record<Lang, string> = {
+  CZ: "Získat audit zdarma",
+  EN: "Get a free audit",
+  RU: "Получить бесплатный аудит",
+  UA: "Отримати безкоштовний аудит",
+};
+
 function InsightPage() {
-  const { post } = Route.useLoaderData() as { post: Insight };
-  const related = (post.related ?? [])
-    .map((s) => INSIGHTS.find((i) => i.slug === s))
-    .filter((i): i is NonNullable<typeof i> => Boolean(i));
-  const formatter = new Intl.DateTimeFormat("cs-CZ", {
+  const navigate = useNavigate();
+  const { lang, t } = useT();
+  const { post } = Route.useLoaderData() as { post: ResolvedInsight };
+
+  // When user switches language, swap the URL slug to the matching locale slug.
+  useEffect(() => {
+    const insight = INSIGHTS.find((i) => i.id === post.id);
+    if (!insight) return;
+    const localized = insight.i18n[lang];
+    if (localized && localized.slug !== post.slug) {
+      navigate({
+        to: "/insights/$slug",
+        params: { slug: localized.slug },
+        replace: true,
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [lang]);
+
+  // Re-resolve the post into the active language for instant rerender even
+  // before the URL swap completes.
+  const active = getInsightById(post.id, lang) ?? post;
+
+  const related = (active.related ?? [])
+    .map((id) => getInsightById(id, lang))
+    .filter((i): i is ResolvedInsight => Boolean(i));
+
+  const formatter = new Intl.DateTimeFormat(LOCALE_MAP[lang], {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -112,30 +195,30 @@ function InsightPage() {
             className="inline-flex items-center gap-2 text-xs uppercase tracking-[0.22em] text-muted-foreground hover:text-primary transition-colors mb-10"
           >
             <ArrowLeft className="h-3.5 w-3.5" />
-            Všechny insights
+            {BACK_LABEL[lang]}
           </Link>
 
           <p className="text-[11px] uppercase tracking-[0.25em] text-primary mb-5">
-            {post.category}
+            {active.category}
           </p>
           <h1 className="text-4xl md:text-6xl font-bold text-foreground tracking-tight leading-[1.05] mb-8">
-            {post.title}
+            {active.title}
           </h1>
           <div className="flex items-center gap-4 text-xs text-muted-foreground mb-12">
-            <span>{formatter.format(new Date(post.publishedAt))}</span>
+            <span>{formatter.format(new Date(active.publishedAt))}</span>
             <span className="h-1 w-1 rounded-full bg-border" />
             <span className="flex items-center gap-1.5">
               <Clock className="h-3.5 w-3.5" />
-              {post.readingMinutes} min čtení
+              {active.readingMinutes} {READ_LABEL[lang]}
             </span>
           </div>
 
           <p className="text-lg md:text-xl text-foreground leading-relaxed mb-16 border-l-2 border-primary pl-6">
-            {post.lead}
+            {active.lead}
           </p>
 
           <div className="space-y-14">
-            {post.sections.map((s, i) => (
+            {active.sections.map((s, i) => (
               <section key={i}>
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight mb-6">
                   {s.heading}
@@ -164,13 +247,13 @@ function InsightPage() {
             ))}
           </div>
 
-          {post.faq && post.faq.length > 0 && (
+          {active.faq && active.faq.length > 0 && (
             <section className="mt-20 pt-12 border-t border-border">
               <h2 className="text-2xl md:text-3xl font-bold text-foreground tracking-tight mb-8">
-                Časté dotazy
+                {FAQ_LABEL[lang]}
               </h2>
               <div className="space-y-6">
-                {post.faq.map((f) => (
+                {active.faq.map((f) => (
                   <div key={f.q} className="p-6 rounded-xl border border-border bg-surface/40">
                     <h3 className="text-base font-bold text-foreground mb-2">{f.q}</h3>
                     <p className="text-sm text-muted-foreground leading-relaxed">{f.a}</p>
@@ -183,16 +266,16 @@ function InsightPage() {
           {/* Inline CTA */}
           <aside className="mt-20 p-10 rounded-2xl border border-primary/30 bg-surface/60 text-center">
             <p className="text-[11px] uppercase tracking-[0.25em] text-primary mb-3">
-              Audit zdarma
+              {t.audit.navLink}
             </p>
             <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-4">
-              Chcete vědět, jak si stojí váš web?
+              {CTA_TITLE[lang]}
             </h2>
             <p className="text-sm text-muted-foreground max-w-md mx-auto mb-7">
-              Pošlete nám URL a do 48 hodin dostanete konkrétní pohled na UX, výkon a konverzní potenciál. Bez závazku.
+              {CTA_DESC[lang]}
             </p>
             <Link to="/audit" className="btn-primary inline-flex">
-              Získat audit zdarma
+              {CTA_BTN[lang]}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </aside>
@@ -203,12 +286,12 @@ function InsightPage() {
         <section className="py-20 md:py-28 border-t border-border bg-surface/30">
           <div className="container-luxe max-w-5xl">
             <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-8">
-              Související
+              {RELATED_LABEL[lang]}
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {related.map((r) => (
                 <Link
-                  key={r.slug}
+                  key={r.id}
                   to="/insights/$slug"
                   params={{ slug: r.slug }}
                   className="group p-8 rounded-xl border border-border bg-background/60 transition-all hover:border-primary/40"
