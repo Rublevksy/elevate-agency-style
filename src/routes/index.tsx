@@ -90,10 +90,10 @@ function Home() {
 
             <p className="text-xs md:text-sm uppercase tracking-[0.18em] text-muted-foreground">
               <span className="text-foreground font-medium">{t.trust.years}</span>
-              <span className="mx-2 text-primary">•</span>
+              {" "}<span className="mx-2 text-primary">•</span>{" "}
               <span className="text-foreground font-medium">{t.trust.projects}</span>
-              <span className="mx-2 text-primary">•</span>
-              {t.trust.response}
+              {" "}<span className="mx-2 text-primary">•</span>{" "}
+              <span>{t.trust.response}</span>
             </p>
           </div>
 
