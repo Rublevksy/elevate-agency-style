@@ -79,12 +79,12 @@ function Home() {
             </p>
 
             <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8">
-              <Link to="/contact" className="btn-primary group">
-                {t.hero.cta1}
+              <Link to="/audit" className="btn-primary group">
+                Audit zdarma
                 <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
               </Link>
-              <Link to="/projects" className="btn-outline">
-                {t.hero.cta2}
+              <Link to="/contact" className="btn-outline">
+                {t.hero.cta1}
               </Link>
             </div>
 

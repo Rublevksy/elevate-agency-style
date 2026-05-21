@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useT, type Lang } from "@/lib/i18n";
+import { grantAnalyticsConsent } from "@/lib/analytics";
 
 const KEY = "elevate-cookies";
 
@@ -22,6 +23,7 @@ export function CookieBanner() {
 
   const choose = (v: "accept" | "decline") => {
     try { localStorage.setItem(KEY, v); } catch {/* ignore */}
+    if (v === "accept") grantAnalyticsConsent();
     setShow(false);
   };
 

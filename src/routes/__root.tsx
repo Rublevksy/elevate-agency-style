@@ -11,6 +11,8 @@ import { CookieBanner } from "@/components/CookieBanner";
 import { ExitIntentModal } from "@/components/ExitIntentModal";
 import { TopProgressBar } from "@/components/TopProgressBar";
 import { useT } from "@/lib/i18n";
+import { initAnalytics, trackPageView } from "@/lib/analytics";
+import { useScrollDepth } from "@/hooks/use-scroll-depth";
 
 const STRUCTURED_DATA = JSON.stringify([
   {
@@ -137,12 +139,18 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function SiteShell() {
   useReveal();
+  useScrollDepth();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    initAnalytics();
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
     // Instant scroll to top on route change
     window.scrollTo({ top: 0, left: 0, behavior: "auto" });
+    trackPageView(pathname, typeof document !== "undefined" ? document.title : undefined);
   }, [pathname]);
 
   // Also scroll up immediately on click of any internal nav link (before the route resolves),

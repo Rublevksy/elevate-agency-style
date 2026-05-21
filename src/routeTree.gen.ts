@@ -13,7 +13,9 @@ import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AuditRouteImport } from './routes/audit'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesWebRouteImport } from './routes/services.web'
@@ -24,6 +26,7 @@ import { Route as ProjectsSlugRouteImport } from './routes/projects.$slug'
 import { Route as PricingWebRouteImport } from './routes/pricing.web'
 import { Route as PricingEshopRouteImport } from './routes/pricing.eshop'
 import { Route as PricingBrandingRouteImport } from './routes/pricing.branding'
+import { Route as InsightsSlugRouteImport } from './routes/insights.$slug'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
@@ -45,9 +48,19 @@ const PricingRoute = PricingRouteImport.update({
   path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditRoute = AuditRouteImport.update({
+  id: '/audit',
+  path: '/audit',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AboutRoute = AboutRouteImport.update({
@@ -100,15 +113,23 @@ const PricingBrandingRoute = PricingBrandingRouteImport.update({
   path: '/branding',
   getParentRoute: () => PricingRoute,
 } as any)
+const InsightsSlugRoute = InsightsSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
+  getParentRoute: () => InsightsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/audit': typeof AuditRoute
   '/contact': typeof ContactRoute
+  '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/insights/$slug': typeof InsightsSlugRoute
   '/pricing/branding': typeof PricingBrandingRoute
   '/pricing/eshop': typeof PricingEshopRoute
   '/pricing/web': typeof PricingWebRoute
@@ -121,11 +142,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/audit': typeof AuditRoute
   '/contact': typeof ContactRoute
+  '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/insights/$slug': typeof InsightsSlugRoute
   '/pricing/branding': typeof PricingBrandingRoute
   '/pricing/eshop': typeof PricingEshopRoute
   '/pricing/web': typeof PricingWebRoute
@@ -139,11 +163,14 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/audit': typeof AuditRoute
   '/contact': typeof ContactRoute
+  '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
   '/services': typeof ServicesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/insights/$slug': typeof InsightsSlugRoute
   '/pricing/branding': typeof PricingBrandingRoute
   '/pricing/eshop': typeof PricingEshopRoute
   '/pricing/web': typeof PricingWebRoute
@@ -158,11 +185,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/audit'
     | '/contact'
+    | '/insights'
     | '/pricing'
     | '/projects'
     | '/services'
     | '/sitemap.xml'
+    | '/insights/$slug'
     | '/pricing/branding'
     | '/pricing/eshop'
     | '/pricing/web'
@@ -175,11 +205,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/about'
+    | '/audit'
     | '/contact'
+    | '/insights'
     | '/pricing'
     | '/projects'
     | '/services'
     | '/sitemap.xml'
+    | '/insights/$slug'
     | '/pricing/branding'
     | '/pricing/eshop'
     | '/pricing/web'
@@ -192,11 +225,14 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/audit'
     | '/contact'
+    | '/insights'
     | '/pricing'
     | '/projects'
     | '/services'
     | '/sitemap.xml'
+    | '/insights/$slug'
     | '/pricing/branding'
     | '/pricing/eshop'
     | '/pricing/web'
@@ -210,7 +246,9 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AuditRoute: typeof AuditRoute
   ContactRoute: typeof ContactRoute
+  InsightsRoute: typeof InsightsRouteWithChildren
   PricingRoute: typeof PricingRouteWithChildren
   ProjectsRoute: typeof ProjectsRouteWithChildren
   ServicesRoute: typeof ServicesRouteWithChildren
@@ -247,11 +285,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/contact': {
       id: '/contact'
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit': {
+      id: '/audit'
+      path: '/audit'
+      fullPath: '/audit'
+      preLoaderRoute: typeof AuditRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/about': {
@@ -324,8 +376,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PricingBrandingRouteImport
       parentRoute: typeof PricingRoute
     }
+    '/insights/$slug': {
+      id: '/insights/$slug'
+      path: '/$slug'
+      fullPath: '/insights/$slug'
+      preLoaderRoute: typeof InsightsSlugRouteImport
+      parentRoute: typeof InsightsRoute
+    }
   }
 }
+
+interface InsightsRouteChildren {
+  InsightsSlugRoute: typeof InsightsSlugRoute
+}
+
+const InsightsRouteChildren: InsightsRouteChildren = {
+  InsightsSlugRoute: InsightsSlugRoute,
+}
+
+const InsightsRouteWithChildren = InsightsRoute._addFileChildren(
+  InsightsRouteChildren,
+)
 
 interface PricingRouteChildren {
   PricingBrandingRoute: typeof PricingBrandingRoute
@@ -375,7 +446,9 @@ const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AuditRoute: AuditRoute,
   ContactRoute: ContactRoute,
+  InsightsRoute: InsightsRouteWithChildren,
   PricingRoute: PricingRouteWithChildren,
   ProjectsRoute: ProjectsRouteWithChildren,
   ServicesRoute: ServicesRouteWithChildren,
