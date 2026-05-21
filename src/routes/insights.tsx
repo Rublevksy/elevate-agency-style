@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight, Clock } from "lucide-react";
 import { INSIGHTS } from "@/lib/insights";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/insights")({
   component: InsightsPage,
@@ -45,7 +46,9 @@ export const Route = createFileRoute("/insights")({
 });
 
 function InsightsPage() {
-  const formatter = new Intl.DateTimeFormat("cs-CZ", {
+  const { lang, t } = useT();
+  const locale = lang === "CZ" ? "cs-CZ" : lang === "EN" ? "en-GB" : lang === "RU" ? "ru-RU" : "uk-UA";
+  const formatter = new Intl.DateTimeFormat(locale, {
     day: "numeric",
     month: "long",
     year: "numeric",
@@ -56,12 +59,12 @@ function InsightsPage() {
       <section className="page-top pb-12 md:pb-16 relative overflow-hidden">
         <div className="absolute inset-0 grid-bg opacity-30 [mask-image:radial-gradient(ellipse_at_top,black_10%,transparent_70%)]" />
         <div className="container-luxe relative max-w-3xl">
-          <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">Insights</p>
+          <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">{t.insights.eyebrow}</p>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-foreground leading-[1.05]">
-            Myšlení o webu, UX a digitálním byznysu.
+            {t.insights.h1}
           </h1>
           <p className="mt-8 text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl">
-            Krátké, konkrétní pohledy na to, co dnes funguje a co ne. Píšeme z praxe — bez SEO spamu a marketingových klišé.
+            {t.insights.sub}
           </p>
         </div>
       </section>
@@ -88,7 +91,7 @@ function InsightsPage() {
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span className="flex items-center gap-2">
                     <Clock className="h-3.5 w-3.5" />
-                    {i.readingMinutes} min · {formatter.format(new Date(i.publishedAt))}
+                    {i.readingMinutes} {t.insights.minutes} · {formatter.format(new Date(i.publishedAt))}
                   </span>
                   <ArrowUpRight className="h-4 w-4 text-primary transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </div>

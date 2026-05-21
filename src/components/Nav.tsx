@@ -127,7 +127,7 @@ export function Nav() {
           </div>
 
           <Link to="/insights" className={linkCls} activeProps={{ className: activeCls }}>
-            Insights
+            {t.insights.navLink}
           </Link>
           <Link to="/about" className={linkCls} activeProps={{ className: activeCls }}>
             {t.nav.about}
@@ -139,7 +139,7 @@ export function Nav() {
             to="/audit"
             className="ml-2 inline-flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
           >
-            Audit zdarma
+            {t.audit.navLink}
           </Link>
         </nav>
 
