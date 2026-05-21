@@ -45,8 +45,8 @@ export const INSIGHTS: Insight[] = [
       {
         heading: "1. Hero, který nic neříká",
         paragraphs: [
-          "Návštěvník má tři sekundy, aby pochopil, co děláte, pro koho a proč by ho to mělo zajímat. „Vítejte na našem webu" nebo „Inovativní řešení pro váš byznys" tuhle otázku nezodpoví.",
-          "Hero musí konkrétně pojmenovat výsledek, který klient získá. Ne službu — výsledek. „E-shopy, které vydělávají od první návštěvy" funguje lépe než „E-commerce řešení na míru".",
+          "Návštěvník má tři sekundy, aby pochopil, co děláte, pro koho a proč by ho to mělo zajímat. „Vítejte na našem webu“ nebo „Inovativní řešení pro váš byznys“ tuhle otázku nezodpoví.",
+          "Hero musí konkrétně pojmenovat výsledek, který klient získá. Ne službu — výsledek. „E-shopy, které vydělávají od první návštěvy“ funguje lépe než „E-commerce řešení na míru“.",
         ],
       },
       {
@@ -91,7 +91,7 @@ export const INSIGHTS: Insight[] = [
     slug: "ux-duvera-konverze",
     title: "Jak moderní UX ovlivňuje důvěru a konverze",
     excerpt:
-      "Důvěra se na webu netvoří texty „proč my". Tvoří se tisícem malých UX rozhodnutí, kterých si návštěvník nikdy nevšimne — a přesto je cítí.",
+      "Důvěra se na webu netvoří texty „proč my“. Tvoří se tisícem malých UX rozhodnutí, kterých si návštěvník nikdy nevšimne — a přesto je cítí.",
     publishedAt: "2026-03-04",
     readingMinutes: 8,
     category: "UX",
@@ -156,7 +156,7 @@ export const INSIGHTS: Insight[] = [
     readingMinutes: 9,
     category: "Byznys",
     lead:
-      "„Kolik to bude stát?" je první otázka každého klienta — a zaslouží si poctivou odpověď, ne marketingovou. V tomhle článku rozebíráme reálné rozpočty českého trhu a co za nimi stojí.",
+      "„Kolik to bude stát?“ je první otázka každého klienta — a zaslouží si poctivou odpověď, ne marketingovou. V tomhle článku rozebíráme reálné rozpočty českého trhu a co za nimi stojí.",
     sections: [
       {
         heading: "Tři cenové úrovně, které dnes existují",
