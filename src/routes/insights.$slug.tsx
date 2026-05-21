@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Clock } from "lucide-react";
-import { getInsight, INSIGHTS } from "@/lib/insights";
+import { getInsight, INSIGHTS, type Insight } from "@/lib/insights";
 
 export const Route = createFileRoute("/insights/$slug")({
   loader: ({ params }) => {
@@ -93,7 +93,7 @@ export const Route = createFileRoute("/insights/$slug")({
 });
 
 function InsightPage() {
-  const { post } = Route.useLoaderData();
+  const { post } = Route.useLoaderData() as { post: Insight };
   const related = (post.related ?? [])
     .map((s) => INSIGHTS.find((i) => i.slug === s))
     .filter((i): i is NonNullable<typeof i> => Boolean(i));
