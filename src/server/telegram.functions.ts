@@ -24,8 +24,10 @@ export const sendContactToTelegram = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const token = process.env.TELEGRAM_BOT_TOKEN;
     const chatId = process.env.TELEGRAM_CHAT_ID;
-    if (!token) throw new Error("TELEGRAM_BOT_TOKEN is not configured");
-    if (!chatId) throw new Error("TELEGRAM_CHAT_ID is not configured");
+    if (!token || !chatId) {
+      console.error("Telegram credentials not configured");
+      throw new Error("SEND_FAILED");
+    }
 
     const text =
       `<b>🟦 Nová poptávka — ELEVATE</b>\n\n` +
