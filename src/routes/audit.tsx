@@ -145,9 +145,9 @@ function AuditPage() {
           <div className="grid lg:grid-cols-[1fr_1.1fr] gap-12 lg:gap-16 items-start">
             {/* Perks */}
             <div>
-              <p className="text-[11px] uppercase tracking-[0.25em] text-primary mb-6">
+              <h2 className="text-[11px] uppercase tracking-[0.25em] text-primary mb-6">
                 {t.audit.perksTitle}
-              </p>
+              </h2>
               <ul className="space-y-6">
                 {t.audit.perks.map((p, i) => {
                   const Icon = PERK_ICONS[i] ?? Sparkles;
