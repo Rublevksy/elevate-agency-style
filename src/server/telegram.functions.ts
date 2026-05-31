@@ -55,7 +55,7 @@ export const sendContactToTelegram = createServerFn({ method: "POST" })
     const body = await res.json().catch(() => ({}));
     if (!res.ok || !body?.ok) {
       console.error("Telegram sendMessage failed:", res.status, body);
-      throw new Error(`Telegram API error (${res.status})`);
+      throw new Error("SEND_FAILED");
     }
     return { ok: true as const };
   });
