@@ -21,7 +21,7 @@ export type ProjectBase = {
 export const PROJECTS_BASE: ProjectBase[] = [
   { slug: "biodent-clinic",   name: "Biodent Clinic",    category: "Web",    url: "https://biodentclinic.cz",   domain: "biodentclinic.cz",   preview: "site" },
   { slug: "exclusive-beauty", name: "Exclusive Beauty",  category: "E-shop", url: "https://exclusivebeauty.cz", domain: "exclusivebeauty.cz", preview: "site" },
-  { slug: "nhome-praha",      name: "N Home Praha",      category: "Web",    url: "https://nhomepraha.cz",      domain: "nhomepraha.cz",      preview: "site" },
+  { slug: "nhome-praha",      name: "N Home Praha",      category: "Web",    url: "https://inhomepraha.cz",     domain: "inhomepraha.cz",     preview: "site" },
   { slug: "euromotors",       name: "EuroMotors",        category: "Web",    url: "https://euromotors.cz",      domain: "euromotors.cz",      preview: "site" },
 ];
 
