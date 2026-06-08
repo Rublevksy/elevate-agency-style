@@ -95,7 +95,10 @@ export function PhoneMockup({ project, className = "" }: { project: VisualProjec
     <div className={`relative aspect-[9/19] w-full max-w-[220px] md:max-w-[260px] ${className}`}>
       <div className="absolute inset-0 rounded-[2.2rem] md:rounded-[2.5rem] border border-border/80 bg-background p-1.5 md:p-2 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.85)]">
         <div className="absolute left-1/2 -translate-x-1/2 top-1.5 md:top-2 h-4 md:h-5 w-20 md:w-24 rounded-full bg-background z-10" />
-        <div className="relative h-full w-full overflow-hidden rounded-[1.7rem] md:rounded-[2rem] bg-surface">
+        <div className="relative h-full w-full overflow-hidden rounded-[1.7rem] md:rounded-[2rem] bg-gradient-to-br from-surface via-background to-surface">
+          <div className="absolute inset-0 flex items-center justify-center text-center px-3 pointer-events-none">
+            <div className="text-[10px] font-semibold text-foreground/70 tracking-tight">{project.name}</div>
+          </div>
           <img
             src={src}
             alt={`${project.name} — mobilní náhled`}
