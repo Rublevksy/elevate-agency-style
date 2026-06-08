@@ -21,7 +21,7 @@ export type ProjectBase = {
 export const PROJECTS_BASE: ProjectBase[] = [
   { slug: "biodent-clinic",   name: "Biodent Clinic",    category: "Web",    url: "https://biodentclinic.cz",   domain: "biodentclinic.cz",   preview: "site" },
   { slug: "exclusive-beauty", name: "Exclusive Beauty",  category: "E-shop", url: "https://exclusivebeauty.cz", domain: "exclusivebeauty.cz", preview: "site" },
-  { slug: "nhome-praha",      name: "N Home Praha",      category: "Web",    url: "https://nhomepraha.cz",      domain: "nhomepraha.cz",      preview: "site" },
+  { slug: "nhome-praha",      name: "N Home Praha",      category: "Web",    url: "https://inhomepraha.cz",     domain: "inhomepraha.cz",     preview: "site" },
   { slug: "euromotors",       name: "EuroMotors",        category: "Web",    url: "https://euromotors.cz",      domain: "euromotors.cz",      preview: "site" },
 ];
 
@@ -61,8 +61,13 @@ export function ProjectVisual({ project, mode = "card" }: { project: VisualProje
             </span>
           </div>
         </div>
-        {/* Live screenshot */}
-        <div className="relative flex-1 bg-surface overflow-hidden">
+        {/* Live screenshot with graceful fallback layer behind it */}
+        <div className="relative flex-1 bg-gradient-to-br from-surface via-background to-surface overflow-hidden">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">Live preview</div>
+            <div className="text-lg md:text-2xl font-semibold text-foreground/80 tracking-tight">{project.name}</div>
+            <div className="text-[11px] text-muted-foreground font-mono mt-1">{domain}</div>
+          </div>
           <img
             src={src}
             alt={`${project.name} — náhled webu`}
@@ -90,7 +95,10 @@ export function PhoneMockup({ project, className = "" }: { project: VisualProjec
     <div className={`relative aspect-[9/19] w-full max-w-[220px] md:max-w-[260px] ${className}`}>
       <div className="absolute inset-0 rounded-[2.2rem] md:rounded-[2.5rem] border border-border/80 bg-background p-1.5 md:p-2 shadow-[0_40px_100px_-30px_rgba(0,0,0,0.85)]">
         <div className="absolute left-1/2 -translate-x-1/2 top-1.5 md:top-2 h-4 md:h-5 w-20 md:w-24 rounded-full bg-background z-10" />
-        <div className="relative h-full w-full overflow-hidden rounded-[1.7rem] md:rounded-[2rem] bg-surface">
+        <div className="relative h-full w-full overflow-hidden rounded-[1.7rem] md:rounded-[2rem] bg-gradient-to-br from-surface via-background to-surface">
+          <div className="absolute inset-0 flex items-center justify-center text-center px-3 pointer-events-none">
+            <div className="text-[10px] font-semibold text-foreground/70 tracking-tight">{project.name}</div>
+          </div>
           <img
             src={src}
             alt={`${project.name} — mobilní náhled`}
