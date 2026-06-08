@@ -156,7 +156,7 @@ function CaseStudyRow({
   project: LocalizedProject;
   lang: Lang;
   index: number;
-  copy: ReturnType<typeof useT>["t"] extends never ? never : (typeof COPY)[Lang];
+  copy: (typeof COPY)[Lang];
 }) {
   const reversed = index % 2 === 1;
   const industry = INDUSTRY_BY_SLUG[project.slug]?.[lang] ?? project.category;
