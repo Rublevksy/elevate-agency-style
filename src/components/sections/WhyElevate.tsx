@@ -1,7 +1,7 @@
 import { Users, Layers, MessagesSquare, FileSearch, Clock, Languages } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
 
-type Item = { icon: typeof Users; t: string; d: string };
+
 
 const COPY: Record<Lang, { eyebrow: string; title: string; lead: string; items: { t: string; d: string }[] }> = {
   CZ: {
