@@ -77,30 +77,6 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+34%", label: "vrácení návštěvníků" },
       ],
     },
-    "america-pod-vezi": {
-      description: "Kompletní redesign značky a webu pražské restaurace America Pod Věží — od identity přes menu po online rezervace.",
-      result: "Kompletní rebrand + 90% více rezervací",
-      problem: "Restaurace měla skvělou kuchyni a polohu, ale značka i web působily zastarale a neodpovídaly úrovni gastronomie.",
-      solution: "Vytvořili jsme novou vizuální identitu, prémiový web s atmosférou podniku, online rezervací a integrací menu.",
-      work: ["Brand identity refresh", "Web design & vývoj", "Online rezervace stolu", "Food photography direction"],
-      results: [
-        { value: "+90%", label: "online rezervací" },
-        { value: "+65%", label: "návštěvnost webu" },
-        { value: "1 identita", label: "od menu po web" },
-      ],
-    },
-    ideatech: {
-      description: "B2B web a produktové UI pro technologickou firmu IDEATECH — od homepage po dashboard a onboarding zákazníků.",
-      result: "+70% kvalifikovaných leadů",
-      problem: "Firma rostla rychle, ale web nepředával technickou převahu produktu a generoval málo kvalifikovaných poptávek.",
-      solution: "Postavili jsme moderní B2B web s jasnou strukturou produktu, případovými studiemi a navazujícím dashboardem se sjednoceným design systémem.",
-      work: ["B2B web design", "Produktový dashboard", "Design systém", "Onboarding flow"],
-      results: [
-        { value: "+70%", label: "kvalifikovaných leadů" },
-        { value: "+45%", label: "demo požadavků" },
-        { value: "1 systém", label: "web i produkt" },
-      ],
-    },
   },
   EN: {
     "biodent-clinic": {
@@ -149,30 +125,6 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+120%", label: "test-drive bookings" },
         { value: "+58%", label: "leads from website" },
         { value: "+34%", label: "returning visitors" },
-      ],
-    },
-    "america-pod-vezi": {
-      description: "Full brand and website redesign for Prague restaurant America Pod Věží — from identity to menu and online reservations.",
-      result: "Full rebrand + 90% more reservations",
-      problem: "The restaurant had great cuisine and a prime location, but the brand and website felt dated and didn't match the gastronomy level.",
-      solution: "We crafted a new visual identity and a premium website with the venue's atmosphere, online table reservations and menu integration.",
-      work: ["Brand identity refresh", "Web design & build", "Online table reservations", "Food photography direction"],
-      results: [
-        { value: "+90%", label: "online reservations" },
-        { value: "+65%", label: "website traffic" },
-        { value: "1 identity", label: "from menu to web" },
-      ],
-    },
-    ideatech: {
-      description: "B2B website and product UI for tech company IDEATECH — from homepage to dashboard and customer onboarding.",
-      result: "+70% qualified leads",
-      problem: "The company was growing fast, but the website didn't convey the product's technical edge and generated few qualified inquiries.",
-      solution: "We built a modern B2B site with a clear product story, case studies and a connected dashboard sharing one design system.",
-      work: ["B2B web design", "Product dashboard", "Design system", "Onboarding flow"],
-      results: [
-        { value: "+70%", label: "qualified leads" },
-        { value: "+45%", label: "demo requests" },
-        { value: "1 system", label: "web & product" },
       ],
     },
   },
@@ -225,30 +177,6 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+34%", label: "возврат пользователей" },
       ],
     },
-    "america-pod-vezi": {
-      description: "Полный редизайн бренда и сайта пражского ресторана America Pod Věží — от айдентики до меню и онлайн-броней.",
-      result: "Ребрендинг + 90% больше броней",
-      problem: "У ресторана отличная кухня и локация, но бренд и сайт выглядели устаревше и не соответствовали уровню гастрономии.",
-      solution: "Мы создали новую визуальную идентичность и премиальный сайт с атмосферой места и онлайн-бронированием стола.",
-      work: ["Обновление айдентики", "Дизайн и разработка сайта", "Онлайн-бронь стола", "Арт-дирекшн фуд-фото"],
-      results: [
-        { value: "+90%", label: "онлайн-броней" },
-        { value: "+65%", label: "трафик" },
-        { value: "1 идентичность", label: "от меню до сайта" },
-      ],
-    },
-    ideatech: {
-      description: "B2B-сайт и продуктовый UI для технологической компании IDEATECH — от homepage до дашборда и онбординга.",
-      result: "+70% квалифицированных лидов",
-      problem: "Компания быстро росла, но сайт не передавал техническое преимущество продукта и приносил мало качественных заявок.",
-      solution: "Мы построили современный B2B-сайт с понятной структурой продукта, кейсами и дашбордом в единой дизайн-системе.",
-      work: ["B2B веб-дизайн", "Продуктовый дашборд", "Дизайн-система", "Онбординг"],
-      results: [
-        { value: "+70%", label: "квалифицированных лидов" },
-        { value: "+45%", label: "demo-запросов" },
-        { value: "1 система", label: "сайт и продукт" },
-      ],
-    },
   },
   UA: {
     "biodent-clinic": {
@@ -297,30 +225,6 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+120%", label: "тест-драйвів" },
         { value: "+58%", label: "лідів" },
         { value: "+34%", label: "повернення відвідувачів" },
-      ],
-    },
-    "america-pod-vezi": {
-      description: "Повний редизайн бренду й сайту празького ресторану America Pod Věží — від айдентики до меню та онлайн-броней.",
-      result: "Ребрендинг + 90% більше броней",
-      problem: "У ресторану чудова кухня й локація, але бренд і сайт виглядали застаріло і не відповідали рівню гастрономії.",
-      solution: "Ми створили нову візуальну ідентичність і преміальний сайт з атмосферою закладу та онлайн-бронюванням столу.",
-      work: ["Оновлення айдентики", "Дизайн і розробка сайту", "Онлайн-бронь столу", "Арт-дирекшн фуд-фото"],
-      results: [
-        { value: "+90%", label: "онлайн-броней" },
-        { value: "+65%", label: "трафік" },
-        { value: "1 ідентичність", label: "від меню до сайту" },
-      ],
-    },
-    ideatech: {
-      description: "B2B-сайт і продуктовий UI для технологічної компанії IDEATECH — від homepage до дашборда та онбордингу.",
-      result: "+70% кваліфікованих лідів",
-      problem: "Компанія швидко зростала, але сайт не передавав технічну перевагу продукту й приносив мало якісних заявок.",
-      solution: "Ми побудували сучасний B2B-сайт з понятною структурою продукту, кейсами та дашбордом в єдиній дизайн-системі.",
-      work: ["B2B веб-дизайн", "Продуктовий дашборд", "Дизайн-система", "Онбординг"],
-      results: [
-        { value: "+70%", label: "кваліфікованих лідів" },
-        { value: "+45%", label: "demo-запитів" },
-        { value: "1 система", label: "сайт і продукт" },
       ],
     },
   },
