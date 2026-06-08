@@ -5,9 +5,7 @@ export type ProjectSlug =
   | "biodent-clinic"
   | "nhome-praha"
   | "exclusive-beauty"
-  | "euromotors"
-  | "america-pod-vezi"
-  | "ideatech";
+  | "euromotors";
 
 export type ProjectCategory = "Web" | "E-shop" | "Branding" | "SaaS";
 
@@ -21,12 +19,10 @@ export type ProjectBase = {
 };
 
 export const PROJECTS_BASE: ProjectBase[] = [
-  { slug: "biodent-clinic",   name: "Biodent Clinic",    category: "Web",      url: "https://biodentclinic.cz",   domain: "biodentclinic.cz",   preview: "site" },
-  { slug: "nhome-praha",      name: "N Home Praha",      category: "Web",      url: "https://nhomepraha.cz",      domain: "nhomepraha.cz",      preview: "site" },
-  { slug: "exclusive-beauty", name: "Exclusive Beauty",  category: "E-shop",   url: "https://exclusivebeauty.cz", domain: "exclusivebeauty.cz", preview: "site" },
-  { slug: "euromotors",       name: "EuroMotors",        category: "Web",      url: "https://euromotors.cz",      domain: "euromotors.cz",      preview: "site" },
-  { slug: "america-pod-vezi", name: "America Pod Věží",  category: "Branding", url: "https://americapodvezi.cz",  domain: "americapodvezi.cz",  preview: "site" },
-  { slug: "ideatech",         name: "IDEATECH",          category: "SaaS",     url: "https://ideatech.cz",        domain: "ideatech.cz",        preview: "site" },
+  { slug: "biodent-clinic",   name: "Biodent Clinic",    category: "Web",    url: "https://biodentclinic.cz",   domain: "biodentclinic.cz",   preview: "site" },
+  { slug: "exclusive-beauty", name: "Exclusive Beauty",  category: "E-shop", url: "https://exclusivebeauty.cz", domain: "exclusivebeauty.cz", preview: "site" },
+  { slug: "nhome-praha",      name: "N Home Praha",      category: "Web",    url: "https://nhomepraha.cz",      domain: "nhomepraha.cz",      preview: "site" },
+  { slug: "euromotors",       name: "EuroMotors",        category: "Web",    url: "https://euromotors.cz",      domain: "euromotors.cz",      preview: "site" },
 ];
 
 export const PROJECT_SLUGS: ProjectSlug[] = PROJECTS_BASE.map((p) => p.slug);
