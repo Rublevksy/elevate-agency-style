@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { useMemo, useState } from "react";
 import { ArrowRight, CheckCircle2, Clock, ShieldCheck, Sparkles, AlertCircle } from "lucide-react";
-import { sendAuditRequest } from "@/server/audit.functions";
+import { sendAuditRequest } from "@/lib/audit.functions";
 import { Events } from "@/lib/analytics";
 import { useT } from "@/lib/i18n";
 
