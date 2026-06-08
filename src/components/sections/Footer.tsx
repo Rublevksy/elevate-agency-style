@@ -1,29 +1,18 @@
 import { Link } from "@tanstack/react-router";
-import { Instagram, Mail, MapPin, Send } from "lucide-react";
-import { useT, type Lang } from "@/lib/i18n";
+import { Mail, MapPin } from "lucide-react";
+import { useT } from "@/lib/i18n";
 import { Logo } from "@/components/Logo";
-
-const IG_LABEL: Record<Lang, string> = {
-  CZ: "Sledujte nás na Instagramu",
-  EN: "Follow us on Instagram",
-  RU: "Мы в Instagram",
-  UA: "Ми в Instagram",
-};
-const TG_LABEL: Record<Lang, string> = {
-  CZ: "Napište nám na Telegramu",
-  EN: "Message us on Telegram",
-  RU: "Напишите нам в Telegram",
-  UA: "Напишіть нам у Telegram",
-};
+import { SocialIcons, CONTACT_PHONE, CONTACT_PHONE_HREF } from "@/components/Socials";
 
 export function Footer() {
-  const { t, lang } = useT();
+  const { t } = useT();
   return (
     <footer className="border-t border-border bg-background relative overflow-hidden">
       <div className="container-luxe py-24 grid grid-cols-1 md:grid-cols-4 gap-14 relative">
         <div className="md:col-span-2">
           <Logo className="h-10 md:h-11 w-auto mb-6" alt="ELEVATE logo" />
-          <p className="text-sm text-muted-foreground max-w-xs leading-relaxed">{t.hero.subtitle}</p>
+          <p className="text-sm text-muted-foreground max-w-xs leading-relaxed mb-8">{t.hero.subtitle}</p>
+          <SocialIcons size="md" />
         </div>
         <div>
           <p className="text-xs uppercase tracking-widest text-muted-foreground mb-5">{t.footer.nav}</p>
@@ -40,6 +29,15 @@ export function Footer() {
           <ul className="space-y-3 text-sm text-foreground">
             <li>
               <a
+                href={CONTACT_PHONE_HREF}
+                className="inline-flex items-center gap-2 hover:text-primary transition-colors story-link tabular-nums"
+              >
+                <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" />
+                {CONTACT_PHONE}
+              </a>
+            </li>
+            <li>
+              <a
                 href="mailto:elevateitcz@gmail.com"
                 className="inline-flex items-center gap-2 hover:text-primary transition-colors story-link"
               >
@@ -47,40 +45,11 @@ export function Footer() {
                 <span>elevateitcz@gmail.com</span>
               </a>
             </li>
-            <li className="flex items-center gap-2">
+            <li className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="h-4 w-4 text-primary" strokeWidth={1.5} />
               <span>Praha, CZ</span>
             </li>
           </ul>
-          <div className="mt-5">
-            <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">{t.footer.follow}</p>
-            <ul className="space-y-3 text-sm">
-              <li>
-                <a
-                  href="https://www.instagram.com/elevateit.cz/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={IG_LABEL[lang]}
-                  className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <Instagram className="h-5 w-5" strokeWidth={1.6} />
-                  <span>Instagram</span>
-                </a>
-              </li>
-              <li>
-                <a
-                  href="https://t.me/elevateit"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={TG_LABEL[lang]}
-                  className="inline-flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-                >
-                  <Send className="h-5 w-5" strokeWidth={1.6} />
-                  <span>Telegram</span>
-                </a>
-              </li>
-            </ul>
-          </div>
         </div>
       </div>
       <div className="border-t border-border relative">
