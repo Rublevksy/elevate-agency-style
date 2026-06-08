@@ -1,9 +1,20 @@
-import { useState, type FormEvent } from "react";
+import { useState, useMemo } from "react";
 import { z } from "zod";
-import { ArrowRight, Globe, ShoppingBag, Sparkles, Check } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowLeft,
+  Check,
+  Globe,
+  ShoppingBag,
+  AppWindow,
+  RefreshCw,
+  HelpCircle,
+  Wallet,
+} from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 import { sendContactToTelegram } from "@/server/telegram.functions";
+import { SocialIcons } from "@/components/Socials";
 import { toast } from "sonner";
 
 const SUCCESS_TITLE: Record<Lang, string> = {
@@ -18,18 +29,6 @@ const SUCCESS_BODY: Record<Lang, string> = {
   RU: "Ответим в течение 24 часов.",
   UA: "Відповімо протягом 24 годин.",
 };
-const REQ: Record<Lang, string> = {
-  CZ: "Toto pole je povinné",
-  EN: "This field is required",
-  RU: "Это поле обязательно",
-  UA: "Це поле обов'язкове",
-};
-const EMAIL_INVALID: Record<Lang, string> = {
-  CZ: "Neplatný e-mail",
-  EN: "Invalid email",
-  RU: "Неверный e-mail",
-  UA: "Невірний e-mail",
-};
 const SEND_AGAIN: Record<Lang, string> = {
   CZ: "Odeslat další zprávu",
   EN: "Send another message",
@@ -37,46 +36,68 @@ const SEND_AGAIN: Record<Lang, string> = {
   UA: "Надіслати ще",
 };
 
-const SERVICES = [
-  { id: "Web", label: "Web", icon: Globe },
-  { id: "E-shop", label: "E-shop", icon: ShoppingBag },
-  { id: "Branding", label: "Branding", icon: Sparkles },
+const PROJECT_TYPES = [
+  { id: "Firemní web", icon: Globe },
+  { id: "E-shop", icon: ShoppingBag },
+  { id: "Webová aplikace", icon: AppWindow },
+  { id: "Redesign webu", icon: RefreshCw },
+  { id: "Nejsem si jistý", icon: HelpCircle },
 ] as const;
 
-const BUDGET_MIN = 10000;
-const BUDGET_MAX = 100000;
-const BUDGET_STEP = 5000;
+const BUDGETS = [
+  { id: "do 20 000 Kč", value: 20000 },
+  { id: "20 000–50 000 Kč", value: 50000 },
+  { id: "50 000–100 000 Kč", value: 100000 },
+  { id: "100 000+ Kč", value: 150000 },
+] as const;
 
-const formatCZK = (n: number) =>
-  new Intl.NumberFormat("cs-CZ", { maximumFractionDigits: 0 }).format(n) + " Kč";
+const STEP_TITLES_CZ = ["Jaký projekt řešíte?", "Jaký máte rozpočet?", "Kontaktní údaje"];
+
+const schema = z.object({
+  projectType: z.string().min(1, "Vyberte typ projektu"),
+  budget: z.string().min(1, "Vyberte rozpočet"),
+  name: z.string().trim().min(1, "Toto pole je povinné").max(100),
+  email: z.string().trim().min(1, "Toto pole je povinné").email("Neplatný e-mail").max(255),
+  phone: z.string().trim().max(40).optional().or(z.literal("")),
+  message: z.string().trim().min(1, "Popište prosím projekt").max(1000),
+});
+
+type StepKey = 1 | 2 | 3;
 
 export function Contact() {
   const { t, lang } = useT();
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState<StepKey>(1);
+  const [projectType, setProjectType] = useState<string>("");
+  const [budget, setBudget] = useState<string>("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+  const [hp, setHp] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [service, setService] = useState<string>("");
-  const [budget, setBudget] = useState<number>(35000);
-  const [hp, setHp] = useState(""); // honeypot
+  const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const schema = z.object({
-    name: z.string().trim().min(1, REQ[lang]).max(100),
-    email: z.string().trim().min(1, REQ[lang]).email(EMAIL_INVALID[lang]).max(255),
-    phone: z.string().trim().max(40).optional().or(z.literal("")),
-    service: z.string().min(1, REQ[lang]),
-    message: z.string().trim().min(1, REQ[lang]).max(1000),
-  });
+  const progress = useMemo(() => (submitted ? 100 : ((step - 1) / 3) * 100 + 33), [step, submitted]);
 
-  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const formEl = e.currentTarget;
-    if (hp) {
-      // Bot detected via honeypot — silently drop
+  const goNext = () => {
+    setErrors({});
+    if (step === 1 && !projectType) {
+      setErrors({ projectType: "Vyberte typ projektu" });
       return;
     }
-    const fd = new FormData(formEl);
-    const data = Object.fromEntries(fd) as Record<string, string>;
-    data.service = service;
+    if (step === 2 && !budget) {
+      setErrors({ budget: "Vyberte rozpočet" });
+      return;
+    }
+    setStep((s) => (s < 3 ? ((s + 1) as StepKey) : s));
+  };
+
+  const goPrev = () => setStep((s) => (s > 1 ? ((s - 1) as StepKey) : s));
+
+  const onSubmit = async () => {
+    if (hp) return;
+    const data = { projectType, budget, name, email, phone, message };
     const result = schema.safeParse(data);
     if (!result.success) {
       const errs: Record<string, string> = {};
@@ -87,41 +108,44 @@ export function Contact() {
     setErrors({});
     setLoading(true);
     try {
+      const budgetNum = BUDGETS.find((b) => b.id === budget)?.value ?? 0;
       await sendContactToTelegram({
         data: {
-          name: data.name,
-          email: data.email,
-          phone: data.phone || "",
-          service,
-          budget,
-          message: data.message,
+          name,
+          email,
+          phone: phone || "",
+          service: projectType,
+          budget: budgetNum,
+          message: `[${budget}]\n${message}`,
         },
       });
-      formEl.reset();
-      setService("");
-      setBudget(35000);
       setSubmitted(true);
       toast.success(`${SUCCESS_TITLE[lang]} ${SUCCESS_BODY[lang]}`);
     } catch (err) {
       console.error(err);
-      toast.error("Failed to send. Please try again.");
+      toast.error("Nepodařilo se odeslat. Zkuste to prosím znovu.");
     } finally {
       setLoading(false);
     }
   };
 
-  const sendingLabel: Record<string, string> = {
-    CZ: "Odesílám...",
-    EN: "Sending...",
-    RU: "Отправка...",
-    UA: "Надсилаю...",
+  const reset = () => {
+    setSubmitted(false);
+    setStep(1);
+    setProjectType("");
+    setBudget("");
+    setName("");
+    setEmail("");
+    setPhone("");
+    setMessage("");
+    setErrors({});
   };
 
-  const budgetPct = ((budget - BUDGET_MIN) / (BUDGET_MAX - BUDGET_MIN)) * 100;
-
   return (
-    <section id="contact" className="py-28 md:py-36 border-t border-border">
-      <div className="container-luxe">
+    <section id="contact" className="py-28 md:py-36 border-t border-border relative overflow-hidden">
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[28rem] w-[28rem] rounded-full bg-primary/10 blur-[140px] pointer-events-none" />
+
+      <div className="container-luxe relative">
         <SectionHeading eyebrow="07" title={t.contact.title} subtitle={t.contact.subtitle} />
 
         <div className="max-w-3xl">
@@ -130,224 +154,256 @@ export function Contact() {
               <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/15 ring-4 ring-primary/30">
                 <Check className="h-10 w-10 text-primary animate-scale-in" strokeWidth={3} />
               </div>
-              <p className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-                {SUCCESS_TITLE[lang]}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                {SUCCESS_BODY[lang]}
-              </p>
+              <p className="text-2xl md:text-3xl font-bold text-foreground mb-2">{SUCCESS_TITLE[lang]}</p>
+              <p className="text-sm text-muted-foreground mb-8">{SUCCESS_BODY[lang]}</p>
               <button
                 type="button"
-                onClick={() => setSubmitted(false)}
-                className="mt-8 text-xs uppercase tracking-widest text-primary hover:text-foreground transition-colors story-link"
+                onClick={reset}
+                className="text-xs uppercase tracking-widest text-primary hover:text-foreground transition-colors story-link"
               >
                 {SEND_AGAIN[lang]}
               </button>
             </div>
           ) : (
-            <>
-            <p className="text-sm md:text-base text-muted-foreground mb-6 flex items-center gap-2">
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              {t.ui.contactReplyHint}
-            </p>
-            <form
-              onSubmit={onSubmit}
-              className="rounded-3xl border border-border/60 bg-surface/40 backdrop-blur p-6 md:p-10 space-y-10 shadow-2xl"
-            >
-              {/* Group: Contact */}
-              <div className="space-y-5">
-                <div className="flex items-center gap-3">
-                  <span className="h-px flex-1 bg-border" />
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                    {t.ui.contactStep1}
+            <div className="rounded-3xl border border-border/60 bg-surface/40 backdrop-blur p-6 md:p-10 shadow-2xl animate-fade-in">
+              {/* Progress bar */}
+              <div className="mb-8">
+                <div className="flex items-center justify-between mb-3 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+                  <span>
+                    Krok <span className="text-primary font-semibold">{step}</span> ze 3
                   </span>
-                  <span className="h-px flex-1 bg-border" />
+                  <span className="text-foreground/70">{STEP_TITLES_CZ[step - 1]}</span>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="group">
-                    <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
-                      {t.contact.name}
-                    </label>
-                    <input
-                      name="name"
-                      maxLength={100}
-                      placeholder={t.contact.name}
-                      className={`field-input-pro ${errors.name ? "border-destructive ring-1 ring-destructive/40" : ""}`}
-                    />
-                    {errors.name && (
-                      <p className="text-xs text-destructive mt-1">{errors.name}</p>
-                    )}
-                  </div>
-                  <div>
-                    <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
-                      {t.contact.email}
-                    </label>
-                    <input
-                      name="email"
-                      type="email"
-                      maxLength={255}
-                      placeholder="jan@firma.cz"
-                      className={`field-input-pro ${errors.email ? "border-destructive ring-1 ring-destructive/40" : ""}`}
-                    />
-                    {errors.email && (
-                      <p className="text-xs text-destructive mt-1">{errors.email}</p>
-                    )}
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
-                      {t.contact.phone}
-                    </label>
-                    <input
-                      name="phone"
-                      maxLength={40}
-                      placeholder="+420 777 123 456"
-                      className="field-input-pro"
-                    />
-                  </div>
+                <div className="relative h-1.5 rounded-full bg-border overflow-hidden">
+                  <div
+                    className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-primary to-primary/60 shadow-[0_0_18px_oklch(0.72_0.18_250/0.7)] transition-all duration-500 ease-out"
+                    style={{ width: `${progress}%` }}
+                  />
                 </div>
               </div>
 
-              {/* Group: Service */}
-              <div className="space-y-5">
-                <div className="flex items-center gap-3">
-                  <span className="h-px flex-1 bg-border" />
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                    {t.ui.contactStep2}
-                  </span>
-                  <span className="h-px flex-1 bg-border" />
+              {/* Step 1 — project type */}
+              {step === 1 && (
+                <div className="space-y-6 animate-fade-in">
+                  <div className="flex items-center gap-3">
+                    <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
+                      1
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[0]}</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {PROJECT_TYPES.map(({ id, icon: Icon }) => {
+                      const active = projectType === id;
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => {
+                            setProjectType(id);
+                            setErrors({});
+                          }}
+                          className={`group relative flex items-center gap-3 px-5 py-4 rounded-xl border text-left transition-all duration-300 ${
+                            active
+                              ? "border-primary bg-primary/10 text-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_250/0.6)]"
+                              : "border-border bg-background/40 text-muted-foreground hover:border-primary/50 hover:text-foreground hover:-translate-y-0.5"
+                          }`}
+                        >
+                          <Icon className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
+                          <span className="font-medium text-sm">{id}</span>
+                          {active && (
+                            <span className="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground animate-scale-in">
+                              <Check className="h-3 w-3" strokeWidth={3} />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {errors.projectType && <p className="text-xs text-destructive">{errors.projectType}</p>}
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                  {SERVICES.map(({ id, label, icon: Icon }) => {
-                    const active = service === id;
-                    return (
-                      <button
-                        type="button"
-                        key={id}
-                        onClick={() => setService(id)}
-                        className={`relative flex items-center justify-center gap-2 px-5 py-4 rounded-xl border transition-all duration-300 ${
-                          active
-                            ? "border-primary bg-primary/10 text-foreground glow-primary"
-                            : "border-border bg-background/40 text-muted-foreground hover:border-primary/50 hover:text-foreground hover:-translate-y-0.5"
-                        }`}
-                      >
-                        <Icon className="h-4 w-4" />
-                        <span className="font-medium">{label}</span>
-                        {active && (
-                          <Check className="h-4 w-4 text-primary absolute top-2 right-2" />
-                        )}
-                      </button>
-                    );
-                  })}
+              )}
+
+              {/* Step 2 — budget */}
+              {step === 2 && (
+                <div className="space-y-6 animate-fade-in">
+                  <div className="flex items-center gap-3">
+                    <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
+                      2
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[1]}</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {BUDGETS.map(({ id }) => {
+                      const active = budget === id;
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => {
+                            setBudget(id);
+                            setErrors({});
+                          }}
+                          className={`group relative flex items-center gap-3 px-5 py-5 rounded-xl border text-left transition-all duration-300 ${
+                            active
+                              ? "border-primary bg-primary/10 text-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_250/0.6)]"
+                              : "border-border bg-background/40 text-muted-foreground hover:border-primary/50 hover:text-foreground hover:-translate-y-0.5"
+                          }`}
+                        >
+                          <Wallet className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
+                          <span className="font-semibold text-foreground tabular-nums">{id}</span>
+                          {active && (
+                            <span className="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground animate-scale-in">
+                              <Check className="h-3 w-3" strokeWidth={3} />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {errors.budget && <p className="text-xs text-destructive">{errors.budget}</p>}
                 </div>
-                {errors.service && (
-                  <p className="text-xs text-destructive">{errors.service}</p>
+              )}
+
+              {/* Step 3 — contact info */}
+              {step === 3 && (
+                <div className="space-y-6 animate-fade-in">
+                  <div className="flex items-center gap-3">
+                    <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
+                      3
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[2]}</h3>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <div>
+                      <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
+                        {t.contact.name}
+                      </label>
+                      <input
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        maxLength={100}
+                        placeholder="Jan Novák"
+                        className={`field-input-pro ${errors.name ? "border-destructive ring-1 ring-destructive/40" : ""}`}
+                      />
+                      {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
+                    </div>
+                    <div>
+                      <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
+                        {t.contact.email}
+                      </label>
+                      <input
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        maxLength={255}
+                        placeholder="jan@firma.cz"
+                        className={`field-input-pro ${errors.email ? "border-destructive ring-1 ring-destructive/40" : ""}`}
+                      />
+                      {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
+                        {t.contact.phone}
+                      </label>
+                      <input
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        maxLength={40}
+                        placeholder="+420 777 123 456"
+                        className="field-input-pro"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
+                        Popis projektu
+                      </label>
+                      <textarea
+                        value={message}
+                        onChange={(e) => setMessage(e.target.value)}
+                        rows={5}
+                        maxLength={1000}
+                        placeholder="Napište nám pár vět o vašem projektu a cílech."
+                        className={`field-input-pro resize-none ${errors.message ? "border-destructive ring-1 ring-destructive/40" : ""}`}
+                      />
+                      {errors.message && <p className="text-xs text-destructive mt-1">{errors.message}</p>}
+                    </div>
+                  </div>
+
+                  {/* honeypot */}
+                  <input
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={hp}
+                    onChange={(e) => setHp(e.target.value)}
+                    className="absolute -left-[9999px] h-0 w-0 opacity-0"
+                    aria-hidden="true"
+                  />
+
+                  {/* summary chip */}
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      {projectType}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground tabular-nums">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      {budget}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Nav buttons */}
+              <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-10 pt-6 border-t border-border/60">
+                <button
+                  type="button"
+                  onClick={goPrev}
+                  disabled={step === 1}
+                  className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium text-muted-foreground border border-border bg-background/40 hover:text-foreground hover:border-primary/50 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Zpět
+                </button>
+                {step < 3 ? (
+                  <button
+                    type="button"
+                    onClick={goNext}
+                    className="group inline-flex items-center justify-center gap-3 rounded-xl px-7 py-4 text-base font-bold bg-gradient-to-r from-primary via-primary to-primary/80 text-primary-foreground shadow-[0_10px_40px_-10px_oklch(0.72_0.18_250/0.6)] hover:shadow-[0_20px_60px_-10px_oklch(0.72_0.18_250/0.8)] hover:-translate-y-0.5 transition-all duration-300"
+                  >
+                    Pokračovat
+                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={onSubmit}
+                    disabled={loading}
+                    className="group inline-flex items-center justify-center gap-3 rounded-xl px-7 py-4 text-base font-bold bg-gradient-to-r from-primary via-primary to-primary/80 text-primary-foreground shadow-[0_10px_40px_-10px_oklch(0.72_0.18_250/0.6)] hover:shadow-[0_20px_60px_-10px_oklch(0.72_0.18_250/0.8)] hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {loading ? "Odesílám..." : "Odeslat poptávku"}
+                    <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                  </button>
                 )}
               </div>
 
-              {/* Group: Budget */}
-              <div className="space-y-5">
-                <div className="flex items-center gap-3">
-                  <span className="h-px flex-1 bg-border" />
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                    {t.ui.contactStep3}
-                  </span>
-                  <span className="h-px flex-1 bg-border" />
-                </div>
-                <div className="rounded-2xl border border-border bg-background/40 p-6">
-                  <div className="flex items-baseline justify-between mb-5">
-                    <span className="text-xs uppercase tracking-widest text-muted-foreground">
-                      {t.ui.contactBudgetLabel}
-                    </span>
-                    <span className="text-2xl md:text-3xl font-bold text-foreground tabular-nums">
-                      {formatCZK(budget)}
-                    </span>
-                  </div>
-                  <div className="relative h-11">
-                    <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 h-2 rounded-full bg-border overflow-hidden pointer-events-none">
-                      <div
-                        className="h-full bg-gradient-to-r from-primary to-primary/60 transition-all"
-                        style={{ width: `${budgetPct}%` }}
-                      />
-                    </div>
-                    <input
-                      type="range"
-                      name="budget"
-                      min={BUDGET_MIN}
-                      max={BUDGET_MAX}
-                      step={BUDGET_STEP}
-                      value={budget}
-                      onChange={(e) => setBudget(Number(e.target.value))}
-                      aria-label={t.ui.contactBudgetLabel}
-                      className="range-pro relative w-full"
-                    />
-                  </div>
-                  <div className="flex justify-between mt-2 text-[11px] text-muted-foreground tabular-nums">
-                    <span>10k</span>
-                    <span>35k</span>
-                    <span>60k</span>
-                    <span>100k+</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Group: Message */}
-              <div className="space-y-5">
-                <div className="flex items-center gap-3">
-                  <span className="h-px flex-1 bg-border" />
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
-                    {t.ui.contactStep4}
-                  </span>
-                  <span className="h-px flex-1 bg-border" />
-                </div>
-                <div>
-                  <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
-                    {t.contact.message}
-                  </label>
-                  <textarea
-                    name="message"
-                    rows={5}
-                    maxLength={1000}
-                    placeholder={t.ui.contactMessagePlaceholder}
-                    className="field-input-pro resize-none"
-                  />
-                  {errors.message && (
-                    <p className="text-xs text-destructive mt-1">{errors.message}</p>
-                  )}
-                </div>
-              </div>
-
-              {/* Honeypot — hidden from users, bots fill it */}
-              <input
-                type="text"
-                tabIndex={-1}
-                autoComplete="off"
-                value={hp}
-                onChange={(e) => setHp(e.target.value)}
-                className="absolute -left-[9999px] h-0 w-0 opacity-0"
-                aria-hidden="true"
-              />
-
-
-              {/* CTA */}
-              <button
-                type="submit"
-                disabled={loading}
-                className="group w-full inline-flex items-center justify-center gap-3 rounded-xl px-8 py-5 text-base md:text-lg font-bold bg-gradient-to-r from-primary via-primary to-primary/80 text-primary-foreground shadow-[0_10px_40px_-10px_oklch(0.72_0.18_250/0.6)] hover:shadow-[0_20px_60px_-10px_oklch(0.72_0.18_250/0.8)] hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
-              >
-                <span>
-                  {loading
-                    ? sendingLabel[lang] ?? t.ui.contactSending
-                    : t.ui.contactSubmitMain}
-                </span>
-                <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
-              </button>
-
-              <p className="text-xs text-center text-muted-foreground">
-                {t.ui.contactNoSpam}
-              </p>
-            </form>
-            </>
+              <p className="text-xs text-center text-muted-foreground mt-4">{t.ui.contactNoSpam}</p>
+            </div>
           )}
+
+          {/* Direct contact / socials */}
+          <div className="mt-10 p-6 md:p-8 rounded-2xl border border-border/60 bg-surface/30 backdrop-blur">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
+                  Nebo nás kontaktujte přímo
+                </p>
+                <p className="text-sm text-foreground/80">Telefon, e-mail nebo sociální sítě — odpovídáme rychle.</p>
+              </div>
+              <SocialIcons size="md" />
+            </div>
+          </div>
         </div>
       </div>
     </section>
