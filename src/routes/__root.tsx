@@ -188,6 +188,7 @@ function SiteShell() {
       <ContactWidget />
       <ExitIntentModal />
       <CookieBanner />
+      <PageLoader />
     </div>
   );
 }
