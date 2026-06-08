@@ -153,6 +153,14 @@ function Home() {
       {/* COLLABORATION */}
       <Collaboration />
 
+      {/* WHY ELEVATE */}
+      <WhyUs />
+
+      {/* TRUST BAR */}
+      <TrustBar />
+
+
+
 
       {/* PORTFOLIO — only 3 */}
       <section className="py-28 md:py-36 border-t border-border">
