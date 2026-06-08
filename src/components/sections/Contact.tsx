@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
-import { sendContactToTelegram } from "@/server/telegram.functions";
+import { sendContactToTelegram } from "@/lib/telegram.functions";
 import { SocialIcons } from "@/components/Socials";
 import { toast } from "sonner";
 
