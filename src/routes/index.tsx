@@ -9,7 +9,8 @@ import { IndustryStrip } from "@/components/sections/IndustryStrip";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { StudioPhilosophy } from "@/components/sections/StudioPhilosophy";
 import { Collaboration } from "@/components/sections/Collaboration";
-import { WhyUs } from "@/components/sections/WhyUs";
+import { WhyElevate } from "@/components/sections/WhyElevate";
+import { Results } from "@/components/sections/Results";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { InstagramStrip } from "@/components/sections/InstagramStrip";
 import { useT } from "@/lib/i18n";
@@ -153,8 +154,11 @@ function Home() {
       {/* COLLABORATION */}
       <Collaboration />
 
-      {/* WHY ELEVATE */}
-      <WhyUs />
+      {/* WHY ELEVATE — trust & authority */}
+      <WhyElevate />
+
+      {/* RESULTS — animated counters */}
+      <Results />
 
       {/* TRUST BAR */}
       <TrustBar />

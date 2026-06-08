@@ -1,45 +1,50 @@
-import { Compass, PenLine, Palette, Code2, Rocket } from "lucide-react";
+import { MessageSquare, Compass, Palette, Code2, Rocket, LifeBuoy } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
 
 type Step = { t: string; d: string };
 const STEPS: Record<Lang, Step[]> = {
   CZ: [
-    { t: "Strategie", d: "Pochopíme byznys, cíle a cílovou skupinu. Definujeme, co má web reálně přinést." },
-    { t: "UX & wireframe", d: "Informační architektura a klikatelný prototyp dřív, než kdokoli kreslí pixely." },
-    { t: "Design", d: "Vizuální identita a UI systém zaměřený na důvěru, čitelnost a konverzi." },
-    { t: "Vývoj", d: "Rychlý, čistý kód. SEO, výkon a přístupnost jako standard, ne nadstavba." },
-    { t: "Launch & optimalizace", d: "Spuštění, měření a iterace podle reálných dat z prvních týdnů." },
+    { t: "Konzultace",  d: "Pochopíme byznys, cíle a co má web reálně přinést. Bez závazku, do 48 hodin máte zpětnou vazbu." },
+    { t: "Strategie",   d: "Definujeme KPI, cílovou skupinu a obsahovou architekturu. Z čeho budeme růst, kde se bude měřit." },
+    { t: "Design",      d: "UX wireframy, vizuální identita a UI systém zaměřený na důvěru, čitelnost a konverzi." },
+    { t: "Vývoj",       d: "Rychlý, čistý kód. SEO, výkon a přístupnost jako standard, ne nadstavba." },
+    { t: "Spuštění",    d: "Hladký launch včetně migrace, přesměrování a měření. Žádné výpadky, žádné překvapení." },
+    { t: "Podpora",     d: "30 dní bezplatné podpory po spuštění + dlouhodobý servis a iterace podle reálných dat." },
   ],
   EN: [
-    { t: "Strategy", d: "We learn the business, goals and audience. We define what the site actually needs to deliver." },
-    { t: "UX & wireframe", d: "Information architecture and a clickable prototype before anyone draws pixels." },
-    { t: "Design", d: "Visual identity and a UI system built for trust, readability and conversion." },
-    { t: "Engineering", d: "Fast, clean code. SEO, performance and accessibility as a standard, not an extra." },
-    { t: "Launch & optimization", d: "Ship, measure, and iterate based on real data from the first weeks." },
+    { t: "Consultation", d: "We learn your business, goals and what the site actually needs to deliver. No commitment, feedback within 48h." },
+    { t: "Strategy",     d: "We define KPIs, audience and content architecture. What we grow from and where we measure." },
+    { t: "Design",       d: "UX wireframes, visual identity and a UI system built for trust, readability and conversion." },
+    { t: "Engineering",  d: "Fast, clean code. SEO, performance and accessibility as a standard, not an extra." },
+    { t: "Launch",       d: "Smooth go-live including migration, redirects and analytics. No downtime, no surprises." },
+    { t: "Support",      d: "30 days of free support post-launch + long-term maintenance and iteration based on real data." },
   ],
   RU: [
-    { t: "Стратегия", d: "Понимаем бизнес, цели и аудиторию. Определяем, что сайт должен дать на самом деле." },
-    { t: "UX и прототип", d: "Информационная архитектура и кликабельный прототип до пикселей." },
-    { t: "Дизайн", d: "Визуальная идентичность и UI-система для доверия, читаемости и конверсии." },
-    { t: "Разработка", d: "Быстрый и чистый код. SEO, производительность и доступность как стандарт." },
-    { t: "Запуск и оптимизация", d: "Запуск, измерения и итерации по данным первых недель." },
+    { t: "Консультация", d: "Понимаем бизнес, цели и что сайт должен дать. Без обязательств, отзыв за 48 часов." },
+    { t: "Стратегия",    d: "Определяем KPI, аудиторию и архитектуру контента. Откуда растём и где замеряем." },
+    { t: "Дизайн",       d: "UX-вайрфреймы, визуальная идентичность и UI-система для доверия, читаемости и конверсии." },
+    { t: "Разработка",   d: "Быстрый, чистый код. SEO, производительность и доступность как стандарт." },
+    { t: "Запуск",       d: "Чёткий go-live с миграцией, редиректами и аналитикой. Без даунтайма, без сюрпризов." },
+    { t: "Поддержка",    d: "30 дней бесплатной поддержки + долгосрочное сопровождение и итерации по данным." },
   ],
   UA: [
-    { t: "Стратегія", d: "Розуміємо бізнес, цілі та аудиторію. Визначаємо, що сайт має реально дати." },
-    { t: "UX і прототип", d: "Інформаційна архітектура і клікабельний прототип до пікселів." },
-    { t: "Дизайн", d: "Візуальна ідентичність та UI-система для довіри, читабельності й конверсії." },
-    { t: "Розробка", d: "Швидкий і чистий код. SEO, продуктивність і доступність як стандарт." },
-    { t: "Запуск і оптимізація", d: "Запуск, вимірювання та ітерації за даними перших тижнів." },
+    { t: "Консультація", d: "Розуміємо бізнес, цілі та що сайт має дати. Без зобов'язань, фідбек за 48 годин." },
+    { t: "Стратегія",    d: "Визначаємо KPI, аудиторію та архітектуру контенту. Звідки ростемо і де вимірюємо." },
+    { t: "Дизайн",       d: "UX-вайрфрейми, візуальна ідентичність і UI-система для довіри, читабельності й конверсії." },
+    { t: "Розробка",     d: "Швидкий, чистий код. SEO, продуктивність і доступність як стандарт." },
+    { t: "Запуск",       d: "Чіткий go-live з міграцією, редиректами та аналітикою. Без даунтайму, без сюрпризів." },
+    { t: "Підтримка",    d: "30 днів безкоштовної підтримки + довгострокове супроводження і ітерації за даними." },
   ],
 };
 const TITLE: Record<Lang, string> = {
-  CZ: "Jak postupujeme od nápadu k výsledku",
-  EN: "How we move from idea to result",
-  RU: "Как мы идём от идеи к результату",
-  UA: "Як ми йдемо від ідеї до результату",
+  CZ: "Jak probíhá spolupráce",
+  EN: "How we work together",
+  RU: "Как идёт сотрудничество",
+  UA: "Як проходить співпраця",
 };
 const EYEBROW: Record<Lang, string> = { CZ: "Proces", EN: "Process", RU: "Процесс", UA: "Процес" };
-const ICONS = [Compass, PenLine, Palette, Code2, Rocket];
+const ICONS = [MessageSquare, Compass, Palette, Code2, Rocket, LifeBuoy];
+
 
 export function ProcessTimeline() {
   const { lang } = useT();
@@ -56,9 +61,9 @@ export function ProcessTimeline() {
           </h2>
         </div>
 
-        <div className="relative grid grid-cols-1 md:grid-cols-5 gap-10 md:gap-6">
+        <div className="relative grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-10 md:gap-6">
           <div
-            className="hidden md:block absolute top-7 left-[10%] right-[10%] h-px bg-border overflow-hidden"
+            className="hidden lg:block absolute top-7 left-[8%] right-[8%] h-px bg-border overflow-hidden"
             aria-hidden
           >
             <div className="h-full w-full bg-gradient-to-r from-primary via-primary to-primary/30 origin-left animate-[timelineGrow_1.4s_ease-out_forwards] scale-x-0" />
