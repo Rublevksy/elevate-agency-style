@@ -7,6 +7,7 @@ import { Nav } from "@/components/Nav";
 import { Footer } from "@/components/sections/Footer";
 import { useReveal } from "@/hooks/use-reveal";
 import { ContactWidget } from "@/components/ContactWidget";
+import { PageLoader } from "@/components/PageLoader";
 import { CookieBanner } from "@/components/CookieBanner";
 import { ExitIntentModal } from "@/components/ExitIntentModal";
 import { TopProgressBar } from "@/components/TopProgressBar";
@@ -187,6 +188,7 @@ function SiteShell() {
       <ContactWidget />
       <ExitIntentModal />
       <CookieBanner />
+      <PageLoader />
     </div>
   );
 }
