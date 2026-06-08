@@ -9,6 +9,8 @@ import { IndustryStrip } from "@/components/sections/IndustryStrip";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
 import { StudioPhilosophy } from "@/components/sections/StudioPhilosophy";
 import { Collaboration } from "@/components/sections/Collaboration";
+import { WhyUs } from "@/components/sections/WhyUs";
+import { TrustBar } from "@/components/sections/TrustBar";
 import { InstagramStrip } from "@/components/sections/InstagramStrip";
 import { useT } from "@/lib/i18n";
 import heroLogo from "@/assets/elevate-logo.png";
