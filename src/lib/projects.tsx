@@ -61,8 +61,13 @@ export function ProjectVisual({ project, mode = "card" }: { project: VisualProje
             </span>
           </div>
         </div>
-        {/* Live screenshot */}
-        <div className="relative flex-1 bg-surface overflow-hidden">
+        {/* Live screenshot with graceful fallback layer behind it */}
+        <div className="relative flex-1 bg-gradient-to-br from-surface via-background to-surface overflow-hidden">
+          <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 pointer-events-none">
+            <div className="text-[10px] uppercase tracking-[0.3em] text-muted-foreground mb-2">Live preview</div>
+            <div className="text-lg md:text-2xl font-semibold text-foreground/80 tracking-tight">{project.name}</div>
+            <div className="text-[11px] text-muted-foreground font-mono mt-1">{domain}</div>
+          </div>
           <img
             src={src}
             alt={`${project.name} — náhled webu`}
