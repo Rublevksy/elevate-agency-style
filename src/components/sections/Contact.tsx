@@ -10,6 +10,7 @@ import {
   RefreshCw,
   HelpCircle,
   Wallet,
+  Sparkles,
 } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
@@ -24,10 +25,10 @@ const SUCCESS_TITLE: Record<Lang, string> = {
   UA: "Повідомлення надіслано!",
 };
 const SUCCESS_BODY: Record<Lang, string> = {
-  CZ: "Ozveme se do 24 hodin.",
-  EN: "We'll get back to you within 24 hours.",
-  RU: "Ответим в течение 24 часов.",
-  UA: "Відповімо протягом 24 годин.",
+  CZ: "Ozveme se do 24 hodin s návrhem dalšího kroku.",
+  EN: "We'll get back to you within 24 hours with next steps.",
+  RU: "Ответим в течение 24 часов и предложим следующий шаг.",
+  UA: "Відповімо протягом 24 годин і запропонуємо наступний крок.",
 };
 const SEND_AGAIN: Record<Lang, string> = {
   CZ: "Odeslat další zprávu",
@@ -45,13 +46,14 @@ const PROJECT_TYPES = [
 ] as const;
 
 const BUDGETS = [
-  { id: "do 20 000 Kč", value: 20000 },
-  { id: "20 000–50 000 Kč", value: 50000 },
-  { id: "50 000–100 000 Kč", value: 100000 },
-  { id: "100 000+ Kč", value: 150000 },
+  { id: "Do 20 000 Kč", value: 20000 },
+  { id: "20 000 – 50 000 Kč", value: 50000 },
+  { id: "50 000 – 100 000 Kč", value: 100000 },
+  { id: "100 000 Kč+", value: 150000 },
+  { id: "Nejsem si jistý", value: 0 },
 ] as const;
 
-const STEP_TITLES_CZ = ["Jaký projekt řešíte?", "Jaký máte rozpočet?", "Kontaktní údaje"];
+const STEP_TITLES_CZ = ["Jaký projekt řešíte?", "Kontaktní údaje", "Jaký je přibližný rozpočet?"];
 
 const schema = z.object({
   projectType: z.string().min(1, "Vyberte typ projektu"),
@@ -78,19 +80,36 @@ export function Contact() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const progress = useMemo(() => (submitted ? 100 : ((step - 1) / 3) * 100 + 33), [step, submitted]);
+  const progress = useMemo(() => (submitted ? 100 : (step / 3) * 100), [step, submitted]);
+
+  const validateContactDetails = (): boolean => {
+    const errs: Record<string, string> = {};
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    if (!trimmedName) errs.name = "Toto pole je povinné";
+    else if (trimmedName.length > 100) errs.name = "Maximálně 100 znaků";
+    if (!trimmedEmail) errs.email = "Toto pole je povinné";
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) errs.email = "Neplatný e-mail";
+    if (!message.trim()) errs.message = "Popište prosím projekt";
+    setErrors(errs);
+    return Object.keys(errs).length === 0;
+  };
 
   const goNext = () => {
     setErrors({});
-    if (step === 1 && !projectType) {
-      setErrors({ projectType: "Vyberte typ projektu" });
+    if (step === 1) {
+      if (!projectType) {
+        setErrors({ projectType: "Vyberte typ projektu" });
+        return;
+      }
+      setStep(2);
       return;
     }
-    if (step === 2 && !budget) {
-      setErrors({ budget: "Vyberte rozpočet" });
+    if (step === 2) {
+      if (!validateContactDetails()) return;
+      setStep(3);
       return;
     }
-    setStep((s) => (s < 3 ? ((s + 1) as StepKey) : s));
   };
 
   const goPrev = () => setStep((s) => (s > 1 ? ((s - 1) as StepKey) : s));
@@ -150,19 +169,51 @@ export function Contact() {
 
         <div className="max-w-3xl">
           {submitted ? (
-            <div className="p-12 md:p-16 rounded-3xl border border-primary/40 bg-surface text-center glow-primary animate-scale-in">
-              <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-primary/15 ring-4 ring-primary/30">
-                <Check className="h-10 w-10 text-primary animate-scale-in" strokeWidth={3} />
+            <div className="relative p-12 md:p-16 rounded-3xl border border-primary/40 bg-surface text-center glow-primary overflow-hidden animate-scale-in">
+              {/* Celebratory glow rings */}
+              <div className="pointer-events-none absolute inset-0 grid place-items-center">
+                <span className="absolute h-40 w-40 rounded-full bg-primary/20 blur-2xl animate-pulse" />
+                <span
+                  className="absolute h-72 w-72 rounded-full border border-primary/30 opacity-60"
+                  style={{ animation: "scale-in 700ms ease-out both" }}
+                />
+                <span
+                  className="absolute h-96 w-96 rounded-full border border-primary/15 opacity-40"
+                  style={{ animation: "scale-in 900ms ease-out both" }}
+                />
               </div>
-              <p className="text-2xl md:text-3xl font-bold text-foreground mb-2">{SUCCESS_TITLE[lang]}</p>
-              <p className="text-sm text-muted-foreground mb-8">{SUCCESS_BODY[lang]}</p>
-              <button
-                type="button"
-                onClick={reset}
-                className="text-xs uppercase tracking-widest text-primary hover:text-foreground transition-colors story-link"
-              >
-                {SEND_AGAIN[lang]}
-              </button>
+              {/* Sparkles */}
+              <Sparkles
+                className="absolute top-8 left-10 h-5 w-5 text-primary/70 animate-pulse"
+                strokeWidth={1.5}
+              />
+              <Sparkles
+                className="absolute bottom-12 right-12 h-4 w-4 text-primary/60 animate-pulse"
+                strokeWidth={1.5}
+                style={{ animationDelay: "400ms" }}
+              />
+
+              <div className="relative">
+                <div className="mx-auto mb-6 flex h-24 w-24 items-center justify-center rounded-full bg-primary/15 ring-4 ring-primary/30 animate-scale-in">
+                  <Check className="h-12 w-12 text-primary" strokeWidth={3} />
+                </div>
+                <p className="text-2xl md:text-3xl font-bold text-foreground mb-3 animate-fade-in">
+                  {SUCCESS_TITLE[lang]}
+                </p>
+                <p
+                  className="text-sm md:text-base text-muted-foreground mb-8 max-w-md mx-auto animate-fade-in"
+                  style={{ animationDelay: "120ms" }}
+                >
+                  {SUCCESS_BODY[lang]}
+                </p>
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="text-xs uppercase tracking-widest text-primary hover:text-foreground transition-colors story-link"
+                >
+                  {SEND_AGAIN[lang]}
+                </button>
+              </div>
             </div>
           ) : (
             <div className="rounded-3xl border border-border/60 bg-surface/40 backdrop-blur p-6 md:p-10 shadow-2xl animate-fade-in">
@@ -184,7 +235,7 @@ export function Contact() {
 
               {/* Step 1 — project type */}
               {step === 1 && (
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6 animate-fade-in" key="step-1">
                   <div className="flex items-center gap-3">
                     <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
                       1
@@ -223,55 +274,14 @@ export function Contact() {
                 </div>
               )}
 
-              {/* Step 2 — budget */}
+              {/* Step 2 — contact info */}
               {step === 2 && (
-                <div className="space-y-6 animate-fade-in">
+                <div className="space-y-6 animate-fade-in" key="step-2">
                   <div className="flex items-center gap-3">
                     <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
                       2
                     </span>
                     <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[1]}</h3>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {BUDGETS.map(({ id }) => {
-                      const active = budget === id;
-                      return (
-                        <button
-                          key={id}
-                          type="button"
-                          onClick={() => {
-                            setBudget(id);
-                            setErrors({});
-                          }}
-                          className={`group relative flex items-center gap-3 px-5 py-5 rounded-xl border text-left transition-all duration-300 ${
-                            active
-                              ? "border-primary bg-primary/10 text-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_250/0.6)]"
-                              : "border-border bg-background/40 text-muted-foreground hover:border-primary/50 hover:text-foreground hover:-translate-y-0.5"
-                          }`}
-                        >
-                          <Wallet className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
-                          <span className="font-semibold text-foreground tabular-nums">{id}</span>
-                          {active && (
-                            <span className="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground animate-scale-in">
-                              <Check className="h-3 w-3" strokeWidth={3} />
-                            </span>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {errors.budget && <p className="text-xs text-destructive">{errors.budget}</p>}
-                </div>
-              )}
-
-              {/* Step 3 — contact info */}
-              {step === 3 && (
-                <div className="space-y-6 animate-fade-in">
-                  <div className="flex items-center gap-3">
-                    <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
-                      3
-                    </span>
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[2]}</h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -347,10 +357,73 @@ export function Contact() {
                       <span className="h-1.5 w-1.5 rounded-full bg-primary" />
                       {projectType}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground tabular-nums">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      {budget}
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3 — budget (final) */}
+              {step === 3 && (
+                <div className="space-y-6 animate-fade-in" key="step-3">
+                  <div className="flex items-center gap-3">
+                    <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
+                      3
                     </span>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[2]}</h3>
+                  </div>
+                  <p className="text-sm text-muted-foreground -mt-2">
+                    Pomůže nám to navrhnout řešení v rámci vašich možností. Bez závazku.
+                  </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {BUDGETS.map(({ id }) => {
+                      const active = budget === id;
+                      const isUnsure = id === "Nejsem si jistý";
+                      return (
+                        <button
+                          key={id}
+                          type="button"
+                          onClick={() => {
+                            setBudget(id);
+                            setErrors({});
+                          }}
+                          className={`group relative flex items-center gap-3 px-5 py-5 rounded-xl border text-left transition-all duration-300 ${
+                            active
+                              ? "border-primary bg-primary/10 text-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_250/0.6)]"
+                              : "border-border bg-background/40 text-muted-foreground hover:border-primary/50 hover:text-foreground hover:-translate-y-0.5"
+                          }`}
+                        >
+                          {isUnsure ? (
+                            <HelpCircle className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
+                          ) : (
+                            <Wallet className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
+                          )}
+                          <span className="font-semibold text-foreground tabular-nums">{id}</span>
+                          {active && (
+                            <span className="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground animate-scale-in">
+                              <Check className="h-3 w-3" strokeWidth={3} />
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {errors.budget && <p className="text-xs text-destructive">{errors.budget}</p>}
+
+                  {/* Summary chips before submit */}
+                  <div className="flex flex-wrap gap-2 pt-4 border-t border-border/60">
+                    <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      {projectType}
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
+                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                      {name || "—"}
+                    </span>
+                    {budget && (
+                      <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 text-foreground tabular-nums">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {budget}
+                      </span>
+                    )}
                   </div>
                 </div>
               )}
