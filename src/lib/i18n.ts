@@ -72,10 +72,10 @@ export const translations = {
       eyebrow: "Čísla",
       title: "Výsledky, které mluví za nás",
       items: [
-        { n: "50+", l: "Dokončených projektů" },
+        { n: "50+", l: "Projektů" },
         { n: "4+", l: "Roky zkušeností" },
-        { n: "100%", l: "Spokojených klientů" },
-        { n: "12", l: "Zemí v EU" },
+        { n: "24h", l: "Průměrná odpověď" },
+        { n: "CZ / EN / RU / UA", l: "Mezinárodní spolupráce" },
       ],
     },
     guarantee: {
@@ -309,10 +309,10 @@ export const translations = {
       eyebrow: "Numbers",
       title: "Results that speak for us",
       items: [
-        { n: "50+", l: "Projects delivered" },
+        { n: "50+", l: "Projects" },
         { n: "4+", l: "Years of experience" },
-        { n: "100%", l: "Client satisfaction" },
-        { n: "12", l: "Countries in EU" },
+        { n: "24h", l: "Average response" },
+        { n: "CZ / EN / RU / UA", l: "International collaboration" },
       ],
     },
     guarantee: {
@@ -528,10 +528,10 @@ export const translations = {
       eyebrow: "Цифры",
       title: "Результаты говорят за нас",
       items: [
-        { n: "50+", l: "Реализованных проектов" },
+        { n: "50+", l: "Проектов" },
         { n: "4+", l: "Года опыта" },
-        { n: "100%", l: "Довольных клиентов" },
-        { n: "12", l: "Стран в ЕС" },
+        { n: "24h", l: "Средний ответ" },
+        { n: "CZ / EN / RU / UA", l: "Международная работа" },
       ],
     },
     guarantee: {
@@ -746,10 +746,10 @@ export const translations = {
       eyebrow: "Цифри",
       title: "Результати говорять за нас",
       items: [
-        { n: "50+", l: "Реалізованих проєктів" },
+        { n: "50+", l: "Проєктів" },
         { n: "4+", l: "Роки досвіду" },
-        { n: "100%", l: "Задоволених клієнтів" },
-        { n: "12", l: "Країн у ЄС" },
+        { n: "24h", l: "Середня відповідь" },
+        { n: "CZ / EN / RU / UA", l: "Міжнародна співпраця" },
       ],
     },
     guarantee: {
