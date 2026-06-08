@@ -23,7 +23,13 @@ export function Results() {
                 key={it.l}
                 className="reveal bg-background p-8 md:p-12 flex flex-col items-start hover:bg-surface/60 transition-colors"
               >
-                <p className="text-5xl md:text-6xl font-extrabold text-gradient tracking-tight mb-3">
+                <p
+                  className={
+                    parsed
+                      ? "text-5xl md:text-6xl font-extrabold text-gradient tracking-tight mb-3 tabular-nums"
+                      : "text-xl md:text-2xl font-bold text-gradient tracking-tight mb-3"
+                  }
+                >
                   {parsed ? <Counter end={parsed.num} suffix={parsed.suffix} /> : it.n}
                 </p>
                 <p className="text-sm text-muted-foreground uppercase tracking-widest">{it.l}</p>
