@@ -1,5 +1,4 @@
 import { useState, useMemo } from "react";
-import { z } from "zod";
 import {
   ArrowRight,
   ArrowLeft,
@@ -12,65 +11,25 @@ import {
   Wallet,
   Sparkles,
 } from "lucide-react";
-import { useT, type Lang } from "@/lib/i18n";
+import { useT } from "@/lib/i18n";
 import { SectionHeading } from "./SectionHeading";
 import { sendContactToTelegram } from "@/lib/telegram.functions";
 import { SocialIcons } from "@/components/Socials";
 import { toast } from "sonner";
 
-const SUCCESS_TITLE: Record<Lang, string> = {
-  CZ: "Zpráva odeslána!",
-  EN: "Message sent!",
-  RU: "Сообщение отправлено!",
-  UA: "Повідомлення надіслано!",
-};
-const SUCCESS_BODY: Record<Lang, string> = {
-  CZ: "Ozveme se do 24 hodin s návrhem dalšího kroku.",
-  EN: "We'll get back to you within 24 hours with next steps.",
-  RU: "Ответим в течение 24 часов и предложим следующий шаг.",
-  UA: "Відповімо протягом 24 годин і запропонуємо наступний крок.",
-};
-const SEND_AGAIN: Record<Lang, string> = {
-  CZ: "Odeslat další zprávu",
-  EN: "Send another message",
-  RU: "Отправить ещё",
-  UA: "Надіслати ще",
-};
-
-const PROJECT_TYPES = [
-  { id: "Firemní web", icon: Globe },
-  { id: "E-shop", icon: ShoppingBag },
-  { id: "Webová aplikace", icon: AppWindow },
-  { id: "Redesign webu", icon: RefreshCw },
-  { id: "Nejsem si jistý", icon: HelpCircle },
-] as const;
-
-const BUDGETS = [
-  { id: "Do 20 000 Kč", value: 20000 },
-  { id: "20 000 – 50 000 Kč", value: 50000 },
-  { id: "50 000 – 100 000 Kč", value: 100000 },
-  { id: "100 000 Kč+", value: 150000 },
-  { id: "Nejsem si jistý", value: 0 },
-] as const;
-
-const STEP_TITLES_CZ = ["Jaký projekt řešíte?", "Kontaktní údaje", "Jaký je přibližný rozpočet?"];
-
-const schema = z.object({
-  projectType: z.string().min(1, "Vyberte typ projektu"),
-  budget: z.string().min(1, "Vyberte rozpočet"),
-  name: z.string().trim().min(1, "Toto pole je povinné").max(100),
-  email: z.string().trim().min(1, "Toto pole je povinné").email("Neplatný e-mail").max(255),
-  phone: z.string().trim().max(40).optional().or(z.literal("")),
-  message: z.string().trim().min(1, "Popište prosím projekt").max(1000),
-});
+const PROJECT_ICONS = [Globe, ShoppingBag, AppWindow, RefreshCw, HelpCircle];
+// Stable numeric budget values (CZK) per BUDGETS index — language-independent
+const BUDGET_VALUES = [20000, 50000, 100000, 150000, 0];
 
 type StepKey = 1 | 2 | 3;
 
 export function Contact() {
-  const { t, lang } = useT();
+  const { t } = useT();
+  const f = t.contact.form;
+
   const [step, setStep] = useState<StepKey>(1);
-  const [projectType, setProjectType] = useState<string>("");
-  const [budget, setBudget] = useState<string>("");
+  const [projectTypeIdx, setProjectTypeIdx] = useState<number | null>(null);
+  const [budgetIdx, setBudgetIdx] = useState<number | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -86,11 +45,11 @@ export function Contact() {
     const errs: Record<string, string> = {};
     const trimmedName = name.trim();
     const trimmedEmail = email.trim();
-    if (!trimmedName) errs.name = "Toto pole je povinné";
-    else if (trimmedName.length > 100) errs.name = "Maximálně 100 znaků";
-    if (!trimmedEmail) errs.email = "Toto pole je povinné";
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) errs.email = "Neplatný e-mail";
-    if (!message.trim()) errs.message = "Popište prosím projekt";
+    if (!trimmedName) errs.name = f.errors.required;
+    else if (trimmedName.length > 100) errs.name = f.errors.nameMax;
+    if (!trimmedEmail) errs.email = f.errors.required;
+    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) errs.email = f.errors.invalidEmail;
+    if (!message.trim()) errs.message = f.errors.describeProject;
     setErrors(errs);
     return Object.keys(errs).length === 0;
   };
@@ -98,8 +57,8 @@ export function Contact() {
   const goNext = () => {
     setErrors({});
     if (step === 1) {
-      if (!projectType) {
-        setErrors({ projectType: "Vyberte typ projektu" });
+      if (projectTypeIdx === null) {
+        setErrors({ projectType: f.errors.projectType });
         return;
       }
       setStep(2);
@@ -116,33 +75,40 @@ export function Contact() {
 
   const onSubmit = async () => {
     if (hp) return;
-    const data = { projectType, budget, name, email, phone, message };
-    const result = schema.safeParse(data);
-    if (!result.success) {
-      const errs: Record<string, string> = {};
-      for (const issue of result.error.issues) errs[issue.path[0] as string] = issue.message;
-      setErrors(errs);
+    if (projectTypeIdx === null) {
+      setErrors({ projectType: f.errors.projectType });
+      setStep(1);
+      return;
+    }
+    if (budgetIdx === null) {
+      setErrors({ budget: f.errors.budget });
+      return;
+    }
+    if (!validateContactDetails()) {
+      setStep(2);
       return;
     }
     setErrors({});
     setLoading(true);
     try {
-      const budgetNum = BUDGETS.find((b) => b.id === budget)?.value ?? 0;
+      const projectTypeLabel = f.projectTypes[projectTypeIdx];
+      const budgetLabel = f.budgets[budgetIdx];
+      const budgetNum = BUDGET_VALUES[budgetIdx] ?? 0;
       await sendContactToTelegram({
         data: {
           name,
           email,
           phone: phone || "",
-          service: projectType,
+          service: projectTypeLabel,
           budget: budgetNum,
-          message: `[${budget}]\n${message}`,
+          message: `[${budgetLabel}]\n${message}`,
         },
       });
       setSubmitted(true);
-      toast.success(`${SUCCESS_TITLE[lang]} ${SUCCESS_BODY[lang]}`);
+      toast.success(`${f.successTitle} ${f.successBody}`);
     } catch (err) {
       console.error(err);
-      toast.error("Nepodařilo se odeslat. Zkuste to prosím znovu.");
+      toast.error(f.errors.sendFailed);
     } finally {
       setLoading(false);
     }
@@ -151,8 +117,8 @@ export function Contact() {
   const reset = () => {
     setSubmitted(false);
     setStep(1);
-    setProjectType("");
-    setBudget("");
+    setProjectTypeIdx(null);
+    setBudgetIdx(null);
     setName("");
     setEmail("");
     setPhone("");
@@ -170,7 +136,6 @@ export function Contact() {
         <div className="max-w-3xl">
           {submitted ? (
             <div className="relative p-12 md:p-16 rounded-3xl border border-primary/40 bg-surface text-center glow-primary overflow-hidden animate-scale-in">
-              {/* Celebratory glow rings */}
               <div className="pointer-events-none absolute inset-0 grid place-items-center">
                 <span className="absolute h-40 w-40 rounded-full bg-primary/20 blur-2xl animate-pulse" />
                 <span
@@ -182,7 +147,6 @@ export function Contact() {
                   style={{ animation: "scale-in 900ms ease-out both" }}
                 />
               </div>
-              {/* Sparkles */}
               <Sparkles
                 className="absolute top-8 left-10 h-5 w-5 text-primary/70 animate-pulse"
                 strokeWidth={1.5}
@@ -198,20 +162,20 @@ export function Contact() {
                   <Check className="h-12 w-12 text-primary" strokeWidth={3} />
                 </div>
                 <p className="text-2xl md:text-3xl font-bold text-foreground mb-3 animate-fade-in">
-                  {SUCCESS_TITLE[lang]}
+                  {f.successTitle}
                 </p>
                 <p
                   className="text-sm md:text-base text-muted-foreground mb-8 max-w-md mx-auto animate-fade-in"
                   style={{ animationDelay: "120ms" }}
                 >
-                  {SUCCESS_BODY[lang]}
+                  {f.successBody}
                 </p>
                 <button
                   type="button"
                   onClick={reset}
                   className="text-xs uppercase tracking-widest text-primary hover:text-foreground transition-colors story-link"
                 >
-                  {SEND_AGAIN[lang]}
+                  {f.sendAgain}
                 </button>
               </div>
             </div>
@@ -219,11 +183,11 @@ export function Contact() {
             <div className="rounded-3xl border border-border/60 bg-surface/40 backdrop-blur p-6 md:p-10 shadow-2xl animate-fade-in">
               {/* Progress bar */}
               <div className="mb-8">
-                <div className="flex items-center justify-between mb-3 text-[11px] uppercase tracking-[0.25em] text-muted-foreground">
+                <div className="flex items-center justify-between mb-3 text-[11px] uppercase tracking-[0.25em] text-muted-foreground gap-3">
                   <span>
-                    Krok <span className="text-primary font-semibold">{step}</span> ze 3
+                    {f.stepLabel} <span className="text-primary font-semibold">{step}</span> {f.stepOf}
                   </span>
-                  <span className="text-foreground/70">{STEP_TITLES_CZ[step - 1]}</span>
+                  <span className="text-foreground/70 text-right">{f.stepTitles[step - 1]}</span>
                 </div>
                 <div className="relative h-1.5 rounded-full bg-border overflow-hidden">
                   <div
@@ -240,17 +204,18 @@ export function Contact() {
                     <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
                       1
                     </span>
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[0]}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{f.stepTitles[0]}</h3>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {PROJECT_TYPES.map(({ id, icon: Icon }) => {
-                      const active = projectType === id;
+                    {f.projectTypes.map((label, i) => {
+                      const Icon = PROJECT_ICONS[i] ?? HelpCircle;
+                      const active = projectTypeIdx === i;
                       return (
                         <button
-                          key={id}
+                          key={i}
                           type="button"
                           onClick={() => {
-                            setProjectType(id);
+                            setProjectTypeIdx(i);
                             setErrors({});
                           }}
                           className={`group relative flex items-center gap-3 px-5 py-4 rounded-xl border text-left transition-all duration-300 ${
@@ -260,7 +225,7 @@ export function Contact() {
                           }`}
                         >
                           <Icon className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
-                          <span className="font-medium text-sm">{id}</span>
+                          <span className="font-medium text-sm">{label}</span>
                           {active && (
                             <span className="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground animate-scale-in">
                               <Check className="h-3 w-3" strokeWidth={3} />
@@ -281,7 +246,7 @@ export function Contact() {
                     <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
                       2
                     </span>
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[1]}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{f.stepTitles[1]}</h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -293,7 +258,7 @@ export function Contact() {
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         maxLength={100}
-                        placeholder="Jan Novák"
+                        placeholder={f.namePlaceholder}
                         className={`field-input-pro ${errors.name ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                       />
                       {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
@@ -307,7 +272,7 @@ export function Contact() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         maxLength={255}
-                        placeholder="jan@firma.cz"
+                        placeholder={f.emailPlaceholder}
                         className={`field-input-pro ${errors.email ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                       />
                       {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
@@ -320,20 +285,20 @@ export function Contact() {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value)}
                         maxLength={40}
-                        placeholder="+420 777 123 456"
+                        placeholder={f.phonePlaceholder}
                         className="field-input-pro"
                       />
                     </div>
                     <div className="md:col-span-2">
                       <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
-                        Popis projektu
+                        {f.messageLabel}
                       </label>
                       <textarea
                         value={message}
                         onChange={(e) => setMessage(e.target.value)}
                         rows={5}
                         maxLength={1000}
-                        placeholder="Napište nám pár vět o vašem projektu a cílech."
+                        placeholder={f.messagePlaceholder}
                         className={`field-input-pro resize-none ${errors.message ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                       />
                       {errors.message && <p className="text-xs text-destructive mt-1">{errors.message}</p>}
@@ -352,37 +317,37 @@ export function Contact() {
                   />
 
                   {/* summary chip */}
-                  <div className="flex flex-wrap gap-2 pt-2">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      {projectType}
-                    </span>
-                  </div>
+                  {projectTypeIdx !== null && (
+                    <div className="flex flex-wrap gap-2 pt-2">
+                      <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {f.projectTypes[projectTypeIdx]}
+                      </span>
+                    </div>
+                  )}
                 </div>
               )}
 
-              {/* Step 3 — budget (final) */}
+              {/* Step 3 — budget */}
               {step === 3 && (
                 <div className="space-y-6 animate-fade-in" key="step-3">
                   <div className="flex items-center gap-3">
                     <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
                       3
                     </span>
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{STEP_TITLES_CZ[2]}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{f.stepTitles[2]}</h3>
                   </div>
-                  <p className="text-sm text-muted-foreground -mt-2">
-                    Pomůže nám to navrhnout řešení v rámci vašich možností. Bez závazku.
-                  </p>
+                  <p className="text-sm text-muted-foreground -mt-2">{f.budgetHelp}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {BUDGETS.map(({ id }) => {
-                      const active = budget === id;
-                      const isUnsure = id === "Nejsem si jistý";
+                    {f.budgets.map((label, i) => {
+                      const active = budgetIdx === i;
+                      const isUnsure = i === f.budgets.length - 1;
                       return (
                         <button
-                          key={id}
+                          key={i}
                           type="button"
                           onClick={() => {
-                            setBudget(id);
+                            setBudgetIdx(i);
                             setErrors({});
                           }}
                           className={`group relative flex items-center gap-3 px-5 py-5 rounded-xl border text-left transition-all duration-300 ${
@@ -396,7 +361,7 @@ export function Contact() {
                           ) : (
                             <Wallet className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
                           )}
-                          <span className="font-semibold text-foreground tabular-nums">{id}</span>
+                          <span className="font-semibold text-foreground tabular-nums">{label}</span>
                           {active && (
                             <span className="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground animate-scale-in">
                               <Check className="h-3 w-3" strokeWidth={3} />
@@ -408,20 +373,24 @@ export function Contact() {
                   </div>
                   {errors.budget && <p className="text-xs text-destructive">{errors.budget}</p>}
 
-                  {/* Summary chips before submit */}
+                  {/* Summary chips */}
                   <div className="flex flex-wrap gap-2 pt-4 border-t border-border/60">
-                    <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      {projectType}
-                    </span>
-                    <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
-                      <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                      {name || "—"}
-                    </span>
-                    {budget && (
+                    {projectTypeIdx !== null && (
+                      <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {f.projectTypes[projectTypeIdx]}
+                      </span>
+                    )}
+                    {name && (
+                      <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-border bg-background/40 text-muted-foreground">
+                        <span className="h-1.5 w-1.5 rounded-full bg-primary" />
+                        {name}
+                      </span>
+                    )}
+                    {budgetIdx !== null && (
                       <span className="inline-flex items-center gap-1.5 text-[11px] uppercase tracking-widest px-3 py-1.5 rounded-full border border-primary/40 bg-primary/10 text-foreground tabular-nums">
                         <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                        {budget}
+                        {f.budgets[budgetIdx]}
                       </span>
                     )}
                   </div>
@@ -437,7 +406,7 @@ export function Contact() {
                   className="inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-medium text-muted-foreground border border-border bg-background/40 hover:text-foreground hover:border-primary/50 transition-all duration-300 disabled:opacity-30 disabled:cursor-not-allowed"
                 >
                   <ArrowLeft className="h-4 w-4" />
-                  Zpět
+                  {f.back}
                 </button>
                 {step < 3 ? (
                   <button
@@ -445,7 +414,7 @@ export function Contact() {
                     onClick={goNext}
                     className="group inline-flex items-center justify-center gap-3 rounded-xl px-7 py-4 text-base font-bold bg-gradient-to-r from-primary via-primary to-primary/80 text-primary-foreground shadow-[0_10px_40px_-10px_oklch(0.72_0.18_250/0.6)] hover:shadow-[0_20px_60px_-10px_oklch(0.72_0.18_250/0.8)] hover:-translate-y-0.5 transition-all duration-300"
                   >
-                    Pokračovat
+                    {f.next}
                     <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                 ) : (
@@ -455,13 +424,13 @@ export function Contact() {
                     disabled={loading}
                     className="group inline-flex items-center justify-center gap-3 rounded-xl px-7 py-4 text-base font-bold bg-gradient-to-r from-primary via-primary to-primary/80 text-primary-foreground shadow-[0_10px_40px_-10px_oklch(0.72_0.18_250/0.6)] hover:shadow-[0_20px_60px_-10px_oklch(0.72_0.18_250/0.8)] hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {loading ? "Odesílám..." : "Odeslat poptávku"}
+                    {loading ? f.sending : f.submit}
                     <ArrowRight className="h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                 )}
               </div>
 
-              <p className="text-xs text-center text-muted-foreground mt-4">{t.ui.contactNoSpam}</p>
+              <p className="text-xs text-center text-muted-foreground mt-4">{f.noSpam}</p>
             </div>
           )}
 
@@ -470,9 +439,9 @@ export function Contact() {
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
               <div>
                 <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-2">
-                  Nebo nás kontaktujte přímo
+                  {f.directEyebrow}
                 </p>
-                <p className="text-sm text-foreground/80">Telefon, e-mail nebo sociální sítě — odpovídáme rychle.</p>
+                <p className="text-sm text-foreground/80">{f.directText}</p>
               </div>
               <SocialIcons size="md" />
             </div>
