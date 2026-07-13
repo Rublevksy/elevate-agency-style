@@ -139,6 +139,18 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+34%", label: "returning visitors" },
       ],
     },
+    "psk-olymp-praha": {
+      description: "Complete redesign of the digital presence of a traditional Prague wrestling club. We turned a dated legacy site into a modern, structured and responsive platform for athletes, parents and new members.",
+      result: "Full digital transformation",
+      problem: "The original website carried a lot of valuable club information, but its technical and visual solution no longer matched current user expectations. Content lived in a legacy structure, mobile use was awkward, and new visitors couldn't quickly find the schedule, contacts, membership fees or the first-training info.",
+      solution: "We built a modern responsive platform with a new information architecture. The extensive club content was split into logical sections — training, schedule, sign-up, gallery, documents and shop — so every visitor reaches what they need within seconds.",
+      work: ["UX strategy & information architecture", "Full website redesign", "Sign-up system", "Club content integration"],
+      results: [
+        { value: "12+", label: "connected sections" },
+        { value: "100%", label: "responsive design" },
+        { value: "1", label: "unified digital ecosystem" },
+      ],
+    },
   },
   RU: {
     "biodent-clinic": {
