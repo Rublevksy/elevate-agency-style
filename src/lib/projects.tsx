@@ -5,9 +5,10 @@ export type ProjectSlug =
   | "biodent-clinic"
   | "nhome-praha"
   | "exclusive-beauty"
-  | "euromotors";
+  | "euromotors"
+  | "psk-olymp-praha";
 
-export type ProjectCategory = "Web" | "E-shop" | "Branding" | "SaaS";
+export type ProjectCategory = "Web" | "E-shop" | "Branding" | "SaaS" | "Sport";
 
 export type ProjectBase = {
   slug: ProjectSlug;
@@ -19,10 +20,11 @@ export type ProjectBase = {
 };
 
 export const PROJECTS_BASE: ProjectBase[] = [
-  { slug: "biodent-clinic",   name: "Biodent Clinic",    category: "Web",    url: "https://biodentclinic.cz",   domain: "biodentclinic.cz",   preview: "site" },
-  { slug: "exclusive-beauty", name: "Exclusive Beauty",  category: "E-shop", url: "https://exclusivebeauty.cz", domain: "exclusivebeauty.cz", preview: "site" },
-  { slug: "nhome-praha",      name: "N Home Praha",      category: "Web",    url: "https://inhomepraha.cz",     domain: "inhomepraha.cz",     preview: "site" },
-  { slug: "euromotors",       name: "EuroMotors",        category: "Web",    url: "https://euromotors.cz",      domain: "euromotors.cz",      preview: "site" },
+  { slug: "biodent-clinic",   name: "Biodent Clinic",    category: "Web",    url: "https://biodentclinic.cz",     domain: "biodentclinic.cz",     preview: "site" },
+  { slug: "exclusive-beauty", name: "Exclusive Beauty",  category: "E-shop", url: "https://exclusivebeauty.cz",   domain: "exclusivebeauty.cz",   preview: "site" },
+  { slug: "nhome-praha",      name: "N Home Praha",      category: "Web",    url: "https://inhomepraha.cz",       domain: "inhomepraha.cz",       preview: "site" },
+  { slug: "euromotors",       name: "EuroMotors",        category: "Web",    url: "https://euromotors.cz",        domain: "euromotors.cz",        preview: "site" },
+  { slug: "psk-olymp-praha",  name: "PSK Olymp Praha",   category: "Sport",  url: "https://wrestlinggympraha.cz", domain: "wrestlinggympraha.cz", preview: "site" },
 ];
 
 export const PROJECT_SLUGS: ProjectSlug[] = PROJECTS_BASE.map((p) => p.slug);

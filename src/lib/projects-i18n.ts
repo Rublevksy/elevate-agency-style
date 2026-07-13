@@ -21,10 +21,10 @@ type Content = {
 };
 
 const CATEGORY_LABELS: Record<Lang, Record<ProjectCategory, string>> = {
-  CZ: { Web: "Web", "E-shop": "E-shop", Branding: "Branding", SaaS: "SaaS" },
-  EN: { Web: "Web", "E-shop": "E-commerce", Branding: "Branding", SaaS: "SaaS" },
-  RU: { Web: "Сайт", "E-shop": "Интернет-магазин", Branding: "Брендинг", SaaS: "SaaS" },
-  UA: { Web: "Сайт", "E-shop": "Інтернет-магазин", Branding: "Брендинг", SaaS: "SaaS" },
+  CZ: { Web: "Web", "E-shop": "E-shop", Branding: "Branding", SaaS: "SaaS", Sport: "Sport · Zápasnický klub" },
+  EN: { Web: "Web", "E-shop": "E-commerce", Branding: "Branding", SaaS: "SaaS", Sport: "Sport · Wrestling club" },
+  RU: { Web: "Сайт", "E-shop": "Интернет-магазин", Branding: "Брендинг", SaaS: "SaaS", Sport: "Спорт · Борцовский клуб" },
+  UA: { Web: "Сайт", "E-shop": "Інтернет-магазин", Branding: "Брендинг", SaaS: "SaaS", Sport: "Спорт · Борцівський клуб" },
 };
 
 const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
@@ -77,6 +77,18 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+34%", label: "vrácení návštěvníků" },
       ],
     },
+    "psk-olymp-praha": {
+      description: "Kompletní redesign digitální prezentace tradičního pražského zápasnického klubu. Zastaralý web jsme proměnili v moderní, přehlednou a responzivní platformu pro sportovce, rodiče i nové členy.",
+      result: "Kompletní digitální transformace",
+      problem: "Původní web obsahoval velké množství důležitých klubových informací, ale jeho technické a vizuální řešení již neodpovídalo současným očekáváním uživatelů. Obsah byl rozdělený ve starší struktuře, mobilní používání bylo komplikované a pro nové návštěvníky nebylo vždy jasné, kde najít rozvrh, kontakty, členské příspěvky nebo informace o prvním tréninku.",
+      solution: "Vytvořili jsme moderní responzivní platformu s novou informační architekturou. Rozsáhlý klubový obsah jsme rozdělili do logických sekcí — tréninky, rozvrh, nábor, galerie, dokumenty i e-shop — tak, aby se každý návštěvník dostal k tomu, co hledá, během několika sekund.",
+      work: ["UX strategie a informační architektura", "Kompletní redesign webu", "Náborový systém", "Integrace klubového obsahu"],
+      results: [
+        { value: "12+", label: "propojených sekcí" },
+        { value: "100 %", label: "responzivní design" },
+        { value: "1", label: "jednotný digitální ekosystém" },
+      ],
+    },
   },
   EN: {
     "biodent-clinic": {
@@ -125,6 +137,18 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+120%", label: "test-drive bookings" },
         { value: "+58%", label: "leads from website" },
         { value: "+34%", label: "returning visitors" },
+      ],
+    },
+    "psk-olymp-praha": {
+      description: "Complete redesign of the digital presence of a traditional Prague wrestling club. We turned a dated legacy site into a modern, structured and responsive platform for athletes, parents and new members.",
+      result: "Full digital transformation",
+      problem: "The original website carried a lot of valuable club information, but its technical and visual solution no longer matched current user expectations. Content lived in a legacy structure, mobile use was awkward, and new visitors couldn't quickly find the schedule, contacts, membership fees or the first-training info.",
+      solution: "We built a modern responsive platform with a new information architecture. The extensive club content was split into logical sections — training, schedule, sign-up, gallery, documents and shop — so every visitor reaches what they need within seconds.",
+      work: ["UX strategy & information architecture", "Full website redesign", "Sign-up system", "Club content integration"],
+      results: [
+        { value: "12+", label: "connected sections" },
+        { value: "100%", label: "responsive design" },
+        { value: "1", label: "unified digital ecosystem" },
       ],
     },
   },
@@ -177,6 +201,18 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+34%", label: "возврат пользователей" },
       ],
     },
+    "psk-olymp-praha": {
+      description: "Полный редизайн цифровой презентации традиционного пражского борцовского клуба. Устаревший сайт превратили в современную, структурированную и адаптивную платформу для спортсменов, родителей и новых членов.",
+      result: "Полная цифровая трансформация",
+      problem: "Прежний сайт содержал большой объём важной клубной информации, но его техническое и визуальное решение уже не соответствовало ожиданиям пользователей. Контент был размещён в устаревшей структуре, мобильное использование было неудобным, и новым посетителям было сложно быстро найти расписание, контакты, взносы или информацию о первой тренировке.",
+      solution: "Мы создали современную адаптивную платформу с новой информационной архитектурой. Обширный клубный контент разделили на логические разделы — тренировки, расписание, набор, галерея, документы и магазин — так, чтобы каждый посетитель находил нужное за секунды.",
+      work: ["UX-стратегия и информационная архитектура", "Полный редизайн сайта", "Система набора", "Интеграция клубного контента"],
+      results: [
+        { value: "12+", label: "связанных разделов" },
+        { value: "100 %", label: "адаптивный дизайн" },
+        { value: "1", label: "единая цифровая экосистема" },
+      ],
+    },
   },
   UA: {
     "biodent-clinic": {
@@ -225,6 +261,18 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+120%", label: "тест-драйвів" },
         { value: "+58%", label: "лідів" },
         { value: "+34%", label: "повернення відвідувачів" },
+      ],
+    },
+    "psk-olymp-praha": {
+      description: "Повний редизайн цифрової присутності традиційного празького борцівського клубу. Застарілий сайт ми перетворили на сучасну, структуровану та адаптивну платформу для спортсменів, батьків і нових членів.",
+      result: "Повна цифрова трансформація",
+      problem: "Попередній сайт містив великий обсяг важливої клубної інформації, але його технічне та візуальне рішення вже не відповідало очікуванням користувачів. Контент був у застарілій структурі, мобільне використання було незручним, а новим відвідувачам було складно швидко знайти розклад, контакти, внески чи інформацію про перше тренування.",
+      solution: "Ми створили сучасну адаптивну платформу з новою інформаційною архітектурою. Обширний клубний контент розділили на логічні секції — тренування, розклад, набір, галерея, документи і магазин — так, щоб кожен відвідувач знаходив потрібне за секунди.",
+      work: ["UX-стратегія та інформаційна архітектура", "Повний редизайн сайту", "Система набору", "Інтеграція клубного контенту"],
+      results: [
+        { value: "12+", label: "пов'язаних секцій" },
+        { value: "100 %", label: "адаптивний дизайн" },
+        { value: "1", label: "єдина цифрова екосистема" },
       ],
     },
   },
