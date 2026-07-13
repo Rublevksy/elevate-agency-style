@@ -21,10 +21,10 @@ type Content = {
 };
 
 const CATEGORY_LABELS: Record<Lang, Record<ProjectCategory, string>> = {
-  CZ: { Web: "Web", "E-shop": "E-shop", Branding: "Branding", SaaS: "SaaS" },
-  EN: { Web: "Web", "E-shop": "E-commerce", Branding: "Branding", SaaS: "SaaS" },
-  RU: { Web: "Сайт", "E-shop": "Интернет-магазин", Branding: "Брендинг", SaaS: "SaaS" },
-  UA: { Web: "Сайт", "E-shop": "Інтернет-магазин", Branding: "Брендинг", SaaS: "SaaS" },
+  CZ: { Web: "Web", "E-shop": "E-shop", Branding: "Branding", SaaS: "SaaS", Sport: "Sport · Zápasnický klub" },
+  EN: { Web: "Web", "E-shop": "E-commerce", Branding: "Branding", SaaS: "SaaS", Sport: "Sport · Wrestling club" },
+  RU: { Web: "Сайт", "E-shop": "Интернет-магазин", Branding: "Брендинг", SaaS: "SaaS", Sport: "Спорт · Борцовский клуб" },
+  UA: { Web: "Сайт", "E-shop": "Інтернет-магазин", Branding: "Брендинг", SaaS: "SaaS", Sport: "Спорт · Борцівський клуб" },
 };
 
 const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
