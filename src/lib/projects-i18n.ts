@@ -77,6 +77,18 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
         { value: "+34%", label: "vrácení návštěvníků" },
       ],
     },
+    "psk-olymp-praha": {
+      description: "Kompletní redesign digitální prezentace tradičního pražského zápasnického klubu. Zastaralý web jsme proměnili v moderní, přehlednou a responzivní platformu pro sportovce, rodiče i nové členy.",
+      result: "Kompletní digitální transformace",
+      problem: "Původní web obsahoval velké množství důležitých klubových informací, ale jeho technické a vizuální řešení již neodpovídalo současným očekáváním uživatelů. Obsah byl rozdělený ve starší struktuře, mobilní používání bylo komplikované a pro nové návštěvníky nebylo vždy jasné, kde najít rozvrh, kontakty, členské příspěvky nebo informace o prvním tréninku.",
+      solution: "Vytvořili jsme moderní responzivní platformu s novou informační architekturou. Rozsáhlý klubový obsah jsme rozdělili do logických sekcí — tréninky, rozvrh, nábor, galerie, dokumenty i e-shop — tak, aby se každý návštěvník dostal k tomu, co hledá, během několika sekund.",
+      work: ["UX strategie a informační architektura", "Kompletní redesign webu", "Náborový systém", "Integrace klubového obsahu"],
+      results: [
+        { value: "12+", label: "propojených sekcí" },
+        { value: "100 %", label: "responzivní design" },
+        { value: "1", label: "jednotný digitální ekosystém" },
+      ],
+    },
   },
   EN: {
     "biodent-clinic": {
