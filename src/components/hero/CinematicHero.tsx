@@ -7,6 +7,7 @@ import {
   useTransform,
   useMotionValue,
   useReducedMotion,
+  type MotionValue,
 } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { ArrowObject } from "./ArrowObject";
@@ -103,25 +104,7 @@ export function CinematicHero() {
             { x: -30, y: 24, r: 6 },
             { x: 40, y: 18, r: -6 },
           ].map((s, i) => (
-            <motion.div
-              key={i}
-              className="absolute left-1/2 top-1/2 w-[190px] rounded-lg border border-border bg-surface/60 p-3 backdrop-blur-xl"
-              style={{
-                x: useTransform(previewSpread, (v) => `calc(-50% + ${s.x * v}vw)`),
-                y: useTransform(previewSpread, (v) => `calc(-50% + ${s.y * v}vh)`),
-                rotate: s.r,
-                boxShadow: "0 30px 70px -30px oklch(0.55 0.2 268 / 0.7)",
-              }}
-            >
-              <div className="mb-2 flex gap-1">
-                <span className="h-1 w-1 rounded-full bg-foreground/30" />
-                <span className="h-1 w-1 rounded-full bg-foreground/30" />
-                <span className="h-1 w-1 rounded-full bg-foreground/30" />
-              </div>
-              <div className="h-1.5 w-2/3 rounded-full bg-foreground/20" />
-              <div className="mt-1.5 h-1.5 w-1/3 rounded-full bg-foreground/10" />
-              <div className="mt-3 h-14 rounded-md bg-gradient-to-br from-primary/25 to-transparent" />
-            </motion.div>
+            <PreviewCard key={i} spread={previewSpread} x={s.x} y={s.y} r={s.r} />
           ))}
         </motion.div>
 
@@ -216,5 +199,40 @@ export function CinematicHero() {
         </motion.div>
       </div>
     </div>
+  );
+}
+
+function PreviewCard({
+  spread,
+  x,
+  y,
+  r,
+}: {
+  spread: MotionValue<number>;
+  x: number;
+  y: number;
+  r: number;
+}) {
+  const tx = useTransform(spread, (v) => `calc(-50% + ${x * v}vw)`);
+  const ty = useTransform(spread, (v) => `calc(-50% + ${y * v}vh)`);
+  return (
+    <motion.div
+      className="absolute left-1/2 top-1/2 w-[190px] rounded-lg border border-border bg-surface/60 p-3 backdrop-blur-xl"
+      style={{
+        x: tx,
+        y: ty,
+        rotate: r,
+        boxShadow: "0 30px 70px -30px oklch(0.55 0.2 268 / 0.7)",
+      }}
+    >
+      <div className="mb-2 flex gap-1">
+        <span className="h-1 w-1 rounded-full bg-foreground/30" />
+        <span className="h-1 w-1 rounded-full bg-foreground/30" />
+        <span className="h-1 w-1 rounded-full bg-foreground/30" />
+      </div>
+      <div className="h-1.5 w-2/3 rounded-full bg-foreground/20" />
+      <div className="mt-1.5 h-1.5 w-1/3 rounded-full bg-foreground/10" />
+      <div className="mt-3 h-14 rounded-md bg-gradient-to-br from-primary/25 to-transparent" />
+    </motion.div>
   );
 }
