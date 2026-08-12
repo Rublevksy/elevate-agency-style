@@ -176,7 +176,7 @@ export function ModularHero() {
 
         {/* ---------------- modular grid ---------------- */}
         <div className="container-luxe relative flex min-h-0 flex-1 flex-col pt-24 md:pt-28">
-          <div className="grid min-h-0 flex-1 grid-cols-1 gap-8 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.5fr)_minmax(0,0.7fr)] lg:gap-10">
+          <div className="grid min-h-0 flex-1 grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.45fr)_minmax(0,0.62fr)] lg:gap-10">
             {/* LEFT — statement module */}
             <motion.div
               style={{ y: textShift, opacity: textFade }}
@@ -230,8 +230,8 @@ export function ModularHero() {
                     transition={{ type: "spring", stiffness: 120, damping: 20 }}
                     className={`absolute hidden overflow-hidden rounded-lg border border-border/70 bg-surface/70 shadow-[0_30px_70px_-40px_rgba(0,0,0,0.9)] backdrop-blur md:block ${
                       i === 0
-                        ? "-right-2 top-2 h-24 w-40 lg:h-28 lg:w-48"
-                        : "-left-4 bottom-2 h-20 w-32 lg:h-24 lg:w-40"
+                        ? "-right-10 -top-8 h-24 w-40 lg:h-28 lg:w-48"
+                        : "-left-12 -bottom-8 h-20 w-32 lg:h-24 lg:w-40"
                     }`}
                   >
                     <img
@@ -244,7 +244,7 @@ export function ModularHero() {
                 ))}
 
                 {/* dominant module */}
-                <div className="absolute inset-x-0 top-0 mx-auto flex h-full max-w-2xl flex-col overflow-hidden rounded-xl border border-border bg-background/80 shadow-[0_60px_120px_-50px_rgba(0,0,0,0.95)] backdrop-blur">
+                <div className="absolute inset-0 flex flex-col overflow-hidden rounded-xl border border-border bg-background/80 shadow-[0_60px_120px_-50px_rgba(0,0,0,0.95)] backdrop-blur">
                   <div className="flex items-center gap-2 border-b border-border/70 bg-surface/70 px-4 py-2.5">
                     <span className="h-2 w-2 rounded-full bg-primary/70" />
                     <span className="h-2 w-2 rounded-full bg-foreground/15" />
