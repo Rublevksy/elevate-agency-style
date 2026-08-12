@@ -76,7 +76,7 @@ export function CinematicHero() {
           style={{
             opacity: vignette,
             background:
-              "radial-gradient(ellipse at 50% 55%, oklch(0.3 0.14 268 / 0.35), transparent 62%)",
+              "radial-gradient(ellipse at 50% 55%, oklch(0.34 0.13 245 / 0.4), transparent 62%)",
           }}
         />
         <ParticleField className="absolute inset-0 h-full w-full" />
@@ -89,21 +89,6 @@ export function CinematicHero() {
           <ArrowObject scale={scale} rotateY={rotateY} rotateX={tiltX} ringSpin={ringSpin} />
         </motion.div>
 
-        {/* STATE 03 — interface previews orbiting the arrow */}
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 hidden md:block"
-          style={{ opacity: previewOpacity }}
-        >
-          {[
-            { x: -38, y: -22, r: -8 },
-            { x: 34, y: -28, r: 7 },
-            { x: -30, y: 24, r: 6 },
-            { x: 40, y: 18, r: -6 },
-          ].map((s, i) => (
-            <PreviewCard key={i} spread={previewSpread} x={s.x} y={s.y} r={s.r} />
-          ))}
-        </motion.div>
 
         {/* STATE 01 — headline */}
         <motion.div
