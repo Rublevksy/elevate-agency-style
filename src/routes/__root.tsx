@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import appCss from "../styles.css?url";
 import { LangProvider } from "@/components/LangProvider";
-import { Nav } from "@/components/Nav";
+import { NavMinimal } from "@/components/NavMinimal";
 import { Footer } from "@/components/sections/Footer";
 import { useReveal } from "@/hooks/use-reveal";
 import { ContactWidget } from "@/components/ContactWidget";
@@ -179,7 +179,7 @@ function SiteShell() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <TopProgressBar />
-      <Nav />
+      <NavMinimal />
       <main key={pathname} className="flex-1 animate-fade-in pb-20 md:pb-0">
         <Outlet />
       </main>
