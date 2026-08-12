@@ -41,17 +41,14 @@ export function CinematicHero() {
   const sceneX = useTransform(px, [-1, 1], [26, -26]);
   const sceneY = useTransform(py, [-1, 1], [18, -18]);
 
-  const scale = useTransform(p, [0, 0.35, 0.7, 1], [0.92, 1.24, 1.06, 0.82]);
-  const rotateY = useTransform(p, [0, 1], [0, reduced ? 0 : 300]);
-  const tiltX = useTransform(py, [-1, 1], [10, -10]);
-  const ringSpin = useTransform(p, [0, 1], [0, reduced ? 0 : 240]);
+  const scale = useTransform(p, [0, 0.35, 0.7, 1], [0.94, 1.22, 1.04, 0.8]);
+  const rotateY = useTransform(px, [-1, 1], [reduced ? 0 : -14, reduced ? 0 : 14]);
+  const tiltX = useTransform(py, [-1, 1], [8, -8]);
+  const ringSpin = useTransform(p, [0, 1], [0, reduced ? 0 : 200]);
 
   const headlineOpacity = useTransform(p, [0, 0.16], [1, 0]);
   const headlineY = useTransform(p, [0, 0.16], [0, -40]);
   const headlineBlur = useTransform(p, [0, 0.16], ["blur(0px)", "blur(10px)"]);
-
-  const previewOpacity = useTransform(p, [0.3, 0.45, 0.72, 0.84], [0, 1, 1, 0]);
-  const previewSpread = useTransform(p, [0.3, 0.55], [0.35, 1]);
 
   const workOpacity = useTransform(p, [0.62, 0.76, 0.92, 1], [0, 1, 1, 0.2]);
   const workY = useTransform(p, [0.62, 0.8], [60, 0]);
