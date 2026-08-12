@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, Globe, ShoppingBag, Sparkles } from "lucide-react";
-import { CinematicHero } from "@/components/hero/CinematicHero";
+import { ModularHero } from "@/components/hero/ModularHero";
 import { ProjectVisual } from "@/lib/projects";
 import { useProjects } from "@/lib/projects-i18n";
 import { TechStack } from "@/components/sections/TechStack";
@@ -45,8 +45,8 @@ function Home() {
 
   return (
     <>
-      {/* HERO — cinematic scroll-driven scene */}
-      <CinematicHero />
+      {/* HERO — modular interactive composition */}
+      <ModularHero />
 
       {/* INDUSTRY STRIP */}
       <IndustryStrip />
