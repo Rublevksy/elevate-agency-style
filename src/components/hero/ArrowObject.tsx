@@ -19,7 +19,7 @@ export function ArrowObject({
 }) {
   return (
     <motion.div
-      className="relative aspect-square w-[min(80vw,560px)]"
+      className="relative aspect-square w-[min(66vw,440px)]"
       style={{ scale, perspective: 1600 }}
     >
       {/* Atmospheric core glow — ELEVATE blue */}
