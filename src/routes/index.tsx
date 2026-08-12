@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, Globe, ShoppingBag, Sparkles } from "lucide-react";
-import { Logo } from "@/components/Logo";
 import { CinematicHero } from "@/components/hero/CinematicHero";
 import { ProjectVisual } from "@/lib/projects";
 import { useProjects } from "@/lib/projects-i18n";
@@ -14,7 +13,6 @@ import { Results } from "@/components/sections/Results";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { InstagramStrip } from "@/components/sections/InstagramStrip";
 import { useT } from "@/lib/i18n";
-import heroLogo from "@/assets/elevate-logo.png";
 
 export const Route = createFileRoute("/")({
   component: Home,
