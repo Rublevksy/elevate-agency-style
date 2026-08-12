@@ -7,7 +7,6 @@ import {
   useTransform,
   useMotionValue,
   useReducedMotion,
-  type MotionValue,
 } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { ArrowObject } from "./ArrowObject";
@@ -41,17 +40,14 @@ export function CinematicHero() {
   const sceneX = useTransform(px, [-1, 1], [26, -26]);
   const sceneY = useTransform(py, [-1, 1], [18, -18]);
 
-  const scale = useTransform(p, [0, 0.35, 0.7, 1], [0.92, 1.24, 1.06, 0.82]);
-  const rotateY = useTransform(p, [0, 1], [0, reduced ? 0 : 300]);
-  const tiltX = useTransform(py, [-1, 1], [10, -10]);
-  const ringSpin = useTransform(p, [0, 1], [0, reduced ? 0 : 240]);
+  const scale = useTransform(p, [0, 0.35, 0.7, 1], [0.94, 1.22, 1.04, 0.8]);
+  const rotateY = useTransform(px, [-1, 1], [reduced ? 0 : -14, reduced ? 0 : 14]);
+  const tiltX = useTransform(py, [-1, 1], [8, -8]);
+  const ringSpin = useTransform(p, [0, 1], [0, reduced ? 0 : 200]);
 
   const headlineOpacity = useTransform(p, [0, 0.16], [1, 0]);
   const headlineY = useTransform(p, [0, 0.16], [0, -40]);
   const headlineBlur = useTransform(p, [0, 0.16], ["blur(0px)", "blur(10px)"]);
-
-  const previewOpacity = useTransform(p, [0.3, 0.45, 0.72, 0.84], [0, 1, 1, 0]);
-  const previewSpread = useTransform(p, [0.3, 0.55], [0.35, 1]);
 
   const workOpacity = useTransform(p, [0.62, 0.76, 0.92, 1], [0, 1, 1, 0.2]);
   const workY = useTransform(p, [0.62, 0.8], [60, 0]);
@@ -79,34 +75,19 @@ export function CinematicHero() {
           style={{
             opacity: vignette,
             background:
-              "radial-gradient(ellipse at 50% 55%, oklch(0.3 0.14 268 / 0.35), transparent 62%)",
+              "radial-gradient(ellipse at 50% 55%, oklch(0.34 0.13 245 / 0.4), transparent 62%)",
           }}
         />
         <ParticleField className="absolute inset-0 h-full w-full" />
 
         {/* Scene */}
         <motion.div
-          className="absolute inset-0 grid place-items-center"
+          className="absolute inset-x-0 top-0 grid h-[62svh] place-items-center md:h-[64svh]"
           style={{ x: sceneX, y: sceneY }}
         >
           <ArrowObject scale={scale} rotateY={rotateY} rotateX={tiltX} ringSpin={ringSpin} />
         </motion.div>
 
-        {/* STATE 03 — interface previews orbiting the arrow */}
-        <motion.div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 hidden md:block"
-          style={{ opacity: previewOpacity }}
-        >
-          {[
-            { x: -38, y: -22, r: -8 },
-            { x: 34, y: -28, r: 7 },
-            { x: -30, y: 24, r: 6 },
-            { x: 40, y: 18, r: -6 },
-          ].map((s, i) => (
-            <PreviewCard key={i} spread={previewSpread} x={s.x} y={s.y} r={s.r} />
-          ))}
-        </motion.div>
 
         {/* STATE 01 — headline */}
         <motion.div
@@ -199,40 +180,5 @@ export function CinematicHero() {
         </motion.div>
       </div>
     </div>
-  );
-}
-
-function PreviewCard({
-  spread,
-  x,
-  y,
-  r,
-}: {
-  spread: MotionValue<number>;
-  x: number;
-  y: number;
-  r: number;
-}) {
-  const tx = useTransform(spread, (v) => `calc(-50% + ${x * v}vw)`);
-  const ty = useTransform(spread, (v) => `calc(-50% + ${y * v}vh)`);
-  return (
-    <motion.div
-      className="absolute left-1/2 top-1/2 w-[190px] rounded-lg border border-border bg-surface/60 p-3 backdrop-blur-xl"
-      style={{
-        x: tx,
-        y: ty,
-        rotate: r,
-        boxShadow: "0 30px 70px -30px oklch(0.55 0.2 268 / 0.7)",
-      }}
-    >
-      <div className="mb-2 flex gap-1">
-        <span className="h-1 w-1 rounded-full bg-foreground/30" />
-        <span className="h-1 w-1 rounded-full bg-foreground/30" />
-        <span className="h-1 w-1 rounded-full bg-foreground/30" />
-      </div>
-      <div className="h-1.5 w-2/3 rounded-full bg-foreground/20" />
-      <div className="mt-1.5 h-1.5 w-1/3 rounded-full bg-foreground/10" />
-      <div className="mt-3 h-14 rounded-md bg-gradient-to-br from-primary/25 to-transparent" />
-    </motion.div>
   );
 }

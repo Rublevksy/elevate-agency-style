@@ -1,9 +1,10 @@
 import { motion, type MotionValue } from "framer-motion";
+import markAsset from "@/assets/elevate-mark-transparent.png.asset.json";
 
 /**
- * ELEVATE arrow rendered as a metallic / holographic 3D object.
- * Shape follows the brand arrow (upward chevron + shaft, slight right lean).
- * Driven by scroll + pointer motion values from the hero scene.
+ * The official ELEVATE mark treated as a premium 3D object:
+ * depth extrusion (stacked copies), electric blue illumination,
+ * edge lighting, a slow light sweep and an orbital system around it.
  */
 export function ArrowObject({
   scale,
@@ -18,137 +19,167 @@ export function ArrowObject({
 }) {
   return (
     <motion.div
-      className="relative aspect-square w-[min(78vw,560px)]"
-      style={{ scale, perspective: 1400 }}
+      className="relative aspect-square w-[min(66vw,440px)]"
+      style={{ scale, perspective: 1600 }}
     >
-      {/* Atmospheric core glow */}
-      <div
+      {/* Atmospheric core glow — ELEVATE blue */}
+      <motion.div
         aria-hidden
-        className="absolute inset-[12%] rounded-full blur-[80px] opacity-70"
+        className="absolute inset-[14%] rounded-full blur-[90px]"
+        animate={{ opacity: [0.45, 0.7, 0.45] }}
+        transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         style={{
           background:
-            "radial-gradient(circle, oklch(0.65 0.19 262 / 0.55), oklch(0.5 0.22 292 / 0.28) 45%, transparent 70%)",
+            "radial-gradient(circle, oklch(0.72 0.17 240 / 0.6), oklch(0.55 0.2 250 / 0.25) 48%, transparent 72%)",
         }}
       />
 
-      {/* Orbital rings */}
-      <motion.div
-        aria-hidden
-        className="absolute inset-0"
-        style={{ rotate: ringSpin, transformStyle: "preserve-3d" }}
-      >
-        {[
-          { inset: "4%", rx: 74, ry: 22, tilt: -18 },
-          { inset: "-4%", rx: 62, ry: 30, tilt: 26 },
-          { inset: "14%", rx: 84, ry: 14, tilt: 8 },
-        ].map((r, i) => (
-          <div
-            key={i}
-            className="absolute"
-            style={{
-              inset: r.inset,
-              transform: `rotateX(${r.tilt}deg)`,
-              transformStyle: "preserve-3d",
-            }}
-          >
-            <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible">
-              <ellipse
-                cx="100"
-                cy="100"
-                rx={r.rx}
-                ry={r.ry}
-                fill="none"
-                stroke={i === 1 ? "oklch(0.7 0.16 292 / 0.35)" : "oklch(0.75 0.14 255 / 0.3)"}
-                strokeWidth="0.5"
-              />
-              <circle
-                cx={100 + r.rx}
-                cy="100"
-                r="1.4"
-                fill="oklch(0.9 0.12 255)"
-                opacity="0.9"
-              />
-            </svg>
-          </div>
-        ))}
-      </motion.div>
+      {/* Orbital system — behind the mark */}
+      <Rings ringSpin={ringSpin} />
 
-      {/* The arrow */}
+      {/* The real ELEVATE mark */}
       <motion.div
         className="absolute inset-0 grid place-items-center"
         style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
       >
-        <svg
-          viewBox="0 0 200 240"
-          className="h-[74%] w-[74%] drop-shadow-[0_30px_80px_oklch(0.6_0.2_262/0.6)]"
-          role="img"
-          aria-label="ELEVATE"
+        <motion.div
+          className="relative h-[72%] w-[72%]"
+          animate={{ y: [-8, 8, -8] }}
+          transition={{ duration: 11, repeat: Infinity, ease: "easeInOut" }}
         >
-          <defs>
-            <linearGradient id="arrowMetal" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stopColor="oklch(0.96 0.03 250)" />
-              <stop offset="28%" stopColor="oklch(0.78 0.14 255)" />
-              <stop offset="58%" stopColor="oklch(0.55 0.2 262)" />
-              <stop offset="82%" stopColor="oklch(0.45 0.22 292)" />
-              <stop offset="100%" stopColor="oklch(0.7 0.16 255)" />
-            </linearGradient>
-            <linearGradient id="arrowEdge" x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0%" stopColor="oklch(1 0 0 / 0)" />
-              <stop offset="50%" stopColor="oklch(1 0 0 / 0.75)" />
-              <stop offset="100%" stopColor="oklch(1 0 0 / 0)" />
-            </linearGradient>
-            <filter id="arrowSoft" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="1.1" />
-            </filter>
-          </defs>
-
-          {/* depth copies for a solid 3D extrusion feel */}
-          {[10, 7, 4].map((d, i) => (
-            <g key={d} transform={`translate(${d * 0.6} ${d})`} opacity={0.16 - i * 0.03}>
-              <path
-                d="M96 226 L124 66 L140 66 L112 226 Z M64 226 L84 226 L112 60 L96 60 Z"
-                fill="oklch(0.35 0.12 270)"
-              />
-            </g>
+          {/* depth extrusion copies */}
+          {[9, 6, 3].map((d, i) => (
+            <img
+              key={d}
+              aria-hidden
+              src={markAsset.url}
+              alt=""
+              className="absolute inset-0 h-full w-full object-contain"
+              style={{
+                transform: `translate3d(${d * -0.5}px, ${d}px, ${-d}px)`,
+                filter: `brightness(0.25) saturate(1.4) blur(${0.4 + i * 0.5}px)`,
+                opacity: 0.34 - i * 0.08,
+              }}
+            />
           ))}
 
-          {/* shaft (two legs, slight right lean — brand geometry) */}
-          <path
-            d="M92 224 L118 70 L134 70 L108 224 Z"
-            fill="url(#arrowMetal)"
+          {/* the mark itself — untouched geometry */}
+          <img
+            src={markAsset.url}
+            alt="ELEVATE"
+            className="relative h-full w-full object-contain"
+            style={{
+              filter:
+                "drop-shadow(0 0 26px oklch(0.7 0.18 245 / 0.55)) drop-shadow(0 26px 70px oklch(0.55 0.2 250 / 0.5))",
+            }}
           />
-          <path
-            d="M58 224 L78 224 L106 62 L90 62 Z"
-            fill="url(#arrowMetal)"
-            opacity="0.92"
-          />
-          {/* crossbar */}
-          <rect x="76" y="168" width="52" height="7" rx="2" fill="url(#arrowMetal)" />
-          {/* arrowhead */}
-          <path
-            d="M99 6 L152 66 L124 66 L124 92 L74 92 L74 66 L46 66 Z"
-            fill="url(#arrowMetal)"
-          />
-          {/* specular edge */}
-          <path
-            d="M99 6 L152 66 L124 66 L124 92 L74 92 L74 66 L46 66 Z"
-            fill="none"
-            stroke="url(#arrowEdge)"
-            strokeWidth="1.2"
-            filter="url(#arrowSoft)"
-          />
-        </svg>
+
+          {/* light sweep across the surface, masked to the mark */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 overflow-hidden"
+            style={{
+              WebkitMaskImage: `url(${markAsset.url})`,
+              maskImage: `url(${markAsset.url})`,
+              WebkitMaskSize: "contain",
+              maskSize: "contain",
+              WebkitMaskRepeat: "no-repeat",
+              maskRepeat: "no-repeat",
+              WebkitMaskPosition: "center",
+              maskPosition: "center",
+            }}
+          >
+            <motion.div
+              className="absolute -inset-y-1/2 w-1/3"
+              animate={{ x: ["-140%", "340%"] }}
+              transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut", repeatDelay: 2.5 }}
+              style={{
+                background:
+                  "linear-gradient(100deg, transparent, oklch(1 0 0 / 0.55), transparent)",
+                filter: "blur(6px)",
+              }}
+            />
+          </div>
+        </motion.div>
       </motion.div>
 
-      {/* Light beam rising through the arrow */}
-      <div
+      {/* Orbital arc passing in front */}
+      <motion.div
         aria-hidden
-        className="absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 opacity-60"
-        style={{
-          background:
-            "linear-gradient(to bottom, transparent, oklch(0.9 0.12 255 / 0.7), transparent)",
-        }}
-      />
+        className="absolute inset-[-2%]"
+        style={{ rotate: ringSpin }}
+      >
+        <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible">
+          <defs>
+            <linearGradient id="orbitFront" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stopColor="oklch(0.85 0.14 240 / 0)" />
+              <stop offset="50%" stopColor="oklch(0.85 0.14 240 / 0.55)" />
+              <stop offset="100%" stopColor="oklch(0.85 0.14 240 / 0)" />
+            </linearGradient>
+          </defs>
+          <g transform="rotate(-14 100 100)">
+            <ellipse
+              cx="100"
+              cy="100"
+              rx="80"
+              ry="26"
+              fill="none"
+              stroke="url(#orbitFront)"
+              strokeWidth="0.6"
+            />
+            <circle cx="180" cy="100" r="1.5" fill="oklch(0.92 0.11 240)" />
+          </g>
+        </svg>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+function Rings({ ringSpin }: { ringSpin: MotionValue<number> }) {
+  return (
+    <motion.div
+      aria-hidden
+      className="absolute inset-0"
+      style={{ rotate: ringSpin, transformStyle: "preserve-3d" }}
+    >
+      {[
+        { inset: "2%", rx: 76, ry: 20, tilt: -20 },
+        { inset: "-6%", rx: 64, ry: 30, tilt: 24 },
+        { inset: "16%", rx: 86, ry: 12, tilt: 6 },
+      ].map((r, i) => (
+        <div
+          key={i}
+          className="absolute"
+          style={{
+            inset: r.inset,
+            transform: `rotateX(${r.tilt}deg)`,
+            transformStyle: "preserve-3d",
+          }}
+        >
+          <svg viewBox="0 0 200 200" className="h-full w-full overflow-visible">
+            <ellipse
+              cx="100"
+              cy="100"
+              rx={r.rx}
+              ry={r.ry}
+              fill="none"
+              stroke={
+                i === 1
+                  ? "oklch(0.78 0.13 235 / 0.3)"
+                  : "oklch(0.8 0.12 245 / 0.26)"
+              }
+              strokeWidth="0.5"
+            />
+            <circle
+              cx={100 + r.rx}
+              cy="100"
+              r="1.3"
+              fill="oklch(0.93 0.1 240)"
+              opacity="0.9"
+            />
+          </svg>
+        </div>
+      ))}
     </motion.div>
   );
 }
