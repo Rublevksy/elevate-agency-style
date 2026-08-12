@@ -64,7 +64,7 @@ const COPY: Record<
     kinds: ["Website", "E-commerce", "Web application", "Branding", "Something else"],
   },
   RU: {
-    eyebrow: "디digital студия · Прага",
+    eyebrow: "Диджитал студия · Прага",
     line1: "Цифровые продукты",
     line2: "для современного бизнеса.",
     note: "Стратегия, дизайн и разработка в одной системе.",
@@ -183,7 +183,7 @@ export function ModularHero() {
               className="flex flex-col justify-center lg:border-r lg:border-border/60 lg:pr-10"
             >
               <div className="mb-6 flex items-center gap-3">
-                <img src={mark} alt="ELEVATE" className="h-7 w-auto" />
+                <img src={markAsset.url} alt="ELEVATE" className="h-7 w-auto" />
                 <span className="h-px w-8 bg-border" />
                 <span className="text-[10px] uppercase tracking-[0.35em] text-muted-foreground">
                   {c.eyebrow}
