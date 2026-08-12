@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 
 /**
- * Lightweight canvas particle field — atmospheric dust + light trails.
- * GPU-friendly, DPR-capped, pauses when offscreen or when reduced motion is on.
+ * Subtle ELEVATE particle field — low-opacity blue dust with occasional
+ * hairline connections, gentle mouse repulsion, DPR-capped and paused offscreen.
  */
 export function ParticleField({ className = "" }: { className?: string }) {
   const ref = useRef<HTMLCanvasElement | null>(null);
@@ -19,16 +19,25 @@ export function ParticleField({ className = "" }: { className?: string }) {
     let h = 0;
     let raf = 0;
     let visible = true;
+    const mouse = { x: -9999, y: -9999, r: 160 };
 
-    const count = window.innerWidth < 768 ? 34 : 70;
-    const dots = Array.from({ length: count }, () => ({
-      x: Math.random(),
-      y: Math.random(),
-      z: 0.3 + Math.random() * 0.7,
-      s: 0.4 + Math.random() * 1.4,
-      v: 0.00006 + Math.random() * 0.00022,
-      a: 0.12 + Math.random() * 0.5,
-    }));
+    const mobile = window.innerWidth < 768;
+    const count = mobile ? 30 : 68;
+    const linkDist = mobile ? 90 : 130;
+
+    type P = { x: number; y: number; vx: number; vy: number; s: number; a: number };
+    let dots: P[] = [];
+
+    const seed = () => {
+      dots = Array.from({ length: count }, () => ({
+        x: Math.random() * w,
+        y: Math.random() * h,
+        vx: (Math.random() - 0.5) * 0.16,
+        vy: (Math.random() - 0.5) * 0.16,
+        s: 0.5 + Math.random() * 1.2,
+        a: 0.1 + Math.random() * 0.35,
+      }));
+    };
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
@@ -37,46 +46,86 @@ export function ParticleField({ className = "" }: { className?: string }) {
       canvas.width = Math.floor(w * dpr);
       canvas.height = Math.floor(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      seed();
     };
     resize();
 
-    const draw = (time: number) => {
+    const draw = () => {
       ctx.clearRect(0, 0, w, h);
+
       for (const d of dots) {
-        if (!reduced) d.y -= d.v * 16;
-        if (d.y < -0.05) d.y = 1.05;
-        const drift = reduced ? 0 : Math.sin(time * 0.0004 + d.x * 12) * 6;
-        const px = d.x * w + drift;
-        const py = d.y * h;
-        const r = d.s * d.z;
+        if (!reduced) {
+          d.x += d.vx;
+          d.y += d.vy;
+          if (d.x < 0 || d.x > w) d.vx *= -1;
+          if (d.y < 0 || d.y > h) d.vy *= -1;
+
+          const dx = mouse.x - d.x;
+          const dy = mouse.y - d.y;
+          const dist = Math.hypot(dx, dy);
+          if (dist < mouse.r && dist > 0.001) {
+            const f = (mouse.r - dist) / mouse.r;
+            d.x -= (dx / dist) * f * 1.6;
+            d.y -= (dy / dist) * f * 1.6;
+          }
+        }
         ctx.beginPath();
-        ctx.arc(px, py, r, 0, Math.PI * 2);
-        ctx.fillStyle = `oklch(0.85 0.12 255 / ${d.a * d.z})`;
+        ctx.arc(d.x, d.y, d.s, 0, Math.PI * 2);
+        ctx.fillStyle = `oklch(0.85 0.12 240 / ${d.a})`;
         ctx.fill();
       }
+
+      // hairline connections — very faint
+      ctx.lineWidth = 0.5;
+      for (let a = 0; a < dots.length; a++) {
+        for (let b = a + 1; b < dots.length; b++) {
+          const p = dots[a]!;
+          const q = dots[b]!;
+          const dist = Math.hypot(p.x - q.x, p.y - q.y);
+          if (dist < linkDist) {
+            const o = (1 - dist / linkDist) * 0.12;
+            ctx.strokeStyle = `oklch(0.8 0.12 240 / ${o})`;
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(q.x, q.y);
+            ctx.stroke();
+          }
+        }
+      }
+
       if (visible && !reduced) raf = requestAnimationFrame(draw);
     };
     raf = requestAnimationFrame(draw);
 
+    const onMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - rect.left;
+      mouse.y = e.clientY - rect.top;
+    };
+    const onLeave = () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
+    };
+
     const io = new IntersectionObserver(
       ([entry]) => {
         visible = !!entry?.isIntersecting;
-        if (visible && !reduced) {
-          cancelAnimationFrame(raf);
-          raf = requestAnimationFrame(draw);
-        } else {
-          cancelAnimationFrame(raf);
-        }
+        cancelAnimationFrame(raf);
+        if (visible && !reduced) raf = requestAnimationFrame(draw);
       },
       { threshold: 0 },
     );
     io.observe(canvas);
     window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerleave", onLeave);
 
     return () => {
       cancelAnimationFrame(raf);
       io.disconnect();
       window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerleave", onLeave);
     };
   }, []);
 
