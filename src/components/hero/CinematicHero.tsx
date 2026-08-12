@@ -82,7 +82,7 @@ export function CinematicHero() {
 
         {/* Scene */}
         <motion.div
-          className="absolute inset-0 grid place-items-center"
+          className="absolute inset-x-0 top-0 grid h-[76svh] place-items-center md:h-[72svh]"
           style={{ x: sceneX, y: sceneY }}
         >
           <ArrowObject scale={scale} rotateY={rotateY} rotateX={tiltX} ringSpin={ringSpin} />
