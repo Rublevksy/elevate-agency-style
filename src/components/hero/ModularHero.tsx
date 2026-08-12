@@ -10,7 +10,7 @@ import {
   useTransform,
 } from "framer-motion";
 import { ArrowUpRight, X } from "lucide-react";
-import mark from "@/assets/elevate-mark-transparent.png";
+import markAsset from "@/assets/elevate-mark-transparent.png.asset.json";
 import { screenshotUrl } from "@/lib/projects";
 import { useProjects } from "@/lib/projects-i18n";
 import { useT, type Lang } from "@/lib/i18n";
