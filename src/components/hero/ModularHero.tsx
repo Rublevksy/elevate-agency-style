@@ -216,9 +216,12 @@ export function ModularHero() {
             {/* CENTER — living canvas */}
             <motion.div
               style={{ x: canvasX, y: canvasY, scale: canvasScale, translateY: canvasShift }}
-              className="relative min-h-[38svh] flex-1"
+              className="relative flex min-h-[34svh] flex-1 items-center justify-center"
             >
-              <motion.div style={{ rotate: tilt }} className="absolute inset-0">
+              <motion.div
+                style={{ rotate: tilt }}
+                className="relative aspect-[16/11] w-full max-w-[34rem] lg:max-w-[38rem]"
+              >
                 {/* satellites */}
                 {satellites.map((s, i) => (
                   <motion.div
