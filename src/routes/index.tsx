@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight, Globe, ShoppingBag, Sparkles } from "lucide-react";
-import { Logo } from "@/components/Logo";
-import { Hero3DCube } from "@/components/Hero3DCube";
+import { CinematicHero } from "@/components/hero/CinematicHero";
 import { ProjectVisual } from "@/lib/projects";
 import { useProjects } from "@/lib/projects-i18n";
 import { TechStack } from "@/components/sections/TechStack";
@@ -14,7 +13,6 @@ import { Results } from "@/components/sections/Results";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { InstagramStrip } from "@/components/sections/InstagramStrip";
 import { useT } from "@/lib/i18n";
-import heroLogo from "@/assets/elevate-logo.png";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -47,70 +45,14 @@ function Home() {
 
   return (
     <>
-      {/* HERO */}
-      <section className="relative pt-40 pb-32 md:pt-56 md:pb-44 overflow-hidden">
-        <div className="absolute inset-0 grid-bg opacity-40 [mask-image:radial-gradient(ellipse_at_center,black_15%,transparent_70%)]" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 h-[34rem] w-[34rem] rounded-full bg-primary/15 blur-[160px]" />
-        <div aria-hidden className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[90%] max-w-[1100px] opacity-[0.03]">
-          <Logo className="w-full h-auto" alt="" />
-        </div>
-
-        <div className="container-luxe relative grid lg:grid-cols-[1.05fr_1fr] gap-16 lg:gap-12 items-center">
-          <div className="text-center lg:text-left max-w-2xl mx-auto lg:mx-0">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-border text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-10">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              {t.hero.tag}
-            </div>
-
-            <div className="mb-10 flex justify-center lg:justify-start">
-              <img
-                src={heroLogo}
-                alt="ELEVATE logo"
-                width={929}
-                height={202}
-                decoding="async"
-                fetchPriority="high"
-                className="w-[320px] sm:w-[430px] md:w-[560px] lg:w-[640px] max-w-full h-auto object-contain select-none"
-                draggable={false}
-              />
-            </div>
-            <h1 className="text-2xl md:text-4xl font-semibold tracking-tight text-foreground mb-6">
-              {t.hero.title1} <span className="text-primary">{t.hero.title2}</span>
-            </h1>
-            <p className="text-base md:text-lg text-muted-foreground mb-8 max-w-lg mx-auto lg:mx-0">
-              {t.hero.subtitle}
-            </p>
-
-            <div className="flex flex-wrap gap-4 justify-center lg:justify-start mb-8">
-              <Link to="/audit" className="btn-primary group">
-                Audit zdarma
-                <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-              </Link>
-              <Link to="/contact" className="btn-outline">
-                {t.hero.cta1}
-              </Link>
-            </div>
-
-            <p className="text-xs md:text-sm uppercase tracking-[0.18em] text-muted-foreground">
-              <span className="text-foreground font-medium">{t.trust.years}</span>
-              {" "}<span className="mx-2 text-primary">•</span>{" "}
-              <span className="text-foreground font-medium">{t.trust.projects}</span>
-              {" "}<span className="mx-2 text-primary">•</span>{" "}
-              <span>{t.trust.response}</span>
-            </p>
-          </div>
-
-          <div className="relative">
-            <Hero3DCube />
-          </div>
-        </div>
-      </section>
+      {/* HERO — cinematic scroll-driven scene */}
+      <CinematicHero />
 
       {/* INDUSTRY STRIP */}
       <IndustryStrip />
 
       {/* SERVICES — only 3 */}
-      <section className="py-28 md:py-36 border-t border-border">
+      <section id="services" className="py-28 md:py-36 border-t border-border">
         <div className="container-luxe">
           <div className="max-w-2xl mx-auto text-center mb-20">
             <p className="text-[11px] uppercase tracking-[0.25em] text-muted-foreground mb-4">{t.ui.homeServicesEyebrow}</p>
