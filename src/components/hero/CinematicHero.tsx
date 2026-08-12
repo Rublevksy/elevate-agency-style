@@ -7,7 +7,6 @@ import {
   useTransform,
   useMotionValue,
   useReducedMotion,
-  type MotionValue,
 } from "framer-motion";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import { ArrowObject } from "./ArrowObject";
