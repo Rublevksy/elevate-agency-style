@@ -199,14 +199,14 @@ export function ModularHero() {
                 <button
                   type="button"
                   onClick={() => setOpen(true)}
-                  className="group inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground backdrop-blur-md transition-all hover:border-primary hover:bg-primary/20"
+                  className="group inline-flex items-center gap-2 rounded-full border border-primary/40 bg-primary/10 whitespace-nowrap px-5 py-2.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-foreground backdrop-blur-md transition-all hover:border-primary hover:bg-primary/20"
                 >
                   {c.start}
                   <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                 </button>
                 <Link
                   to="/projects"
-                  className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
+                  className="whitespace-nowrap text-[11px] uppercase tracking-[0.2em] text-muted-foreground transition-colors hover:text-foreground"
                 >
                   {c.work}
                 </Link>
