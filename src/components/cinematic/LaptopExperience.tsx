@@ -26,15 +26,15 @@ export function LaptopExperience() {
   useMotionValueEvent(p, "change", (v) => setPhase(v));
 
   // camera
-  const tilt = useTransform(p, [0, 0.28, 0.62, 0.8], [16, 6, 2, 0]);
-  const yaw = useTransform(p, [0, 0.3, 0.62], [-14, -4, 0]);
-  const rise = useTransform(p, [0, 0.62, 0.86], ["4vh", "0vh", "-6vh"]);
-  const zoom = useTransform(p, [0, 0.3, 0.62, 0.86], [0.86, 0.96, 1.06, 2.6]);
+  const tilt = useTransform(p, [0, 0.28, 0.62, 0.8], [22, 10, 3, 0]);
+  const yaw = useTransform(p, [0, 0.3, 0.62], [-12, -4, 0]);
+  const rise = useTransform(p, [0, 0.3, 0.62, 0.86], ["10vh", "0vh", "-4vh", "-10vh"]);
+  const zoom = useTransform(p, [0, 0.3, 0.62, 0.86], [0.5, 0.62, 0.78, 2.2]);
   const deviceOpacity = useTransform(p, [0.74, 0.87], [1, 0]);
 
-  // lid
-  const lid = useTransform(p, [0.08, 0.5], [reduced ? -100 : 0, -100]);
-  const screenFade = useTransform(p, [0.34, 0.5], [0, 1]);
+  // lid — closed (lying on the deck) → upright
+  const lid = useTransform(p, [0.1, 0.52], [reduced ? -6 : 78, -6]);
+  const screenFade = useTransform(p, [0.3, 0.48], [0, 1]);
   const glow = useTransform(p, [0.3, 0.55, 0.9], [0, 0.5, 0.16]);
 
   // typography
