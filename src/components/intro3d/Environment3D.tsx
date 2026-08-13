@@ -1,6 +1,6 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { AdditiveBlending, CanvasTexture, type Group, type PointLight, type Points } from "three";
+import { AdditiveBlending, CanvasTexture, type Group, type MeshBasicMaterial, type PointLight, type Points } from "three";
 import { CLOSED_END, DEVICE, OPEN_END, ROTATION_END, clamp01, range, smoothstep } from "./constants";
 
 /**
@@ -14,6 +14,7 @@ export function Environment3D({ stage }: { stage: React.RefObject<number> }) {
     <group>
       <Haze stage={stage} />
       <Dust />
+      <ContactSmudge stage={stage} />
     </group>
   );
 }
@@ -85,6 +86,43 @@ function Haze({ stage }: { stage: React.RefObject<number> }) {
         />
       </mesh>
     </group>
+  );
+}
+
+/* ---------------- suspended atmosphere beneath the device ---------------- */
+
+/**
+ * NOT a floor. A single very soft radial smudge far below the chassis that
+ * reads as atmosphere gathering under a floating object — it has no edge, no
+ * horizon and no reflection, so no platform is ever implied.
+ */
+function ContactSmudge({ stage }: { stage: React.RefObject<number> }) {
+  const mat = useRef<MeshBasicMaterial>(null);
+  const tex = useMemo(() => {
+    if (typeof document === "undefined") return null;
+    const c = document.createElement("canvas");
+    c.width = c.height = 128;
+    const ctx = c.getContext("2d")!;
+    const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+    g.addColorStop(0, "rgba(0,0,0,0.75)");
+    g.addColorStop(0.45, "rgba(0,0,0,0.22)");
+    g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 128, 128);
+    return new CanvasTexture(c);
+  }, []);
+
+  useFrame(() => {
+    const p = stage.current ?? 0;
+    if (mat.current) mat.current.opacity = 0.5 * (1 - smoothstep(0.72, 0.9, p));
+  });
+
+  if (!tex) return null;
+  return (
+    <mesh position={[0, -1.4, DEVICE.D * 0.05]} rotation={[-Math.PI / 2, 0, 0]} scale={[DEVICE.W * 1.5, DEVICE.D * 1.6, 1]}>
+      <planeGeometry />
+      <meshBasicMaterial ref={mat} map={tex} transparent opacity={0.5} depthWrite={false} />
+    </mesh>
   );
 }
 
