@@ -4,19 +4,33 @@
  * sequence can be tuned without touching component code.
  */
 
-/** Scroll-timeline phase boundaries (0 → 1). */
-export const CLOSED_END = 0.15;
-export const ROTATION_END = 0.3;
-export const OPEN_END = 0.55;
-export const HOLD_END = 0.62;
-/** the camera reaches the display plane only at the very end of the timeline */
-export const SCREEN_APPROACH_END = 0.99;
+/**
+ * ONE master scroll progress (0 → 1) drives the whole story:
+ *   0.00 closed → ENTER_END fullscreen ELEVATE → EXIT_START camera exit → 1.00 closed.
+ *
+ * Between ENTER_END and EXIT_START the camera is inside the display and the
+ * fullscreen interface plays the discipline sequence. The exit is the exact
+ * mirror of the entrance, so the device re-forms and the lid closes.
+ */
+export const ENTER_END = 0.6;
+export const EXIT_START = 0.84;
+
+/** Phase boundaries expressed on the STAGE timeline (0 → 1, mirrored on exit). */
+export const CLOSED_END = 0.16;
+export const ROTATION_END = 0.32;
+export const OPEN_END = 0.6;
+export const HOLD_END = 0.68;
+/** the camera reaches the display plane only at the very end of the stage */
+export const SCREEN_APPROACH_END = 1;
 /** the 3D display hands over to the fullscreen layer here (same content, same scale) */
-export const HANDOFF_START = 0.915;
-export const HANDOFF_END = 0.935;
-export const CHASSIS_GONE = 0.94;
+export const HANDOFF_START = 0.93;
+export const HANDOFF_END = 0.965;
+export const CHASSIS_GONE = 0.97;
 export const FULLSCREEN_END = 1;
 
+/** where the discipline sequence lives on the MASTER timeline */
+export const SERVICES_START = 0.62;
+export const SERVICES_END = 0.83;
 
 /** Device geometry, in centimetres (1 world unit = 1 cm). */
 export const DEVICE = {
@@ -49,13 +63,13 @@ export type CamKey = {
 };
 
 export const CAM_TRACK: CamKey[] = [
-  { p: 0.0, k: 1.62, yaw: -14, elev: 24 },
-  { p: 0.15, k: 1.56, yaw: -6, elev: 20 },
-  { p: 0.3, k: 1.52, yaw: 34, elev: 9 },
-  { p: 0.45, k: 2.15, yaw: 18, elev: 14 },
-  { p: 0.55, k: 2.2, yaw: 7, elev: 13 },
-  { p: 0.62, k: 1.95, yaw: 0, elev: 9 },
-  { p: 1.0, k: 1.95, yaw: 0, elev: 0 },
+  { p: 0.0, k: 1.12, yaw: -16, elev: 20 },
+  { p: 0.16, k: 1.0, yaw: -7, elev: 16 },
+  { p: 0.32, k: 0.96, yaw: 26, elev: 11 },
+  { p: 0.48, k: 1.18, yaw: 14, elev: 13 },
+  { p: 0.6, k: 1.16, yaw: 5, elev: 12 },
+  { p: 0.68, k: 1.06, yaw: 0, elev: 9 },
+  { p: 1.0, k: 1.06, yaw: 0, elev: 0 },
 ];
 
 /** Mobile: same story, calmer camera. */
@@ -109,4 +123,15 @@ export function sampleTrack(track: CamKey[], p: number): Omit<CamKey, "p"> {
     }
   }
   return last;
+}
+
+/**
+ * Master progress → STAGE progress. The device story runs forward until
+ * ENTER_END, holds while the interface owns the viewport, then plays in exact
+ * reverse from EXIT_START so the MacBook re-forms and closes at 1.00.
+ */
+export function stageProgress(p: number) {
+  if (p <= ENTER_END) return clamp01(p / ENTER_END);
+  if (p >= EXIT_START) return clamp01((1 - p) / (1 - EXIT_START));
+  return 1;
 }

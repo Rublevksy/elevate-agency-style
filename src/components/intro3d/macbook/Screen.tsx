@@ -1,8 +1,8 @@
 import { forwardRef, useRef } from "react";
 import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
-import type { Group } from "three";
-import { DEVICE, HANDOFF_START, clamp01, smoothstep } from "../constants";
+import type { Group, MeshBasicMaterial } from "three";
+import { DEVICE, HANDOFF_START, OPEN_END, ROTATION_END, clamp01, smoothstep } from "../constants";
 import { ScreenInterface } from "../ScreenInterface";
 
 const PX_PER_UNIT = 40; // drei <Html transform> maps 1 world unit to 40 CSS px
@@ -12,22 +12,26 @@ const PX_PER_UNIT = 40; // drei <Html transform> maps 1 world unit to 40 CSS px
  * HTML (not a baked image), so the interface stays editable.
  * `ref` is the anchor the camera flies into.
  */
-export const Screen = forwardRef<Group, { progress: React.RefObject<number> }>(function Screen(
-  { progress },
-  ref,
-) {
+export const Screen = forwardRef<
+  Group,
+  { progress: React.RefObject<number>; stage: React.RefObject<number> }
+>(function Screen({ progress, stage }, ref) {
   const { W, H, LID_T } = DEVICE;
   const activeW = W - 1.1;
   const activeH = H - 1.25;
   const uiRef = useRef<HTMLDivElement>(null);
+  const glowRef = useRef<MeshBasicMaterial>(null);
 
   // the display is dark while the lid is shut, lights up as it opens and hands
   // over to the fullscreen layer once the camera is inside it
   useFrame(() => {
-    const p = progress.current ?? 0;
+    const p = stage.current ?? 0;
     // hard cut at the handoff: a crossfade would show the 3D screen and the
     // fullscreen layer at once, which reads as doubled text
     const on = p >= HANDOFF_START ? 0 : smoothstep(0.36, 0.5, p);
+    if (glowRef.current) {
+      glowRef.current.opacity = 0.16 * smoothstep(ROTATION_END, OPEN_END, p) * (p >= HANDOFF_START ? 0 : 1);
+    }
     const el = uiRef.current;
     if (!el) return;
     const v = clamp01(on);
@@ -35,14 +39,13 @@ export const Screen = forwardRef<Group, { progress: React.RefObject<number> }>(f
     el.style.visibility = v < 0.01 ? "hidden" : "visible";
   });
 
-
   return (
     // rotate so the group's +Z points along the lid's inner (-Y) face
     <group ref={ref} position={[0, -LID_T / 2 - 0.006, H / 2]} rotation={[Math.PI / 2, 0, 0]}>
       {/* black glass panel + bezel */}
       <mesh position={[0, 0, -0.002]}>
         <planeGeometry args={[W - 0.16, H - 0.16]} />
-        <meshStandardMaterial color="#05070a" roughness={0.16} metalness={0.35} />
+        <meshStandardMaterial color="#04060a" roughness={0.12} metalness={0.4} />
       </mesh>
 
       <Html
@@ -61,8 +64,13 @@ export const Screen = forwardRef<Group, { progress: React.RefObject<number> }>(f
         <div ref={uiRef} style={{ width: "100%", height: "100%", opacity: 0, visibility: "hidden" }}>
           <ScreenInterface progress={progress} />
         </div>
-
       </Html>
+
+      {/* glass sheen over the panel — one restrained reflection */}
+      <mesh position={[0, 0, 0.02]}>
+        <planeGeometry args={[W - 0.16, H - 0.16]} />
+        <meshBasicMaterial ref={glowRef} color="#9dc0ee" transparent opacity={0} depthWrite={false} />
+      </mesh>
     </group>
   );
 });
