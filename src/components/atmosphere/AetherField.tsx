@@ -21,6 +21,22 @@ type Props = {
 type Dot = { x: number; y: number; vx: number; vy: number; r: number; a: number; layer: number };
 
 /**
+ * A distant interface fragment: a hairline rectangle with one or two internal
+ * rules, drifting in far depth. It reads as a piece of a UI dissolving into the
+ * dark — the cue that this is a digital space, not outer space.
+ */
+type Fragment = {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  vx: number;
+  vy: number;
+  a: number;
+  depth: number;
+};
+
+/**
  * A flowing light structure: a long, extremely thin curve that drifts through
  * the scene, brightest in its middle and dissolving into darkness at both ends.
  * Data stream, never lightning.
@@ -66,6 +82,7 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
 
     let dots: Dot[] = [];
     let streams: Stream[] = [];
+    let fragments: Fragment[] = [];
 
     const seed = () => {
       dots = [];
@@ -106,6 +123,25 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
     };
 
 
+    const seedFragments = () => {
+      const count = mobile ? 3 : 7;
+      fragments = [];
+      for (let i = 0; i < count; i++) {
+        const depth = 0.2 + Math.random() * 0.5;
+        const fw = (mobile ? 70 : 110) * (0.7 + depth);
+        fragments.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          w: fw,
+          h: fw * (0.5 + Math.random() * 0.22),
+          vx: (Math.random() - 0.5) * 0.055 * depth,
+          vy: (Math.random() - 0.5) * 0.035 * depth,
+          a: 0.05 + depth * 0.06,
+          depth,
+        });
+      }
+    };
+
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
       w = Math.max(1, rect.width);
@@ -114,6 +150,7 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
       canvas.height = Math.floor(h * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       seed();
+      seedFragments();
     };
     resize();
 
@@ -133,6 +170,28 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
         glow.addColorStop(1, "rgba(0,0,0,0)");
         ctx.fillStyle = glow;
         ctx.fillRect(0, 0, w, h);
+
+        // Layer 1b — far interface fragments: hairline UI rectangles that drift
+        // in deep space and dissolve into the dark
+        for (const f of fragments) {
+          if (!reduced) {
+            f.x += f.vx;
+            f.y += f.vy;
+            if (f.x < -f.w) f.x = w + f.w;
+            if (f.x > w + f.w) f.x = -f.w;
+            if (f.y < -f.h) f.y = h + f.h;
+            if (f.y > h + f.h) f.y = -f.h;
+          }
+          const o = f.a * k;
+          if (o < 0.004) continue;
+          ctx.lineWidth = 0.6;
+          ctx.strokeStyle = `rgba(126,166,220,${o})`;
+          ctx.strokeRect(f.x, f.y, f.w, f.h);
+          ctx.fillStyle = `rgba(120,158,212,${o * 0.5})`;
+          ctx.fillRect(f.x + f.w * 0.08, f.y + f.h * 0.16, f.w * 0.42, 1);
+          ctx.fillRect(f.x + f.w * 0.08, f.y + f.h * 0.3, f.w * 0.24, 1);
+          ctx.fillRect(f.x + f.w * 0.08, f.y + f.h * 0.72, f.w * 0.55, 1);
+        }
 
         // Layer 2b — flowing light structures: thin curves that carry a slow
         // travelling brightness and dissolve into darkness at both ends
@@ -235,6 +294,16 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
             }
           }
         }
+
+
+
+        // depth fog — the edges of the world fall away into darkness so the
+        // centre (and the device) always stays the brightest thing on screen
+        const fog = ctx.createRadialGradient(w * 0.5, h * 0.46, Math.min(w, h) * 0.22, w * 0.5, h * 0.5, Math.max(w, h) * 0.78);
+        fog.addColorStop(0, "rgba(5,7,11,0)");
+        fog.addColorStop(1, `rgba(5,7,11,${0.72 * Math.max(0.4, k)})`);
+        ctx.fillStyle = fog;
+        ctx.fillRect(0, 0, w, h);
       }
 
       if (visible) raf = requestAnimationFrame(draw);

@@ -82,7 +82,7 @@ export function AppsComposition() {
           ))}
         </div>
         <div className="grid min-w-0 flex-1 grid-cols-3 gap-3">
-          {["Todo", "Active", "Done"].map((col, ci) => (
+          {["Brief", "Build", "Live"].map((col, ci) => (
             <div key={col} className="flex flex-col gap-2 rounded-lg border border-white/5 bg-white/[0.015] p-2">
               <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-muted-foreground">{col}</span>
               {Array.from({ length: 3 - ci }).map((_, i) => (

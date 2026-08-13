@@ -120,28 +120,38 @@ export function CinematicIntro() {
             Opacity, a short lift and a touch of blur only — no bounce, no overshoot. */}
         <div
           ref={introRef}
-          className="pointer-events-none absolute inset-x-0 top-[9svh] z-20 px-7 will-change-transform md:top-[10svh] md:px-[7vw]"
+          className="pointer-events-none absolute inset-x-0 top-[8svh] z-20 px-7 will-change-transform md:top-[13svh] md:px-[7vw]"
         >
-          <p className="cine-in mb-5 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.5em] text-primary/70 md:mb-7">
-            <span aria-hidden className="h-px w-8 bg-primary/50" />
-            Digital studio
-          </p>
-          <h1
-            className="cine-in max-w-[16ch] text-[clamp(1.9rem,4.6vw,3.6rem)] font-light leading-[1.04] tracking-[-0.03em] text-foreground/90"
-            style={{ animationDelay: "0.16s" }}
-          >
-            Digitální prostor,
-            <br />
-            který pracuje
-            <br />
-            <span className="text-foreground/40">pro váš byznys.</span>
-          </h1>
-          <p
-            className="cine-in mt-6 max-w-sm text-xs leading-relaxed text-muted-foreground md:text-sm"
-            style={{ animationDelay: "0.34s" }}
-          >
-            Weby, e-shopy a digitální produkty navržené tak, aby měly smysl.
-          </p>
+          <div className="w-full md:w-[44%] md:max-w-[38rem]">
+            <p className="cine-in mb-5 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.52em] text-primary/75 md:mb-8">
+              <span aria-hidden className="h-px w-10 bg-primary/45" />
+              Digitální studio
+            </p>
+            <h1 className="text-[clamp(1.85rem,3.9vw,3.15rem)] font-light leading-[1.08] tracking-[-0.035em] text-foreground/92">
+              <span className="cine-clip block">
+                <span className="cine-clip-in block">Digitální prostor,</span>
+              </span>
+              <span className="cine-clip block">
+                <span className="cine-clip-in block" style={{ animationDelay: "0.32s" }}>
+                  který pracuje
+                </span>
+              </span>
+              <span className="cine-clip block">
+                <span className="cine-clip-in block text-foreground/38" style={{ animationDelay: "0.46s" }}>
+                  pro váš byznys.
+                </span>
+              </span>
+            </h1>
+            <div
+              className="cine-in mt-8 flex max-w-md items-start gap-4 md:mt-10"
+              style={{ animationDelay: "0.68s" }}
+            >
+              <span aria-hidden className="mt-2 h-8 w-px shrink-0 bg-gradient-to-b from-primary/60 to-transparent" />
+              <p className="text-xs leading-relaxed text-muted-foreground md:text-sm">
+                Weby, e-shopy a digitální produkty navržené tak, aby měly smysl.
+              </p>
+            </div>
+          </div>
         </div>
 
         {/* one extremely subtle hint */}
