@@ -20,11 +20,27 @@ type Props = {
 
 type Dot = { x: number; y: number; vx: number; vy: number; r: number; a: number; layer: number };
 
+/**
+ * A flowing light structure: a long, extremely thin curve that drifts through
+ * the scene, brightest in its middle and dissolving into darkness at both ends.
+ * Data stream, never lightning.
+ */
+type Stream = {
+  /** normalised control points */
+  p: { x: number; y: number }[];
+  depth: number;
+  speed: number;
+  phase: number;
+  alpha: number;
+  width: number;
+};
+
 const LAYERS = [
   { depth: 0.28, size: 0.5, alpha: 0.16, link: 0 }, // far dust — no links
   { depth: 0.62, size: 0.9, alpha: 0.3, link: 96 }, // mid field
   { depth: 1, size: 1.35, alpha: 0.42, link: 128 }, // near flow
 ];
+
 
 export function AetherField({ className = "", intensityRef, strength = 1 }: Props) {
   const ref = useRef<HTMLCanvasElement | null>(null);
