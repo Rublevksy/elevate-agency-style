@@ -132,19 +132,19 @@ export function CinematicIntro() {
                 <span className="cine-clip-in block">Digitální prostor,</span>
               </span>
               <span className="cine-clip block">
-                <span className="cine-clip-in block" style={{ animationDelay: "0.12s" }}>
+                <span className="cine-clip-in block" style={{ animationDelay: "0.32s" }}>
                   který pracuje
                 </span>
               </span>
               <span className="cine-clip block">
-                <span className="cine-clip-in block text-foreground/38" style={{ animationDelay: "0.24s" }}>
+                <span className="cine-clip-in block text-foreground/38" style={{ animationDelay: "0.46s" }}>
                   pro váš byznys.
                 </span>
               </span>
             </h1>
             <div
               className="cine-in mt-8 flex max-w-md items-start gap-4 md:mt-10"
-              style={{ animationDelay: "0.44s" }}
+              style={{ animationDelay: "0.68s" }}
             >
               <span aria-hidden className="mt-2 h-8 w-px shrink-0 bg-gradient-to-b from-primary/60 to-transparent" />
               <p className="text-xs leading-relaxed text-muted-foreground md:text-sm">
