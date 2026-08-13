@@ -62,7 +62,6 @@ export function MacbookIntro() {
     const e = b * b * (3 - 2 * b);
     return closed * (1 - e) + tracked * e;
   });
-  const drift = useTransform(p, [0, 0.15], [vp.h * 0.02, 0]);
 
 
   // ── hinge: 180° = lid closed on the deck, 62° = open & reclined ────────────
