@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { CinematicIntro } from "@/components/intro3d/CinematicIntro";
-import { ServiceNavigator } from "@/components/cinematic/ServiceNavigator";
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
@@ -34,9 +33,6 @@ function Home() {
     <>
       {/* 01 — pinned cinematic intro: closed laptop → open → into the screen */}
       <CinematicIntro />
-
-      {/* 02 — disciplines, visual first */}
-      <ServiceNavigator />
 
       {/* 03 — how we work + studio point of view */}
       <StudioPhilosophy />

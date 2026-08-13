@@ -5,6 +5,7 @@ import { useScrollTimeline } from "./useScrollTimeline";
 import { ScreenInterface } from "./ScreenInterface";
 import { setCinematicActive } from "@/lib/cinematic-state";
 import { AetherField } from "@/components/atmosphere/AetherField";
+import { FloatingWindows } from "./FloatingWindows";
 
 const Stage = lazy(() => import("./Stage"));
 
