@@ -1,11 +1,13 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
-import { CLOSED_END, HANDOFF_START, smoothstep, stageProgress } from "./constants";
+import { CLOSED_END, HANDOFF_START, ROTATION_END, clamp01, smoothstep } from "./constants";
 import { useScrollTimeline } from "./useScrollTimeline";
 import { ScreenInterface } from "./ScreenInterface";
 import { setCinematicActive } from "@/lib/cinematic-state";
+import { AetherField } from "@/components/atmosphere/AetherField";
 
 const Stage = lazy(() => import("./Stage"));
+
 
 /**
  * CinematicIntro — the ELEVATE cinematic, one scene and one timeline.
