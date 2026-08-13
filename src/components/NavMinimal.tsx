@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import { useT, type Lang } from "@/lib/i18n";
+import { useCinematicActive } from "@/lib/cinematic-state";
 import { Logo } from "./Logo";
 
 const LANGS: Lang[] = ["CZ", "EN", "RU", "UA"];
@@ -22,6 +23,7 @@ export function NavMinimal() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const cinematic = useCinematicActive();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -46,7 +48,10 @@ export function NavMinimal() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
+      aria-hidden={cinematic}
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
+        cinematic ? "pointer-events-none -translate-y-full opacity-0" : "translate-y-0 opacity-100"
+      } ${
         scrolled
           ? "border-b border-border/60 bg-background/70 backdrop-blur-2xl"
           : "border-b border-transparent bg-transparent"
