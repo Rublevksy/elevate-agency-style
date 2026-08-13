@@ -39,16 +39,16 @@ export function ScreenShowcase({
         {items.map((it, i) => {
           const d = index - i;
           const a = Math.abs(d);
-          const visible = a < 1.35;
+          const visible = a < 0.9;
           return (
             <div
               key={it.domain}
               aria-hidden={!visible}
               className="absolute inset-0 will-change-transform"
               style={{
-                opacity: visible ? Math.max(0, 1 - a * 1.05) : 0,
-                transform: `translate3d(${d * -14}%,0,${-a * 220}px) scale(${1 - a * 0.06})`,
-                filter: `blur(${Math.min(8, a * 7)}px)`,
+                opacity: visible ? Math.max(0, 1 - Math.pow(a, 1.4) * 1.9) : 0,
+                transform: `translate3d(${d * -10}%,0,${-a * 180}px) scale(${1 - a * 0.05})`,
+                filter: `blur(${Math.min(5, a * 5)}px)`,
                 transformStyle: "preserve-3d",
                 transition: "none",
               }}
