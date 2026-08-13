@@ -131,13 +131,14 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
               <img
                 src={stills[i % stills.length]}
                 alt=""
-                className="h-full w-full object-cover opacity-[0.55]"
+                className="h-full w-full object-cover"
+                style={{ opacity: 0.26, filter: "grayscale(1) contrast(1.15) blur(2px)" }}
               />
               <div
                 className="absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(120deg, #05070a 0%, transparent 45%, oklch(0.32 0.05 250 / 0.22) 100%)",
+                    "linear-gradient(115deg, #05070a 8%, oklch(0.2 0.03 250 / 0.55) 55%, oklch(0.34 0.06 250 / 0.3) 100%)",
                 }}
               />
             </div>
