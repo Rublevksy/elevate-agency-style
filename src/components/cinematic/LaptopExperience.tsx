@@ -157,7 +157,7 @@ export function LaptopExperience() {
               <div className="mx-auto mt-[4%] h-[30%] w-[34%] rounded-[6px] bg-[linear-gradient(180deg,oklch(0.26_0.004_255),oklch(0.21_0.004_255))] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.06)]" />
               {/* front lip */}
               <div className="absolute inset-x-[42%] bottom-0 h-[3%] rounded-t-[4px] bg-black/40" />
-            </div>
+            </motion.div>
             </div>
           </motion.div>
         </motion.div>
