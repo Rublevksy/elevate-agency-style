@@ -30,7 +30,7 @@ export function LaptopExperience() {
   const yaw = useTransform(p, [0, 0.3, 0.62], [-12, -4, 0]);
   const rise = useTransform(p, [0, 0.3, 0.62, 0.86], ["-1vh", "-7vh", "-9vh", "-13vh"]);
   const zoom = useTransform(p, [0, 0.3, 0.62, 0.86], [0.62, 0.72, 0.84, 2.2]);
-  const deviceOpacity = useTransform(p, [0.74, 0.87], [1, 0]);
+  const deviceOpacity = useTransform(p, [0.76, 0.84], [1, 0]);
 
   // lid — closed (lying on the deck) → upright
   const lid = useTransform(p, [0.1, 0.52], [reduced ? -6 : 78, -6]);
