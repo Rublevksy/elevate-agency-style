@@ -69,6 +69,7 @@ export function MacbookIntro() {
   const lidRot = useTransform(lidA, (a) => `rotateX(${a}deg)`);
 
   // chassis leaves the frame as the camera enters the display
+  const screenContent = useTransform(p, [0.64, 0.73], [1, 0]);
   const chassis = useTransform(p, [0.74, 0.86], [1, 0]);
   const takeover = useTransform(p, [0.68, 0.79, 0.96, 1], [0, 1, 1, 0]);
   const hintOpacity = useTransform(p, [0, 0.08], [1, 0]);
@@ -211,7 +212,9 @@ export function MacbookIntro() {
                   >
                     <div style={{ position: "absolute", top: W * 0.0035, left: "50%", width: W * 0.004, height: W * 0.004, borderRadius: 99, background: "#1c2129" }} />
                     <div style={{ position: "relative", height: "100%", width: "100%", borderRadius: W * 0.006, overflow: "hidden" }}>
-                      <ElevateScreen compact />
+                      <motion.div style={{ position: "absolute", inset: 0, opacity: screenContent }}>
+                        <ElevateScreen compact />
+                      </motion.div>
                       {/* glass reflection */}
                       <div
                         aria-hidden
