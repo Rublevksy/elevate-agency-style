@@ -143,7 +143,7 @@ void main(){
 
   /* ---------- NEAR: interface fragments + light trails ------------------- */
   vec2 nearUV = c * 1.35 + vec2(flow * 0.9, -flow * 0.22) + uMouse * 0.14;
-  float frag = fragments(nearUV, 2.6) * (1.0 - uMobile * 0.45);
+  float frag = fragments(nearUV, 4.6) * (1.0 - uMobile * 0.45);
   float trails = pow(filaments(nearUV * 1.9 + vec2(0.0, flow * 0.4), 2.2, 34.0), 1.4);
 
   /* ---------- volumetric haze ------------------------------------------- */
@@ -161,7 +161,7 @@ void main(){
   col += BLUE * mid * mid * 0.10 * centreLift;
   col += STEEL * far * 0.42 * depth;
   col += COOL * trails * 0.055 * depth;
-  col += mix(STEEL, COOL, 0.4) * frag * 0.09 * depth;
+  col += mix(STEEL, COOL, 0.4) * frag * 0.07 * depth;
 
   /* atmospheric glow behind the product, slightly right of centre */
   float g = exp(-pow(length((c - vec2(0.10, 0.02)) * vec2(1.0, 1.25)) * 1.9, 2.0));
