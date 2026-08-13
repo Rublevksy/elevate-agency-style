@@ -173,15 +173,15 @@ export function ScreenLight({ stage }: { stage: React.RefObject<number> }) {
     const p = stage.current ?? 0;
     const on = smoothstep(ROTATION_END, OPEN_END, p);
     const bloom = clamp01(on + range(OPEN_END, 1, p) * 0.6);
-    if (ref.current) ref.current.intensity = 260 * bloom;
+    if (ref.current) ref.current.intensity = 120 * bloom;
   });
   return (
     <pointLight
       ref={ref}
       position={[0, DEVICE.H * 0.75, DEVICE.D * 0.35]}
-      color="#8fb4e6"
-      distance={70}
-      decay={1.6}
+      color="#c3d3e6"
+      distance={52}
+      decay={2}
       intensity={0}
     />
   );
