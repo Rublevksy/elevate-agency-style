@@ -49,6 +49,8 @@ export function LaptopExperience() {
 
   // ── lid: closed lying on the deck → upright → closed again ────────────────
   const lid = useTransform(p, [0.07, 0.34, 0.8, 0.94], reduced ? [-10, -10, -10, -10] : [-100, -10, -10, -100]);
+  // lift the lid a few px off the deck plane while closed so it paints above the keyboard
+  const lidLift = useTransform(p, [0.07, 0.2, 0.86, 0.94], [16, 0, 0, 16]);
   const screenOn = useTransform(p, [0.22, 0.4, 0.86, 0.93], [0, 1, 1, 0]);
   const floorGlow = useTransform(p, [0.1, 0.4, 0.9, 1], [0.1, 0.42, 0.3, 0.05]);
 
@@ -94,7 +96,7 @@ export function LaptopExperience() {
             {/* lid */}
             <motion.div
               className="relative aspect-[16/10.4] w-full rounded-[12px] md:rounded-[16px]"
-              style={{ rotateX: lid, transformOrigin: "bottom center", transformStyle: "preserve-3d" }}
+              style={{ rotateX: lid, z: lidLift, transformOrigin: "bottom center", transformStyle: "preserve-3d" }}
             >
               {/* aluminium back of the lid (seen while closed) */}
               <div
