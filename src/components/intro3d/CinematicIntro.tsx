@@ -33,7 +33,7 @@ export function CinematicIntro() {
     if (takeoverRef.current) {
       // the 3D display hands over to the fullscreen layer while both are the
       // same size and the same content — no swap, no cut, no scale jump
-      const inn = smoothstep(HANDOFF_START, HANDOFF_END, p);
+      const inn = p >= HANDOFF_START ? 1 : 0;
       takeoverRef.current.style.opacity = String(clamp01(inn));
     }
     setCinematicActive(p < 0.995);

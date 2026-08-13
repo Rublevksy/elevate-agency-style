@@ -2,7 +2,7 @@ import { forwardRef, useRef } from "react";
 import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import type { Group } from "three";
-import { DEVICE, HANDOFF_END, HANDOFF_START, clamp01, smoothstep } from "../constants";
+import { DEVICE, HANDOFF_START, clamp01, smoothstep } from "../constants";
 import { ScreenInterface } from "../ScreenInterface";
 
 const PX_PER_UNIT = 40; // drei <Html transform> maps 1 world unit to 40 CSS px
@@ -25,7 +25,9 @@ export const Screen = forwardRef<Group, { progress: React.RefObject<number> }>(f
   // over to the fullscreen layer once the camera is inside it
   useFrame(() => {
     const p = progress.current ?? 0;
-    const on = smoothstep(0.36, 0.5, p) - smoothstep(HANDOFF_START, HANDOFF_END, p);
+    // hard cut at the handoff: a crossfade would show the 3D screen and the
+    // fullscreen layer at once, which reads as doubled text
+    const on = p >= HANDOFF_START ? 0 : smoothstep(0.36, 0.5, p);
     const el = uiRef.current;
     if (!el) return;
     const v = clamp01(on);
