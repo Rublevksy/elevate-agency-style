@@ -1,19 +1,19 @@
 /** Shared premium product materials for the device. */
 export const ALUMINIUM = {
-  color: "#565d66",
-  metalness: 0.86,
-  roughness: 0.29,
-  envMapIntensity: 2.7,
-  clearcoat: 0.7,
-  clearcoatRoughness: 0.22,
-  reflectivity: 0.6,
+  color: "#2b3037",
+  metalness: 0.92,
+  roughness: 0.42,
+  envMapIntensity: 1.35,
+  clearcoat: 0.5,
+  clearcoatRoughness: 0.3,
+  reflectivity: 0.45,
 } as const;
 
 export const ALUMINIUM_DARK = {
-  color: "#4a5057",
+  color: "#23272d",
   metalness: 0.9,
-  roughness: 0.4,
-  envMapIntensity: 1.6,
+  roughness: 0.5,
+  envMapIntensity: 0.9,
 } as const;
 
 

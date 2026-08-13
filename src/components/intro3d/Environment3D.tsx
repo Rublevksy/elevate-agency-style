@@ -1,5 +1,4 @@
 import { useMemo, useRef } from "react";
-import { MeshReflectorMaterial } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { AdditiveBlending, BackSide, CanvasTexture, Color, type Group, type PointLight, type Points } from "three";
 import { CLOSED_END, DEVICE, OPEN_END, ROTATION_END, clamp01, range, smoothstep } from "./constants";
@@ -78,24 +77,34 @@ function Backdrop() {
 
 /* ---------------- soft reflective deck ---------------- */
 
+/**
+ * The deck the product stands on. Deliberately unlit (basic material) so the
+ * key lights cannot lift it off black — the only thing visible is one very soft
+ * pool of cool light directly beneath the device.
+ */
 function Floor() {
+  const tex = useMemo(() => {
+    if (typeof document === "undefined") return null;
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const ctx = c.getContext("2d")!;
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(0, 0, 256, 256);
+    const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
+    g.addColorStop(0, "rgba(26,38,56,1)");
+    g.addColorStop(0.35, "rgba(12,18,28,1)");
+    g.addColorStop(1, "rgba(0,0,0,1)");
+    ctx.fillStyle = g;
+    ctx.fillRect(0, 0, 256, 256);
+    return new CanvasTexture(c);
+  }, []);
+
+  if (!tex) return null;
+
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-      <planeGeometry args={[520, 520]} />
-      <MeshReflectorMaterial
-        resolution={256}
-        mixBlur={1}
-        mixStrength={1.1}
-        blur={[420, 120]}
-        depthScale={1.1}
-        minDepthThreshold={0.5}
-        maxDepthThreshold={1.3}
-        metalness={0}
-        roughness={1}
-        envMapIntensity={0.02}
-        color="#000000"
-        mirror={0.08}
-      />
+      <planeGeometry args={[900, 900]} />
+      <meshBasicMaterial map={tex} toneMapped={false} />
     </mesh>
   );
 }
