@@ -1,19 +1,20 @@
 /** Shared premium product materials for the device. */
 export const ALUMINIUM = {
-  color: "#34383f",
-  metalness: 1,
-  roughness: 0.27,
-  envMapIntensity: 1.6,
-  clearcoat: 0.35,
-  clearcoatRoughness: 0.4,
+  color: "#5b626b",
+  metalness: 0.82,
+  roughness: 0.34,
+  envMapIntensity: 2.4,
+  clearcoat: 0.6,
+  clearcoatRoughness: 0.28,
 } as const;
 
 export const ALUMINIUM_DARK = {
-  color: "#1f2226",
-  metalness: 1,
-  roughness: 0.38,
-  envMapIntensity: 0.9,
+  color: "#4a5057",
+  metalness: 0.9,
+  roughness: 0.4,
+  envMapIntensity: 1.6,
 } as const;
+
 
 export const GLASS_PANEL = {
   color: "#04060a",
@@ -23,7 +24,7 @@ export const GLASS_PANEL = {
 } as const;
 
 export const KEY_CAP = {
-  color: "#14171b",
-  metalness: 0.35,
-  roughness: 0.62,
+  color: "#1c2026",
+  metalness: 0.4,
+  roughness: 0.55,
 } as const;

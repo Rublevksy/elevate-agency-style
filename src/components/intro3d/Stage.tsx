@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import type { Group } from "three";
 import { MathUtils } from "three";
-import { CHASSIS_GONE, DEVICE, OPEN_END, ROTATION_END, clamp01, lerp, smoothstep } from "./constants";
+import { DEVICE, OPEN_END, ROTATION_END, lerp, smoothstep } from "./constants";
 import { Lighting } from "./Lighting";
 import { MacBook3D } from "./macbook/MacBook3D";
 import { ProductCamera } from "./ProductCamera";
@@ -43,11 +43,11 @@ export default function Stage({
   );
 }
 
-/** Hinge angle + chassis dissolve, both derived from scroll progress. */
+/** Hinge angle, derived from scroll progress. The chassis is never hidden —
+ *  it leaves the frame because the camera physically moves past it. */
 function Hinge({
   progress,
   lidRef,
-  rootRef,
 }: {
   progress: React.RefObject<number>;
   lidRef: React.RefObject<Group | null>;
@@ -59,10 +59,7 @@ function Hinge({
     const eased = open * open * (3 - 2 * open);
     const deg = lerp(DEVICE.LID_CLOSED_DEG, DEVICE.LID_OPEN_DEG, eased);
     if (lidRef.current) lidRef.current.rotation.x = MathUtils.degToRad(deg);
-
-    // the physical device leaves the frame as the camera passes the screen plane
-    const gone = clamp01(smoothstep(0.8, CHASSIS_GONE, p));
-    if (rootRef.current) rootRef.current.visible = gone < 1;
   });
   return null;
 }
+
