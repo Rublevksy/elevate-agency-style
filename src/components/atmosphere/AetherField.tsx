@@ -134,6 +134,52 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
         ctx.fillStyle = glow;
         ctx.fillRect(0, 0, w, h);
 
+        // Layer 2b — flowing light structures: thin curves that carry a slow
+        // travelling brightness and dissolve into darkness at both ends
+        const mx = mouse.x > -9000 ? (mouse.x / w - 0.5) : 0;
+        const my = mouse.y > -9000 ? (mouse.y / h - 0.5) : 0;
+        ctx.lineCap = "round";
+        for (const s of streams) {
+          const bendX = mx * 26 * s.depth;
+          const bendY = my * 18 * s.depth;
+          const sway = reduced ? 0 : Math.sin(t * (0.5 + s.depth) + s.phase * 7) * 0.028;
+          const pts: { x: number; y: number }[] = [];
+          const N = 26;
+          for (let i = 0; i <= N; i++) {
+            const u = i / N;
+            const iu = 1 - u;
+            const b0 = iu * iu * iu;
+            const b1 = 3 * iu * iu * u;
+            const b2 = 3 * iu * u * u;
+            const b3 = u * u * u;
+            const nx = s.p[0]!.x * b0 + s.p[1]!.x * b1 + s.p[2]!.x * b2 + s.p[3]!.x * b3;
+            const ny =
+              s.p[0]!.y * b0 + s.p[1]!.y * b1 + s.p[2]!.y * b2 + s.p[3]!.y * b3 +
+              sway * Math.sin(u * Math.PI * 1.6 + s.phase * 6);
+            pts.push({ x: nx * w + bendX, y: ny * h + bendY });
+          }
+          // travelling head position along the curve
+          const head = ((t * s.speed + s.phase) % 1.35) - 0.175;
+          ctx.lineWidth = s.width;
+          for (let i = 0; i < N; i++) {
+            const u = (i + 0.5) / N;
+            // body: brightest mid-curve, fading to nothing at both extremes
+            const body = Math.sin(u * Math.PI) ** 1.6;
+            // pulse: a soft light that travels the path
+            const dh = Math.abs(u - head);
+            const pulse = dh < 0.16 ? (1 - dh / 0.16) ** 2 * 1.5 : 0;
+            const o = s.alpha * k * body * (0.55 + pulse);
+            if (o < 0.004) continue;
+            ctx.strokeStyle = `rgba(${150 + pulse * 70},${185 + pulse * 50},${225 + pulse * 25},${Math.min(0.3, o)})`;
+            ctx.beginPath();
+            ctx.moveTo(pts[i]!.x, pts[i]!.y);
+            ctx.lineTo(pts[i + 1]!.x, pts[i + 1]!.y);
+            ctx.stroke();
+          }
+        }
+
+
+
         // ease mouse — the field follows lazily
         if (mouse.tx > -9000) {
           mouse.x = mouse.x < -9000 ? mouse.tx : mouse.x + (mouse.tx - mouse.x) * 0.05;
