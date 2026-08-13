@@ -1,11 +1,18 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
-import { CLOSED_END, HANDOFF_START, OPEN_END, ROTATION_END, clamp01, smoothstep } from "./constants";
+import {
+  CLOSED_END,
+  HANDOFF_START,
+  OPEN_END,
+  ROTATION_END,
+  clamp01,
+  smoothstep,
+  stageProgress,
+} from "./constants";
 import { useScrollTimeline } from "./useScrollTimeline";
 import { ScreenInterface } from "./ScreenInterface";
 import { setCinematicActive } from "@/lib/cinematic-state";
 import { NeuralField } from "@/components/atmosphere/NeuralField";
-import { stageProgress } from "./constants";
 
 const Stage = lazy(() => import("./Stage"));
 
