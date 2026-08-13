@@ -128,9 +128,23 @@
     from { opacity: 0; transform: translateY(18px); filter: blur(9px); }
     to { opacity: 1; transform: translateY(0); filter: blur(0); }
   }
-  @media (prefers-reduced-motion: reduce) {
-    .cine-in { animation: none; }
+  /* clip reveal for headline lines — each line rises out of its own mask */
+  .cine-clip {
+    overflow: hidden;
+    padding-bottom: 0.06em;
   }
+  .cine-clip-in {
+    animation: cineClip 1.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 0.18s;
+  }
+  @keyframes cineClip {
+    from { opacity: 0; transform: translateY(105%); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cine-in, .cine-clip-in { animation: none; }
+  }
+
 
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(16px); }
