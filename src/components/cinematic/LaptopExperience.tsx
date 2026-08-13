@@ -51,6 +51,8 @@ export function LaptopExperience() {
   const lid = useTransform(p, [0.07, 0.34, 0.8, 0.94], reduced ? [-10, -10, -10, -10] : [-100, -10, -10, -100]);
   // lift the lid a few px off the deck plane while closed so it paints above the keyboard
   const lidLift = useTransform(p, [0.07, 0.2, 0.86, 0.94], [16, 0, 0, 16]);
+  // the deck is hidden under the lid while the device is closed
+  const deckOpacity = useTransform(p, [0.08, 0.18, 0.84, 0.93], [0, 1, 1, 0]);
   const screenOn = useTransform(p, [0.22, 0.4, 0.86, 0.93], [0, 1, 1, 0]);
   const floorGlow = useTransform(p, [0.1, 0.4, 0.9, 1], [0.1, 0.42, 0.3, 0.05]);
 
@@ -131,7 +133,7 @@ export function LaptopExperience() {
             <div className="absolute inset-x-[16%] top-full h-[6px] -translate-y-[3px] rounded-full bg-[linear-gradient(180deg,oklch(0.3_0.005_255),oklch(0.14_0.004_255))]" />
 
             {/* deck */}
-            <div
+            <motion.div
               className="absolute inset-x-0 top-full aspect-[16/10.6] overflow-hidden rounded-b-[12px] bg-[linear-gradient(180deg,oklch(0.33_0.006_255),oklch(0.2_0.004_255)_45%,oklch(0.27_0.005_255))] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07)] md:rounded-b-[16px]"
               style={{ transform: "rotateX(74deg)", transformOrigin: "top center" }}
             >
