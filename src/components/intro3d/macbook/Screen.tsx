@@ -3,6 +3,7 @@ import { Html } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import type { Group, MeshBasicMaterial } from "three";
 import { DEVICE, HANDOFF_START, OPEN_END, ROTATION_END, clamp01, smoothstep } from "../constants";
+import { GLASS_PANEL } from "./materials";
 import { ScreenInterface } from "../ScreenInterface";
 
 const PX_PER_UNIT = 40; // drei <Html transform> maps 1 world unit to 40 CSS px
@@ -45,7 +46,7 @@ export const Screen = forwardRef<
       {/* black glass panel + bezel */}
       <mesh position={[0, 0, -0.002]}>
         <planeGeometry args={[W - 0.16, H - 0.16]} />
-        <meshStandardMaterial color="#04060a" roughness={0.12} metalness={0.4} />
+        <meshStandardMaterial {...GLASS_PANEL} />
       </mesh>
 
       <Html

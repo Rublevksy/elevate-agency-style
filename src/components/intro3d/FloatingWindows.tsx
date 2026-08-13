@@ -49,7 +49,6 @@ export function FloatingWindows({
 
   useEffect(() => {
     let raf = 0;
-    let t = 0;
 
     const onMove = (e: PointerEvent) => {
       mouse.current.tx = e.clientX / window.innerWidth - 0.5;
@@ -59,7 +58,6 @@ export function FloatingWindows({
 
     const tick = () => {
       const p = stage.current ?? 0;
-      t += 0.004;
       const m = mouse.current;
       m.x += (m.tx - m.x) * 0.045;
       m.y += (m.ty - m.y) * 0.045;
@@ -71,23 +69,28 @@ export function FloatingWindows({
       const presence = clamp01(0.55 + enter * 0.45) * (1 - exit);
       /** which window is currently dominant, cycling with the timeline */
       const focus = p * (items.length - 0.001);
+      /** all travel is a function of scroll — stop scrolling and the gallery stops */
+      const travel = p * Math.PI * 1.35;
 
       refs.current.forEach((el, i) => {
         if (!el) return;
         const s = SLOTS[i]!;
         const d = Math.abs(focus - i);
         const dom = clamp01(1 - d); // 1 when dominant
-        const drift = Math.sin(t * (0.6 + i * 0.17) + i) * (mobile ? 4 : 11);
-        const driftY = Math.cos(t * (0.5 + i * 0.13) + i * 2) * (mobile ? 3 : 8);
-        const z = s.z + dom * 130 - exit * 420;
+        const drift = Math.sin(travel * (0.6 + i * 0.17) + i) * (mobile ? 5 : 16);
+        const driftY = Math.cos(travel * (0.5 + i * 0.13) + i * 2) * (mobile ? 4 : 12);
+        const z = s.z + dom * 130 + p * 180 - exit * 460;
         const px = m.x * s.k * (mobile ? 6 : 22);
         const py = m.y * s.k * (mobile ? 4 : 14);
+        // small, slow rotations only: a camera gliding past a gallery
+        const ry = s.rotY - m.x * s.k * 3 + Math.sin(travel * 0.5 + i) * 2.2;
+        const rx = s.rotX + m.y * s.k * 1.4 + Math.cos(travel * 0.42 + i) * 1.4;
 
-        el.style.opacity = String(presence * (0.2 + dom * 0.5));
-        el.style.filter = `blur(${(1 - dom) * 2.6 + (1 - presence) * 3}px) saturate(${0.65 + dom * 0.35})`;
+        el.style.opacity = String(presence * (0.26 + dom * 0.46));
+        el.style.filter = `blur(${(1 - dom) * 2.4 + (1 - presence) * 3}px) saturate(${0.7 + dom * 0.3})`;
         el.style.transform =
           `translate3d(${drift + px}px, ${driftY + py - exit * 40}px, ${z}px) ` +
-          `rotateX(${s.rotX + m.y * s.k * 1.4}deg) rotateY(${s.rotY - m.x * s.k * 3}deg) rotateZ(${s.rotZ}deg) ` +
+          `rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${s.rotZ}deg) ` +
           `scale(${0.94 + dom * 0.1})`;
       });
 
@@ -100,6 +103,7 @@ export function FloatingWindows({
       window.removeEventListener("pointermove", onMove);
     };
   }, [stage, mobile, items.length]);
+
 
   return (
     <div

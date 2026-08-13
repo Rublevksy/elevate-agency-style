@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { RoundedBox } from "@react-three/drei";
 import { DEVICE } from "../constants";
-import { KEY_CAP } from "./materials";
+import { KEY_CAP, TRACKPAD } from "./materials";
 
 /**
  * Deck keyboard: a milled well, individual key caps and the trackpad.
@@ -53,7 +53,7 @@ export function Keyboard() {
       {/* trackpad */}
       <mesh position={[0, T + 0.002, D * 0.21]}>
         <boxGeometry args={[W * 0.4, 0.03, D * 0.29]} />
-        <meshStandardMaterial color="#1b1f24" roughness={0.28} metalness={0.5} />
+        <meshStandardMaterial {...TRACKPAD} />
       </mesh>
     </group>
   );
