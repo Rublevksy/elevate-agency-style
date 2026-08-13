@@ -32,7 +32,7 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
         if (!el) return;
         const d = seq - i; // <0 upcoming, ~0.5 dominant, >1 gone
         // one discipline is dominant at a time: it resolves, holds, then clears
-        const o = d < 0 || d > 1 ? 0 : Math.min(clamp01(d / 0.22), clamp01((1 - d) / 0.22));
+        const o = d < -0.2 || d > 1.2 ? 0 : Math.min(clamp01((d + 0.2) / 0.4), clamp01((1.2 - d) / 0.4));
         el.style.opacity = String(o);
         const dc = clamp01(d);
         // subtle depth: upcoming slides sit slightly back and softly defocused
@@ -104,8 +104,8 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
               {it.index}
             </span>
             <h3
-              className="mt-[2cqh] font-light uppercase leading-[0.95] tracking-[-0.02em] text-white"
-              style={{ fontSize: "5.4cqw" }}
+              className="mt-[2cqh] max-w-[52%] font-light uppercase leading-[0.98] tracking-[-0.02em] text-white"
+              style={{ fontSize: "4.1cqw" }}
             >
               {it.label}
             </h3>
