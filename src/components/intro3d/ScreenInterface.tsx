@@ -26,7 +26,16 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
       // 0 → items.length, one unit per discipline
       const seq = range(SERVICES_START, SERVICES_END, p) * items.length;
 
-      if (headRef.current) headRef.current.style.opacity = String(clamp01(1 - seq * 2.2));
+      // the statement clears completely before the first discipline arrives —
+      // two headlines must never be legible in the same frame
+      if (headRef.current) {
+        const ho = clamp01(1 - seq * 5);
+        headRef.current.style.opacity = String(ho);
+        headRef.current.style.filter = `blur(${(1 - ho) * 6}px)`;
+        headRef.current.style.transform = `translate3d(0, ${-(1 - ho) * 3}cqh, 0)`;
+        headRef.current.style.visibility = ho < 0.01 ? "hidden" : "visible";
+      }
+
 
       slides.current.forEach((el, i) => {
         if (!el) return;
