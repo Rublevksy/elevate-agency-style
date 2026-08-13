@@ -2,11 +2,7 @@ import { useEffect, useRef } from "react";
 import logo from "@/assets/elevate-logo.png";
 import { CINEMATIC } from "@/lib/cinematic-copy";
 import { useT } from "@/lib/i18n";
-import { clamp01, range } from "./constants";
-
-/** where the discipline sequence starts / ends on the master timeline */
-const SERVICES_START = 0.66;
-const SERVICES_END = 1;
+import { SERVICES_END, SERVICES_START, clamp01, range } from "./constants";
 
 /**
  * The ELEVATE interface. It lives INSIDE the 3D display first, then becomes the
@@ -34,9 +30,13 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
       slides.current.forEach((el, i) => {
         if (!el) return;
         const d = seq - i; // <0 upcoming, ~0.5 dominant, >1 gone
-        const o = d < 0 ? 0 : clamp01(Math.min(d * 2.6, 1.4 - d));
+        // one discipline is dominant at a time: it resolves, holds, then clears
+        const o = d < 0 || d > 1 ? 0 : Math.min(clamp01(d / 0.22), clamp01((1 - d) / 0.22));
         el.style.opacity = String(o);
-        el.style.transform = `translate3d(0, ${(0.5 - clamp01(d)) * 5}cqh, 0) scale(${0.965 + clamp01(d) * 0.05})`;
+        const dc = clamp01(d);
+        // subtle depth: upcoming slides sit slightly back and softly defocused
+        el.style.filter = `blur(${(1 - o) * 3.4}px)`;
+        el.style.transform = `translate3d(0, ${(0.5 - dc) * 5}cqh, 0) scale(${0.955 + dc * 0.06})`;
         el.style.visibility = o < 0.01 ? "hidden" : "visible";
       });
       raf = requestAnimationFrame(tick);

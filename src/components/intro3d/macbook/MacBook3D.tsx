@@ -14,8 +14,15 @@ import { ALUMINIUM_DARK } from "./materials";
  */
 export const MacBook3D = forwardRef<
   Group,
-  { lidRef: React.Ref<Group>; screenRef: React.Ref<Group>; progress: React.RefObject<number> }
->(function MacBook3D({ lidRef, screenRef, progress }, ref) {
+  {
+    lidRef: React.Ref<Group>;
+    screenRef: React.Ref<Group>;
+    /** master timeline — drives the interface inside the display */
+    progress: React.RefObject<number>;
+    /** device timeline — drives hinge, screen light and handoff */
+    stage: React.RefObject<number>;
+  }
+>(function MacBook3D({ lidRef, screenRef, progress, stage }, ref) {
   const { W, D, T } = DEVICE;
   return (
     <group ref={ref}>
@@ -27,7 +34,19 @@ export const MacBook3D = forwardRef<
         <meshStandardMaterial {...ALUMINIUM_DARK} />
       </mesh>
 
-      <Lid ref={lidRef} screenRef={screenRef} progress={progress} />
+      {/* hinge end caps */}
+      {[-1, 1].map((s) => (
+        <mesh
+          key={s}
+          position={[s * W * 0.3, T - 0.22, -D / 2 + 0.3]}
+          rotation={[0, 0, Math.PI / 2]}
+        >
+          <cylinderGeometry args={[0.24, 0.24, W * 0.06, 20]} />
+          <meshStandardMaterial {...ALUMINIUM_DARK} />
+        </mesh>
+      ))}
+
+      <Lid ref={lidRef} screenRef={screenRef} progress={progress} stage={stage} />
     </group>
   );
 });

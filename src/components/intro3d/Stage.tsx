@@ -3,18 +3,23 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import type { Group } from "three";
 import { MathUtils } from "three";
 import { DEVICE, OPEN_END, ROTATION_END, lerp, smoothstep } from "./constants";
+import { Environment3D, ScreenLight } from "./Environment3D";
 import { Lighting } from "./Lighting";
 import { MacBook3D } from "./macbook/MacBook3D";
 import { ProductCamera } from "./ProductCamera";
 
 /**
  * The 3D stage. Client-only (WebGL), lazily loaded by CinematicIntro.
+ * `stage` is the device timeline (forward, hold, mirrored exit); `progress` is
+ * the master scroll timeline, used by the interface inside the display.
  */
 export default function Stage({
   progress,
+  stage,
   mobile,
 }: {
   progress: React.RefObject<number>;
+  stage: React.RefObject<number>;
   mobile: boolean;
 }) {
   const lidRef = useRef<Group>(null);
@@ -23,27 +28,29 @@ export default function Stage({
 
   return (
     <Canvas
-      dpr={[1, mobile ? 1.6 : 2]}
+      dpr={[1, mobile ? 1.5 : 1.9]}
       gl={{ antialias: true, powerPreference: "high-performance" }}
       camera={{ fov: 30, position: [0, 12, 60] }}
       shadows={false}
       style={{ position: "absolute", inset: 0 }}
     >
-      <color attach="background" args={["#04060a"]} />
-      <fog attach="fog" args={["#04060a", 90, 220]} />
+      <color attach="background" args={["#020407"]} />
+      <fog attach="fog" args={["#04070b", 70, 190]} />
 
-      <Lighting />
+      <Environment3D stage={stage} />
+      <Lighting stage={stage} />
+      <ScreenLight stage={stage} />
 
-      <Hinge progress={progress} lidRef={lidRef} rootRef={rootRef} />
+      <Hinge progress={stage} lidRef={lidRef} rootRef={rootRef} />
 
-      <MacBook3D ref={rootRef} lidRef={lidRef} screenRef={screenRef} progress={progress} />
+      <MacBook3D ref={rootRef} lidRef={lidRef} screenRef={screenRef} progress={progress} stage={stage} />
 
-      <ProductCamera progress={progress} screenRef={screenRef} mobile={mobile} />
+      <ProductCamera progress={stage} screenRef={screenRef} mobile={mobile} />
     </Canvas>
   );
 }
 
-/** Hinge angle, derived from scroll progress. The chassis is never hidden —
+/** Hinge angle, derived from stage progress. The chassis is never hidden —
  *  it leaves the frame because the camera physically moves past it. */
 function Hinge({
   progress,
@@ -62,4 +69,3 @@ function Hinge({
   });
   return null;
 }
-

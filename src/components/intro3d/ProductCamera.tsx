@@ -58,7 +58,13 @@ export function ProductCamera({
     const activeW = DEVICE.W - 1.1;
     const activeH = DEVICE.H - 1.25;
     const coverDist = Math.min(activeW / (2 * halfTan * aspect), activeH / (2 * halfTan));
-    const orbitDist = key.k * coverDist;
+    // distance at which the WHOLE product comfortably fits the frame — the
+    // orbit is expressed as a multiple of this, so framing holds on any aspect
+    const fitDist = Math.max(
+      (DEVICE.W * 1.2) / (2 * halfTan * aspect),
+      (DEVICE.H * 1.5) / (2 * halfTan),
+    );
+    const orbitDist = key.k * fitDist;
 
     // where the camera looks: the closed device, then the display itself
     s.deckTarget.set(0, DEVICE.T * 0.7, -DEVICE.D * 0.02);

@@ -10,7 +10,7 @@ export function LidLogo() {
   const tex = useTexture(logoUrl);
   const w = DEVICE.W * 0.26;
   return (
-    <mesh position={[0, DEVICE.LID_T / 2 + 0.003, DEVICE.H * 0.5]} rotation={[Math.PI / 2, 0, 0]}>
+    <mesh position={[0, DEVICE.LID_T / 2 + 0.02, DEVICE.H * 0.5]} rotation={[-Math.PI / 2, 0, 0]}>
       <planeGeometry args={[w, w * 0.2174]} />
       <meshPhysicalMaterial
         map={tex}
