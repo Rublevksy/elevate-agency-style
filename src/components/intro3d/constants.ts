@@ -52,10 +52,10 @@ export const CAM_TRACK: CamKey[] = [
   { p: 0.0, k: 1.62, yaw: -14, elev: 24 },
   { p: 0.15, k: 1.56, yaw: -6, elev: 20 },
   { p: 0.3, k: 1.52, yaw: 34, elev: 9 },
-  { p: 0.45, k: 1.72, yaw: 18, elev: 13 },
-  { p: 0.55, k: 1.8, yaw: 7, elev: 12 },
-  { p: 0.62, k: 1.66, yaw: 0, elev: 8 },
-  { p: 1.0, k: 1.66, yaw: 0, elev: 0 },
+  { p: 0.45, k: 2.15, yaw: 18, elev: 14 },
+  { p: 0.55, k: 2.2, yaw: 7, elev: 13 },
+  { p: 0.62, k: 1.95, yaw: 0, elev: 9 },
+  { p: 1.0, k: 1.95, yaw: 0, elev: 0 },
 ];
 
 /** Mobile: same story, calmer camera. */
