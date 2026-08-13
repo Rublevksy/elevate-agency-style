@@ -14,6 +14,7 @@ import { TopProgressBar } from "@/components/TopProgressBar";
 import { useT } from "@/lib/i18n";
 import { initAnalytics, trackPageView } from "@/lib/analytics";
 import { useScrollDepth } from "@/hooks/use-scroll-depth";
+import { useCinematicActive } from "@/lib/cinematic-state";
 
 const STRUCTURED_DATA = JSON.stringify([
   {
@@ -185,9 +186,13 @@ function SiteShell() {
       </main>
       <Footer />
       {pathname !== "/contact" && <FloatingCta />}
-      <ContactWidget />
+      <CinematicGate>
+        <ContactWidget />
+      </CinematicGate>
       <ExitIntentModal />
-      <CookieBanner />
+      <CinematicGate>
+        <CookieBanner />
+      </CinematicGate>
       <PageLoader />
     </div>
   );
@@ -196,8 +201,15 @@ function SiteShell() {
 // Floating mobile CTA: only visible after scrolling past the hero (>=window height).
 // Hidden on /contact. On /, only appears once user scrolls past the hero — so it
 // never overlaps with the in-hero CTA at the top.
+function CinematicGate({ children }: { children: React.ReactNode }) {
+  const cinematic = useCinematicActive();
+  if (cinematic) return null;
+  return <>{children}</>;
+}
+
 function FloatingCta() {
   const [visible, setVisible] = useState(false);
+  const cinematic = useCinematicActive();
   useEffect(() => {
     if (typeof window === "undefined") return;
     const onScroll = () => {
@@ -209,7 +221,7 @@ function FloatingCta() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  if (!visible) return null;
+  if (!visible || cinematic) return null;
   return (
     <div className="md:hidden fixed bottom-0 inset-x-0 z-40 px-4 pb-[max(env(safe-area-inset-bottom),12px)] pt-3 bg-gradient-to-t from-background via-background/95 to-transparent pointer-events-none">
       <Link
