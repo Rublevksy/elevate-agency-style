@@ -76,7 +76,7 @@ export function ProductCamera({
     // while the whole product is in shot, aim a little below the display centre
     // so deck + lid sit balanced in frame; released as the dolly takes over
     const framing = 1 - easeCinematic(range(HOLD_END, HANDOFF_START, p));
-    s.target.y -= DEVICE.H * 0.24 * framing * toScreen;
+    s.target.y -= DEVICE.H * 0.12 * framing * toScreen;
 
     // restrained orbit, with a hair of camera breathing while the lid is shut
     const drift = (1 - smoothstep(0, 0.14, p)) * (mobile ? 0 : 1);

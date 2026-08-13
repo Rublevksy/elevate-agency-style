@@ -12,8 +12,8 @@ export const HOLD_END = 0.62;
 /** the camera reaches the display plane only at the very end of the timeline */
 export const SCREEN_APPROACH_END = 0.99;
 /** the 3D display hands over to the fullscreen layer here (same content, same scale) */
-export const HANDOFF_START = 0.9;
-export const HANDOFF_END = 0.95;
+export const HANDOFF_START = 0.915;
+export const HANDOFF_END = 0.935;
 export const CHASSIS_GONE = 0.94;
 export const FULLSCREEN_END = 1;
 
