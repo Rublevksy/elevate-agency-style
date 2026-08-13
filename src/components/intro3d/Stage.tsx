@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import type { Group } from "three";
 import { MathUtils } from "three";
-import { DEVICE, OPEN_END, ROTATION_END, lerp, smoothstep } from "./constants";
+import { DEVICE, HANDOFF_START, OPEN_END, ROTATION_END, lerp, smoothstep } from "./constants";
 import { Environment3D, ScreenLight } from "./Environment3D";
 import { Lighting } from "./Lighting";
 import { MacBook3D } from "./macbook/MacBook3D";
@@ -41,12 +41,42 @@ export default function Stage({
       <ScreenLight stage={stage} />
 
       <Hinge progress={stage} lidRef={lidRef} rootRef={rootRef} />
+      <ChassisDissolve stage={stage} rootRef={rootRef} />
 
       <MacBook3D ref={rootRef} lidRef={lidRef} screenRef={screenRef} progress={progress} stage={stage} />
 
       <ProductCamera progress={stage} screenRef={screenRef} mobile={mobile} />
     </Canvas>
   );
+}
+
+/**
+ * The camera physically enters the display, so the chassis around it must yield
+ * gradually rather than cut: keyboard, deck, bezel and hinge lose density over
+ * the last stretch of the dolly while the screen still fills the frame. Fully
+ * reversible — scrubbing back re-forms the product.
+ */
+function ChassisDissolve({
+  stage,
+  rootRef,
+}: {
+  stage: React.RefObject<number>;
+  rootRef: React.RefObject<Group | null>;
+}) {
+  useFrame(() => {
+    const p = stage.current ?? 0;
+    const v = 1 - smoothstep(0.86, HANDOFF_START, p);
+    const root = rootRef.current;
+    if (!root) return;
+    root.traverse((o) => {
+      const mesh = o as unknown as { material?: { transparent: boolean; opacity: number; depthWrite: boolean } };
+      const m = mesh.material;
+      if (!m || typeof m.opacity !== "number") return;
+      m.transparent = true;
+      m.opacity = v;
+    });
+  });
+  return null;
 }
 
 /** Hinge angle, derived from stage progress. The chassis is never hidden —
