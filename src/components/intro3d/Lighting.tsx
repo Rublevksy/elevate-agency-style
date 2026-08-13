@@ -19,7 +19,7 @@ export function Lighting({ stage }: { stage: React.RefObject<number> }) {
   useFrame(() => {
     const p = stage.current ?? 0;
     const lift = smoothstep(CLOSED_END, OPEN_END, p);
-    if (rim.current) rim.current.intensity = lerp(1.15, 2.1, lift);
+    if (rim.current) rim.current.intensity = lerp(0.95, 1.7, lift);
   });
 
   return (
@@ -28,7 +28,7 @@ export function Lighting({ stage }: { stage: React.RefObject<number> }) {
       {/* soft neutral key */}
       <directionalLight position={[16, 28, 16]} intensity={1.55} color="#e6ecf6" />
       {/* cool blue rim, raking the far edge */}
-      <directionalLight ref={rim} position={[-24, 9, -16]} intensity={1.15} color="#7fa4d8" />
+      <directionalLight ref={rim} position={[-24, 9, -16]} intensity={0.8} color="#9db0c8" />
 
       {/* local environment — reflections come from here, no remote HDRI fetch */}
       <Environment resolution={256} frames={1} background={false}>
@@ -51,7 +51,7 @@ export function Lighting({ stage }: { stage: React.RefObject<number> }) {
           scale={[26, 3.4, 1]}
           color="#f2f7ff"
         />
-        <Lightformer form="rect" intensity={0.7} position={[0, 5, 24]} scale={[36, 20, 1]} color="#9fb4cd" />
+        <Lightformer form="rect" intensity={0.55} position={[0, 5, 24]} scale={[36, 20, 1]} color="#7d8794" />
 
         {/* narrow strips: these draw the machined edge highlights */}
         <Lightformer
@@ -68,9 +68,9 @@ export function Lighting({ stage }: { stage: React.RefObject<number> }) {
           position={[17, 4, -4]}
           rotation={[0, -Math.PI / 2.1, 0]}
           scale={[20, 0.9, 1]}
-          color="#8fabd2"
+          color="#9aa4b2"
         />
-        <Lightformer form="circle" intensity={0.9} position={[0, -8, 12]} scale={12} color="#2b3850" />
+        <Lightformer form="circle" intensity={0.7} position={[0, -8, 12]} scale={12} color="#232830" />
       </Environment>
 
       <spotLight position={[0, 30, 18]} angle={0.4} penumbra={1} intensity={95} color="#e8f0fb" distance={64} />
