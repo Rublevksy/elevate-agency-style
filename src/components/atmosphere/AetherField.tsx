@@ -1,0 +1,196 @@
+import { useEffect, useRef, type RefObject } from "react";
+
+/**
+ * ELEVATE atmosphere — a restrained, depth-layered light field.
+ *
+ * Three parallax layers of drifting light points with short-range hairline
+ * links, plus a slow-moving cool glow. Deliberately low-contrast: it is the air
+ * in the room, never a particle demo. Mouse influence is a gentle bend, not an
+ * explosion. Density and DPR are capped, work pauses offscreen, and the whole
+ * thing can be dimmed from the outside via `intensityRef` so the cinematic
+ * timeline can breathe with it.
+ */
+type Props = {
+  className?: string;
+  /** 0 → 1 multiplier applied every frame (scroll-driven). Defaults to 1. */
+  intensityRef?: RefObject<number>;
+  /** overall strength ceiling */
+  strength?: number;
+};
+
+type Dot = { x: number; y: number; vx: number; vy: number; r: number; a: number; layer: number };
+
+const LAYERS = [
+  { depth: 0.28, size: 0.5, alpha: 0.16, link: 0 }, // far dust — no links
+  { depth: 0.62, size: 0.9, alpha: 0.3, link: 96 }, // mid field
+  { depth: 1, size: 1.35, alpha: 0.42, link: 128 }, // near flow
+];
+
+export function AetherField({ className = "", intensityRef, strength = 1 }: Props) {
+  const ref = useRef<HTMLCanvasElement | null>(null);
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+    const mobile = window.innerWidth < 768;
+
+    let w = 0;
+    let h = 0;
+    let raf = 0;
+    let visible = true;
+    let t = 0;
+
+    const perLayer = mobile ? [14, 12, 10] : [34, 26, 20];
+    const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, r: mobile ? 110 : 190 };
+
+    let dots: Dot[] = [];
+
+    const seed = () => {
+      dots = [];
+      LAYERS.forEach((L, li) => {
+        for (let i = 0; i < (perLayer[li] ?? 0); i++) {
+          dots.push({
+            x: Math.random() * w,
+            y: Math.random() * h,
+            vx: (Math.random() - 0.5) * 0.1 * L.depth,
+            vy: (Math.random() - 0.5) * 0.08 * L.depth,
+            r: L.size * (0.7 + Math.random() * 0.7),
+            a: L.alpha * (0.5 + Math.random() * 0.6),
+            layer: li,
+          });
+        }
+      });
+    };
+
+    const resize = () => {
+      const rect = canvas.getBoundingClientRect();
+      w = Math.max(1, rect.width);
+      h = Math.max(1, rect.height);
+      canvas.width = Math.floor(w * dpr);
+      canvas.height = Math.floor(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      seed();
+    };
+    resize();
+
+    const draw = () => {
+      const k = Math.max(0, Math.min(1, intensityRef?.current ?? 1)) * strength;
+      t += 0.0035;
+
+      ctx.clearRect(0, 0, w, h);
+
+      if (k > 0.01) {
+        // Layer 2 — slow atmospheric light movement
+        const gx = w * (0.5 + Math.sin(t * 0.7) * 0.16);
+        const gy = h * (0.42 + Math.cos(t * 0.5) * 0.12);
+        const glow = ctx.createRadialGradient(gx, gy, 0, gx, gy, Math.max(w, h) * 0.62);
+        glow.addColorStop(0, `rgba(96,140,205,${0.05 * k})`);
+        glow.addColorStop(0.45, `rgba(40,66,104,${0.026 * k})`);
+        glow.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = glow;
+        ctx.fillRect(0, 0, w, h);
+
+        // ease mouse — the field follows lazily
+        if (mouse.tx > -9000) {
+          mouse.x = mouse.x < -9000 ? mouse.tx : mouse.x + (mouse.tx - mouse.x) * 0.05;
+          mouse.y = mouse.y < -9000 ? mouse.ty : mouse.y + (mouse.ty - mouse.y) * 0.05;
+        }
+
+        // Layers 3 & 4 — flowing points with parallax
+        for (const d of dots) {
+          const L = LAYERS[d.layer]!;
+          if (!reduced) {
+            d.x += d.vx + Math.sin(t * 1.4 + d.y * 0.006) * 0.06 * L.depth;
+            d.y += d.vy + Math.cos(t * 1.1 + d.x * 0.005) * 0.04 * L.depth;
+            if (d.x < -20) d.x = w + 20;
+            if (d.x > w + 20) d.x = -20;
+            if (d.y < -20) d.y = h + 20;
+            if (d.y > h + 20) d.y = -20;
+
+            const dx = mouse.x - d.x;
+            const dy = mouse.y - d.y;
+            const dist = Math.hypot(dx, dy);
+            if (dist < mouse.r && dist > 0.001) {
+              const f = ((mouse.r - dist) / mouse.r) * L.depth;
+              d.x -= (dx / dist) * f * 0.5;
+              d.y -= (dy / dist) * f * 0.5;
+            }
+          }
+
+          const near = Math.hypot(mouse.x - d.x, mouse.y - d.y);
+          const lift = near < mouse.r ? 1 + (1 - near / mouse.r) * 0.7 : 1;
+          ctx.beginPath();
+          ctx.arc(d.x, d.y, d.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(176,204,240,${Math.min(0.5, d.a * lift * k)})`;
+          ctx.fill();
+        }
+
+        // hairline links — only within the two nearer layers, short range
+        ctx.lineWidth = 0.5;
+        for (let a = 0; a < dots.length; a++) {
+          const p = dots[a]!;
+          const link = LAYERS[p.layer]!.link;
+          if (!link) continue;
+          for (let b = a + 1; b < dots.length; b++) {
+            const q = dots[b]!;
+            if (q.layer !== p.layer) continue;
+            const dist = Math.hypot(p.x - q.x, p.y - q.y);
+            if (dist < link) {
+              const o = (1 - dist / link) * 0.075 * k;
+              ctx.strokeStyle = `rgba(120,160,215,${o})`;
+              ctx.beginPath();
+              ctx.moveTo(p.x, p.y);
+              ctx.lineTo(q.x, q.y);
+              ctx.stroke();
+            }
+          }
+        }
+      }
+
+      if (visible) raf = requestAnimationFrame(draw);
+    };
+    raf = requestAnimationFrame(draw);
+
+    const onMove = (e: PointerEvent) => {
+      const rect = canvas.getBoundingClientRect();
+      mouse.tx = e.clientX - rect.left;
+      mouse.ty = e.clientY - rect.top;
+    };
+    const onLeave = () => {
+      mouse.tx = -9999;
+      mouse.ty = -9999;
+      mouse.x = -9999;
+      mouse.y = -9999;
+    };
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        const next = !!entry?.isIntersecting;
+        if (next === visible) return;
+        visible = next;
+        cancelAnimationFrame(raf);
+        if (visible) raf = requestAnimationFrame(draw);
+      },
+      { threshold: 0 },
+    );
+    io.observe(canvas);
+    window.addEventListener("resize", resize);
+    window.addEventListener("pointermove", onMove, { passive: true });
+    window.addEventListener("pointerleave", onLeave);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      io.disconnect();
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerleave", onLeave);
+    };
+  }, [intensityRef, strength]);
+
+  return <canvas ref={ref} aria-hidden className={className} />;
+}
