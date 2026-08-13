@@ -43,8 +43,8 @@ export function LaptopExperience() {
   const hintOpacity = useTransform(p, [0, 0.08, 0.55, 0.68], [0, 0, 0, 1]);
 
   // takeover
-  const takeoverOpacity = useTransform(p, [0.82, 0.9], [0, 1]);
-  const takeoverScale = useTransform(p, [0.82, 0.92], [1.06, 1]);
+  const takeoverOpacity = useTransform(p, [0.8, 0.88], [0, 1]);
+  const takeoverScale = useTransform(p, [0.8, 0.9], [1.04, 1]);
 
   // auto-cycle disciplines while inside the product view
   useEffect(() => {
