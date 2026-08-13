@@ -294,7 +294,8 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
             }
           }
         }
-      }
+
+
 
         // depth fog — the edges of the world fall away into darkness so the
         // centre (and the device) always stays the brightest thing on screen
