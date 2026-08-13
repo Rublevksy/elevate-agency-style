@@ -1,6 +1,6 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
-import { CHASSIS_GONE, CLOSED_END, FULLSCREEN_END, clamp01, smoothstep } from "./constants";
+import { CLOSED_END, HANDOFF_START, smoothstep } from "./constants";
 import { useScrollTimeline } from "./useScrollTimeline";
 import { ScreenInterface } from "./ScreenInterface";
 import { setCinematicActive } from "@/lib/cinematic-state";
@@ -31,14 +31,15 @@ export function CinematicIntro() {
   const onTick = useCallback((p: number) => {
     if (hintRef.current) hintRef.current.style.opacity = String(1 - smoothstep(0.01, CLOSED_END * 0.4, p));
     if (takeoverRef.current) {
-      const inn = smoothstep(0.84, CHASSIS_GONE, p);
-      const out = smoothstep(0.985, FULLSCREEN_END, p);
-      takeoverRef.current.style.opacity = String(clamp01(inn - out));
+      // the 3D display and the fullscreen layer never overlap: at HANDOFF_START
+      // the display already covers the frame, so one replaces the other
+      takeoverRef.current.style.opacity = p >= HANDOFF_START ? "1" : "0";
     }
-    setCinematicActive(p < 0.97);
+    setCinematicActive(p < 0.995);
   }, []);
 
   const progress = useScrollTimeline(wrap, onTick);
+
 
   useEffect(() => {
     setCinematicActive(true);
@@ -46,7 +47,7 @@ export function CinematicIntro() {
   }, []);
 
   return (
-    <div ref={wrap} className="relative h-[620vh] md:h-[760vh]">
+    <div ref={wrap} className="relative h-[760vh] md:h-[980vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden bg-[#04060a]">
         <ClientOnly fallback={<div className="absolute inset-0 bg-[#04060a]" />}>
           <Suspense fallback={<div className="absolute inset-0 bg-[#04060a]" />}>
@@ -56,8 +57,9 @@ export function CinematicIntro() {
 
         {/* fullscreen ELEVATE interface — the screen has become the viewport */}
         <div ref={takeoverRef} className="pointer-events-none absolute inset-0" style={{ opacity: 0 }}>
-          <ScreenInterface />
+          <ScreenInterface progress={progress} />
         </div>
+
 
         {/* one extremely subtle hint */}
         <div ref={hintRef} className="pointer-events-none absolute inset-x-0 bottom-8 text-center">

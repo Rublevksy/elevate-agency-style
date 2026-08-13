@@ -8,10 +8,15 @@
 export const CLOSED_END = 0.15;
 export const ROTATION_END = 0.3;
 export const OPEN_END = 0.55;
-export const HOLD_END = 0.65;
-export const SCREEN_APPROACH_END = 0.8;
-export const CHASSIS_GONE = 0.88;
+export const HOLD_END = 0.62;
+/** the camera reaches the display plane only at the very end of the timeline */
+export const SCREEN_APPROACH_END = 0.99;
+/** the 3D display hands over to the fullscreen layer here (same content, same scale) */
+export const HANDOFF_START = 0.915;
+export const HANDOFF_END = 0.935;
+export const CHASSIS_GONE = 0.94;
 export const FULLSCREEN_END = 1;
+
 
 /** Device geometry, in centimetres (1 world unit = 1 cm). */
 export const DEVICE = {
@@ -44,15 +49,13 @@ export type CamKey = {
 };
 
 export const CAM_TRACK: CamKey[] = [
-  { p: 0.0, k: 1.14, yaw: -13, elev: 25 },
-  { p: 0.15, k: 1.1, yaw: -6, elev: 21 },
-  { p: 0.3, k: 1.08, yaw: 42, elev: 8 },
-  { p: 0.45, k: 1.12, yaw: 22, elev: 11 },
-  { p: 0.55, k: 1.2, yaw: 8, elev: 11 },
-  { p: 0.65, k: 1.16, yaw: 0, elev: 7 },
-  { p: 0.8, k: 0.72, yaw: 0, elev: 2 },
-  { p: 0.9, k: 0.34, yaw: 0, elev: 0 },
-  { p: 1.0, k: 0.26, yaw: 0, elev: 0 },
+  { p: 0.0, k: 1.62, yaw: -14, elev: 24 },
+  { p: 0.15, k: 1.56, yaw: -6, elev: 20 },
+  { p: 0.3, k: 1.52, yaw: 34, elev: 9 },
+  { p: 0.45, k: 2.15, yaw: 18, elev: 14 },
+  { p: 0.55, k: 2.2, yaw: 7, elev: 13 },
+  { p: 0.62, k: 1.95, yaw: 0, elev: 9 },
+  { p: 1.0, k: 1.95, yaw: 0, elev: 0 },
 ];
 
 /** Mobile: same story, calmer camera. */
@@ -60,8 +63,9 @@ export const CAM_TRACK_MOBILE: CamKey[] = CAM_TRACK.map((k) => ({
   ...k,
   yaw: k.yaw * 0.35,
   elev: k.elev * 0.8,
-  k: k.k * 1.02,
+  k: k.k * 1.06,
 }));
+
 
 /** Optional drop-in location for a real GLB product model. */
 export const MACBOOK_MODEL_URL = "/models/macbook.glb";
@@ -71,6 +75,20 @@ export const MACBOOK_MODEL_URL = "/models/macbook.glb";
 export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
 export const clamp01 = (v: number) => (v < 0 ? 0 : v > 1 ? 1 : v);
+
+/**
+ * Cinematic dolly curve: very slow start, smooth acceleration, gentle
+ * deceleration. Symmetric, so scrubbing backwards feels identical.
+ */
+export function easeCinematic(t: number) {
+  const v = clamp01(t);
+  return v < 0.5 ? 8 * v * v * v * v : 1 - Math.pow(-2 * v + 2, 4) / 2;
+}
+
+/** Normalised, clamped position of `v` inside [a, b]. */
+export const range = (a: number, b: number, v: number) => clamp01((v - a) / (b - a));
+
+
 
 export function smoothstep(edge0: number, edge1: number, v: number) {
   const t = clamp01((v - edge0) / (edge1 - edge0));
