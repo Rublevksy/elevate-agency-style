@@ -12,16 +12,13 @@ export function LidLogo() {
   return (
     <mesh position={[0, DEVICE.LID_T / 2 + 0.02, DEVICE.H * 0.5]} rotation={[-Math.PI / 2, 0, 0]}>
       <planeGeometry args={[w, w * 0.2174]} />
-      <meshPhysicalMaterial
+      <meshBasicMaterial
         map={tex}
         transparent
+        opacity={0.82}
         depthWrite={false}
-        color="#9fb0c6"
-        metalness={1}
-        roughness={0.16}
-        envMapIntensity={2.4}
-        clearcoat={0.6}
-        clearcoatRoughness={0.2}
+        color="#c8d6ea"
+        toneMapped={false}
       />
     </mesh>
 

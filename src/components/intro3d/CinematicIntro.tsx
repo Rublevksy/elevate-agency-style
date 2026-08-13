@@ -43,9 +43,10 @@ export function CinematicIntro() {
       // and the same rule plays in reverse on the way out
       takeoverRef.current.style.opacity = s >= HANDOFF_START ? "1" : "0";
     }
-    // site chrome stays hidden while the device owns the frame; it emerges only
-    // once the interface itself is the viewport
-    setCinematicActive(s < HANDOFF_START);
+    // site chrome stays hidden for the whole cinematic — inside the display the
+    // interface carries its own header, so the real one would read as a double.
+    // It emerges only once the sequence has fully played back out.
+    setCinematicActive(p < 0.985);
   }, []);
 
   const progress = useScrollTimeline(wrap, onTick);

@@ -10,6 +10,7 @@ import {
   HANDOFF_START,
   HOLD_END,
   OPEN_END,
+  ROTATION_END,
   SCREEN_APPROACH_END,
   easeCinematic,
   lerp,
@@ -61,13 +62,16 @@ export function ProductCamera({
     // distance at which the WHOLE product comfortably fits the frame — the
     // orbit is expressed as a multiple of this, so framing holds on any aspect
     const fitDist = Math.max(
-      (DEVICE.W * 1.2) / (2 * halfTan * aspect),
-      (DEVICE.H * 1.5) / (2 * halfTan),
+      (DEVICE.W * 1.45) / (2 * halfTan * aspect),
+      (DEVICE.H * 2.2) / (2 * halfTan),
     );
     const orbitDist = key.k * fitDist;
 
     // where the camera looks: the closed device, then the display itself
-    s.deckTarget.set(0, DEVICE.T * 0.7, -DEVICE.D * 0.02);
+    // as the lid rises the whole silhouette grows upward, so the aim point
+    // climbs with it — the product stays centred instead of drifting off frame
+    const lidOpen = smoothstep(ROTATION_END, OPEN_END, p);
+    s.deckTarget.set(0, DEVICE.T * 0.7 + DEVICE.H * 0.34 * lidOpen, -DEVICE.D * 0.02);
     if (screenRef.current) {
       screenRef.current.getWorldPosition(s.screenPos);
       screenRef.current.getWorldQuaternion(s.q);

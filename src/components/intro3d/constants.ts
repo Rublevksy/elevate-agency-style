@@ -12,8 +12,8 @@
  * fullscreen interface plays the discipline sequence. The exit is the exact
  * mirror of the entrance, so the device re-forms and the lid closes.
  */
-export const ENTER_END = 0.6;
-export const EXIT_START = 0.84;
+export const ENTER_END = 0.72;
+export const EXIT_START = 0.88;
 
 /** Phase boundaries expressed on the STAGE timeline (0 → 1, mirrored on exit). */
 export const CLOSED_END = 0.16;
@@ -29,8 +29,8 @@ export const CHASSIS_GONE = 0.97;
 export const FULLSCREEN_END = 1;
 
 /** where the discipline sequence lives on the MASTER timeline */
-export const SERVICES_START = 0.62;
-export const SERVICES_END = 0.83;
+export const SERVICES_START = 0.73;
+export const SERVICES_END = 0.87;
 
 /** Device geometry, in centimetres (1 world unit = 1 cm). */
 export const DEVICE = {
@@ -63,13 +63,13 @@ export type CamKey = {
 };
 
 export const CAM_TRACK: CamKey[] = [
-  { p: 0.0, k: 1.12, yaw: -16, elev: 20 },
-  { p: 0.16, k: 1.0, yaw: -7, elev: 16 },
-  { p: 0.32, k: 0.96, yaw: 26, elev: 11 },
-  { p: 0.48, k: 1.18, yaw: 14, elev: 13 },
-  { p: 0.6, k: 1.16, yaw: 5, elev: 12 },
-  { p: 0.68, k: 1.06, yaw: 0, elev: 9 },
-  { p: 1.0, k: 1.06, yaw: 0, elev: 0 },
+  { p: 0.0, k: 1.2, yaw: -10, elev: 16 },
+  { p: 0.16, k: 1.14, yaw: -4, elev: 13 },
+  { p: 0.32, k: 1.1, yaw: 20, elev: 11 },
+  { p: 0.48, k: 1.26, yaw: 11, elev: 12 },
+  { p: 0.6, k: 1.22, yaw: 4, elev: 10 },
+  { p: 0.68, k: 1.12, yaw: 0, elev: 8 },
+  { p: 1.0, k: 1.0, yaw: 0, elev: 0 },
 ];
 
 /** Mobile: same story, calmer camera. */

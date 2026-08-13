@@ -35,7 +35,7 @@ export default function Stage({
       style={{ position: "absolute", inset: 0 }}
     >
       <color attach="background" args={["#020407"]} />
-      <fog attach="fog" args={["#04070b", 70, 190]} />
+      <fog attach="fog" args={["#020407", 55, 165]} />
 
       <Environment3D stage={stage} />
       <Lighting stage={stage} />
