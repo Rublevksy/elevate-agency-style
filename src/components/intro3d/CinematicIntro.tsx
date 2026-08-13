@@ -85,7 +85,7 @@ export function CinematicIntro() {
             frame, where the MacBook stands, is masked out entirely */}
         <div
           ref={aetherWrap}
-          className="pointer-events-none absolute inset-0 will-change-transform"
+          className="pointer-events-none absolute inset-0 z-10 will-change-transform"
           style={{
             maskImage:
               "radial-gradient(58% 52% at 50% 54%, transparent 0%, transparent 34%, rgba(0,0,0,0.55) 62%, #000 100%)",
