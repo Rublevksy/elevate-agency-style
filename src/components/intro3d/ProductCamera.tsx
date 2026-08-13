@@ -43,7 +43,6 @@ export function ProductCamera({
   });
 
   useFrame(() => {
-    (window as any).__frames = ((window as any).__frames ?? 0) + 1;
     const cam = camera as PerspectiveCamera;
     const p = progress.current ?? 0;
     const key = sampleTrack(mobile ? CAM_TRACK_MOBILE : CAM_TRACK, p);
@@ -89,7 +88,6 @@ export function ProductCamera({
     cam.near = 0.5;
     cam.far = 400;
     cam.updateProjectionMatrix();
-    (window as unknown as Record<string, unknown>).__dbg = { p, k: key.k, pos: cam.position.toArray(), fill: fillDist };
   });
 
   return null;
