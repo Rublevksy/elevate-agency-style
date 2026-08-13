@@ -86,8 +86,11 @@ export function FloatingWindows({
         const ry = s.rotY - m.x * s.k * 3 + Math.sin(travel * 0.5 + i) * 2.2;
         const rx = s.rotX + m.y * s.k * 1.4 + Math.cos(travel * 0.42 + i) * 1.4;
 
-        el.style.opacity = String(presence * (0.26 + dom * 0.46));
-        el.style.filter = `blur(${(1 - dom) * 2.4 + (1 - presence) * 3}px) saturate(${0.7 + dom * 0.3})`;
+        // the windows are the space, never the subject: they stay well below the
+        // device in contrast and defocus with distance
+        el.style.opacity = String(presence * (0.14 + dom * 0.3));
+        el.style.filter = `blur(${(1 - dom) * 4.5 + (1 - presence) * 4}px) saturate(${0.55 + dom * 0.35})`;
+
         el.style.transform =
           `translate3d(${drift + px}px, ${driftY + py - exit * 40}px, ${z}px) ` +
           `rotateX(${rx}deg) rotateY(${ry}deg) rotateZ(${s.rotZ}deg) ` +
