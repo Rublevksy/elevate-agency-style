@@ -65,6 +65,7 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
     const mouse = { x: -9999, y: -9999, tx: -9999, ty: -9999, r: mobile ? 110 : 190 };
 
     let dots: Dot[] = [];
+    let streams: Stream[] = [];
 
     const seed = () => {
       dots = [];
@@ -81,7 +82,29 @@ export function AetherField({ className = "", intensityRef, strength = 1 }: Prop
           });
         }
       });
+
+      // long, thin light paths — a handful only; they are architecture, not FX
+      const count = mobile ? 3 : 6;
+      streams = [];
+      for (let i = 0; i < count; i++) {
+        const depth = 0.25 + (i / count) * 0.75;
+        const y0 = 0.12 + Math.random() * 0.76;
+        streams.push({
+          p: [
+            { x: -0.18, y: y0 },
+            { x: 0.2 + Math.random() * 0.2, y: y0 + (Math.random() - 0.5) * 0.4 },
+            { x: 0.55 + Math.random() * 0.15, y: y0 + (Math.random() - 0.5) * 0.5 },
+            { x: 1.18, y: 0.12 + Math.random() * 0.76 },
+          ],
+          depth,
+          speed: 0.06 + depth * 0.16,
+          phase: Math.random(),
+          alpha: (0.05 + depth * 0.11) * (0.7 + Math.random() * 0.5),
+          width: 0.4 + depth * 0.7,
+        });
+      }
     };
+
 
     const resize = () => {
       const rect = canvas.getBoundingClientRect();
