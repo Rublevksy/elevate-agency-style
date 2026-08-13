@@ -1,9 +1,6 @@
 import { useEffect, useRef } from "react";
 import logo from "@/assets/elevate-logo.png";
-import shot1 from "@/assets/portfolio-1.jpg";
-import shot2 from "@/assets/portfolio-2.jpg";
-import shot3 from "@/assets/portfolio-3.jpg";
-import shot4 from "@/assets/portfolio-4.jpg";
+import { COMPOSITIONS } from "@/components/cinematic/ServicePreviews";
 import { CINEMATIC } from "@/lib/cinematic-copy";
 import { useT } from "@/lib/i18n";
 import { SERVICES_END, SERVICES_START, clamp01, range } from "./constants";
@@ -17,8 +14,6 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
   const { lang } = useT();
   const c = CINEMATIC[lang];
   const items = c.disciplines;
-  /** one editorial still per discipline — the panel reads as a spread, not a list */
-  const stills = [shot1, shot2, shot3, shot4];
 
   const headRef = useRef<HTMLDivElement>(null);
   const slides = useRef<(HTMLDivElement | null)[]>([]);
@@ -36,9 +31,14 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
       slides.current.forEach((el, i) => {
         if (!el) return;
         const d = seq - i; // <0 upcoming, ~0.5 dominant, >1 gone
-        // one discipline is dominant at a time: it resolves, holds, then clears
-        const o = d < 0 || d > 1 ? 0 : Math.min(clamp01(d / 0.22), clamp01((1 - d) / 0.22));
+        const last = i === items.length - 1;
+        // one discipline is dominant at a time: it resolves, holds, then clears.
+        // the final one holds on screen all the way into the fullscreen handoff.
+        const fadeIn = clamp01((d + 0.2) / 0.4);
+        const fadeOut = last ? 1 : clamp01((1.2 - d) / 0.4);
+        const o = d < -0.2 || (!last && d > 1.2) ? 0 : Math.min(fadeIn, fadeOut);
         el.style.opacity = String(o);
+
         const dc = clamp01(d);
         // subtle depth: upcoming slides sit slightly back and softly defocused
         el.style.filter = `blur(${(1 - o) * 3.4}px)`;
@@ -109,8 +109,8 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
               {it.index}
             </span>
             <h3
-              className="mt-[2cqh] font-light uppercase leading-[0.95] tracking-[-0.02em] text-white"
-              style={{ fontSize: "5.4cqw" }}
+              className="mt-[2cqh] max-w-[52%] font-light uppercase leading-[0.98] tracking-[-0.02em] text-white"
+              style={{ fontSize: "4.1cqw" }}
             >
               {it.label}
             </h3>
@@ -122,23 +122,21 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
             </p>
             <div aria-hidden className="mt-[4cqh] h-px w-[22%] bg-gradient-to-r from-primary/50 to-transparent" />
 
-            {/* editorial still, cropped like a printed spread */}
+            {/* the same interface composition the floating windows use — one system */}
             <div
               aria-hidden
-              className="absolute right-[7%] top-1/2 -translate-y-1/2 overflow-hidden border border-white/[0.06]"
+              className="absolute right-[7%] top-1/2 -translate-y-1/2 overflow-hidden rounded-[0.6cqw] border border-white/[0.07] bg-[#070b12]"
               style={{ width: "38cqw", height: "52cqh" }}
             >
-              <img
-                src={stills[i % stills.length]}
-                alt=""
-                className="h-full w-full object-cover"
-                style={{ opacity: 0.26, filter: "grayscale(1) contrast(1.15) blur(2px)" }}
-              />
+              {(() => {
+                const Composition = COMPOSITIONS[it.id];
+                return Composition ? <Composition /> : null;
+              })()}
               <div
-                className="absolute inset-0"
+                className="pointer-events-none absolute inset-0"
                 style={{
                   background:
-                    "linear-gradient(115deg, #05070a 8%, oklch(0.2 0.03 250 / 0.55) 55%, oklch(0.34 0.06 250 / 0.3) 100%)",
+                    "linear-gradient(118deg, rgba(160,195,240,0.10) 0%, rgba(160,195,240,0) 45%), radial-gradient(120% 90% at 50% 115%, rgba(5,7,10,0.8), transparent 62%)",
                 }}
               />
             </div>

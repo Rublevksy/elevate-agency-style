@@ -5,6 +5,7 @@ import { useScrollTimeline } from "./useScrollTimeline";
 import { ScreenInterface } from "./ScreenInterface";
 import { setCinematicActive } from "@/lib/cinematic-state";
 import { AetherField } from "@/components/atmosphere/AetherField";
+import { FloatingWindows } from "./FloatingWindows";
 
 const Stage = lazy(() => import("./Stage"));
 
@@ -81,24 +82,27 @@ export function CinematicIntro() {
   return (
     <div ref={wrap} className="relative h-[1180vh] md:h-[1420vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden bg-[#05070b]">
-        {/* atmosphere — lives in the space behind the device: the centre of the
-            frame, where the MacBook stands, is masked out entirely */}
+        {/* 01 — deep cinematic space: a graphite gradient, no floor, no horizon */}
         <div
-          ref={aetherWrap}
-          className="pointer-events-none absolute inset-0 z-10 will-change-transform"
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
           style={{
-            maskImage:
-              "radial-gradient(58% 52% at 50% 54%, transparent 0%, transparent 34%, rgba(0,0,0,0.55) 62%, #000 100%)",
-            WebkitMaskImage:
-              "radial-gradient(58% 52% at 50% 54%, transparent 0%, transparent 34%, rgba(0,0,0,0.55) 62%, #000 100%)",
-            mixBlendMode: "screen",
+            background:
+              "radial-gradient(120% 85% at 50% 34%, #0b1220 0%, #070b12 42%, #05070b 78%), radial-gradient(60% 45% at 22% 78%, rgba(28,52,88,0.35), transparent 70%)",
           }}
-        >
+        />
+
+        {/* 02 — atmospheric light field, truly behind the device (the canvas above is transparent) */}
+        <div ref={aetherWrap} className="pointer-events-none absolute inset-0 will-change-transform">
           <AetherField className="h-full w-full" intensityRef={aether} />
         </div>
 
-        <ClientOnly fallback={<div className="absolute inset-0 bg-[#05070b]" />}>
-          <Suspense fallback={<div className="absolute inset-0 bg-[#05070b]" />}>
+        {/* 03 — digital product windows suspended in the space behind the MacBook */}
+        <FloatingWindows stage={stage} mobile={mobile} />
+
+        {/* 04 — the MacBook itself; the canvas is alpha, so it composites over the space */}
+        <ClientOnly fallback={null}>
+          <Suspense fallback={null}>
             <Stage progress={progress} stage={stage} mobile={mobile} />
           </Suspense>
         </ClientOnly>
@@ -108,25 +112,33 @@ export function CinematicIntro() {
           <ScreenInterface progress={progress} />
         </div>
 
-        {/* restrained introduction — reads before the first scroll, then leaves */}
+        {/* 05 — editorial introduction, offset from centre so the device stays dominant */}
         <div
           ref={introRef}
-          className="pointer-events-none absolute z-20 inset-x-0 top-[13svh] px-6 text-center will-change-transform md:top-[11svh]"
+          className="pointer-events-none absolute inset-x-0 top-[9svh] z-20 px-7 will-change-transform md:top-[10svh] md:px-[7vw]"
         >
-          <h1 className="text-[clamp(2.4rem,7vw,5.25rem)] font-light leading-[0.95] tracking-[0.24em] text-white/90">
-            ELEVATE
+          <p className="mb-5 font-mono text-[9px] uppercase tracking-[0.5em] text-primary/70 md:mb-7">Elevate</p>
+          <h1 className="max-w-[16ch] text-[clamp(1.9rem,4.6vw,3.6rem)] font-light leading-[1.04] tracking-[-0.03em] text-foreground/90">
+            Digitální prostor,
+            <br />
+            který pracuje
+            <br />
+            <span className="text-foreground/40">pro váš byznys.</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-md text-[11px] uppercase leading-relaxed tracking-[0.22em] text-white/45 md:text-xs">
-            Digitální studio pro weby, e-shopy a digitální produkty.
+          <p className="mt-6 max-w-sm text-xs leading-relaxed text-muted-foreground md:text-sm">
+            Weby, e-shopy a digitální produkty navržené tak, aby měly smysl.
           </p>
         </div>
 
         {/* one extremely subtle hint */}
-        <div ref={hintRef} className="pointer-events-none absolute inset-x-0 bottom-8 text-center">
-          <span className="text-[9px] uppercase tracking-[0.55em] text-white/30">Scroll to enter</span>
+        <div ref={hintRef} className="pointer-events-none absolute inset-x-0 bottom-8 z-20 text-center">
+          <span className="font-mono text-[9px] uppercase tracking-[0.55em] text-muted-foreground">
+            Scroll to enter
+          </span>
         </div>
       </div>
     </div>
   );
+
 
 }

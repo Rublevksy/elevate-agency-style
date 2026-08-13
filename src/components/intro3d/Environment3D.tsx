@@ -1,145 +1,19 @@
 import { useMemo, useRef } from "react";
 import { useFrame } from "@react-three/fiber";
-import { AdditiveBlending, BackSide, CanvasTexture, Color, type Group, type PointLight, type Points } from "three";
+import { AdditiveBlending, CanvasTexture, type Group, type PointLight, type Points } from "three";
 import { CLOSED_END, DEVICE, OPEN_END, ROTATION_END, clamp01, range, smoothstep } from "./constants";
 
 /**
- * The environment the product lives in: a graphite studio void with a soft
- * reflective deck, faint technical lines, atmospheric haze and a whisper of
- * dust. Everything is deliberately near-black — it must read as atmosphere,
- * never as decoration.
+ * The environment the product lives in: pure suspended space. No floor, no
+ * platform, no horizon — only atmospheric haze and a whisper of dust, so the
+ * device reads as floating. The deep gradient and light field behind it are
+ * composited in the DOM layers underneath the transparent canvas.
  */
 export function Environment3D({ stage }: { stage: React.RefObject<number> }) {
   return (
     <group>
-      <Backdrop />
-      <Floor />
-      <GridLines />
       <Haze stage={stage} />
       <Dust />
-    </group>
-  );
-}
-
-/* ---------------- graphite void ---------------- */
-
-const BACKDROP_VERT = /* glsl */ `
-  varying vec3 vPos;
-  void main() {
-    vPos = position;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-
-const BACKDROP_FRAG = /* glsl */ `
-  varying vec3 vPos;
-  uniform vec3 uLow;
-  uniform vec3 uHigh;
-  uniform vec3 uCool;
-  void main() {
-    vec3 n = normalize(vPos);
-    float h = clamp(n.y * 0.5 + 0.5, 0.0, 1.0);
-    // vertical graphite gradient
-    vec3 c = mix(uLow, uHigh, pow(h, 1.6));
-    // one restrained cool pool of light behind the product
-    float pool = smoothstep(0.55, 0.0, length(vec2(n.x * 1.15, (n.y - 0.12) * 1.6)));
-    c += uCool * pool * 0.55;
-    // uniforms are authored in sRGB; convert to the renderer's linear space so
-    // the void stays genuinely near-black after the output transform
-    c = pow(c, vec3(2.2));
-    gl_FragColor = vec4(c, 1.0);
-  }
-`;
-
-function Backdrop() {
-  const uniforms = useMemo(
-    () => ({
-      uLow: { value: new Color("#020407") },
-      uHigh: { value: new Color("#05080c") },
-      uCool: { value: new Color("#122036") },
-    }),
-    [],
-  );
-
-  return (
-    <mesh scale={200}>
-      <sphereGeometry args={[1, 32, 24]} />
-      <shaderMaterial
-        side={BackSide}
-        depthWrite={false}
-        uniforms={uniforms}
-        vertexShader={BACKDROP_VERT}
-        fragmentShader={BACKDROP_FRAG}
-      />
-    </mesh>
-  );
-}
-
-/* ---------------- soft reflective deck ---------------- */
-
-/**
- * The deck the product stands on. Deliberately unlit (basic material) so the
- * key lights cannot lift it off black — the only thing visible is one very soft
- * pool of cool light directly beneath the device.
- */
-function Floor() {
-  const tex = useMemo(() => {
-    if (typeof document === "undefined") return null;
-    const c = document.createElement("canvas");
-    c.width = c.height = 256;
-    const ctx = c.getContext("2d")!;
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0, 0, 256, 256);
-    const g = ctx.createRadialGradient(128, 128, 0, 128, 128, 128);
-    g.addColorStop(0, "rgba(26,38,56,1)");
-    g.addColorStop(0.35, "rgba(12,18,28,1)");
-    g.addColorStop(1, "rgba(0,0,0,1)");
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, 256, 256);
-    return new CanvasTexture(c);
-  }, []);
-
-  if (!tex) return null;
-
-  return (
-    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]}>
-      <planeGeometry args={[900, 900]} />
-      <meshBasicMaterial map={tex} toneMapped={false} />
-    </mesh>
-  );
-}
-
-/* ---------------- fine technical lines ---------------- */
-
-function GridLines() {
-  const lines = useMemo(() => {
-    const out: { pos: [number, number, number]; len: number; axis: "x" | "z" }[] = [];
-    const step = 26;
-    for (let i = -5; i <= 5; i++) {
-      out.push({ pos: [i * step, 0.005, -40], len: 300, axis: "z" });
-      out.push({ pos: [0, 0.005, -40 + i * step], len: 300, axis: "x" });
-    }
-    return out;
-  }, []);
-
-  return (
-    <group>
-      {lines.map((l, i) => (
-        <mesh
-          key={i}
-          position={l.pos}
-          rotation={[-Math.PI / 2, 0, l.axis === "x" ? 0 : Math.PI / 2]}
-        >
-          <planeGeometry args={[l.len, 0.055]} />
-          <meshBasicMaterial
-            color="#26364a"
-            transparent
-            opacity={0.16}
-            blending={AdditiveBlending}
-            depthWrite={false}
-          />
-        </mesh>
-      ))}
     </group>
   );
 }
