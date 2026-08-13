@@ -75,7 +75,7 @@ export function LaptopExperience() {
 
   return (
     <div ref={wrap} className="relative h-[560vh] md:h-[700vh]">
-      <div className="sticky top-0 h-[100svh] overflow-hidden bg-[oklch(0.08_0.006_255)]">
+      <div className="sticky top-0 h-[100svh] overflow-hidden bg-[oklch(0.08 0.006 255)]">
         {/* environment — one soft key light, nothing else */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_26%,oklch(0.19_0.035_255/0.55),transparent_68%)]" />
         <motion.div
@@ -125,7 +125,7 @@ export function LaptopExperience() {
                     transform: `rotateX(${DECK}deg)`,
                     transformOrigin: "top center",
                     background:
-                      "linear-gradient(178deg,oklch(0.42_0.005_255) 0%,oklch(0.3_0.004_255) 12%,oklch(0.24_0.004_255) 55%,oklch(0.33_0.005_255) 100%)",
+                      "linear-gradient(178deg,oklch(0.42 0.005 255) 0%,oklch(0.3 0.004 255) 12%,oklch(0.24 0.004 255) 55%,oklch(0.33 0.005 255) 100%)",
                     boxShadow:
                       "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -1px 0 rgba(0,0,0,0.5), 0 30px 60px -30px rgba(0,0,0,0.9)",
                   }}
@@ -134,7 +134,7 @@ export function LaptopExperience() {
                   <div className="absolute inset-0 bg-[linear-gradient(100deg,transparent_20%,rgba(255,255,255,0.05)_46%,transparent_66%)]" />
 
                   {/* keyboard well */}
-                  <div className="mx-auto mt-[4.5%] h-[42%] w-[86%] rounded-[5px] bg-[oklch(0.1_0.003_255)] p-[0.9%] shadow-[inset_0_2px_9px_rgba(0,0,0,0.8)]">
+                  <div className="mx-auto mt-[4.5%] h-[42%] w-[86%] rounded-[5px] bg-[oklch(0.1 0.003 255)] p-[0.9%] shadow-[inset_0_2px_9px_rgba(0,0,0,0.8)]">
                     <div className="grid h-full grid-rows-6 gap-[2.4%]">
                       {[13, 14, 14, 13, 12, 8].map((n, r) => (
                         <div key={r} className="flex gap-[0.9%]">
@@ -155,7 +155,7 @@ export function LaptopExperience() {
                   </div>
 
                   {/* trackpad */}
-                  <div className="mx-auto mt-[4%] h-[30%] w-[32%] rounded-[6px] bg-[linear-gradient(180deg,oklch(0.28_0.004_255),oklch(0.235_0.004_255))] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07),inset_0_2px_6px_rgba(0,0,0,0.35)]" />
+                  <div className="mx-auto mt-[4%] h-[30%] w-[32%] rounded-[6px] bg-[linear-gradient(180deg,oklch(0.28 0.004 255),oklch(0.235 0.004 255))] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07),inset_0_2px_6px_rgba(0,0,0,0.35)]" />
 
                   {/* front lip notch */}
                   <div className="absolute inset-x-[43%] bottom-0 h-[2.5%] rounded-t-[4px] bg-black/45" />
@@ -188,7 +188,7 @@ export function LaptopExperience() {
                     style={{
                       opacity: shellOpacity,
                       background:
-                        "linear-gradient(163deg,oklch(0.44_0.005_255) 0%,oklch(0.3_0.004_255) 34%,oklch(0.21_0.004_255) 62%,oklch(0.36_0.005_255) 100%)",
+                        "linear-gradient(163deg,oklch(0.44 0.005 255) 0%,oklch(0.3 0.004 255) 34%,oklch(0.21 0.004 255) 62%,oklch(0.36 0.005 255) 100%)",
                       boxShadow:
                         "inset 0 0 0 1px rgba(255,255,255,0.12), 0 40px 80px -40px rgba(0,0,0,0.9)",
                     }}
@@ -212,7 +212,7 @@ export function LaptopExperience() {
                   >
                     <div className="absolute left-1/2 top-[3px] h-[3px] w-[3px] -translate-x-1/2 rounded-full bg-white/25" />
                     <motion.div
-                      className="h-full w-full overflow-hidden rounded-[7px] bg-[oklch(0.1_0.008_255)] md:rounded-[10px]"
+                      className="h-full w-full overflow-hidden rounded-[7px] bg-[oklch(0.1 0.008 255)] md:rounded-[10px]"
                       style={{ opacity: screenOn }}
                     >
                       <ScreenShowcase disciplines={disciplines} index={idx} compact />
