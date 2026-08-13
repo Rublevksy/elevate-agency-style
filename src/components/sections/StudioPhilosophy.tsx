@@ -99,9 +99,9 @@ export function StudioPhilosophy() {
         const v = reduce ? 1 : smooth(a, a + 0.15, p);
         // once the next principle arrives, this one settles gently backwards
         const recede = reduce ? 0 : smooth(a + 0.16, a + 0.34, p);
-        panel.style.opacity = String(0.15 + v * 0.85 - recede * 0.32);
+        panel.style.opacity = String(0.15 + v * 0.85 - recede * 0.14);
         panel.style.transform =
-          `translate3d(0, ${(1 - v) * 40 - recede * 6}px, 0) scale(${0.965 + v * 0.035 - recede * 0.016})`;
+          `translate3d(0, ${(1 - v) * 40 - recede * 4}px, 0) scale(${0.965 + v * 0.035 - recede * 0.008})`;
         panel.style.setProperty("--accent", String(v * (1 - recede * 0.6)));
       });
     };
