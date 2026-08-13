@@ -135,7 +135,7 @@ export function LaptopExperience() {
             {/* deck */}
             <motion.div
               className="absolute inset-x-0 top-full aspect-[16/10.6] overflow-hidden rounded-b-[12px] bg-[linear-gradient(180deg,oklch(0.33_0.006_255),oklch(0.2_0.004_255)_45%,oklch(0.27_0.005_255))] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07)] md:rounded-b-[16px]"
-              style={{ transform: "rotateX(74deg)", transformOrigin: "top center" }}
+              style={{ transform: "rotateX(74deg)", transformOrigin: "top center", opacity: deckOpacity }}
             >
               {/* keyboard well */}
               <div className="mx-auto mt-[5%] h-[44%] w-[88%] rounded-[6px] bg-[oklch(0.11_0.004_255)] p-[1.2%] shadow-[inset_0_2px_10px_rgba(0,0,0,0.7)]">
