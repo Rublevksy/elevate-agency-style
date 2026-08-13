@@ -47,6 +47,7 @@ export function Lid({
           display: "grid",
           placeItems: "center",
           opacity: bezel,
+          backfaceVisibility: "hidden",
           boxShadow: `inset 0 1px 0 rgba(255,255,255,.24), inset 0 0 0 1px rgba(255,255,255,.06), 0 ${T}px ${T * 5}px rgba(0,0,0,.7)`,
         }}
       >
