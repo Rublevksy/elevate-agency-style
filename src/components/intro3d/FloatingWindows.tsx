@@ -131,21 +131,43 @@ export function FloatingWindows({
               transformStyle: "preserve-3d",
             }}
           >
-            <div className="relative aspect-[16/10] overflow-hidden rounded-lg border border-white/[0.07] bg-[#070b12] shadow-[0_50px_120px_-50px_rgba(10,20,40,0.9)]">
-              <Composition />
-              {/* screen reflection + vignette so it reads as glass, not a card */}
+            {/* screen glow bleeding into the space behind the display */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -inset-[14%] rounded-[2rem]"
+              style={{
+                background:
+                  "radial-gradient(60% 55% at 50% 45%, rgba(70,120,190,0.16), transparent 72%)",
+                filter: "blur(22px)",
+              }}
+            />
+            <div className="relative aspect-[16/10] overflow-hidden rounded-[0.7rem] bg-[#070b12] p-[1.5px] shadow-[0_60px_150px_-60px_rgba(8,16,34,0.95)] ring-1 ring-inset ring-white/[0.06]">
+              {/* machined frame: one bright edge, one dark edge */}
               <div
-                className="pointer-events-none absolute inset-0"
+                aria-hidden
+                className="pointer-events-none absolute inset-0 rounded-[0.7rem]"
                 style={{
                   background:
-                    "linear-gradient(118deg, rgba(160,195,240,0.10) 0%, rgba(160,195,240,0) 42%), radial-gradient(120% 90% at 50% 110%, rgba(5,7,11,0.85), transparent 60%)",
+                    "linear-gradient(150deg, rgba(190,215,245,0.22), rgba(190,215,245,0.02) 38%, rgba(0,0,0,0.5))",
                 }}
               />
+              <div className="relative h-full w-full overflow-hidden rounded-[0.55rem] bg-[#05080e]">
+                <Composition />
+                {/* glass: one restrained specular sweep + bottom vignette */}
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(118deg, rgba(175,205,245,0.13) 0%, rgba(175,205,245,0) 40%), radial-gradient(120% 90% at 50% 112%, rgba(5,7,11,0.88), transparent 58%)",
+                  }}
+                />
+              </div>
             </div>
             <div className="mt-2 flex items-baseline gap-2 px-1">
               <span className="font-mono text-[9px] tracking-[0.3em] text-primary/70">{it.index}</span>
               <span className="text-[10px] uppercase tracking-[0.3em] text-foreground/35">{it.label}</span>
             </div>
+
           </div>
         );
       })}
