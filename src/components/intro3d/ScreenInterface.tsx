@@ -1,5 +1,9 @@
 import { useEffect, useRef } from "react";
 import logo from "@/assets/elevate-logo.png";
+import shot1 from "@/assets/portfolio-1.jpg";
+import shot2 from "@/assets/portfolio-2.jpg";
+import shot3 from "@/assets/portfolio-3.jpg";
+import shot4 from "@/assets/portfolio-4.jpg";
 import { CINEMATIC } from "@/lib/cinematic-copy";
 import { useT } from "@/lib/i18n";
 import { SERVICES_END, SERVICES_START, clamp01, range } from "./constants";
@@ -13,6 +17,8 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
   const { lang } = useT();
   const c = CINEMATIC[lang];
   const items = c.disciplines;
+  /** one editorial still per discipline — the panel reads as a spread, not a list */
+  const stills = [shot1, shot2, shot3, shot4];
 
   const headRef = useRef<HTMLDivElement>(null);
   const slides = useRef<(HTMLDivElement | null)[]>([]);
@@ -109,12 +115,32 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
               {it.label}
             </h3>
             <p
-              className="mt-[3cqh] max-w-[52%] font-light leading-[1.35] text-white/45"
+              className="mt-[3cqh] max-w-[38%] font-light leading-[1.35] text-white/45"
               style={{ fontSize: "1.5cqw" }}
             >
               {it.note}
             </p>
-            <div aria-hidden className="mt-[4cqh] h-px w-[28%] bg-gradient-to-r from-primary/50 to-transparent" />
+            <div aria-hidden className="mt-[4cqh] h-px w-[22%] bg-gradient-to-r from-primary/50 to-transparent" />
+
+            {/* editorial still, cropped like a printed spread */}
+            <div
+              aria-hidden
+              className="absolute right-[7%] top-1/2 -translate-y-1/2 overflow-hidden border border-white/[0.06]"
+              style={{ width: "38cqw", height: "52cqh" }}
+            >
+              <img
+                src={stills[i % stills.length]}
+                alt=""
+                className="h-full w-full object-cover opacity-[0.55]"
+              />
+              <div
+                className="absolute inset-0"
+                style={{
+                  background:
+                    "linear-gradient(120deg, #05070a 0%, transparent 45%, oklch(0.32 0.05 250 / 0.22) 100%)",
+                }}
+              />
+            </div>
           </div>
         ))}
       </div>
