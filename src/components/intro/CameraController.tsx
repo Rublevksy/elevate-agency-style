@@ -29,7 +29,7 @@ export function useCamera(p: MotionValue<number>, geo: IntroGeometry, reduced: b
   // tracked to the viewport centre so the zoom lands exactly inside the screen.
   const frameY = useTransform([p, zoom] as never, (v) => {
     const [pp, z] = v as unknown as number[];
-    const closed = -D * 0.5;
+    const closed = -D * 0.26;
     const tracked = H * 0.5 * z;
     const b = Math.min(1, Math.max(0, (pp - 0.3) / 0.28));
     const e = b * b * (3 - 2 * b);
@@ -45,12 +45,14 @@ export function useCamera(p: MotionValue<number>, geo: IntroGeometry, reduced: b
   // Chassis peels away in layers: deck first, then bezel/shell, screen last.
   const baseOpacity = useTransform(p, [0.645, 0.695], [1, 0]);
   const bezelOpacity = useTransform(p, [0.665, 0.71], [1, 0]);
-  // the display is off while the lid is shut and lights up as it opens
-  const screenOpacity = useTransform(p, [0.34, 0.5, 0.665, 0.705], [0, 1, 1, 0]);
-  const chassis = useTransform(p, [0.69, 0.725], [1, 0]);
-  const takeover = useTransform(p, [0.675, 0.73, 0.96, 1], [0, 1, 1, 0]);
+  // the display is off while the lid is shut, lights up as it opens, and is
+  // fully gone before the fullscreen layer arrives (no double image)
+  const screenOpacity = useTransform(p, [0.34, 0.5, 0.66, 0.7], [0, 1, 1, 0]);
+  const chassis = useTransform(p, [0.7, 0.74], [1, 0]);
+  const takeover = useTransform(p, [0.7, 0.745, 0.96, 1], [0, 1, 1, 0]);
   const hint = useTransform(p, [0, 0.07], [1, 0]);
   const ambient = useTransform(p, [0, 0.5, 0.82], [0.5, 0.68, 0.2]);
+
 
   return {
     tilt, yaw, zoom, frameY, lidRotate,
