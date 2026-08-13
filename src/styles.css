@@ -120,6 +120,18 @@
   .fade-in-up {
     animation: fadeInUp 0.7s ease-out both;
   }
+  /* cinematic entrance for editorial type: opacity + short lift + soft focus */
+  .cine-in {
+    animation: cineIn 1.15s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  @keyframes cineIn {
+    from { opacity: 0; transform: translateY(18px); filter: blur(9px); }
+    to { opacity: 1; transform: translateY(0); filter: blur(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cine-in { animation: none; }
+  }
+
   @keyframes fadeInUp {
     from { opacity: 0; transform: translateY(16px); }
     to { opacity: 1; transform: translateY(0); }

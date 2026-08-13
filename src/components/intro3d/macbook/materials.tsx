@@ -6,25 +6,26 @@
  * is revealed by long environmental highlights instead of mirror glare.
  */
 export const ALUMINIUM = {
-  color: "#33383f",
-  metalness: 0.88,
-  roughness: 0.36,
-  envMapIntensity: 1.55,
-  clearcoat: 0.35,
-  clearcoatRoughness: 0.42,
-  reflectivity: 0.4,
-  sheen: 0.25,
-  sheenColor: "#8fa8c8",
-  sheenRoughness: 0.6,
+  color: "#2a2e34",
+  metalness: 0.92,
+  roughness: 0.28,
+  envMapIntensity: 1.15,
+  clearcoat: 0.45,
+  clearcoatRoughness: 0.3,
+  reflectivity: 0.45,
+  sheen: 0.2,
+  sheenColor: "#93aecd",
+  sheenRoughness: 0.55,
 } as const;
 
 /** Machined chamfers and the hinge barrel: slightly darker, tighter reflection. */
 export const ALUMINIUM_DARK = {
-  color: "#262a30",
-  metalness: 0.9,
-  roughness: 0.44,
-  envMapIntensity: 1.05,
+  color: "#1d2126",
+  metalness: 0.92,
+  roughness: 0.36,
+  envMapIntensity: 0.85,
 } as const;
+
 
 /** Display glass: dark, smooth, with one restrained environmental reflection. */
 export const GLASS_PANEL = {

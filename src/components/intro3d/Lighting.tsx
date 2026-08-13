@@ -33,16 +33,26 @@ export function Lighting({ stage }: { stage: React.RefObject<number> }) {
       {/* local environment — reflections come from here, no remote HDRI fetch */}
       <Environment resolution={256} frames={1} background={false}>
         <color attach="background" args={["#05070a"]} />
-        {/* broad top box light: the long soft highlight across the lid */}
+        {/* broad top box light, kept modest so the lid is not a flat wash */}
         <Lightformer
           form="rect"
-          intensity={3}
+          intensity={1.5}
           position={[0, 16, 3]}
           rotation={[-Math.PI / 2, 0, 0]}
           scale={[44, 30, 1]}
           color="#eaf1fb"
         />
-        <Lightformer form="rect" intensity={0.9} position={[0, 5, 24]} scale={[36, 20, 1]} color="#b9c9df" />
+        {/* angled softbox: draws one long diagonal highlight across the lid */}
+        <Lightformer
+          form="rect"
+          intensity={6}
+          position={[-9, 13, 11]}
+          rotation={[-Math.PI / 2.6, 0, Math.PI / 5]}
+          scale={[26, 3.4, 1]}
+          color="#f2f7ff"
+        />
+        <Lightformer form="rect" intensity={0.7} position={[0, 5, 24]} scale={[36, 20, 1]} color="#9fb4cd" />
+
         {/* narrow strips: these draw the machined edge highlights */}
         <Lightformer
           form="rect"

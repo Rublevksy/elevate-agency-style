@@ -26,7 +26,16 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
       // 0 → items.length, one unit per discipline
       const seq = range(SERVICES_START, SERVICES_END, p) * items.length;
 
-      if (headRef.current) headRef.current.style.opacity = String(clamp01(1 - seq * 2.2));
+      // the statement clears completely before the first discipline arrives —
+      // two headlines must never be legible in the same frame
+      if (headRef.current) {
+        const ho = clamp01(1 - seq * 5);
+        headRef.current.style.opacity = String(ho);
+        headRef.current.style.filter = `blur(${(1 - ho) * 6}px)`;
+        headRef.current.style.transform = `translate3d(0, ${-(1 - ho) * 3}cqh, 0)`;
+        headRef.current.style.visibility = ho < 0.01 ? "hidden" : "visible";
+      }
+
 
       slides.current.forEach((el, i) => {
         if (!el) return;
@@ -34,9 +43,10 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
         const last = i === items.length - 1;
         // one discipline is dominant at a time: it resolves, holds, then clears.
         // the final one holds on screen all the way into the fullscreen handoff.
-        const fadeIn = clamp01((d + 0.2) / 0.4);
+        const fadeIn = clamp01((d - 0.18) / 0.32);
         const fadeOut = last ? 1 : clamp01((1.2 - d) / 0.4);
-        const o = d < -0.2 || (!last && d > 1.2) ? 0 : Math.min(fadeIn, fadeOut);
+        const o = d < 0.18 || (!last && d > 1.2) ? 0 : Math.min(fadeIn, fadeOut);
+
         el.style.opacity = String(o);
 
         const dc = clamp01(d);
