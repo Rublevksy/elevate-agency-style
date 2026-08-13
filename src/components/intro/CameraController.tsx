@@ -45,6 +45,8 @@ export function useCamera(p: MotionValue<number>, geo: IntroGeometry, reduced: b
   // Chassis peels away in layers: deck first, then bezel/shell, screen last.
   const baseOpacity = useTransform(p, [0.645, 0.695], [1, 0]);
   const bezelOpacity = useTransform(p, [0.665, 0.71], [1, 0]);
+  // the lid's outer shell leaves first so it can never bleed through the panel
+  const shellOpacity = useTransform(p, [0.6, 0.645], [1, 0]);
   // the display is off while the lid is shut, lights up as it opens, and is
   // fully gone before the fullscreen layer arrives (no double image)
   const screenOpacity = useTransform(p, [0.34, 0.5, 0.66, 0.7], [0, 1, 1, 0]);
@@ -56,6 +58,6 @@ export function useCamera(p: MotionValue<number>, geo: IntroGeometry, reduced: b
 
   return {
     tilt, yaw, zoom, frameY, lidRotate,
-    baseOpacity, bezelOpacity, screenOpacity, chassis, takeover, hint, ambient,
+    baseOpacity, bezelOpacity, shellOpacity, screenOpacity, chassis, takeover, hint, ambient,
   };
 }

@@ -13,11 +13,13 @@ export function Lid({
   geo,
   rotate,
   bezel,
+  shell,
   content,
 }: {
   geo: IntroGeometry;
   rotate: MotionValue<string>;
   bezel: MotionValue<number>;
+  shell: MotionValue<number>;
   content: MotionValue<number>;
 }) {
   const { W, H, T } = geo;
@@ -46,7 +48,7 @@ export function Lid({
           transform: `translateZ(${-Math.max(8, T * 1.25)}px)`,
           display: "grid",
           placeItems: "center",
-          opacity: bezel,
+          opacity: shell,
           backfaceVisibility: "hidden",
           boxShadow: `inset 0 1px 0 rgba(255,255,255,.24), inset 0 0 0 1px rgba(255,255,255,.06), 0 ${T}px ${T * 5}px rgba(0,0,0,.7)`,
         }}
