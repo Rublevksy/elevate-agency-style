@@ -12,12 +12,14 @@ export function MacBook({
   lidRotate,
   baseOpacity,
   bezelOpacity,
+  shellOpacity,
   screenOpacity,
 }: {
   geo: IntroGeometry;
   lidRotate: MotionValue<string>;
   baseOpacity: MotionValue<number>;
   bezelOpacity: MotionValue<number>;
+  shellOpacity: MotionValue<number>;
   screenOpacity: MotionValue<number>;
 }) {
   return (
@@ -25,7 +27,7 @@ export function MacBook({
       <motion.div style={{ transformStyle: "preserve-3d", opacity: baseOpacity }}>
         <Base geo={geo} />
       </motion.div>
-      <Lid geo={geo} rotate={lidRotate} bezel={bezelOpacity} content={screenOpacity} />
+      <Lid geo={geo} rotate={lidRotate} bezel={bezelOpacity} shell={shellOpacity} content={screenOpacity} />
     </div>
   );
 }
