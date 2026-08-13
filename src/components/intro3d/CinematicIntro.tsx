@@ -42,10 +42,13 @@ export function CinematicIntro() {
 
     const fade = smoothstep(0.005, CLOSED_END * 0.5, s);
     if (introRef.current) {
+      // the camera moves deeper into the world: the type recedes, softens and
+      // lifts away rather than simply switching off
       introRef.current.style.opacity = String(1 - fade);
-      introRef.current.style.transform = `translate3d(0, ${-fade * 34}px, 0)`;
-      introRef.current.style.filter = `blur(${fade * 7}px)`;
+      introRef.current.style.transform = `translate3d(0, ${-fade * 46}px, 0) scale(${1 - fade * 0.06})`;
+      introRef.current.style.filter = `blur(${fade * 9}px)`;
     }
+
     if (hintRef.current) {
       hintRef.current.style.opacity = String(1 - smoothstep(0.01, CLOSED_END * 0.4, s));
     }
