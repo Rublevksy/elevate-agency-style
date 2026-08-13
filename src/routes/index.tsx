@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { LaptopExperience } from "@/components/cinematic/LaptopExperience";
+import { MacbookIntro } from "@/components/cinematic/MacbookIntro";
 import { ServiceNavigator } from "@/components/cinematic/ServiceNavigator";
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
@@ -32,8 +32,8 @@ function Home() {
 
   return (
     <>
-      {/* 01 — closed laptop → opening → screen reveal → fullscreen takeover */}
-      <LaptopExperience />
+      {/* 01 — pinned cinematic intro: closed laptop → open → into the screen */}
+      <MacbookIntro />
 
       {/* 02 — disciplines, visual first */}
       <ServiceNavigator />
