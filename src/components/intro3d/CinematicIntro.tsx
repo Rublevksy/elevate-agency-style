@@ -115,30 +115,47 @@ export function CinematicIntro() {
           <ScreenInterface progress={progress} />
         </div>
 
-        {/* 05 — editorial introduction, offset from centre so the device stays dominant */}
+        {/* 05 — editorial introduction, offset from centre so the device stays dominant.
+            It enters as a sequence: eyebrow → statement → supporting line → hint.
+            Opacity, a short lift and a touch of blur only — no bounce, no overshoot. */}
         <div
           ref={introRef}
           className="pointer-events-none absolute inset-x-0 top-[9svh] z-20 px-7 will-change-transform md:top-[10svh] md:px-[7vw]"
         >
-          <p className="mb-5 font-mono text-[9px] uppercase tracking-[0.5em] text-primary/70 md:mb-7">Elevate</p>
-          <h1 className="max-w-[16ch] text-[clamp(1.9rem,4.6vw,3.6rem)] font-light leading-[1.04] tracking-[-0.03em] text-foreground/90">
+          <p className="cine-in mb-5 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.5em] text-primary/70 md:mb-7">
+            <span aria-hidden className="h-px w-8 bg-primary/50" />
+            Digital studio
+          </p>
+          <h1
+            className="cine-in max-w-[16ch] text-[clamp(1.9rem,4.6vw,3.6rem)] font-light leading-[1.04] tracking-[-0.03em] text-foreground/90"
+            style={{ animationDelay: "0.16s" }}
+          >
             Digitální prostor,
             <br />
             který pracuje
             <br />
             <span className="text-foreground/40">pro váš byznys.</span>
           </h1>
-          <p className="mt-6 max-w-sm text-xs leading-relaxed text-muted-foreground md:text-sm">
+          <p
+            className="cine-in mt-6 max-w-sm text-xs leading-relaxed text-muted-foreground md:text-sm"
+            style={{ animationDelay: "0.34s" }}
+          >
             Weby, e-shopy a digitální produkty navržené tak, aby měly smysl.
           </p>
         </div>
 
         {/* one extremely subtle hint */}
         <div ref={hintRef} className="pointer-events-none absolute inset-x-0 bottom-8 z-20 text-center">
-          <span className="font-mono text-[9px] uppercase tracking-[0.55em] text-muted-foreground">
+          <span
+            className="cine-in inline-flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.55em] text-muted-foreground"
+            style={{ animationDelay: "0.55s" }}
+          >
+            <span aria-hidden className="h-px w-6 bg-muted-foreground/40" />
             Scroll to enter
+            <span aria-hidden className="h-px w-6 bg-muted-foreground/40" />
           </span>
         </div>
+
       </div>
     </div>
   );
