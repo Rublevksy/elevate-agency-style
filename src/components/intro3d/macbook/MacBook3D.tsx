@@ -1,16 +1,22 @@
-import { forwardRef } from "react";
-import type { Group } from "three";
-import { DEVICE } from "../constants";
-import { Base } from "./Base";
-import { Lid } from "./Lid";
-import { ALUMINIUM_DARK } from "./materials";
+import { forwardRef, useLayoutEffect, useMemo } from "react";
+import { useGLTF } from "@react-three/drei";
+import type { Group, Mesh, MeshStandardMaterial } from "three";
+import glb from "@/assets/macbook-pro-14-m5.glb.asset.json";
+import { Screen } from "./Screen";
+import { measureMacbook } from "./glbParts";
+
+const MODEL_URL = glb.url;
 
 /**
- * Assembled product: BASE + HINGE + LID (+ SCREEN, KEYBOARD, LOGO inside).
+ * The real product: the supplied MacBook Pro 14" GLB, measured at load time.
  *
- * Every part is an independent object, so a real GLB product model can replace
- * these primitives one-for-one later (see MACBOOK_MODEL_URL in constants.ts):
- * load the GLB, then map its BASE / LID / SCREEN nodes onto the same refs.
+ * BASE and LID are the model's own groups, kept independent. The lid is hung on
+ * a pivot placed on the GLB's real hinge barrel, pre-rotated by the angle the
+ * model was authored at, so the existing cinematic can keep driving `lidRef`
+ * with DEVICE.LID_CLOSED_DEG → DEVICE.LID_OPEN_DEG and nothing else changes.
+ *
+ * The display panel from the GLB is dimmed and the live ELEVATE interface is
+ * rendered on the same plane, so the screen content stays real HTML.
  */
 export const MacBook3D = forwardRef<
   Group,
@@ -23,35 +29,51 @@ export const MacBook3D = forwardRef<
     stage: React.RefObject<number>;
   }
 >(function MacBook3D({ lidRef, screenRef, progress, stage }, ref) {
-  const { W, D, T } = DEVICE;
+  const { scene } = useGLTF(MODEL_URL);
+  const parts = useMemo(() => measureMacbook(scene), [scene]);
+
+  // the GLB ships a baked wallpaper on the display; the live interface replaces
+  // it, so the panel itself becomes plain black glass
+  useLayoutEffect(() => {
+    const panel = parts.panel as Mesh;
+    panel.traverse((o) => {
+      const m = (o as Mesh).material as MeshStandardMaterial | undefined;
+      if (!m || Array.isArray(m)) return;
+      const clone = m.clone();
+      clone.emissiveIntensity = 0;
+      clone.color?.set("#05070a");
+      (o as Mesh).material = clone;
+    });
+  }, [parts]);
+
+  const { quaternion: q, scale: s, hinge, screenOffset, screenTilt, openDeg, offset } = parts;
+
   return (
-    <group ref={ref}>
-      <Base />
+    <group ref={ref} position={offset}>
+      {/* base / top case — stays perfectly still */}
+      <primitive object={parts.base} quaternion={q} scale={s} />
 
-      {/* hinge assembly: a recessed dark channel with the barrel running through
-          it and two machined knuckles — the part that visually ties lid to deck */}
-      <mesh position={[0, T - 0.14, -D / 2 + 0.34]}>
-        <boxGeometry args={[W * 0.72, 0.34, 0.66]} />
-        <meshStandardMaterial color="#0a0c10" roughness={0.85} metalness={0.35} />
-      </mesh>
-      <mesh position={[0, T - 0.2, -D / 2 + 0.34]} rotation={[0, 0, Math.PI / 2]}>
-        <cylinderGeometry args={[0.26, 0.26, W * 0.7, 28]} />
-        <meshStandardMaterial {...ALUMINIUM_DARK} roughness={0.3} />
-      </mesh>
-      {[-1, 1].map((s) => (
-        <group key={s}>
-          <mesh position={[s * W * 0.29, T - 0.2, -D / 2 + 0.34]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.3, 0.3, W * 0.075, 24]} />
-            <meshStandardMaterial {...ALUMINIUM_DARK} roughness={0.24} />
-          </mesh>
-          <mesh position={[s * W * 0.09, T - 0.2, -D / 2 + 0.34]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.29, 0.29, W * 0.06, 24]} />
-            <meshStandardMaterial {...ALUMINIUM_DARK} roughness={0.24} />
-          </mesh>
+      {/* real hinge: the pivot sits on the model's hinge axis and carries the
+          GLB's authored open angle, so lidRef sees 0° = closed */}
+      <group position={hinge} rotation={[(openDeg * Math.PI) / 180, 0, 0]}>
+        <group ref={lidRef}>
+          <primitive
+            object={parts.lid}
+            quaternion={q}
+            scale={s}
+            position={[-hinge.x, -hinge.y, -hinge.z]}
+          />
+
+          {/* the display surface: independent, live HTML, camera entry anchor */}
+          <group position={screenOffset} rotation={[-screenTilt, 0, 0]}>
+            <group position={[0, 0, 0.06]}>
+              <Screen ref={screenRef} progress={progress} stage={stage} w={parts.screenW} h={parts.screenH} />
+            </group>
+          </group>
         </group>
-      ))}
-
-      <Lid ref={lidRef} screenRef={screenRef} progress={progress} stage={stage} />
+      </group>
     </group>
   );
 });
+
+useGLTF.preload(MODEL_URL);

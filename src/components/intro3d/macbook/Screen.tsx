@@ -15,11 +15,18 @@ const PX_PER_UNIT = 40; // drei <Html transform> maps 1 world unit to 40 CSS px
  */
 export const Screen = forwardRef<
   Group,
-  { progress: React.RefObject<number>; stage: React.RefObject<number> }
->(function Screen({ progress, stage }, ref) {
-  const { W, H, LID_T } = DEVICE;
-  const activeW = W - 1.1;
-  const activeH = H - 1.25;
+  {
+    progress: React.RefObject<number>;
+    stage: React.RefObject<number>;
+    /** display size in world units — measured from the GLB when available */
+    w?: number;
+    h?: number;
+  }
+>(function Screen({ progress, stage, w, h }, ref) {
+  const W = w ?? DEVICE.W - 0.16;
+  const H = h ?? DEVICE.H - 0.16;
+  const activeW = W - 0.9;
+  const activeH = H - 1.0;
   const uiRef = useRef<HTMLDivElement>(null);
   const glowRef = useRef<MeshBasicMaterial>(null);
 
@@ -41,11 +48,11 @@ export const Screen = forwardRef<
   });
 
   return (
-    // rotate so the group's +Z points along the lid's inner (-Y) face
-    <group ref={ref} position={[0, -LID_T / 2 - 0.006, H / 2]} rotation={[Math.PI / 2, 0, 0]}>
-      {/* black glass panel + bezel */}
+    // the group sits on the display plane; its +Z is the display normal
+    <group ref={ref}>
+      {/* black glass panel */}
       <mesh position={[0, 0, -0.002]}>
-        <planeGeometry args={[W - 0.16, H - 0.16]} />
+        <planeGeometry args={[W, H]} />
         <meshStandardMaterial {...GLASS_PANEL} />
       </mesh>
 
@@ -69,7 +76,7 @@ export const Screen = forwardRef<
 
       {/* glass sheen over the panel — one restrained reflection */}
       <mesh position={[0, 0, 0.02]}>
-        <planeGeometry args={[W - 0.16, H - 0.16]} />
+        <planeGeometry args={[W, H]} />
         <meshBasicMaterial ref={glowRef} color="#9dc0ee" transparent opacity={0} depthWrite={false} />
       </mesh>
     </group>
