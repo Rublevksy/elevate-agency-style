@@ -64,6 +64,7 @@ function Stage({ p, raw }: { p: MotionValue<number>; raw: MotionValue<number> })
               lidRotate={cam.lidRotate}
               baseOpacity={cam.baseOpacity}
               bezelOpacity={cam.bezelOpacity}
+              shellOpacity={cam.shellOpacity}
               screenOpacity={cam.screenOpacity}
             />
           </motion.div>
