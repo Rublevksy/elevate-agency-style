@@ -1,31 +1,31 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
-import { CLOSED_END, HANDOFF_START, ROTATION_END, clamp01, smoothstep, stageProgress } from "./constants";
+import { CLOSED_END, HANDOFF_START, OPEN_END, ROTATION_END, clamp01, smoothstep } from "./constants";
 import { useScrollTimeline } from "./useScrollTimeline";
 import { ScreenInterface } from "./ScreenInterface";
 import { setCinematicActive } from "@/lib/cinematic-state";
-import { AetherField } from "@/components/atmosphere/AetherField";
-import { FloatingWindows } from "./FloatingWindows";
+import { NeuralField } from "@/components/atmosphere/NeuralField";
+import { stageProgress } from "./constants";
 
 const Stage = lazy(() => import("./Stage"));
 
-
 /**
- * CinematicIntro — the ELEVATE cinematic, one scene and one timeline.
+ * CinematicIntro — one cinematic scene, one scroll timeline.
+ *
+ * Composition: the product sits slightly right of centre and stays the subject;
+ * the editorial type occupies the left; the WebGL digital environment lives
+ * behind both. Nothing else is on stage.
  *
  * CLOSED → CAMERA APPROACH → HINGE OPENS → ELEVATE INTERFACE → CAMERA ENTERS
- * THE DISPLAY → FULLSCREEN ELEVATE (disciplines) → CAMERA EXITS → DEVICE
- * RE-FORMS → LID CLOSES.
- *
- * Scroll is the only driver: nothing autoplays, everything reverses.
+ * THE DISPLAY → FULLSCREEN ELEVATE → CAMERA EXITS → LID CLOSES.
  */
 export function CinematicIntro() {
   const wrap = useRef<HTMLDivElement>(null);
   const hintRef = useRef<HTMLDivElement>(null);
   const introRef = useRef<HTMLDivElement>(null);
   const takeoverRef = useRef<HTMLDivElement>(null);
-  const aetherWrap = useRef<HTMLDivElement>(null);
-  const aether = useRef(0.55);
+  const stageWrap = useRef<HTMLDivElement>(null);
+  const fieldRef = useRef(0.55);
   const stage = useRef(0);
   const [mobile, setMobile] = useState(false);
 
@@ -53,27 +53,26 @@ export function CinematicIntro() {
       hintRef.current.style.opacity = String(1 - smoothstep(0.01, CLOSED_END * 0.4, s));
     }
     if (takeoverRef.current) {
-      // the 3D display and the fullscreen layer never overlap: at HANDOFF_START
-      // the display already covers the frame, so one replaces the other —
-      // and the same rule plays in reverse on the way out
       takeoverRef.current.style.opacity = s >= HANDOFF_START ? "1" : "0";
     }
 
-    // the atmosphere breathes with the scene: quiet when closed, brighter as
-    // the lid opens, then drawn toward the display as the camera enters it
-    const lift = smoothstep(ROTATION_END, 0.72, s);
-    const inside = smoothstep(0.8, HANDOFF_START, s);
-    aether.current = clamp01(0.5 + lift * 0.5) * (1 - inside * 0.85);
-    if (aetherWrap.current) {
-      const pull = 1 + lift * 0.1 + inside * 0.28;
-      aetherWrap.current.style.transform = `scale(${pull})`;
+    // the product is offset to the right while the whole device is in shot, and
+    // returns to dead centre as the camera commits to the display, so the
+    // fullscreen handoff still matches the frame 1:1
+    if (stageWrap.current) {
+      const recentre = smoothstep(OPEN_END, HANDOFF_START - 0.02, s);
+      const shift = (mobile ? 0 : 10) * (1 - recentre);
+      stageWrap.current.style.transform = `translate3d(${shift}%, 0, 0)`;
     }
 
-    // site chrome stays hidden for the whole cinematic — inside the display the
-    // interface carries its own header, so the real one would read as a double.
-    // It emerges only once the sequence has fully played back out.
+    // the environment breathes with the scene: quiet when closed, brighter as
+    // the lid opens, then drawn into darkness as the camera enters the display
+    const lift = smoothstep(ROTATION_END, 0.72, s);
+    const inside = smoothstep(0.8, HANDOFF_START, s);
+    fieldRef.current = clamp01(0.5 + lift * 0.5) * (1 - inside * 0.9);
+
     setCinematicActive(p < 0.985);
-  }, []);
+  }, [mobile]);
 
   const progress = useScrollTimeline(wrap, onTick);
 
@@ -85,90 +84,72 @@ export function CinematicIntro() {
   return (
     <div ref={wrap} className="relative h-[1180vh] md:h-[1420vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden bg-[#05070b]">
-        {/* 01 — deep cinematic space: a graphite gradient, no floor, no horizon */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(120% 85% at 50% 34%, #0b1220 0%, #070b12 42%, #05070b 78%), radial-gradient(60% 45% at 22% 78%, rgba(28,52,88,0.35), transparent 70%)",
-          }}
-        />
+        {/* 01 — the digital environment: WebGL depth layers, behind everything */}
+        <NeuralField className="absolute inset-0 h-full w-full" progressRef={progress} intensityRef={fieldRef} />
 
-        {/* 02 — atmospheric light field, truly behind the device (the canvas above is transparent) */}
-        <div ref={aetherWrap} className="pointer-events-none absolute inset-0 will-change-transform">
-          <AetherField className="h-full w-full" intensityRef={aether} />
+        {/* 02 — the product; the canvas is alpha, so it composites over the field */}
+        <div ref={stageWrap} className="absolute inset-0 will-change-transform">
+          <ClientOnly fallback={null}>
+            <Suspense fallback={null}>
+              <Stage progress={progress} stage={stage} mobile={mobile} />
+            </Suspense>
+          </ClientOnly>
         </div>
-
-        {/* 03 — digital product windows suspended in the space behind the MacBook */}
-        <FloatingWindows stage={stage} mobile={mobile} />
-
-        {/* 04 — the MacBook itself; the canvas is alpha, so it composites over the space */}
-        <ClientOnly fallback={null}>
-          <Suspense fallback={null}>
-            <Stage progress={progress} stage={stage} mobile={mobile} />
-          </Suspense>
-        </ClientOnly>
 
         {/* fullscreen ELEVATE interface — the screen has become the viewport */}
         <div ref={takeoverRef} className="pointer-events-none absolute inset-0 z-20" style={{ opacity: 0 }}>
           <ScreenInterface progress={progress} />
         </div>
 
-        {/* 05 — editorial introduction, offset from centre so the device stays dominant.
-            It enters as a sequence: eyebrow → statement → supporting line → hint.
-            Opacity, a short lift and a touch of blur only — no bounce, no overshoot. */}
+        {/* 03 — editorial type on the left; it never competes with the product */}
         <div
           ref={introRef}
-          className="pointer-events-none absolute inset-x-0 top-[8svh] z-20 px-7 will-change-transform md:top-[13svh] md:px-[7vw]"
+          className="pointer-events-none absolute inset-x-0 top-[9svh] z-20 px-7 will-change-transform md:top-[19svh] md:px-[6.5vw]"
         >
-          <div className="w-full md:w-[44%] md:max-w-[38rem]">
-            <p className="cine-in mb-5 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.52em] text-primary/75 md:mb-8">
-              <span aria-hidden className="h-px w-10 bg-primary/45" />
-              Digitální studio
+          <div className="w-full md:w-[42%] md:max-w-[34rem]">
+            <p className="cine-in mb-6 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.4em] text-primary/70 md:mb-9">
+              <span aria-hidden className="h-px w-9 bg-primary/40" />
+              Digitální studio · Praha
             </p>
-            <h1 className="text-[clamp(1.85rem,3.9vw,3.15rem)] font-light leading-[1.08] tracking-[-0.035em] text-foreground/92">
+            <h1 className="text-[clamp(1.7rem,3.1vw,2.6rem)] font-light leading-[1.22] tracking-[-0.02em] text-foreground/90">
               <span className="cine-clip block">
-                <span className="cine-clip-in block">Digitální prostor,</span>
+                <span className="cine-clip-in block">Tvoříme digitální produkty,</span>
               </span>
               <span className="cine-clip block">
-                <span className="cine-clip-in block" style={{ animationDelay: "0.32s" }}>
-                  který pracuje
+                <span className="cine-clip-in block" style={{ animationDelay: "0.3s" }}>
+                  které dávají vašemu
                 </span>
               </span>
               <span className="cine-clip block">
-                <span className="cine-clip-in block text-foreground/38" style={{ animationDelay: "0.46s" }}>
-                  pro váš byznys.
+                <span className="cine-clip-in block" style={{ animationDelay: "0.44s" }}>
+                  byznysu <span className="text-primary/90">náskok</span>.
                 </span>
               </span>
             </h1>
             <div
-              className="cine-in mt-8 flex max-w-md items-start gap-4 md:mt-10"
-              style={{ animationDelay: "0.68s" }}
+              className="cine-in mt-9 flex max-w-sm items-start gap-4 md:mt-11"
+              style={{ animationDelay: "0.66s" }}
             >
-              <span aria-hidden className="mt-2 h-8 w-px shrink-0 bg-gradient-to-b from-primary/60 to-transparent" />
-              <p className="text-xs leading-relaxed text-muted-foreground md:text-sm">
-                Weby, e-shopy a digitální produkty navržené tak, aby měly smysl.
+              <span aria-hidden className="mt-2 h-8 w-px shrink-0 bg-gradient-to-b from-primary/55 to-transparent" />
+              <p className="text-[0.8rem] leading-[1.75] text-muted-foreground md:text-sm">
+                Weby, e-shopy a digitální produkty navržené pro důvěru, výkon a růst.
               </p>
             </div>
           </div>
         </div>
 
-        {/* one extremely subtle hint */}
+        {/* 04 — one extremely quiet micro label */}
         <div ref={hintRef} className="pointer-events-none absolute inset-x-0 bottom-8 z-20 text-center">
           <span
-            className="cine-in inline-flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.55em] text-muted-foreground"
+            className="cine-in inline-flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.42em] text-muted-foreground/80"
             style={{ animationDelay: "0.55s" }}
           >
-            <span aria-hidden className="h-px w-6 bg-muted-foreground/40" />
+            <span aria-hidden className="h-px w-6 bg-muted-foreground/35" />
             Scroll to enter
-            <span aria-hidden className="h-px w-6 bg-muted-foreground/40" />
+            <span aria-hidden className="h-px w-6 bg-muted-foreground/35" />
           </span>
         </div>
-
       </div>
     </div>
   );
-
-
 }
