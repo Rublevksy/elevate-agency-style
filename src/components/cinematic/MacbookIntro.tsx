@@ -69,9 +69,9 @@ export function MacbookIntro() {
   const lidRot = useTransform(lidA, (a) => `rotateX(${a}deg)`);
 
   // chassis leaves the frame as the camera enters the display
-  const screenContent = useTransform(p, [0.64, 0.73], [1, 0]);
+  const screenContent = useTransform(p, [0.58, 0.67], [1, 0]);
   const chassis = useTransform(p, [0.74, 0.86], [1, 0]);
-  const takeover = useTransform(p, [0.68, 0.79, 0.96, 1], [0, 1, 1, 0]);
+  const takeover = useTransform(p, [0.70, 0.80, 0.96, 1], [0, 1, 1, 0]);
   const hintOpacity = useTransform(p, [0, 0.08], [1, 0]);
   const ambient = useTransform(p, [0, 0.5, 0.8], [0.5, 0.7, 0.25]);
 
