@@ -125,7 +125,7 @@ export function LaptopExperience() {
                     transform: `rotateX(${DECK}deg)`,
                     transformOrigin: "top center",
                     background:
-                      "linear-gradient(178deg,oklch(0.42 0.005 255) 0%,oklch(0.3 0.004 255) 12%,oklch(0.24 0.004 255) 55%,oklch(0.33 0.005 255) 100%)",
+                      "linear-gradient(178deg,oklch(0.33 0.005 255) 0%,oklch(0.23 0.004 255) 12%,oklch(0.175 0.004 255) 55%,oklch(0.26 0.005 255) 100%)",
                     boxShadow:
                       "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 -1px 0 rgba(0,0,0,0.5), 0 30px 60px -30px rgba(0,0,0,0.9)",
                   }}
