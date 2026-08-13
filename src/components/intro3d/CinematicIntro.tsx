@@ -1,6 +1,6 @@
 import { Suspense, lazy, useCallback, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
-import { CLOSED_END, HANDOFF_END, HANDOFF_START, clamp01, smoothstep } from "./constants";
+import { CLOSED_END, HANDOFF_START, smoothstep } from "./constants";
 import { useScrollTimeline } from "./useScrollTimeline";
 import { ScreenInterface } from "./ScreenInterface";
 import { setCinematicActive } from "@/lib/cinematic-state";
@@ -31,10 +31,9 @@ export function CinematicIntro() {
   const onTick = useCallback((p: number) => {
     if (hintRef.current) hintRef.current.style.opacity = String(1 - smoothstep(0.01, CLOSED_END * 0.4, p));
     if (takeoverRef.current) {
-      // the 3D display hands over to the fullscreen layer while both are the
-      // same size and the same content — no swap, no cut, no scale jump
-      const inn = p >= HANDOFF_START ? 1 : 0;
-      takeoverRef.current.style.opacity = String(clamp01(inn));
+      // the 3D display and the fullscreen layer never overlap: at HANDOFF_START
+      // the display already covers the frame, so one replaces the other
+      takeoverRef.current.style.opacity = p >= HANDOFF_START ? "1" : "0";
     }
     setCinematicActive(p < 0.995);
   }, []);
