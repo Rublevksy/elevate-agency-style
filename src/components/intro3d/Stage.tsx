@@ -29,13 +29,12 @@ export default function Stage({
   return (
     <Canvas
       dpr={[1, mobile ? 1.5 : 1.9]}
-      gl={{ antialias: true, powerPreference: "high-performance" }}
+      gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
       camera={{ fov: 30, position: [0, 12, 60] }}
       shadows={false}
       style={{ position: "absolute", inset: 0 }}
     >
-      <color attach="background" args={["#020407"]} />
-      <fog attach="fog" args={["#020407", 55, 165]} />
+      <fog attach="fog" args={["#05070b", 60, 180]} />
 
       <Environment3D stage={stage} />
       <Lighting stage={stage} />
