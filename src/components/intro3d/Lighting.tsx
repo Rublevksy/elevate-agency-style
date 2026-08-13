@@ -28,7 +28,7 @@ export function Lighting({ stage }: { stage: React.RefObject<number> }) {
       {/* soft neutral key */}
       <directionalLight position={[16, 28, 16]} intensity={1.55} color="#e6ecf6" />
       {/* cool blue rim, raking the far edge */}
-      <directionalLight ref={rim} position={[-24, 9, -16]} intensity={0.95} color="#7fa4d8" />
+      <directionalLight ref={rim} position={[-24, 9, -16]} intensity={0.8} color="#9db0c8" />
 
       {/* local environment — reflections come from here, no remote HDRI fetch */}
       <Environment resolution={256} frames={1} background={false}>
