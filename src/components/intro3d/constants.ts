@@ -63,12 +63,12 @@ export type CamKey = {
 };
 
 export const CAM_TRACK: CamKey[] = [
-  { p: 0.0, k: 1.42, yaw: -10, elev: 16 },
-  { p: 0.16, k: 1.34, yaw: -4, elev: 13 },
-  { p: 0.32, k: 1.3, yaw: 20, elev: 11 },
-  { p: 0.48, k: 1.5, yaw: 11, elev: 12 },
-  { p: 0.6, k: 1.44, yaw: 4, elev: 10 },
-  { p: 0.68, k: 1.3, yaw: 0, elev: 8 },
+  { p: 0.0, k: 1.2, yaw: -10, elev: 16 },
+  { p: 0.16, k: 1.14, yaw: -4, elev: 13 },
+  { p: 0.32, k: 1.1, yaw: 20, elev: 11 },
+  { p: 0.48, k: 1.26, yaw: 11, elev: 12 },
+  { p: 0.6, k: 1.22, yaw: 4, elev: 10 },
+  { p: 0.68, k: 1.12, yaw: 0, elev: 8 },
   { p: 1.0, k: 1.0, yaw: 0, elev: 0 },
 ];
 
