@@ -31,9 +31,14 @@ export function ScreenInterface({ progress }: { progress?: React.RefObject<numbe
       slides.current.forEach((el, i) => {
         if (!el) return;
         const d = seq - i; // <0 upcoming, ~0.5 dominant, >1 gone
-        // one discipline is dominant at a time: it resolves, holds, then clears
-        const o = d < -0.2 || d > 1.2 ? 0 : Math.min(clamp01((d + 0.2) / 0.4), clamp01((1.2 - d) / 0.4));
+        const last = i === items.length - 1;
+        // one discipline is dominant at a time: it resolves, holds, then clears.
+        // the final one holds on screen all the way into the fullscreen handoff.
+        const fadeIn = clamp01((d + 0.2) / 0.4);
+        const fadeOut = last ? 1 : clamp01((1.2 - d) / 0.4);
+        const o = d < -0.2 || (!last && d > 1.2) ? 0 : Math.min(fadeIn, fadeOut);
         el.style.opacity = String(o);
+
         const dc = clamp01(d);
         // subtle depth: upcoming slides sit slightly back and softly defocused
         el.style.filter = `blur(${(1 - o) * 3.4}px)`;
