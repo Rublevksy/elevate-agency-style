@@ -48,7 +48,7 @@ const BACKDROP_FRAG = /* glsl */ `
     // uniforms are authored in sRGB; convert to the renderer's linear space so
     // the void stays genuinely near-black after the output transform
     c = pow(c, vec3(2.2));
-    gl_FragColor = vec4(1.0, 0.0, 0.0, 1.0);
+    gl_FragColor = vec4(c, 1.0);
   }
 `;
 
@@ -85,16 +85,16 @@ function Floor() {
       <MeshReflectorMaterial
         resolution={256}
         mixBlur={1}
-        mixStrength={2.2}
+        mixStrength={1.1}
         blur={[420, 120]}
         depthScale={1.1}
         minDepthThreshold={0.5}
         maxDepthThreshold={1.3}
         metalness={0}
         roughness={1}
-        envMapIntensity={0.06}
-        color="#010305"
-        mirror={0.14}
+        envMapIntensity={0.02}
+        color="#000000"
+        mirror={0.08}
       />
     </mesh>
   );
