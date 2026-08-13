@@ -104,14 +104,14 @@ export function CinematicIntro() {
         </ClientOnly>
 
         {/* fullscreen ELEVATE interface — the screen has become the viewport */}
-        <div ref={takeoverRef} className="pointer-events-none absolute inset-0" style={{ opacity: 0 }}>
+        <div ref={takeoverRef} className="pointer-events-none absolute inset-0 z-20" style={{ opacity: 0 }}>
           <ScreenInterface progress={progress} />
         </div>
 
         {/* restrained introduction — reads before the first scroll, then leaves */}
         <div
           ref={introRef}
-          className="pointer-events-none absolute inset-x-0 top-[13svh] px-6 text-center will-change-transform md:top-[11svh]"
+          className="pointer-events-none absolute z-20 inset-x-0 top-[13svh] px-6 text-center will-change-transform md:top-[11svh]"
         >
           <h1 className="text-[clamp(2.4rem,7vw,5.25rem)] font-light leading-[0.95] tracking-[0.24em] text-white/90">
             ELEVATE
