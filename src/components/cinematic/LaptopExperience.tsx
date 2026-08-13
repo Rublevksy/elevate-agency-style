@@ -155,9 +155,10 @@ export function LaptopExperience() {
 
         {/* STATE 05 — the screen becomes the viewport */}
         <motion.div
-          className="absolute inset-0"
+          className="absolute inset-0 overflow-hidden pt-[64px]"
           style={{ opacity: takeoverOpacity, scale: takeoverScale, pointerEvents: phase > 0.85 ? "auto" : "none" }}
         >
+
           <ScreenInterface
             disciplines={c.disciplines}
             active={active}
