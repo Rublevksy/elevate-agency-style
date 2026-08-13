@@ -1,0 +1,64 @@
+import { forwardRef, useRef } from "react";
+import { Html } from "@react-three/drei";
+import { useFrame } from "@react-three/fiber";
+import type { Group } from "three";
+import { DEVICE, clamp01, smoothstep } from "../constants";
+import { ScreenInterface } from "../ScreenInterface";
+
+const PX_PER_UNIT = 40; // drei <Html transform> maps 1 world unit to 40 CSS px
+
+/**
+ * The display: an independent surface on the lid's inner face carrying REAL
+ * HTML (not a baked image), so the interface stays editable.
+ * `ref` is the anchor the camera flies into.
+ */
+export const Screen = forwardRef<Group, { progress: React.RefObject<number> }>(function Screen(
+  { progress },
+  ref,
+) {
+  const { W, H, LID_T } = DEVICE;
+  const activeW = W - 1.1;
+  const activeH = H - 1.25;
+  const uiRef = useRef<HTMLDivElement>(null);
+
+  // the display is dark while the lid is shut, lights up as it opens and hands
+  // over to the fullscreen layer once the camera is inside it
+  useFrame(() => {
+    const p = progress.current ?? 0;
+    const on = smoothstep(0.36, 0.5, p) - smoothstep(0.87, 0.92, p);
+    const el = uiRef.current;
+    if (!el) return;
+    const v = clamp01(on);
+    el.style.opacity = String(v);
+    el.style.visibility = v < 0.01 ? "hidden" : "visible";
+  });
+
+  return (
+    // rotate so the group's +Z points along the lid's inner (-Y) face
+    <group ref={ref} position={[0, -LID_T / 2 - 0.006, H / 2]} rotation={[Math.PI / 2, 0, 0]}>
+      {/* black glass panel + bezel */}
+      <mesh position={[0, 0, -0.002]}>
+        <planeGeometry args={[W - 0.16, H - 0.16]} />
+        <meshStandardMaterial color="#05070a" roughness={0.16} metalness={0.35} />
+      </mesh>
+
+      <Html
+        transform
+        occlude={false}
+        pointerEvents="none"
+        position={[0, 0, 0.004]}
+        zIndexRange={[10, 0]}
+        style={{
+          width: activeW * PX_PER_UNIT,
+          height: activeH * PX_PER_UNIT,
+          overflow: "hidden",
+          userSelect: "none",
+        }}
+      >
+        <div ref={uiRef} style={{ width: "100%", height: "100%", opacity: 0, visibility: "hidden" }}>
+          <ScreenInterface />
+        </div>
+      </Html>
+    </group>
+  );
+});
