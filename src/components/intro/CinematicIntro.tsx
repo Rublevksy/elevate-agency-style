@@ -30,8 +30,8 @@ function Stage({ p, raw }: { p: MotionValue<number>; raw: MotionValue<number> })
     return () => setCinematicActive(false);
   }, []);
 
-  const takeoverScale = useTransform(p, [0.675, 0.8], [0.9, 1]);
-  const takeoverRadius = useTransform(p, [0.675, 0.8], [geo.W * 0.016, 0]);
+  const takeoverScale = useTransform(p, [0.7, 0.84], [0.94, 1]);
+  const takeoverRadius = useTransform(p, [0.7, 0.84], [geo.W * 0.016, 0]);
 
   return (
     <>
