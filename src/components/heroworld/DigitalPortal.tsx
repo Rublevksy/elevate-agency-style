@@ -1,4 +1,4 @@
-import { useEffect, useRef, type RefObject } from "string" extends never ? "react" : "react";
+import { useEffect, useRef, type RefObject } from "react";
 
 /**
  * DigitalPortal — the interface core.
