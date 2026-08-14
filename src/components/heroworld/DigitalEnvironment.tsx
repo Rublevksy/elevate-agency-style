@@ -156,16 +156,16 @@ void main(){
   float coreShadow = 1.0 - 0.55 * exp(-pow(length(c * vec2(1.0, 1.15)) * 2.6, 2.0));
 
   vec3 col = BLACK;
-  col += NAVY * haze * 0.8 * depth;
-  col += mix(NAVY, BLUE, 0.55) * mid * 0.24 * depth * coreShadow;
-  col += BLUE * mid * mid * 0.09 * centreLift * coreShadow;
-  col += STEEL * far * 0.4 * depth;
-  col += COOL * trails * 0.05 * depth;
-  col += mix(STEEL, COOL, 0.4) * frag * 0.065 * depth;
+  col += NAVY * haze * 1.15 * depth;
+  col += mix(NAVY, BLUE, 0.55) * mid * 0.38 * depth * coreShadow;
+  col += BLUE * mid * mid * 0.16 * centreLift * coreShadow;
+  col += STEEL * far * 0.6 * depth;
+  col += COOL * trails * 0.085 * depth;
+  col += mix(STEEL, COOL, 0.4) * frag * 0.1 * depth;
 
   /* large soft key light, slightly above and right of the core */
   float g = exp(-pow(length((c - vec2(0.14, 0.10)) * vec2(1.0, 1.25)) * 1.7, 2.0));
-  col += mix(NAVY, BLUE, 0.32) * g * 0.15;
+  col += mix(NAVY, BLUE, 0.32) * g * 0.26;
 
   col *= uK;
   o = vec4(max(col, vec3(0.0)), 1.0);
@@ -229,7 +229,7 @@ export function DigitalEnvironment({ className = "", progressRef, intensityRef }
       const k = Math.max(0, Math.min(1, intensityRef?.current ?? 1));
       gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.uniform1f(uFlow, progressRef?.current ?? 0);
-      gl.uniform1f(uK, 0.4 + k * 0.6);
+      gl.uniform1f(uK, 0.55 + k * 0.85);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       if (visible) raf = requestAnimationFrame(draw);
     };

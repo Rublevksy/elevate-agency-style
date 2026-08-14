@@ -68,7 +68,7 @@ export function DigitalPortal({ className = "", progressRef }: Props) {
           className="absolute h-[62vmin] w-[62vmin] rounded-full blur-[70px]"
           style={{
             background:
-              "radial-gradient(circle, oklch(0.62 0.16 258 / 0.34) 0%, oklch(0.42 0.12 258 / 0.14) 42%, transparent 72%)",
+              "radial-gradient(circle, oklch(0.66 0.17 258 / 0.55) 0%, oklch(0.45 0.13 258 / 0.24) 44%, transparent 72%)",
           }}
         />
 
@@ -101,11 +101,11 @@ export function DigitalPortal({ className = "", progressRef }: Props) {
               className="absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(120% 90% at 30% 15%, oklch(0.45 0.10 258 / 0.30), transparent 60%), linear-gradient(200deg, oklch(0.12 0.02 258 / 0.85), oklch(0.06 0.01 258 / 0.95))",
+                  "radial-gradient(120% 95% at 32% 12%, oklch(0.52 0.12 258 / 0.55), transparent 66%), linear-gradient(200deg, oklch(0.15 0.03 258 / 0.72), oklch(0.08 0.02 258 / 0.9))",
               }}
             />
             {/* thin technical lines: horizon + measure marks */}
-            <div className="absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent via-primary/45 to-transparent" />
+            <div className="absolute inset-x-0 top-1/2 h-px bg-gradient-to-r from-transparent via-primary/60 to-transparent" />
             <div className="absolute inset-y-0 left-1/2 w-px bg-gradient-to-b from-transparent via-foreground/12 to-transparent" />
             <div className="absolute left-[10%] right-[10%] top-[22%] h-px bg-foreground/[0.07]" />
             <div className="absolute left-[10%] right-[42%] top-[30%] h-px bg-foreground/[0.07]" />
@@ -113,7 +113,7 @@ export function DigitalPortal({ className = "", progressRef }: Props) {
             {/* rim light */}
             <div
               className="absolute inset-0 rounded-[1.3rem]"
-              style={{ boxShadow: "inset 0 0 0 1px oklch(0.72 0.14 258 / 0.35), inset 0 0 40px oklch(0.55 0.14 258 / 0.16)" }}
+              style={{ boxShadow: "inset 0 0 0 1px oklch(0.75 0.15 258 / 0.5), inset 0 0 60px oklch(0.6 0.15 258 / 0.28)" }}
             />
           </div>
 

@@ -17,7 +17,7 @@ export function HeroWorld() {
   const wrap = useRef<HTMLDivElement>(null);
   const content = useRef<HTMLDivElement>(null);
   const progress = useRef(0);
-  const intensity = useRef(0.85);
+  const intensity = useRef(1);
 
   const onScroll = useCallback(() => {
     const el = wrap.current;
@@ -25,7 +25,7 @@ export function HeroWorld() {
     const total = el.offsetHeight - window.innerHeight;
     const p = total > 0 ? Math.min(1, Math.max(0, -el.getBoundingClientRect().top / total)) : 0;
     progress.current = p;
-    intensity.current = 0.85 - p * 0.5;
+    intensity.current = 1 - p * 0.55;
     if (content.current) {
       const fade = Math.min(1, p * 1.9);
       content.current.style.opacity = String(1 - fade);
@@ -62,7 +62,7 @@ export function HeroWorld() {
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(120% 90% at 50% 45%, transparent 40%, oklch(0.04 0.01 258 / 0.75) 100%), linear-gradient(90deg, oklch(0.04 0.01 258 / 0.72) 0%, transparent 52%)",
+              "radial-gradient(120% 90% at 50% 45%, transparent 40%, oklch(0.04 0.01 258 / 0.68) 100%), linear-gradient(90deg, oklch(0.04 0.01 258 / 0.6) 0%, transparent 46%)",
           }}
         />
 
