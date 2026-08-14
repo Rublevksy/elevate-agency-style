@@ -137,7 +137,7 @@ export function ElevatePlanet({
       body.current.rotation.y = 0.6 + p * 1.35 + smooth.current.mx * 0.06;
       const mat = body.current.material as MeshStandardMaterial;
       /* the interface network wakes up as the world becomes digital */
-      mat.emissiveIntensity = 0.35 + easeCine(stage(p, 0.5, 0.85)) * 1.75;
+      mat.emissiveIntensity = 0.22 + easeCine(stage(p, 0.5, 0.85)) * 0.85;
       mat.displacementScale = lerp(0.075, 0.05, recede);
     }
 
@@ -220,9 +220,9 @@ export function ElevatePlanet({
           bumpScale={0.35}
           emissiveMap={maps.emissive}
           emissive="#5b93f0"
-          emissiveIntensity={0.35}
-          metalness={0.42}
-          roughness={0.62}
+          emissiveIntensity={0.22}
+          metalness={0.34}
+          roughness={0.74}
           envMapIntensity={1.25}
         />
       </mesh>
