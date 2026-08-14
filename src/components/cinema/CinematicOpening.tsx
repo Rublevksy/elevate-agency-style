@@ -2,7 +2,7 @@ import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
 import { useCinemaProgress } from "./progress";
 import { CinemaTypography } from "./CinemaTypography";
-import { InterfaceReveal } from "./InterfaceReveal";
+import { ServiceField } from "./ServiceField";
 
 const CinemaScene = lazy(() => import("./CinemaScene"));
 
@@ -10,9 +10,9 @@ const CinemaScene = lazy(() => import("./CinemaScene"));
  * CINEMATIC OPENING — the authoritative ELEVATE homepage introduction.
  *
  * A tall scroll container with one sticky viewport. Scroll is the timeline and
- * feeds a single progress value into the camera, the artifact, the environment,
- * the typography and the final interface reveal. Nothing autoplays; the whole
- * shot reverses perfectly.
+ * feeds a single progress value into the camera, the digital world, the
+ * environment, the typography and the final service field. Nothing autoplays;
+ * the whole shot reverses.
  */
 export function CinematicOpening() {
   const wrap = useRef<HTMLDivElement>(null);
@@ -35,7 +35,7 @@ export function CinematicOpening() {
     let raf = 0;
     const tick = () => {
       const p = progress.current;
-      if (scrim.current) scrim.current.style.opacity = String(Math.max(0, 1 - p * 2.6));
+      if (scrim.current) scrim.current.style.opacity = String(Math.max(0, 1 - p * 2.2));
       if (cue.current) cue.current.style.opacity = String(Math.max(0, 1 - p * 8));
       raf = requestAnimationFrame(tick);
     };
@@ -49,7 +49,7 @@ export function CinematicOpening() {
   }, [progress]);
 
   return (
-    <div ref={wrap} className="relative h-[420vh] md:h-[520vh]">
+    <div ref={wrap} className="relative h-[460vh] md:h-[560vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden bg-[#04060a]">
         <ClientOnly fallback={<div className="absolute inset-0 bg-[#04060a]" />}>
           <Suspense fallback={<div className="absolute inset-0 bg-[#04060a]" />}>
@@ -66,7 +66,7 @@ export function CinematicOpening() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "linear-gradient(90deg, oklch(0.04 0.01 258 / 0.86) 0%, oklch(0.04 0.01 258 / 0.35) 38%, transparent 62%), radial-gradient(120% 100% at 50% 50%, transparent 45%, oklch(0.03 0.01 258 / 0.7) 100%)",
+              "linear-gradient(90deg, oklch(0.04 0.01 258 / 0.88) 0%, oklch(0.04 0.01 258 / 0.4) 42%, transparent 66%), radial-gradient(120% 100% at 50% 50%, transparent 45%, oklch(0.03 0.01 258 / 0.72) 100%)",
           }}
         />
 
@@ -74,12 +74,12 @@ export function CinematicOpening() {
           <CinemaTypography progressRef={progress} />
         </div>
 
-        <InterfaceReveal progressRef={progress} />
+        <ServiceField progressRef={progress} pointerRef={pointer} />
 
         <div
           ref={cue}
           aria-hidden
-          className="pointer-events-none absolute bottom-8 left-1/2 z-20 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.4em] text-muted-foreground/70"
+          className="pointer-events-none absolute bottom-8 left-1/2 z-30 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.4em] text-muted-foreground/70"
         >
           Scroll
         </div>
