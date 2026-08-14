@@ -1,5 +1,6 @@
 import { type RefObject } from "react";
 import { Canvas } from "@react-three/fiber";
+import { Environment, Lightformer } from "@react-three/drei";
 import { ElevateEngine } from "./ElevateEngine";
 import { Atmosphere } from "./Atmosphere";
 import { CameraRig } from "./CameraRig";
