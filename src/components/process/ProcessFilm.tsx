@@ -89,7 +89,10 @@ export function ProcessFilm() {
       if (s <= 0) active = 0;
 
       STEPS.forEach((_, i) => {
-        const u = s - i; // 0 → 1 while this stage owns the frame
+        // 0 → 1 while this stage owns the frame; the first and last beats hold
+        let u = s - i;
+        if (i === 0) u = Math.max(u, 0.5);
+        if (i === N - 1) u = Math.min(u, 0.5);
         const vis = clamp01(1 - Math.abs(u - 0.5) / 0.72);
         const el = stages.current[i];
         if (el) {
