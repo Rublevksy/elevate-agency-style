@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { CinematicIntro } from "@/components/intro3d/CinematicIntro";
+import { HeroWorld } from "@/components/heroworld/HeroWorld";
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
@@ -31,8 +31,8 @@ function Home() {
 
   return (
     <>
-      {/* 01 — pinned cinematic intro: closed laptop → open → into the screen */}
-      <CinematicIntro />
+      {/* 01 — ELEVATE digital world: environment + interface core + editorial type */}
+      <HeroWorld />
 
       {/* 03 — how we work + studio point of view */}
       <StudioPhilosophy />
