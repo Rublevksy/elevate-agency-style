@@ -4,7 +4,7 @@ import { ArrowUpRight } from "lucide-react";
 import { clamp01, easeFilm, lerp, useFilmProgress } from "@/components/devicefilm/film";
 import { KineticGrid } from "./KineticGrid";
 import { Laptop, Monitor, Phone, Tablet } from "./DeviceShells";
-import { BrandScreen, DashboardScreen, MobileScreen, ShopScreen, WebScreen } from "./ServiceScreens";
+import { BrandScreen, MobileScreen, SeoScreen, ShopScreen, WebScreen } from "./ServiceScreens";
 
 type Stage = {
   n: string;
@@ -36,9 +36,9 @@ const W = (Comp: React.ComponentType, Shell: typeof Monitor, size: string, activ
 const STAGES: Stage[] = [
   {
     n: "01",
-    kicker: "Web development",
-    title: "Web",
-    desc: "Firemní weby, landing pages a digitální prezentace, které dávají vašemu podnikání profesionální tvář.",
+    kicker: "Weby",
+    title: "Weby",
+    desc: "Firemní weby, landing pages a moderní digitální prezentace.",
     to: "/services/web",
     base: { x: 15, y: -1, ry: -9, scale: 1 },
     inX: 10,
@@ -50,9 +50,9 @@ const STAGES: Stage[] = [
   },
   {
     n: "02",
-    kicker: "E-commerce",
-    title: "E-commerce",
-    desc: "E-shopy navržené pro důvěru, jednoduchý nákup a skutečnou konverzi.",
+    kicker: "E-shopy",
+    title: "E-shopy",
+    desc: "E-shopy navržené pro jednoduchý nákup, důvěru a konverzi.",
     to: "/services/eshop",
     base: { x: -16, y: 2, ry: 10, scale: 1 },
     inX: -14,
@@ -66,8 +66,8 @@ const STAGES: Stage[] = [
     n: "03",
     kicker: "Mobilní aplikace",
     title: "Mobilní aplikace",
-    desc: "Moderní aplikace pro iOS a Android, od konceptu po publikaci v App Store a Google Play.",
-    to: "/services/design",
+    desc: "Aplikace pro iOS a Android, včetně přípravy a publikace v App Store a Google Play.",
+    to: "/contact",
     base: { x: 20, y: 1, ry: -12, scale: 1 },
     inX: 8,
     inZ: 620,
@@ -78,61 +78,34 @@ const STAGES: Stage[] = [
   },
   {
     n: "04",
-    kicker: "Digitální produkty",
-    title: "Digitální produkty",
-    desc: "Dashboardy, interní systémy a webové aplikace pro reálné procesy.",
-    to: "/services/web",
+    kicker: "SEO & optimalizace",
+    title: "SEO & optimalizace",
+    desc: "Technické SEO, rychlost webu, Core Web Vitals, struktura obsahu, indexace a průběžná optimalizace výkonu.",
+    to: "/contact",
     base: { x: -3, y: -5, ry: 6, scale: 1 },
     inX: -12,
     inZ: -1300,
     outX: 0,
     outZ: -1400,
     text: "right",
-    Device: W(DashboardScreen, Tablet, "w-[70vw] md:w-[38vw]"),
+    Device: W(SeoScreen, Monitor, "w-[66vw] md:w-[40vw]"),
   },
   {
     n: "05",
-    kicker: "Brand & UX",
-    title: "Brand & UX",
-    desc: "Vizuální identita, UX/UI a digitální systém, který drží značku pohromadě.",
-    to: "/services/branding",
+    kicker: "Logo & design",
+    title: "Logo & design",
+    desc: "Tvorba loga, vizuální identity, UI/UX a kompletního vizuálního směru značky.",
+    to: "/services/design",
     base: { x: 17, y: 0, ry: -4, scale: 1 },
     inX: 0,
     inZ: -1200,
     outX: 0,
     outZ: 1400,
     text: "left",
-    Device: function Ecosystem() {
-      return (
-        <div className="relative w-[86vw] md:w-[52vw]" style={{ transformStyle: "preserve-3d" }}>
-          <div className="relative" style={{ transform: "translateZ(-140px) translateX(-6%)" }}>
-            <Monitor active className="w-[62%]">
-              <BrandScreen />
-            </Monitor>
-          </div>
-          <div className="absolute right-0 top-[16%] hidden w-[44%] md:block" style={{ transform: "translateZ(60px)" }}>
-            <Laptop className="w-full">
-              <WebScreen />
-            </Laptop>
-          </div>
-          <div className="absolute bottom-[-6%] left-[26%] w-[13%] md:w-[11%]" style={{ transform: "translateZ(260px)" }}>
-            <Phone className="w-full">
-              <MobileScreen />
-            </Phone>
-          </div>
-          <div
-            className="absolute bottom-[2%] right-[8%] hidden w-[26%] md:block"
-            style={{ transform: "translateZ(180px) rotateY(-14deg)" }}
-          >
-            <Tablet className="w-full">
-              <DashboardScreen />
-            </Tablet>
-          </div>
-        </div>
-      );
-    },
+    Device: W(BrandScreen, Tablet, "w-[70vw] md:w-[38vw]"),
   },
 ];
+
 
 const N = STAGES.length;
 
@@ -245,8 +218,9 @@ export function DeviceServices() {
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(65% 60% at 50% 42%, oklch(0.3 0.07 258 / 0.26) 0%, transparent 72%), linear-gradient(180deg, oklch(0.09 0.014 258 / 0.55) 0%, transparent 40%, transparent 62%, oklch(0.09 0.014 258 / 0.4) 100%)",
+              "radial-gradient(65% 60% at 50% 42%, oklch(0.3 0.07 258 / 0.22) 0%, transparent 74%)",
           }}
+
         />
         <div ref={grid} aria-hidden className="absolute inset-[-4%]">
           <KineticGrid mobile={mobile} />

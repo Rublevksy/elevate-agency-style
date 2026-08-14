@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { DeviceFilm } from "@/components/devicefilm/DeviceFilm";
 import { DeviceServices } from "@/components/deviceservices/DeviceServices";
+import { ServicesIntro } from "@/components/sections/ServicesIntro";
+
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
 import { ProcessFilm } from "@/components/process/ProcessFilm";
@@ -9,6 +11,9 @@ import { StudioPhilosophy } from "@/components/sections/StudioPhilosophy";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { CINEMATIC } from "@/lib/cinematic-copy";
 import { useT } from "@/lib/i18n";
+import glbAsset from "@/assets/macbook-pro-14-m5.glb.asset.json";
+import aMarkAsset from "@/assets/elevate-a-mark.png.asset.json";
+
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -22,7 +27,13 @@ export const Route = createFileRoute("/")({
       { name: "twitter:title", content: "ELEVATE — Webdesign, UX a vývoj moderních webů" },
       { name: "twitter:description", content: "Moderní weby a UX strategie pro firmy, které chtějí růst online. Audit zdarma do 48 hodin." },
     ],
-    links: [{ rel: "canonical", href: "https://elevateit.cz/" }],
+    links: [
+      { rel: "canonical", href: "https://elevateit.cz/" },
+      // the hero device is the critical above-the-fold asset
+      { rel: "preload", as: "fetch", href: glbAsset.url, crossOrigin: "anonymous" },
+      { rel: "preload", as: "image", href: aMarkAsset.url, fetchpriority: "high" },
+    ],
+
   }),
 });
 
@@ -35,8 +46,12 @@ function Home() {
       {/* 01 — cinematic device film: product → camera → digital products → website */}
       <DeviceFilm />
 
+      {/* 02 — the seam: what ELEVATE can actually do for you */}
+      <ServicesIntro />
+
       {/* 02 — device-based service gallery: one shot through five products */}
       <DeviceServices />
+
 
       {/* 03 — how we work + studio point of view */}
       <StudioPhilosophy />

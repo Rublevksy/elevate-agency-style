@@ -122,9 +122,13 @@ export function DeviceFilm() {
         {/* the seam into the next section: light falloff only, never a colour cut */}
         <div
           aria-hidden
-          className="absolute inset-x-0 bottom-0 z-50 h-[26vh]"
-          style={{ background: "linear-gradient(180deg, transparent 0%, oklch(0.09 0.014 258 / 0.75) 92%)" }}
+          className="absolute inset-x-0 bottom-0 z-50 h-[30vh]"
+          style={{
+            background:
+              "linear-gradient(180deg, transparent 0%, oklch(0.115 0.018 258 / 0.18) 55%, oklch(0.115 0.018 258 / 0.4) 100%)",
+          }}
         />
+
 
       </div>
     </div>
