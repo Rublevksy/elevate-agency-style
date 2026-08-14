@@ -30,7 +30,7 @@ export default function CinemaScene({
     >
       {/* cinematic key / fill / rim: deep shadow regions, cool white highlight */}
       <ambientLight intensity={0.1} color="#7f9fd0" />
-      <directionalLight position={[7, 5.5, 6]} intensity={1.75} color="#e6efff" />
+      <directionalLight position={[7, 5.5, 6]} intensity={2.4} color="#e6efff" />
       <directionalLight position={[-9, -2.5, -5]} intensity={0.5} color="#2f5da8" />
       <directionalLight position={[-5, 3, -8]} intensity={1.15} color="#6f9ff0" />
 

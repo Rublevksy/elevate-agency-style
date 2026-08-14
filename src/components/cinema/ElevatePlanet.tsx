@@ -226,13 +226,13 @@ export function ElevatePlanet({
           displacementMap={maps.displacement}
           displacementScale={0.075}
           bumpMap={maps.displacement}
-          bumpScale={0.35}
+          bumpScale={0.6}
           emissiveMap={maps.emissive}
           emissive="#5b93f0"
           emissiveIntensity={0.45}
-          metalness={0.34}
-          roughness={0.74}
-          envMapIntensity={1.25}
+          metalness={0.12}
+          roughness={0.72}
+          envMapIntensity={0.5}
         />
       </mesh>
 

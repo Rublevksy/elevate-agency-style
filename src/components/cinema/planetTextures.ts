@@ -115,16 +115,16 @@ export function makePlanetMaps(w = 1024): PlanetMaps {
     const o = i * 4;
 
     /* ALBEDO — deep navy basins → graphite landmass → cool white ridges */
-    const r = 12 + land * 46 + ridge * 62;
-    const g = 18 + land * 54 + ridge * 70;
-    const b = 34 + land * 66 + ridge * 82;
+    const r = 16 + land * 66 + ridge * 74;
+    const g = 24 + land * 76 + ridge * 84;
+    const b = 44 + land * 88 + ridge * 96;
     A.data.data[o] = r;
     A.data.data[o + 1] = g;
     A.data.data[o + 2] = b;
     A.data.data[o + 3] = 255;
 
     /* ROUGHNESS — basins polished (specular response), land matte + micro variation */
-    const rough = 255 * (0.22 + land * 0.5 + (hash(i, i * 0.37) - 0.5) * 0.06);
+    const rough = 255 * (0.46 + land * 0.34 + (hash(i, i * 0.37) - 0.5) * 0.08);
     R.data.data[o] = R.data.data[o + 1] = R.data.data[o + 2] = Math.max(0, Math.min(255, rough));
     R.data.data[o + 3] = 255;
 
@@ -145,7 +145,7 @@ export function makePlanetMaps(w = 1024): PlanetMaps {
   for (let y = 2; y < h - 2; y += 2) {
     for (let x = 2; x < w - 2; x += 2) {
       const e = heights[y * w + x]!;
-      if (e < 0.4 || e > 0.5) continue;
+      if (e < 0.36 || e > 0.56) continue;
       if (hash(x * 1.7, y * 2.3) > 0.085) continue;
       const len = (4 + hash(x, y) * 16) * (w / 1024);
       const dir = hash(y, x) > 0.5 ? 0 : 1;
