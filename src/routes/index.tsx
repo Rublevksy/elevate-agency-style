@@ -31,8 +31,8 @@ function Home() {
 
   return (
     <>
-      {/* 01 — pinned cinematic intro: closed laptop → open → into the screen */}
-      <CinematicIntro />
+      {/* 01 — ELEVATE digital world: environment + interface core + editorial type */}
+      <HeroWorld />
 
       {/* 03 — how we work + studio point of view */}
       <StudioPhilosophy />
