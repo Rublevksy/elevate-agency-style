@@ -114,7 +114,7 @@ export function DeviceFilm() {
           className="absolute inset-0 z-40"
           style={{ opacity: 0, visibility: "hidden", willChange: "opacity, transform, filter" }}
         >
-          <WorkspaceDisplay progress={progress} />
+          <WorkspaceDisplay progress={progress} chrome={false} />
         </div>
 
         {/* the seam into the next section: same environment, no colour cut */}

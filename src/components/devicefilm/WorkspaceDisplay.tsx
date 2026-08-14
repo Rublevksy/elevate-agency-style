@@ -14,7 +14,7 @@ import { PHASE, clamp01, easeFilm, range } from "./film";
 /** beat centres on the local 0 → 1 display timeline */
 const BEATS = [0.1, 0.38, 0.64, 0.88];
 /** how wide a beat owns the frame */
-const HOLD = 0.3;
+const HOLD = 0.24;
 
 function beat(u: number, i: number) {
   const d = Math.abs(u - BEATS[i]!);
@@ -23,7 +23,14 @@ function beat(u: number, i: number) {
   return easeFilm(clamp01(1 - d / HOLD));
 }
 
-export function WorkspaceDisplay({ progress }: { progress?: React.RefObject<number> }) {
+export function WorkspaceDisplay({
+  progress,
+  chrome = true,
+}: {
+  progress?: React.RefObject<number>;
+  /** the device shows the workspace chrome; the fullscreen takeover does not */
+  chrome?: boolean;
+}) {
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -80,6 +87,7 @@ export function WorkspaceDisplay({ progress }: { progress?: React.RefObject<numb
       />
 
       {/* chrome — the workspace label morphs from a file into a live domain */}
+      {chrome && (
       <div className="relative flex items-center gap-[1.6cqw] border-b border-white/[0.06] px-[3.4%] py-[2%]">
         <span className="h-[0.7cqw] w-[0.7cqw] rounded-full bg-white/12" />
         <span className="h-[0.7cqw] w-[0.7cqw] rounded-full bg-white/[0.08]" />
@@ -113,8 +121,10 @@ export function WorkspaceDisplay({ progress }: { progress?: React.RefObject<numb
         </div>
       </div>
 
+      )}
+
       {/* ============ the four states, stacked and cross-faded ============ */}
-      <div className="relative h-[calc(100%-5.6cqw)] w-full">
+      <div className="relative w-full" style={{ height: chrome ? "calc(100% - 5.6cqw)" : "100%" }}>
         {/* 01 — IDEA: the brief */}
         <div
           className="absolute inset-0 flex flex-col justify-center px-[7%]"
@@ -326,6 +336,7 @@ export function WorkspaceDisplay({ progress }: { progress?: React.RefObject<numb
       </div>
 
       {/* the timeline rail: IDEA → DESIGN → BUILD → LIVE, read at a glance */}
+      {chrome && (
       <div className="absolute bottom-[2.4%] left-[4%] right-[4%] flex items-center gap-[1.2cqw]">
         {["idea", "design", "build", "live"].map((t, i) => (
           <div key={t} className="flex flex-1 items-center gap-[0.8cqw]">
@@ -347,6 +358,7 @@ export function WorkspaceDisplay({ progress }: { progress?: React.RefObject<numb
           </div>
         ))}
       </div>
+      )}
     </div>
   );
 }
