@@ -80,13 +80,19 @@ export function ElevateEngine({
       shell.current.visible = dissolve > 0.01;
     }
 
-    /* light core: breathes with proximity, collapses into pure light at the end */
+    /* light core: collapses into pure light before the lens reaches it, so the
+       camera travels through light rather than into a solid body */
     if (core.current) {
-      const s = lerp(1, 0.2, easeCine(stage(p, 0.62, 0.95)));
-      core.current.scale.setScalar(s);
+      const collapse = easeCine(stage(p, 0.34, 0.7));
+      core.current.scale.setScalar(lerp(1, 0.04, collapse));
+      core.current.rotation.y = p * 2.6;
       const mat = core.current.material as MeshStandardMaterial;
-      mat.emissiveIntensity = 0.18 + e * 0.9;
+      mat.emissiveIntensity = 0.18 + collapse * 1.6;
+      mat.transparent = true;
+      mat.opacity = 1 - stage(p, 0.5, 0.72);
+      core.current.visible = mat.opacity > 0.01;
     }
+
     if (halo.current) {
       halo.current.scale.setScalar(lerp(4.5, 11, e));
       (halo.current.material as MeshBasicMaterial).opacity = lerp(0.16, 0.34, e) * (1 - stage(p, 0.94, 1));
