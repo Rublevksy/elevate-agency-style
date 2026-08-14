@@ -110,7 +110,7 @@ export const Laptop = forwardRef<
             <group position={screenOffset} rotation={[-screenTilt, 0, 0]}>
               {/* the same emblem etched into the bottom bezel, front facing, so
                   the mark reads as hardware while the lid is open */}
-              <group position={[0, -H * 0.472, 0.055]}>
+              <group position={[0, -H * 0.62, 0.09]}>
                 <mesh position={[0, 0, -0.002]}>
                   <planeGeometry args={[W * 0.05, W * 0.05]} />
                   <meshStandardMaterial
