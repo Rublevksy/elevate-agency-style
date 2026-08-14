@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { CinematicIntro } from "@/components/intro3d/CinematicIntro";
+import { HeroWorld } from "@/components/heroworld/HeroWorld";
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
