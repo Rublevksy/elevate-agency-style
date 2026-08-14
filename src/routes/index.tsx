@@ -4,7 +4,7 @@ import { DeviceFilm } from "@/components/devicefilm/DeviceFilm";
 import { DeviceServices } from "@/components/deviceservices/DeviceServices";
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
-import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
+import { ProcessFilm } from "@/components/process/ProcessFilm";
 import { StudioPhilosophy } from "@/components/sections/StudioPhilosophy";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { CINEMATIC } from "@/lib/cinematic-copy";
@@ -41,7 +41,7 @@ function Home() {
       {/* 03 — how we work + studio point of view */}
       <StudioPhilosophy />
 
-      <ProcessTimeline />
+      <ProcessFilm />
 
       {/* 04 — proof */}
       <Results />
