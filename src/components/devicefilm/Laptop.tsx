@@ -5,7 +5,7 @@ import type { Group, Mesh, MeshStandardMaterial } from "three";
 import { MathUtils } from "three";
 import glb from "@/assets/macbook-pro-14-m5.glb.asset.json";
 import mark from "@/assets/elevate-logo.png";
-import { ScreenSite } from "./ScreenSite";
+import { WorkspaceDisplay } from "./WorkspaceDisplay";
 import { measureMacbook } from "./glbParts";
 import { DEVICE, PHASE, clamp01, range, smoothstep } from "./film";
 
@@ -137,7 +137,7 @@ export const Laptop = forwardRef<
                   }}
                 >
                   <div ref={uiRef} style={{ width: "100%", height: "100%" }}>
-                    <ScreenSite />
+                    <WorkspaceDisplay progress={progress} />
                   </div>
                 </Html>
 
