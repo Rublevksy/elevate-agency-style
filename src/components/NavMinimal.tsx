@@ -44,25 +44,27 @@ export function NavMinimal() {
   }, [open]);
 
   const link =
-    "text-[11px] uppercase tracking-[0.24em] text-muted-foreground transition-colors hover:text-foreground";
+    "text-[10px] uppercase tracking-[0.28em] text-muted-foreground/85 transition-colors duration-300 hover:text-foreground";
 
   return (
     <header
       aria-hidden={cinematic}
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-700 ${
         cinematic ? "pointer-events-none -translate-y-full opacity-0" : "translate-y-0 opacity-100"
-      } ${
-        scrolled
-          ? "border-b border-border/60 bg-background/70 backdrop-blur-2xl"
-          : "border-b border-transparent bg-transparent"
-      }`}
+      } border-b`}
+      style={{
+        backgroundColor: scrolled ? "rgba(3,7,14,0.65)" : "transparent",
+        backdropFilter: scrolled ? "blur(16px) saturate(140%)" : "none",
+        borderColor: scrolled ? "oklch(0.72 0.14 258 / 0.1)" : "transparent",
+        boxShadow: scrolled ? "0 1px 0 0 oklch(0.72 0.16 258 / 0.06)" : "none",
+      }}
     >
-      <div className="mx-auto flex h-16 max-w-[1400px] items-center justify-between px-5 md:h-20 md:px-10">
+      <div className="mx-auto flex h-14 max-w-[1400px] items-center justify-between px-5 md:h-16 md:px-10">
         <Link to="/" aria-label="ELEVATE" className="transition-opacity hover:opacity-70">
-          <Logo className="h-6 w-auto md:h-7" />
+          <Logo className="h-5 w-auto md:h-6" />
         </Link>
 
-        <nav className="hidden items-center gap-10 md:flex">
+        <nav className="hidden items-center gap-8 md:flex">
           {LINKS.map((l) => (
             <Link
               key={l.to}
