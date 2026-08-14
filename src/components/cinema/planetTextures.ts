@@ -104,9 +104,9 @@ export function makePlanetMaps(w = 1024): PlanetMaps {
     const o = i * 4;
 
     /* ALBEDO — deep navy basins → graphite landmass → cool white ridges */
-    const r = 8 + land * 30 + ridge * 46;
-    const g = 13 + land * 36 + ridge * 52;
-    const b = 26 + land * 46 + ridge * 60;
+    const r = 12 + land * 46 + ridge * 62;
+    const g = 18 + land * 54 + ridge * 70;
+    const b = 34 + land * 66 + ridge * 82;
     A.data.data[o] = r;
     A.data.data[o + 1] = g;
     A.data.data[o + 2] = b;
@@ -135,10 +135,10 @@ export function makePlanetMaps(w = 1024): PlanetMaps {
     for (let x = 2; x < w - 2; x += 2) {
       const e = heights[y * w + x]!;
       if (e < 0.32 || e > 0.42) continue;
-      if (hash(x * 1.7, y * 2.3) > 0.045) continue;
-      const len = 6 + hash(x, y) * 26;
+      if (hash(x * 1.7, y * 2.3) > 0.085) continue;
+      const len = (4 + hash(x, y) * 16) * (w / 1024);
       const dir = hash(y, x) > 0.5 ? 0 : 1;
-      ex.strokeStyle = `rgba(96,150,246,${0.14 + hash(x + 3, y) * 0.26})`;
+      ex.strokeStyle = `rgba(96,150,246,${0.2 + hash(x + 3, y) * 0.35})`;
       ex.beginPath();
       ex.moveTo(x, y);
       ex.lineTo(dir ? x + len : x, dir ? y : y + len);
