@@ -85,7 +85,7 @@ export function ElevateEngine({
       const s = lerp(1, 0.2, easeCine(stage(p, 0.62, 0.95)));
       core.current.scale.setScalar(s);
       const mat = core.current.material as MeshStandardMaterial;
-      mat.emissiveIntensity = 0.5 + e * 1.3;
+      mat.emissiveIntensity = 0.18 + e * 0.9;
     }
     if (halo.current) {
       halo.current.scale.setScalar(lerp(4.5, 11, e));
@@ -121,9 +121,9 @@ export function ElevateEngine({
 
   const metal = (
     <meshStandardMaterial
-      color="#1b2532"
-      metalness={0.88}
-      roughness={0.42}
+      color="#334153"
+      metalness={0.5}
+      roughness={0.4}
       transparent
       opacity={1}
       envMapIntensity={1.4}
@@ -146,9 +146,9 @@ export function ElevateEngine({
             <mesh rotation={[Math.PI / 2, 0, 0]}>
               <cylinderGeometry args={[3.4 + i * 0.7, 3.4 + i * 0.7, 0.26 + i * 0.06, mobile ? 72 : 140, 1, true]} />
               <meshStandardMaterial
-                color="#252f3d"
-                metalness={0.92}
-                roughness={0.34}
+                color="#39485c"
+                metalness={0.55}
+                roughness={0.38}
                 side={DoubleSide}
                 transparent
                 opacity={1}
@@ -181,9 +181,9 @@ export function ElevateEngine({
         <mesh rotation={[Math.PI / 2, 0, 0]}>
           <cylinderGeometry args={[1.28, 1.5, 0.6, 12, 1, true]} />
           <meshStandardMaterial
-            color="#2b3543"
-            metalness={0.9}
-            roughness={0.3}
+            color="#3b4a5e"
+            metalness={0.5}
+            roughness={0.35}
             side={DoubleSide}
             transparent
             opacity={1}
@@ -196,11 +196,11 @@ export function ElevateEngine({
       <mesh ref={core}>
         <icosahedronGeometry args={[0.78, 1]} />
         <meshStandardMaterial
-          color="#161d29"
+          color="#20293a"
           emissive="#2c5395"
-          emissiveIntensity={0.35}
-          metalness={0.95}
-          roughness={0.22}
+          emissiveIntensity={0.18}
+          metalness={0.7}
+          roughness={0.25}
           envMapIntensity={1.8}
           flatShading
         />

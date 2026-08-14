@@ -31,7 +31,7 @@ export default function CinemaScene({
       <ambientLight intensity={0.18} color="#8fb0e0" />
       <directionalLight position={[6, 8, 6]} intensity={1.1} color="#cfe0ff" />
       <directionalLight position={[-8, -3, -6]} intensity={0.45} color="#3f6fc0" />
-      <pointLight position={[0, 0, 0]} intensity={mobile ? 3 : 6} distance={14} color="#5b93f0" />
+      <pointLight position={[0, 0, 0]} intensity={mobile ? 1.2 : 2.2} distance={12} color="#5b93f0" />
 
       {/* studio reflections generated in-engine: gives the metal real specular */}
       <Environment resolution={mobile ? 128 : 256} frames={1}>
