@@ -142,13 +142,22 @@ export function ElevateEngine({
             }}
             rotation={[Math.PI / 2 + (i - 1) * 0.06, 0, 0]}
           >
-            <mesh>
-              <torusGeometry args={[3.4 + i * 0.7, 0.035 + i * 0.012, 8, mobile ? 72 : 140]} />
-              {metal}
+            {/* machined plate ring — reads as engineered metal, not wire */}
+            <mesh rotation={[Math.PI / 2, 0, 0]}>
+              <cylinderGeometry args={[3.4 + i * 0.7, 3.4 + i * 0.7, 0.26 + i * 0.06, mobile ? 72 : 140, 1, true]} />
+              <meshStandardMaterial
+                color="#252f3d"
+                metalness={0.92}
+                roughness={0.34}
+                side={DoubleSide}
+                transparent
+                opacity={1}
+                envMapIntensity={1.6}
+              />
             </mesh>
             {/* thin light channel inside the ring */}
             <mesh>
-              <torusGeometry args={[3.4 + i * 0.7, 0.008, 6, mobile ? 60 : 120]} />
+              <torusGeometry args={[3.4 + i * 0.7, 0.012, 6, mobile ? 60 : 120]} />
               <meshBasicMaterial color="#5b93f0" transparent opacity={0.7} blending={AdditiveBlending} />
             </mesh>
           </group>
@@ -158,7 +167,7 @@ export function ElevateEngine({
         {blades.map((a, i) => (
           <group key={i} rotation={[0, a, 0]}>
             <mesh position={[2.35, 0, 0]} rotation={[0, 0, 0.16]}>
-              <boxGeometry args={[1.5, 0.055, 0.34]} />
+              <boxGeometry args={[1.5, 0.07, 0.34]} />
               {metal}
             </mesh>
             <mesh position={[3.05, 0, 0]}>
@@ -170,34 +179,41 @@ export function ElevateEngine({
 
         {/* central hub housing */}
         <mesh rotation={[Math.PI / 2, 0, 0]}>
-          <cylinderGeometry args={[1.28, 1.5, 0.5, 12, 1, true]} />
+          <cylinderGeometry args={[1.28, 1.5, 0.6, 12, 1, true]} />
           <meshStandardMaterial
-            color="#111823"
+            color="#2b3543"
             metalness={0.9}
-            roughness={0.35}
+            roughness={0.3}
             side={DoubleSide}
             transparent
             opacity={1}
+            envMapIntensity={1.5}
           />
         </mesh>
       </group>
 
-      {/* suspended light core */}
+      {/* suspended core: dark machined body with a thin light equator */}
       <mesh ref={core}>
         <icosahedronGeometry args={[0.78, 1]} />
         <meshStandardMaterial
-          color="#0b1220"
-          emissive="#3f74cf"
-          emissiveIntensity={0.55}
-          metalness={0.85}
-          roughness={0.3}
+          color="#161d29"
+          emissive="#2c5395"
+          emissiveIntensity={0.35}
+          metalness={0.95}
+          roughness={0.22}
+          envMapIntensity={1.8}
           flatShading
         />
+      </mesh>
+      <mesh rotation={[Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.95, 0.006, 6, 90]} />
+        <meshBasicMaterial color="#a8c8ff" transparent opacity={0.8} blending={AdditiveBlending} />
       </mesh>
       <mesh ref={halo}>
         <planeGeometry args={[1, 1]} />
         <meshBasicMaterial map={glow} transparent opacity={0.3} blending={AdditiveBlending} depthWrite={false} />
       </mesh>
+
 
       {/* internal digital surfaces revealed as the camera closes in */}
       <group ref={surfaces} visible={false}>
