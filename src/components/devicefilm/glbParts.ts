@@ -1,5 +1,5 @@
 import { Box3, Quaternion, Vector3, type Matrix4, type Object3D } from "three";
-import { DEVICE } from "../constants";
+import { DEVICE } from "./film";
 
 /**
  * Node names taken from the supplied GLB (`macbook_pro_14_inch_M5.glb`).
