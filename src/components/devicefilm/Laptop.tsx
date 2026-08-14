@@ -124,12 +124,12 @@ export const Laptop = forwardRef<
                   />
                 </mesh>
                 <mesh>
-                  <planeGeometry args={[W * 0.045, W * 0.045]} />
+                  <planeGeometry args={[W * 0.2, W * 0.2]} />
                   <meshStandardMaterial
                     map={logoTex}
                     transparent
                     opacity={0.85}
-                    color="#5b6b84"
+                    color="#ff0000"
                     metalness={1}
                     roughness={0.3}
                     envMapIntensity={2}
