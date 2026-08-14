@@ -4,7 +4,7 @@ import { useFrame } from "@react-three/fiber";
 import type { Group, Mesh, MeshStandardMaterial } from "three";
 import { MathUtils } from "three";
 import glb from "@/assets/macbook-pro-14-m5.glb.asset.json";
-import mark from "@/assets/elevate-logo.png";
+import markAsset from "@/assets/elevate-a-mark.png.asset.json";
 import { WorkspaceDisplay } from "./WorkspaceDisplay";
 import { measureMacbook } from "./glbParts";
 import { DEVICE, PHASE, clamp01, range, smoothstep } from "./film";
@@ -27,7 +27,7 @@ export const Laptop = forwardRef<
 >(function Laptop({ progress, screenRef, mobile }, ref) {
   const { scene } = useGLTF(MODEL_URL);
   const parts = useMemo(() => measureMacbook(scene), [scene]);
-  const logoTex = useTexture(mark);
+  const logoTex = useTexture(markAsset.url);
   const lidRef = useRef<Group>(null);
   const rootRef = useRef<Group>(null);
   const uiRef = useRef<HTMLDivElement>(null);
@@ -106,19 +106,51 @@ export const Laptop = forwardRef<
             <primitive object={parts.lid} quaternion={q} scale={s} position={[-hinge.x, -hinge.y, -hinge.z]} />
 
             <group position={screenOffset} rotation={[-screenTilt, 0, 0]}>
-              {/* ELEVATE mark, etched into the aluminium of the lid back */}
-              <mesh position={[0, 0, -0.42]} rotation={[0, Math.PI, 0]}>
-                <planeGeometry args={[W * 0.13, W * 0.13]} />
-                <meshStandardMaterial
-                  map={logoTex}
-                  transparent
-                  opacity={0.5}
-                  color="#c9d4e4"
-                  metalness={0.9}
-                  roughness={0.36}
-                  depthWrite={false}
-                />
-              </mesh>
+              {/* ELEVATE "A" — a machined hardware emblem in the aluminium: dark
+                  metal fill, a soft blue edge highlight and a whisper of emission
+                  so it reads with the scene lighting instead of glowing */}
+              <group position={[0, 0, -0.44]} rotation={[0, Math.PI, 0]}>
+                {/* recessed seat: a slightly darker milled pocket */}
+                <mesh position={[0, 0, -0.004]}>
+                  <planeGeometry args={[W * 0.165, W * 0.165]} />
+                  <meshStandardMaterial
+                    map={logoTex}
+                    transparent
+                    opacity={0.5}
+                    color="#0a0e15"
+                    metalness={0.4}
+                    roughness={0.72}
+                    depthWrite={false}
+                  />
+                </mesh>
+                {/* the mark itself: polished graphite metal, real reflections */}
+                <mesh>
+                  <planeGeometry args={[W * 0.15, W * 0.15]} />
+                  <meshStandardMaterial
+                    map={logoTex}
+                    transparent
+                    opacity={0.92}
+                    color="#4c5a70"
+                    metalness={1}
+                    roughness={0.26}
+                    envMapIntensity={2.1}
+                    emissive="#2b6fd6"
+                    emissiveIntensity={0.14}
+                    depthWrite={false}
+                  />
+                </mesh>
+                {/* very soft edge highlight — a hint of blue on the chamfer */}
+                <mesh position={[0, 0, 0.006]} scale={1.012}>
+                  <planeGeometry args={[W * 0.15, W * 0.15]} />
+                  <meshBasicMaterial
+                    map={logoTex}
+                    transparent
+                    opacity={0.1}
+                    color="#8fb6ef"
+                    depthWrite={false}
+                  />
+                </mesh>
+              </group>
 
               {/* the display: real HTML on the panel plane, camera entry anchor */}
               <group ref={screenRef} position={[0, 0, 0.06]}>

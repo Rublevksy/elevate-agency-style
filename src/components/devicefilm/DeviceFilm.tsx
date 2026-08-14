@@ -73,17 +73,19 @@ export function DeviceFilm() {
 
   return (
     <div ref={wrap} className="relative h-[250vh]">
-      <div className="sticky top-0 h-[100svh] overflow-hidden bg-[#05070c]">
-        {/* refined technology environment: near-black navy, graphite, thin light */}
+      <div className="sticky top-0 h-[100svh] overflow-hidden">
+        {/* refined technology environment: lighting only — the colour comes from
+            the one continuous page environment underneath */}
         <div
           ref={haze}
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 55% at 52% 40%, oklch(0.28 0.06 258 / 0.28) 0%, transparent 70%), radial-gradient(90% 80% at 50% 110%, oklch(0.18 0.04 258 / 0.5) 0%, transparent 65%), linear-gradient(180deg, #05070c 0%, #05070c 60%, #04060a 100%)",
+              "radial-gradient(60% 55% at 52% 40%, oklch(0.32 0.07 258 / 0.24) 0%, transparent 70%), radial-gradient(90% 80% at 50% 112%, oklch(0.2 0.05 258 / 0.35) 0%, transparent 66%)",
           }}
         />
+
 
         {/* layered digital infrastructure: wireframes, lines, data points */}
         <Atmosphere progress={progress} pointer={pointer} mobile={mobile} />
@@ -117,12 +119,13 @@ export function DeviceFilm() {
           <WorkspaceDisplay progress={progress} chrome={false} />
         </div>
 
-        {/* the seam into the next section: same environment, no colour cut */}
+        {/* the seam into the next section: light falloff only, never a colour cut */}
         <div
           aria-hidden
           className="absolute inset-x-0 bottom-0 z-50 h-[26vh]"
-          style={{ background: "linear-gradient(180deg, transparent 0%, #04060a 92%)" }}
+          style={{ background: "linear-gradient(180deg, transparent 0%, oklch(0.09 0.014 258 / 0.75) 92%)" }}
         />
+
       </div>
     </div>
   );

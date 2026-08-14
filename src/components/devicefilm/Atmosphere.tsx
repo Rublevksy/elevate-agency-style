@@ -24,6 +24,16 @@ export function Atmosphere({
   useEffect(() => {
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const smooth = { x: 0, y: 0 };
+    const cursor = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, energy: 0 };
+    let last = performance.now();
+    const onMove = (e: PointerEvent) => {
+      cursor.tx = e.clientX / window.innerWidth;
+      cursor.ty = e.clientY / window.innerHeight;
+      cursor.energy = 1;
+      last = performance.now();
+    };
+    if (!reduced && !mobile) window.addEventListener("pointermove", onMove, { passive: true });
+
     let raf = 0;
     const tick = () => {
       const el = root.current;
@@ -37,14 +47,24 @@ export function Atmosphere({
         el.style.setProperty("--mx", smooth.x.toFixed(4));
         el.style.setProperty("--my", smooth.y.toFixed(4));
         el.style.setProperty("--p", p.toFixed(4));
-        // the atmosphere yields to the interface as the camera enters the glass
+        // the cursor light: soft, slow, and it decays back to neutral on rest
+        cursor.x += (cursor.tx - cursor.x) * 0.06;
+        cursor.y += (cursor.ty - cursor.y) * 0.06;
+        if (performance.now() - last > 220) cursor.energy += (0 - cursor.energy) * 0.03;
+        el.style.setProperty("--cx", `${(cursor.x * 100).toFixed(2)}%`);
+        el.style.setProperty("--cy", `${(cursor.y * 100).toFixed(2)}%`);
+        el.style.setProperty("--ce", cursor.energy.toFixed(3));
         el.style.setProperty("--thin", (1 - range(PHASE.ENTER, PHASE.HANDOFF, p) * 0.85).toFixed(4));
       }
       raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("pointermove", onMove);
+    };
   }, [progress, pointer, mobile]);
+
 
   const plane = (depth: number) =>
     ({
@@ -62,11 +82,27 @@ export function Atmosphere({
           ["--mx" as string]: 0,
           ["--my" as string]: 0,
           ["--p" as string]: 0,
+          ["--cx" as string]: "50%",
+          ["--cy" as string]: "50%",
+          ["--ce" as string]: 0,
           ["--thin" as string]: 1,
           opacity: "var(--thin)" as unknown as number,
         } as React.CSSProperties
       }
     >
+      {/* the cursor's own light: extremely soft, it lifts the nearby atmosphere */}
+      {!mobile && (
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(22vw 22vw at var(--cx) var(--cy), oklch(0.62 0.15 258 / 0.1) 0%, oklch(0.5 0.12 258 / 0.045) 38%, transparent 72%)",
+            opacity: "calc(0.35 + var(--ce) * 0.65)" as unknown as number,
+            mixBlendMode: "screen",
+          }}
+        />
+      )}
+
       {/* FAR — soft blue light fields and atmospheric haze */}
       <div className="absolute inset-[-8%]" style={plane(0.18)}>
         <div
@@ -189,6 +225,50 @@ export function Atmosphere({
         </div>
       )}
 
+      {/* NEAR — the rare events: a line that draws itself, a point travelling
+          along it, a pulse. Long cycles, so the scene feels alive, never busy. */}
+      {!mobile && (
+        <div className="absolute inset-0" style={plane(1.32)}>
+          {TRACES.map((t, i) => (
+            <div
+              key={i}
+              className="absolute h-px atmo-draw origin-left"
+              style={{
+                top: t.y,
+                left: t.x,
+                width: t.w,
+                animationDelay: `${t.delay}s`,
+                animationDuration: `${t.dur}s`,
+                background:
+                  "linear-gradient(90deg, transparent 0%, oklch(0.72 0.16 258 / 0.5) 40%, oklch(0.86 0.1 258 / 0.75) 70%, transparent 100%)",
+                opacity: "calc(0.35 + var(--ce) * 0.5)" as unknown as number,
+              }}
+            >
+              <span
+                className="absolute -top-[1.5px] h-1 w-1 rounded-full bg-primary atmo-travel"
+                style={{ animationDelay: `${t.delay + 1.2}s`, animationDuration: `${t.dur}s`, boxShadow: "0 0 10px oklch(0.75 0.17 258 / 0.7)" }}
+              />
+            </div>
+          ))}
+          {PARTICLES.map((s, i) => (
+            <span
+              key={i}
+              className="absolute rounded-full bg-primary/60 atmo-drift"
+              style={{
+                left: `${s.x}%`,
+                top: `${s.y}%`,
+                width: "2px",
+                height: "2px",
+                animationDelay: `${s.delay}s`,
+                animationDuration: `${s.dur}s`,
+                opacity: "calc(0.3 + var(--ce) * 0.45)" as unknown as number,
+              }}
+            />
+          ))}
+        </div>
+      )}
+
+
       {/* grain keeps the gradients cinematic instead of digital */}
       <div
         className="absolute inset-0 opacity-[0.14] mix-blend-soft-light"
@@ -200,6 +280,21 @@ export function Atmosphere({
     </div>
   );
 }
+
+/** rare foreground events — long cycles, deterministic placement */
+const TRACES = [
+  { x: "6%", y: "34%", w: "18vw", delay: 0, dur: 22 },
+  { x: "58%", y: "18%", w: "14vw", delay: 7, dur: 26 },
+  { x: "40%", y: "82%", w: "22vw", delay: 13, dur: 24 },
+] as const;
+
+const PARTICLES = [
+  { x: 18, y: 46, delay: 0, dur: 18 },
+  { x: 34, y: 26, delay: 3, dur: 22 },
+  { x: 52, y: 66, delay: 6, dur: 20 },
+  { x: 76, y: 40, delay: 9, dur: 24 },
+  { x: 90, y: 62, delay: 12, dur: 19 },
+] as const;
 
 /** deterministic near-plane data points — no randomness, no autoplay */
 const DOTS = [

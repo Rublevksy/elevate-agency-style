@@ -29,7 +29,7 @@ export default function FilmScene({
       camera={{ fov: mobile ? 34 : 30, position: [0, 12, 70], near: 0.1, far: 400 }}
       onCreated={({ gl }) => {
         gl.toneMapping = ACESFilmicToneMapping;
-        gl.toneMappingExposure = 1.05;
+        gl.toneMappingExposure = 1.02;
       }}
       style={{ position: "absolute", inset: 0 }}
     >
@@ -37,6 +37,10 @@ export default function FilmScene({
       <directionalLight position={[26, 34, 30]} intensity={3.4} color="#eef4ff" />
       <directionalLight position={[-34, 10, -18]} intensity={1.1} color="#3b6ec4" />
       <directionalLight position={[-16, 26, 26]} intensity={1.3} color="#b9cdf0" />
+      {/* subtle blue rim: separates the graphite chassis from the dark environment */}
+      <directionalLight position={[0, 6, -40]} intensity={1.5} color="#2f6ed0" />
+      {/* restrained keyboard illumination — light spilling off the deck */}
+      <pointLight position={[0, 6, 8]} intensity={mobile ? 12 : 22} distance={34} decay={2.2} color="#cfe0ff" />
 
 
       <Environment resolution={mobile ? 128 : 256} frames={1}>
