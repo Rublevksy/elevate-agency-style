@@ -308,6 +308,13 @@
     transform-origin: center;
   }
 
+  /* travelling specular highlight along a device edge */
+  @keyframes edge-travel {
+    0%   { background-position: 130% 0; }
+    100% { background-position: -130% 0; }
+  }
+
+
   /* Dropdown menu */
   .nav-dropdown {
     opacity: 0;

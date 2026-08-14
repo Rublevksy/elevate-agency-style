@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { DeviceFilm } from "@/components/devicefilm/DeviceFilm";
+import { DeviceServices } from "@/components/deviceservices/DeviceServices";
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
@@ -34,8 +35,12 @@ function Home() {
       {/* 01 — cinematic device film: product → camera → digital products → website */}
       <DeviceFilm />
 
+      {/* 02 — device-based service gallery: one shot through five products */}
+      <DeviceServices />
+
       {/* 03 — how we work + studio point of view */}
       <StudioPhilosophy />
+
       <ProcessTimeline />
 
       {/* 04 — proof */}
