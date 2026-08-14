@@ -13,28 +13,38 @@ function hash(x: number, y: number) {
   return n - Math.floor(n);
 }
 
+function hash3(x: number, y: number, z: number) {
+  const n = Math.sin(x * 127.1 + y * 311.7 + z * 74.7) * 43758.5453123;
+  return n - Math.floor(n);
+}
+
 function smooth(t: number) {
   return t * t * (3 - 2 * t);
 }
 
-function noise(x: number, y: number) {
+/** 3D value noise — sampled on the sphere so the surface has no UV seam or pole pinch */
+function noise3(x: number, y: number, z: number) {
   const xi = Math.floor(x);
   const yi = Math.floor(y);
+  const zi = Math.floor(z);
   const xf = smooth(x - xi);
   const yf = smooth(y - yi);
-  const a = hash(xi, yi);
-  const b = hash(xi + 1, yi);
-  const c = hash(xi, yi + 1);
-  const d = hash(xi + 1, yi + 1);
-  return a + (b - a) * xf + (c - a) * yf + (a - b - c + d) * xf * yf;
+  const zf = smooth(z - zi);
+  const c = (dx: number, dy: number, dz: number) => hash3(xi + dx, yi + dy, zi + dz);
+  const l = (a: number, b: number, t: number) => a + (b - a) * t;
+  const x00 = l(c(0, 0, 0), c(1, 0, 0), xf);
+  const x10 = l(c(0, 1, 0), c(1, 1, 0), xf);
+  const x01 = l(c(0, 0, 1), c(1, 0, 1), xf);
+  const x11 = l(c(0, 1, 1), c(1, 1, 1), xf);
+  return l(l(x00, x10, yf), l(x01, x11, yf), zf);
 }
 
-function fbm(x: number, y: number, octaves = 6) {
+function fbm3(x: number, y: number, z: number, octaves = 6) {
   let v = 0;
   let amp = 0.5;
   let f = 1;
   for (let i = 0; i < octaves; i++) {
-    v += noise(x * f, y * f) * amp;
+    v += noise3(x * f, y * f, z * f) * amp;
     f *= 2.03;
     amp *= 0.5;
   }
@@ -64,27 +74,28 @@ export function makePlanetMaps(w = 1024): PlanetMaps {
   const D = mk();
   const E = mk();
 
-  const scale = 6;
+  const scale = 2.6;
   const heights = new Float32Array(w * h);
 
   for (let y = 0; y < h; y++) {
-    /* latitude compression keeps the noise from pinching at the poles */
-    const v = y / h;
-    const lat = (v - 0.5) * Math.PI;
-    const comp = Math.max(0.15, Math.cos(lat));
+    const lat = (y / h - 0.5) * Math.PI;
+    const cy = Math.sin(lat);
+    const cr = Math.cos(lat);
     for (let x = 0; x < w; x++) {
-      const u = x / w;
-      const nx = u * scale * comp * 2;
-      const ny = v * scale;
+      const lon = (x / w) * Math.PI * 2;
+      const sx = Math.cos(lon) * cr * scale;
+      const sy = cy * scale;
+      const sz = Math.sin(lon) * cr * scale;
       /* domain warp: gives continents organic, non-blobby edges */
-      const wx = fbm(nx + 5.2, ny + 1.3, 4);
-      const wy = fbm(nx + 9.7, ny + 4.1, 4);
-      let e = fbm(nx + wx * 0.9, ny + wy * 0.9, 6);
-      e = Math.pow(Math.max(0, e * 1.25 - 0.18), 1.15);
-      const micro = fbm(nx * 9, ny * 9, 3) * 0.16;
+      const wx = fbm3(sx + 5.2, sy + 1.3, sz + 2.4, 4);
+      const wy = fbm3(sx + 9.7, sy + 4.1, sz + 7.8, 4);
+      let e = fbm3(sx + wx * 1.1, sy + wy * 1.1, sz + wx * 0.6, 6);
+      e = Math.pow(Math.max(0, e * 1.35 - 0.2), 1.1);
+      const micro = fbm3(sx * 8, sy * 8, sz * 8, 3) * 0.18;
       heights[y * w + x] = Math.min(1, e + micro * e);
     }
   }
+
 
   for (let i = 0; i < w * h; i++) {
     const e = heights[i]!;
