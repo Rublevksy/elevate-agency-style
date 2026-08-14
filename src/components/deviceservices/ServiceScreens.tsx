@@ -3,6 +3,9 @@
  * of real ELEVATE work for that discipline — drawn with design tokens, sized in
  * container units so it stays correct at any device scale.
  */
+import aMark from "@/assets/elevate-a-mark.png.asset.json";
+
+
 
 function Screen({ children }: { children: React.ReactNode }) {
   return (
@@ -155,8 +158,70 @@ export function MobileScreen() {
   );
 }
 
-/** 04 — internal dashboard / analytics */
+/** 04 — SEO, speed & Core Web Vitals */
+export function SeoScreen() {
+  return (
+    <Screen>
+      <div className="flex h-full flex-col p-[3cqw]">
+        <div className="flex items-center gap-[2cqw]">
+          <span className="font-mono text-[1.8cqw] uppercase tracking-[0.32em] text-primary">Core Web Vitals</span>
+          <span className="ml-auto rounded-full border border-white/10 px-[2cqw] py-[0.9cqh] text-[1.6cqw] text-muted-foreground">
+            elevateit.cz
+          </span>
+        </div>
+        <div className="mt-[2.4cqh] grid grid-cols-4 gap-[1.8cqw]">
+          {[
+            { k: "LCP", v: "1,2 s" },
+            { k: "INP", v: "48 ms" },
+            { k: "CLS", v: "0,01" },
+            { k: "Index", v: "100 %" },
+          ].map((c, i) => (
+            <div
+              key={c.k}
+              className="rounded-[1.2cqw] border border-white/[0.07] p-[1.6cqw]"
+              style={{
+                background:
+                  i === 0
+                    ? "linear-gradient(150deg, oklch(0.65 0.18 255 / 0.28), transparent 70%)"
+                    : "rgba(255,255,255,0.02)",
+              }}
+            >
+              <div className="font-mono text-[1.5cqw] uppercase tracking-[0.2em] text-muted-foreground">{c.k}</div>
+              <div className="mt-[0.6cqh] text-[3cqw] font-medium">{c.v}</div>
+            </div>
+          ))}
+        </div>
+        {/* performance curve — thin-line geometry, no stock iconography */}
+        <div className="relative mt-[2.4cqh] min-h-0 flex-1 overflow-hidden rounded-[1.2cqw] border border-white/[0.07] bg-white/[0.015]">
+          <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
+            {[10, 20, 30].map((y) => (
+              <line key={y} x1="0" y1={y} x2="100" y2={y} stroke="currentColor" strokeWidth="0.15" className="text-white/10" />
+            ))}
+            <path
+              d="M0 34 C 14 33, 22 30, 32 26 S 52 20, 64 13 S 84 6, 100 3"
+              fill="none"
+              stroke="oklch(0.65 0.18 255)"
+              strokeWidth="0.7"
+              strokeLinecap="round"
+            />
+            <path
+              d="M0 34 C 14 33, 22 30, 32 26 S 52 20, 64 13 S 84 6, 100 3 L100 40 L0 40 Z"
+              fill="oklch(0.65 0.18 255 / 0.14)"
+            />
+            <circle cx="100" cy="3" r="1" fill="oklch(0.72 0.16 250)" />
+          </svg>
+          <div className="absolute bottom-[1.6cqh] left-[2cqw] font-mono text-[1.5cqw] uppercase tracking-[0.24em] text-muted-foreground">
+            Rychlost · pozice · indexace
+          </div>
+        </div>
+      </div>
+    </Screen>
+  );
+}
+
+/** internal dashboard / analytics */
 export function DashboardScreen() {
+
   return (
     <Screen>
       <div className="flex h-full">
@@ -208,18 +273,32 @@ export function DashboardScreen() {
   );
 }
 
-/** 05 — brand & UX system */
+/** 05 — logo, visual identity & UI/UX */
 export function BrandScreen() {
   return (
     <Screen>
       <div className="flex h-full flex-col p-[3.4cqw]">
-        <span className="font-mono text-[1.8cqw] uppercase tracking-[0.34em] text-primary">Brand system</span>
+        <span className="font-mono text-[1.8cqw] uppercase tracking-[0.34em] text-primary">Logo & design</span>
         <div className="mt-[2cqh] flex min-h-0 flex-1 gap-[2.4cqw]">
-          <div className="flex w-[36%] flex-col justify-between rounded-[1.4cqw] border border-white/[0.07] bg-white/[0.02] p-[2cqw]">
-            <div className="text-[9cqw] font-medium leading-none tracking-[-0.05em]">
-              Aa
-            </div>
-            <div className="space-y-[1cqh]">
+          <div className="relative flex w-[36%] flex-col justify-between overflow-hidden rounded-[1.4cqw] border border-white/[0.07] bg-white/[0.02] p-[2cqw]">
+            {/* construction grid + the ELEVATE mark being built */}
+            <div
+              aria-hidden
+              className="absolute inset-0 opacity-40"
+              style={{
+                backgroundImage:
+                  "linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)",
+                backgroundSize: "8% 12%",
+              }}
+            />
+            <img
+              src={aMark.url}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="relative mx-auto h-[46cqh] w-auto object-contain opacity-95"
+            />
+            <div className="relative space-y-[1cqh]">
               <div className="h-[1.2cqh] w-[80%] rounded-full bg-foreground/18" />
               <div className="h-[1.2cqh] w-[56%] rounded-full bg-foreground/10" />
             </div>

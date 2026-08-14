@@ -100,6 +100,8 @@ export const Laptop = forwardRef<
         {/* base / top case — perfectly still */}
         <primitive object={parts.base} quaternion={q} scale={s} />
 
+
+
         {/* real hinge axis, carrying the GLB's authored open angle */}
         <group position={hinge} rotation={[(openDeg * Math.PI) / 180, 0, 0]}>
           <group ref={lidRef}>
@@ -110,6 +112,7 @@ export const Laptop = forwardRef<
                   metal fill, a soft blue edge highlight and a whisper of emission
                   so it reads with the scene lighting instead of glowing */}
               <group position={[0, 0, -0.44]} rotation={[0, Math.PI, 0]}>
+
                 {/* recessed seat: a slightly darker milled pocket */}
                 <mesh position={[0, 0, -0.004]}>
                   <planeGeometry args={[W * 0.165, W * 0.165]} />
