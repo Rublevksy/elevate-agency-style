@@ -113,7 +113,7 @@ export function NavMinimal() {
 
       {/* Full menu overlay */}
       <div
-        className={`fixed inset-0 top-16 md:top-20 z-40 bg-background/95 backdrop-blur-2xl transition-all duration-500 ${
+        className={`fixed inset-0 top-14 md:top-16 z-40 bg-background/95 backdrop-blur-2xl transition-all duration-500 ${
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0"
         }`}
       >
