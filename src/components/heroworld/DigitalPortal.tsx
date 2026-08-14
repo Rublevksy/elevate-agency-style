@@ -101,7 +101,7 @@ export function DigitalPortal({ className = "", progressRef }: Props) {
               className="absolute inset-0"
               style={{
                 background:
-                  "radial-gradient(120% 95% at 32% 12%, oklch(0.52 0.12 258 / 0.55), transparent 66%), linear-gradient(200deg, oklch(0.15 0.03 258 / 0.72), oklch(0.08 0.02 258 / 0.9))",
+                  "radial-gradient(120% 95% at 32% 12%, oklch(0.52 0.12 258 / 0.55), transparent 66%), linear-gradient(200deg, oklch(0.19 0.04 258 / 0.6), oklch(0.10 0.02 258 / 0.78))",
               }}
             />
             {/* thin technical lines: horizon + measure marks */}

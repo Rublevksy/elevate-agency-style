@@ -53,18 +53,18 @@ export function HeroWorld() {
             progressRef={progress}
             intensityRef={intensity}
           />
-          <DigitalPortal className="absolute inset-0 md:left-[16%]" progressRef={progress} />
         </ClientOnly>
 
-        {/* vignette keeps the frame cinematic and the type legible */}
+        {/* vignette sits behind the interface core so the bloom is never crushed */}
         <div
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(120% 90% at 50% 45%, transparent 40%, oklch(0.04 0.01 258 / 0.68) 100%), linear-gradient(90deg, oklch(0.04 0.01 258 / 0.6) 0%, transparent 46%)",
+              "radial-gradient(120% 95% at 50% 45%, transparent 46%, oklch(0.04 0.01 258 / 0.6) 100%), linear-gradient(90deg, oklch(0.04 0.01 258 / 0.62) 0%, transparent 44%)",
           }}
         />
+        <DigitalPortal className="absolute inset-0 md:left-[16%]" progressRef={progress} />
 
         <div
           ref={content}

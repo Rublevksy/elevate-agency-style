@@ -156,7 +156,7 @@ void main(){
   float coreShadow = 1.0 - 0.55 * exp(-pow(length(c * vec2(1.0, 1.15)) * 2.6, 2.0));
 
   vec3 col = BLACK;
-  col += NAVY * haze * 1.15 * depth;
+  col += NAVY * haze * 1.5 * depth;
   col += mix(NAVY, BLUE, 0.55) * mid * 0.38 * depth * coreShadow;
   col += BLUE * mid * mid * 0.16 * centreLift * coreShadow;
   col += STEEL * far * 0.6 * depth;
@@ -229,7 +229,7 @@ export function DigitalEnvironment({ className = "", progressRef, intensityRef }
       const k = Math.max(0, Math.min(1, intensityRef?.current ?? 1));
       gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.uniform1f(uFlow, progressRef?.current ?? 0);
-      gl.uniform1f(uK, 0.55 + k * 0.85);
+      gl.uniform1f(uK, 0.8 + k * 1.1);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       if (visible) raf = requestAnimationFrame(draw);
     };
