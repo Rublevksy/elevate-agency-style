@@ -96,7 +96,7 @@ const STAGES: Stage[] = [
     title: "Brand & UX",
     desc: "Vizuální identita, UX/UI a digitální systém, který drží značku pohromadě.",
     to: "/services/branding",
-    base: { x: 4, y: 0, ry: 0, scale: 1 },
+    base: { x: 17, y: 0, ry: -4, scale: 1 },
     inX: 0,
     inZ: -1200,
     outX: 0,
@@ -104,7 +104,7 @@ const STAGES: Stage[] = [
     text: "left",
     Device: function Ecosystem() {
       return (
-        <div className="relative w-[86vw] md:w-[58vw]" style={{ transformStyle: "preserve-3d" }}>
+        <div className="relative w-[86vw] md:w-[52vw]" style={{ transformStyle: "preserve-3d" }}>
           <div className="relative" style={{ transform: "translateZ(-140px) translateX(-6%)" }}>
             <Monitor active className="w-[62%]">
               <BrandScreen />
