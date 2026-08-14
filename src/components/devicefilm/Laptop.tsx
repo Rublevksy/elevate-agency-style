@@ -100,40 +100,6 @@ export const Laptop = forwardRef<
         {/* base / top case — perfectly still */}
         <primitive object={parts.base} quaternion={q} scale={s} />
 
-        {/* ELEVATE "A" milled into the palm rest, so the emblem stays visible
-            with the lid open: graphite metal, faint blue chamfer, no glow */}
-        <group
-          position={[W * 0.3, hinge.y + 0.012, hinge.z + H * 0.62]}
-          rotation={[-Math.PI / 2, 0, 0]}
-        >
-          <mesh position={[0, 0, -0.003]}>
-            <planeGeometry args={[W * 0.085, W * 0.085]} />
-            <meshStandardMaterial
-              map={logoTex}
-              transparent
-              opacity={0.45}
-              color="#0a0e15"
-              metalness={0.4}
-              roughness={0.75}
-              depthWrite={false}
-            />
-          </mesh>
-          <mesh>
-            <planeGeometry args={[W * 0.078, W * 0.078]} />
-            <meshStandardMaterial
-              map={logoTex}
-              transparent
-              opacity={0.9}
-              color="#54637b"
-              metalness={1}
-              roughness={0.28}
-              envMapIntensity={2}
-              emissive="#2b6fd6"
-              emissiveIntensity={0.12}
-              depthWrite={false}
-            />
-          </mesh>
-        </group>
 
 
         {/* real hinge axis, carrying the GLB's authored open angle */}
