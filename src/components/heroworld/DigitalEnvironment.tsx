@@ -102,7 +102,7 @@ float fragments(vec2 uv, float cells){
   vec2 id = floor(g);
   vec2 f = fract(g);
   float seed = hash1(id * 1.37);
-  if (seed < 0.76) return 0.0;
+  if (seed < 0.86) return 0.0;
   vec2 h = hash2(id + 5.1);
   vec2 size = vec2(0.28 + h.x * 0.3, 0.15 + h.y * 0.16);
   vec2 org = (vec2(1.0) - size) * hash2(id + 11.3);
@@ -127,7 +127,7 @@ void main(){
   float dots = 0.0;
   vec2 farUV = c + vec2(flow * 0.08, -flow * 0.02) + uMouse * 0.010;
   float links = network(farUV, 7.0, 0.55, dots);
-  float far = dots * 0.5 + links * 0.28;
+  float far = dots * 0.42 + links * 0.24;
 
   /* MID — large flowing structures */
   vec2 midUV = c * 0.9 + vec2(flow * 0.34, -flow * 0.08) + uMouse * 0.055;
@@ -156,7 +156,7 @@ void main(){
   float coreShadow = 1.0 - 0.55 * exp(-pow(length(c * vec2(1.0, 1.15)) * 2.6, 2.0));
 
   vec3 col = BLACK;
-  col += NAVY * haze * 1.5 * depth;
+  col += NAVY * haze * 1.1 * depth;
   col += mix(NAVY, BLUE, 0.55) * mid * 0.38 * depth * coreShadow;
   col += BLUE * mid * mid * 0.16 * centreLift * coreShadow;
   col += STEEL * far * 0.6 * depth;
@@ -229,7 +229,7 @@ export function DigitalEnvironment({ className = "", progressRef, intensityRef }
       const k = Math.max(0, Math.min(1, intensityRef?.current ?? 1));
       gl.uniform2f(uMouse, mouse.x, mouse.y);
       gl.uniform1f(uFlow, progressRef?.current ?? 0);
-      gl.uniform1f(uK, 0.8 + k * 1.1);
+      gl.uniform1f(uK, 0.34 + k * 0.42);
       gl.drawArrays(gl.TRIANGLES, 0, 3);
       if (visible) raf = requestAnimationFrame(draw);
     };
