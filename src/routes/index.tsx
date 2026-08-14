@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { CinematicOpening } from "@/components/cinema/CinematicOpening";
+import { DeviceFilm } from "@/components/devicefilm/DeviceFilm";
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
@@ -31,8 +31,8 @@ function Home() {
 
   return (
     <>
-      {/* 01 — the cinematic opening: one scroll-driven shot into ELEVATE */}
-      <CinematicOpening />
+      {/* 01 — cinematic device film: product → camera → digital products → website */}
+      <DeviceFilm />
 
       {/* 03 — how we work + studio point of view */}
       <StudioPhilosophy />
