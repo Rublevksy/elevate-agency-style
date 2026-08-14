@@ -97,10 +97,21 @@ export function makePlanetMaps(w = 1024): PlanetMaps {
   }
 
 
+  /* normalise so the land/ridge thresholds are resolution- and seed-independent */
+  let lo = Infinity;
+  let hi = -Infinity;
+  for (let i = 0; i < heights.length; i++) {
+    const v = heights[i]!;
+    if (v < lo) lo = v;
+    if (v > hi) hi = v;
+  }
+  const span = Math.max(1e-4, hi - lo);
+  for (let i = 0; i < heights.length; i++) heights[i] = (heights[i]! - lo) / span;
+
   for (let i = 0; i < w * h; i++) {
     const e = heights[i]!;
-    const land = Math.min(1, Math.max(0, (e - 0.34) / 0.24));
-    const ridge = Math.min(1, Math.max(0, (e - 0.62) / 0.3));
+    const land = Math.min(1, Math.max(0, (e - 0.42) / 0.26));
+    const ridge = Math.min(1, Math.max(0, (e - 0.72) / 0.26));
     const o = i * 4;
 
     /* ALBEDO — deep navy basins → graphite landmass → cool white ridges */
@@ -134,7 +145,7 @@ export function makePlanetMaps(w = 1024): PlanetMaps {
   for (let y = 2; y < h - 2; y += 2) {
     for (let x = 2; x < w - 2; x += 2) {
       const e = heights[y * w + x]!;
-      if (e < 0.32 || e > 0.42) continue;
+      if (e < 0.4 || e > 0.5) continue;
       if (hash(x * 1.7, y * 2.3) > 0.085) continue;
       const len = (4 + hash(x, y) * 16) * (w / 1024);
       const dir = hash(y, x) > 0.5 ? 0 : 1;
