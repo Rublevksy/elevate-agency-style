@@ -74,16 +74,7 @@ export function ElevatePlanet({
   const orbitDust = useRef<Points>(null);
   const smooth = useRef({ p: 0, mx: 0, my: 0 });
 
-  const maps = useMemo(() => {
-    const m = makePlanetMaps(mobile ? 512 : 1024);
-    if (typeof window !== "undefined")
-      (window as unknown as Record<string, unknown>).__PLANET_DEBUG__ = {
-        albedo: m.albedo.image.width,
-        px: m.albedo.image.getContext("2d").getImageData(200, 100, 1, 1).data.join(","),
-        em: m.emissive.image.getContext("2d").getImageData(200, 100, 1, 1).data.join(","),
-      };
-    return m;
-  }, [mobile]);
+  const maps = useMemo(() => makePlanetMaps(mobile ? 512 : 1024), [mobile]);
   const uiTex = useMemo(() => makeGridTexture(mobile ? 256 : 512), [mobile]);
   const glow = useMemo(() => makeGlowTexture(), []);
   const seg = mobile ? 128 : 320;
