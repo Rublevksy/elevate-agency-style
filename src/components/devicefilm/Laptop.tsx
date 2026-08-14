@@ -108,10 +108,43 @@ export const Laptop = forwardRef<
             <primitive object={parts.lid} quaternion={q} scale={s} position={[-hinge.x, -hinge.y, -hinge.z]} />
 
             <group position={screenOffset} rotation={[-screenTilt, 0, 0]}>
+              {/* the same emblem etched into the bottom bezel, front facing, so
+                  the mark reads as hardware while the lid is open */}
+              <group position={[0, -H * 0.472, 0.055]}>
+                <mesh position={[0, 0, -0.002]}>
+                  <planeGeometry args={[W * 0.05, W * 0.05]} />
+                  <meshStandardMaterial
+                    map={logoTex}
+                    transparent
+                    opacity={0.4}
+                    color="#0a0e15"
+                    metalness={0.4}
+                    roughness={0.78}
+                    depthWrite={false}
+                  />
+                </mesh>
+                <mesh>
+                  <planeGeometry args={[W * 0.045, W * 0.045]} />
+                  <meshStandardMaterial
+                    map={logoTex}
+                    transparent
+                    opacity={0.85}
+                    color="#5b6b84"
+                    metalness={1}
+                    roughness={0.3}
+                    envMapIntensity={2}
+                    emissive="#2b6fd6"
+                    emissiveIntensity={0.12}
+                    depthWrite={false}
+                  />
+                </mesh>
+              </group>
+
               {/* ELEVATE "A" — a machined hardware emblem in the aluminium: dark
                   metal fill, a soft blue edge highlight and a whisper of emission
                   so it reads with the scene lighting instead of glowing */}
               <group position={[0, 0, -0.44]} rotation={[0, Math.PI, 0]}>
+
                 {/* recessed seat: a slightly darker milled pocket */}
                 <mesh position={[0, 0, -0.004]}>
                   <planeGeometry args={[W * 0.165, W * 0.165]} />
