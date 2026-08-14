@@ -129,7 +129,7 @@ export function ProcessFilm() {
   }, [progress, mobile]);
 
   return (
-    <section id="process" ref={wrap} className="relative h-[420vh] bg-[#04060a]">
+    <section id="process" ref={wrap} className="relative h-[420vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         {/* atmosphere: soft cinematic glow + thin technical lines + grain */}
         <div
@@ -137,7 +137,7 @@ export function ProcessFilm() {
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 55% at 68% 40%, oklch(0.24 0.05 258 / 0.42) 0%, transparent 72%), linear-gradient(180deg, #04060a 0%, #060910 55%, #04060a 100%)",
+              "radial-gradient(60% 55% at 68% 40%, oklch(0.3 0.07 258 / 0.28) 0%, transparent 72%), linear-gradient(180deg, oklch(0.09 0.014 258 / 0.5) 0%, transparent 42%, transparent 60%, oklch(0.09 0.014 258 / 0.4) 100%)",
           }}
         />
         <div ref={atmos} aria-hidden className="absolute inset-[-6%]">

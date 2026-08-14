@@ -54,22 +54,24 @@ export function Nav() {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
-        scrolled
-          ? "backdrop-blur-2xl bg-background/85 border-border shadow-[0_8px_30px_-12px_oklch(0_0_0/0.6)]"
-          : "backdrop-blur-xl bg-background/60 border-transparent"
-      }`}
+      className="fixed top-0 left-0 right-0 z-50 border-b transition-all duration-500"
+      style={{
+        backgroundColor: scrolled ? "rgba(3,7,14,0.65)" : "rgba(3,7,14,0.18)",
+        backdropFilter: scrolled ? "blur(18px) saturate(140%)" : "blur(8px)",
+        borderColor: scrolled ? "oklch(0.72 0.14 258 / 0.12)" : "transparent",
+        boxShadow: scrolled ? "0 1px 0 0 oklch(0.72 0.16 258 / 0.06)" : "none",
+      }}
     >
-      <div className="container-luxe flex h-20 md:h-24 items-center justify-between py-3">
+      <div className="container-luxe flex h-16 md:h-[68px] items-center justify-between py-2">
         <Link
           to="/"
           className="flex items-center gap-2 transition-opacity hover:opacity-80"
           aria-label="ELEVATE — domů"
         >
-          <Logo className="h-9 md:h-11 w-auto" />
+          <Logo className="h-7 md:h-8 w-auto" />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-9 text-sm">
+        <nav className="hidden md:flex items-center gap-7 text-[12px] uppercase tracking-[0.14em]">
           <Link to="/" className={linkCls} activeProps={{ className: activeCls }} activeOptions={{ exact: true }}>
             {t.nav.home}
           </Link>
@@ -179,7 +181,7 @@ export function Nav() {
         {/* Backdrop below the panel — dims hero but keeps content visible */}
         <div
           onClick={() => setMobileOpen(false)}
-          className={`fixed inset-0 top-20 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ${
+          className={`fixed inset-0 top-16 z-40 bg-black/40 backdrop-blur-[2px] transition-opacity duration-300 ${
             mobileOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
           }`}
         />

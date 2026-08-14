@@ -39,7 +39,7 @@
   --radius: 0.75rem;
 
   /* Brand */
-  --background: oklch(0.16 0.02 260);          /* #0B0F1A */
+  --background: oklch(0.115 0.018 258);        /* #03060B — one continuous navy environment */
   --foreground: oklch(0.985 0 0);              /* white */
   --surface: oklch(0.20 0.02 260);             /* card surface */
   --surface-elevated: oklch(0.235 0.022 260);
@@ -71,7 +71,7 @@
 }
 
 .dark {
-  --background: oklch(0.16 0.02 260);
+  --background: oklch(0.115 0.018 258);
   --foreground: oklch(0.985 0 0);
 }
 
@@ -83,11 +83,26 @@
     scroll-behavior: smooth;
   }
   html, body {
-    background-color: var(--color-background);
+    background-color: #03060b;
     color: var(--color-foreground);
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+  /* ONE continuous environment: a fixed atmospheric layer behind every section,
+     so scrolling changes the lighting, never the colour */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background:
+      radial-gradient(120% 80% at 50% -10%, #071321 0%, transparent 60%),
+      radial-gradient(70% 55% at 18% 30%, oklch(0.34 0.08 258 / 0.16) 0%, transparent 70%),
+      radial-gradient(80% 60% at 82% 72%, oklch(0.3 0.07 258 / 0.13) 0%, transparent 72%),
+      linear-gradient(180deg, #03060b 0%, #050b14 46%, #04080f 100%);
+  }
+
   ::selection {
     background-color: oklch(0.65 0.18 255 / 0.3);
   }
@@ -117,6 +132,43 @@
       linear-gradient(90deg, oklch(1 0 0 / 0.04) 1px, transparent 1px);
     background-size: 48px 48px;
   }
+
+  /* rare atmospheric events: a line draws itself, a point travels it, dust drifts */
+  .atmo-draw {
+    animation-name: atmoDraw;
+    animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+  }
+  @keyframes atmoDraw {
+    0%, 8% { transform: scaleX(0); }
+    28%, 62% { transform: scaleX(1); }
+    88%, 100% { transform: scaleX(0); }
+  }
+  .atmo-travel {
+    animation-name: atmoTravel;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    animation-iteration-count: infinite;
+  }
+  @keyframes atmoTravel {
+    0%, 20% { left: 0%; opacity: 0; }
+    35% { opacity: 1; }
+    70% { left: 100%; opacity: 0; }
+    100% { left: 100%; opacity: 0; }
+  }
+  .atmo-drift {
+    animation-name: atmoDrift;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+  }
+  @keyframes atmoDrift {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-14px, -22px, 0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .atmo-draw, .atmo-travel, .atmo-drift { animation: none !important; }
+  }
+
   .fade-in-up {
     animation: fadeInUp 0.7s ease-out both;
   }

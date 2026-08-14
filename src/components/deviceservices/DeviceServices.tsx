@@ -237,7 +237,7 @@ export function DeviceServices() {
   }, [progress]);
 
   return (
-    <section id="services" ref={wrap} className="relative h-[500vh] bg-[#04060a]">
+    <section id="services" ref={wrap} className="relative h-[500vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         {/* the physical digital field the products sit in */}
         <div
@@ -245,7 +245,7 @@ export function DeviceServices() {
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(65% 60% at 50% 42%, oklch(0.24 0.05 258 / 0.4) 0%, transparent 72%), linear-gradient(180deg, #04060a 0%, #060910 60%, #04060a 100%)",
+              "radial-gradient(65% 60% at 50% 42%, oklch(0.3 0.07 258 / 0.26) 0%, transparent 72%), linear-gradient(180deg, oklch(0.09 0.014 258 / 0.55) 0%, transparent 40%, transparent 62%, oklch(0.09 0.014 258 / 0.4) 100%)",
           }}
         />
         <div ref={grid} aria-hidden className="absolute inset-[-4%]">
