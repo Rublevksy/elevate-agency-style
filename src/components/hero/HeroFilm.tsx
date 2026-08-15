@@ -168,8 +168,8 @@ export function HeroFilm() {
 
       // 01 — the device: hold, approach the display, then pass through it
       const settle = easeFilm(range(0, 0.14, hp));
-      const approach = easeFilm(range(0.2, 0.62, hp));
-      const pass = easeFilm(range(0.58, 0.96, hp));
+      const approach = easeFilm(range(0.2, 0.5, hp));
+      const pass = easeFilm(range(0.64, 0.88, hp));
       /** the device sits right of centre in the hero; the camera re-centres on it */
       const recentre = isMobile ? 0 : -approach * 19 * (window.innerWidth / 100);
 
@@ -192,10 +192,10 @@ export function HeroFilm() {
       }
 
       // 02 — the portal: light first, then the gate opens behind the display
-      const form = easeFilm(range(0.26, 0.62, hp));
-      const open = easeFilm(range(0.4, 0.92, hp));
+      const form = easeFilm(range(0.3, 0.52, hp));
+      const open = easeFilm(range(0.4, 0.74, hp));
       // once the first service is stable the gate has done its job
-      const settled = easeFilm(range(0.9, 1, hp));
+      const settled = easeFilm(range(0.86, 1, hp));
       if (portal.current) {
         portal.current.style.setProperty("--form", form.toFixed(3));
         portal.current.style.setProperty("--open", open.toFixed(3));
@@ -208,7 +208,7 @@ export function HeroFilm() {
         bloom.current.style.transform = `translate3d(-50%, -50%, 0) scale(${(0.35 + form * 0.5 + open * 1.4).toFixed(3)})`;
       }
       if (type.current) {
-        const out = easeFilm(range(0.18, 0.44, hp));
+        const out = easeFilm(range(0.16, 0.34, hp));
         type.current.style.opacity = (1 - out).toFixed(3);
         type.current.style.transform = `translate3d(${(-out * 4).toFixed(2)}vw, 0, 0)`;
         type.current.style.visibility = out >= 0.995 ? "hidden" : "visible";
@@ -217,9 +217,9 @@ export function HeroFilm() {
       // 03 — the services are extracted out of the portal
       const s = stageOf(p, SCENES.length);
       /** the first scene is pulled out of the gate while the device is still there */
-      const extract = easeFilm(range(0.5, 0.94, hp));
-      const started = hp > 0.48;
-      const copyIn = easeFilm(range(0.74, 1, hp));
+      const extract = easeFilm(range(0.5, 0.82, hp));
+      const started = hp > 0.46;
+      const copyIn = easeFilm(range(0.72, 0.96, hp));
 
       sceneRefs.current.forEach((el, i) => {
         if (!el) return;
