@@ -135,15 +135,12 @@ function holdStage(p: number, count: number) {
 function Depth({ progress }: { progress: React.RefObject<number> }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let raf = 0;
-    const tick = () => {
+    return startFrameLoop(() => {
       const el = ref.current;
       if (el) el.style.setProperty("--p", String(progress.current ?? 0));
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    }, ref.current);
   }, [progress]);
+
 
   return (
     <div ref={ref} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
