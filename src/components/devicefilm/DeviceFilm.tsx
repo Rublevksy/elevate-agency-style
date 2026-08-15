@@ -40,12 +40,14 @@ export function DeviceFilm() {
       if (full.current) {
         const on = p >= PHASE.HANDOFF;
         const settle = easeFilm(range(PHASE.HANDOFF, PHASE.HANDOFF + 0.05, p));
-        // it keeps travelling forward, so the service section starts inside it
-        const exit = easeFilm(range(0.97, 1, p));
-        full.current.style.opacity = String((on ? 1 : 0) * (1 - exit));
-        full.current.style.transform = `perspective(1400px) scale(${1 + (1 - settle) * 0.04 + exit * 0.12}) translate3d(0, ${-exit * 5}vh, 0)`;
+        // it never cuts: the interface stays and physically scrolls away as the
+        // service stage rises underneath it
+        const push = easeFilm(range(0.9, 1, p));
+        full.current.style.opacity = on ? "1" : "0";
+        full.current.style.transform = `perspective(1400px) scale(${1 + (1 - settle) * 0.04 + push * 0.06}) translate3d(0, ${-push * 3}vh, 0)`;
         full.current.style.visibility = on ? "visible" : "hidden";
       }
+
     };
     const stop = startFrameLoop(tick, wrap.current);
     return () => {
