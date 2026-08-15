@@ -111,10 +111,12 @@ export function ProductLayer({
 
   return (
     <div
+      ref={stage}
       aria-hidden
       className="pointer-events-none absolute inset-0 z-20"
       style={{ perspective: "1400px", perspectiveOrigin: "50% 46%" }}
     >
+
       <div className="absolute left-1/2 top-[46%]" style={{ transformStyle: "preserve-3d" }}>
         {PRODUCTS.map((prod, i) => (
           <div
