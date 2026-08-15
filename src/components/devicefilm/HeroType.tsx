@@ -38,30 +38,32 @@ export function HeroType({ progress }: { progress: React.RefObject<number> }) {
 
   return (
     <div ref={root} className="pointer-events-none absolute inset-0 z-30 flex items-center px-7 md:px-[6vw]">
-      <div className="max-w-[42rem]">
+      <div className="max-w-[44rem]">
         <span ref={setLine(0)} className="block font-mono text-[10px] uppercase tracking-[0.42em] text-primary">
           Digitální studio · Praha
         </span>
         <h1
           ref={setLine(1)}
-          className="mt-5 text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-foreground md:text-[4.4vw]"
+          className="mt-5 text-[2.15rem] font-medium leading-[1.04] tracking-[-0.04em] text-foreground md:text-[4.1vw]"
         >
-          Tvoříme digitální
+          Tvoříme weby, e-shopy
           <br />
-          produkty pro váš
+          a aplikace, které
           <br />
-          byznys.
+          <span className="text-primary">posouvají váš byznys.</span>
         </h1>
-        <p ref={setLine(2)} className="mt-6 max-w-md text-sm text-muted-foreground md:text-base">
-          Weby, e-shopy a digitální produkty od strategie po vývoj.
+        <p ref={setLine(2)} className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
+          Od prvního konceptu po spuštění. Design, vývoj a optimalizace v jednom týmu.
         </p>
         <span
           ref={setLine(3)}
-          className="mt-10 block font-mono text-[9px] uppercase tracking-[0.4em] text-muted-foreground/70"
+          className="mt-10 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[0.4em] text-muted-foreground/70"
         >
-          Scroll to explore
+          <span aria-hidden className="h-8 w-px bg-gradient-to-b from-primary/70 to-transparent" />
+          Scroll
         </span>
       </div>
     </div>
+
   );
 }
