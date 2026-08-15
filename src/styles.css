@@ -134,11 +134,35 @@
   }
   .hero-device-light {
     background:
-      radial-gradient(ellipse 52% 58% at 79% 47%, color-mix(in oklab, var(--surface-elevated) 58%, transparent) 0%, transparent 72%),
-      radial-gradient(ellipse 34% 24% at 82% 72%, color-mix(in oklab, var(--foreground) 5%, transparent) 0%, transparent 78%);
+      radial-gradient(ellipse 44% 48% at 76% 46%, color-mix(in oklab, var(--primary) 22%, transparent) 0%, transparent 70%),
+      radial-gradient(ellipse 30% 22% at 80% 74%, color-mix(in oklab, var(--primary) 10%, transparent) 0%, transparent 76%);
+  }
+  .hero-fiber {
+    opacity: 0.92;
+    transform: translate3d(0, calc(var(--hero-scroll, 0) * -3vh), 0);
   }
   .hero-device-shadow {
     background: radial-gradient(ellipse at 50% 32%, color-mix(in oklab, var(--background) 92%, transparent) 0%, transparent 72%);
+  }
+  .hero-device-img {
+    filter: drop-shadow(0 40px 60px oklch(0 0 0 / 0.65));
+  }
+  .hero-device-reflection {
+    transform: scaleY(-1);
+    opacity: 0.16;
+    -webkit-mask-image: linear-gradient(to bottom, oklch(0 0 0 / 0.85), transparent 46%);
+    mask-image: linear-gradient(to bottom, oklch(0 0 0 / 0.85), transparent 46%);
+  }
+  .hero-accent-line {
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      color-mix(in oklab, var(--primary) 55%, transparent) 22%,
+      color-mix(in oklab, var(--primary) 95%, transparent) 46%,
+      color-mix(in oklab, var(--primary) 40%, transparent) 70%,
+      transparent
+    );
+    box-shadow: 0 0 18px 2px color-mix(in oklab, var(--primary) 35%, transparent);
   }
   .hero-device {
     transform: translate3d(calc(-50% - var(--hero-scroll, 0) * 3.5vw), calc(-50% + var(--hero-scroll, 0) * 5vh), 0)
@@ -147,7 +171,7 @@
   }
   @media (max-width: 767px) {
     .hero-device-light {
-      background: radial-gradient(ellipse 92% 45% at 60% 66%, color-mix(in oklab, var(--surface-elevated) 52%, transparent) 0%, transparent 76%);
+      background: radial-gradient(ellipse 92% 45% at 60% 66%, color-mix(in oklab, var(--primary) 16%, transparent) 0%, transparent 76%);
     }
   }
   @media (min-width: 768px) {
@@ -157,6 +181,7 @@
         scale(calc(1 + var(--hero-scroll, 0) * 0.055));
     }
   }
+
 
   /* rare atmospheric events: a line draws itself, a point travels it, dust drifts */
   .atmo-draw {
