@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
 import heroMaster from "@/assets/elevate-hero-master.png.asset.json";
+import { FiberField } from "@/components/hero/FiberField";
 import { setCinematicActive } from "@/lib/cinematic-state";
 
 const services: { label: string; to: string; left: number; width: number }[] = [
