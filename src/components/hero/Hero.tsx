@@ -72,17 +72,15 @@ export function Hero() {
         className="sticky top-0 h-[100svh] overflow-hidden bg-background"
       >
         {/* exact master artwork — base graphic layer, right side of the composition */}
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1] w-full md:w-[68%]">
-          <img
-            src={heroStage.url}
-            alt="ELEVATE — MacBook s ukázkou webu, e-shopu a aplikací"
-            width={988}
-            height={746}
-            fetchPriority="high"
-            decoding="sync"
-            className="hero-master absolute left-1/2 top-[54%] w-[126%] max-w-none -translate-x-1/2 -translate-y-1/2 md:top-1/2 md:w-[104%]"
-          />
-        </div>
+        <img
+          src={heroStage.url}
+          alt="ELEVATE — MacBook s ukázkou webu, e-shopu a aplikací"
+          width={988}
+          height={746}
+          fetchPriority="high"
+          decoding="sync"
+          className="hero-master pointer-events-none absolute right-[-6%] top-[62%] z-[1] h-[46%] w-auto max-w-none md:right-[-1%] md:top-1/2 md:h-[82%]"
+        />
 
         {/* soft edge blends so the artwork sits in the black space */}
         <div aria-hidden className="hero-scrim-left pointer-events-none absolute inset-y-0 left-0 z-[2] w-full md:w-[46%]" />
