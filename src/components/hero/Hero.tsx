@@ -14,13 +14,41 @@ const services: { label: string; to: string; left: number; width: number }[] = [
 ];
 
 export function Hero() {
+  const stageRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     setCinematicActive(true);
     return () => setCinematicActive(false);
   }, []);
 
+  // jemný scroll parallax celé scény — zapisuje se přímo do CSS proměnné, bez re-renderu
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    let raf = 0;
+    const write = () => {
+      raf = 0;
+      const p = Math.min(1, Math.max(0, window.scrollY / Math.max(1, window.innerHeight)));
+      el.style.setProperty("--hs", p.toFixed(4));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(write);
+    };
+    write();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
-    <section aria-label="ELEVATE — digitální studio" className="hero-reference relative h-[100svh] overflow-hidden bg-background">
+    <section
+      ref={stageRef}
+      aria-label="ELEVATE — digitální studio"
+      className="hero-reference relative h-[100svh] overflow-hidden bg-background"
+    >
+
       <h1 className="sr-only">Digitální řešení, která posouvají vaše podnikání</h1>
       <img
         src={heroMaster.url}
