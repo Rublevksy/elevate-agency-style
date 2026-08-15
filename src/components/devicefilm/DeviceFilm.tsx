@@ -1,5 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
+import { startFrameLoop } from "@/lib/raf";
+
 import { PHASE, clamp01, easeFilm, range } from "./film";
 import { HeroType } from "./HeroType";
 import { ProductLayer } from "./ProductLayer";
@@ -38,7 +40,6 @@ export function DeviceFilm() {
     window.addEventListener("resize", check);
     window.addEventListener("pointermove", onMove, { passive: true });
 
-    let raf = 0;
     const tick = () => {
       const p = progress.current ?? 0;
       // fullscreen workspace: takes over exactly where the 3D display switches
@@ -61,15 +62,15 @@ export function DeviceFilm() {
         const back = range(0.95, 1, p);
         haze.current.style.opacity = String(clamp01(1 - enter * 0.75 + back * 0.75));
       }
-      raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+    const stop = startFrameLoop(tick, wrap.current);
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("resize", check);
       window.removeEventListener("pointermove", onMove);
     };
   }, [progress]);
+
 
   return (
     <div ref={wrap} className="relative h-[380vh]">

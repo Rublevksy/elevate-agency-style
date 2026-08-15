@@ -2,10 +2,11 @@ import { useEffect, useRef } from "react";
 import {
   BrandComposition,
   CommerceComposition,
-  ProductComposition,
   WebComposition,
 } from "@/components/cinematic/ServicePreviews";
+import { startFrameLoop } from "@/lib/raf";
 import { PHASE, clamp01, easeFilm, lerp, range } from "./film";
+
 
 type Product = {
   id: string;
@@ -44,16 +45,7 @@ const PRODUCTS: Product[] = [
     Body: CommerceComposition,
   },
   {
-    id: "product",
-    label: "Digitální produkt",
-    to: { x: 13, y: -19, z: -160, ry: -9, rx: 4 },
-    from: PHASE.PRODUCTS_IN + 0.06,
-    par: 0.35,
-    w: "26vw",
-    h: "17vw",
-    Body: ProductComposition,
-  },
-  {
+
     id: "brand",
     label: "Branding",
     to: { x: -28, y: 22, z: -90, ry: 12, rx: -3 },
@@ -83,9 +75,10 @@ export function ProductLayer({
   const phone = useRef<HTMLDivElement>(null);
   const smooth = useRef({ mx: 0, my: 0 });
 
+  const stage = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    let raf = 0;
-    const tick = () => {
+    return startFrameLoop(() => {
       const p = progress.current ?? 0;
       const m = pointer.current ?? { x: 0, y: 0 };
       smooth.current.mx += (m.x - smooth.current.mx) * 0.05;
@@ -112,18 +105,18 @@ export function ProductLayer({
         ph.style.transform = `translate3d(calc(-50% + ${-13 * out}vw + ${smooth.current.mx * 52}px), calc(-50% + ${19 * out}vh + ${smooth.current.my * -30}px), ${lerp(-20, 190, out)}px) rotateY(${11 * out}deg) rotateX(${-3 * out}deg) scale(${lerp(0.4, 1, out)})`;
         ph.style.opacity = String(clamp01(t * 1.5) * (1 - absorb));
       }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    }, stage.current);
   }, [progress, pointer]);
+
 
   return (
     <div
+      ref={stage}
       aria-hidden
       className="pointer-events-none absolute inset-0 z-20"
       style={{ perspective: "1400px", perspectiveOrigin: "50% 46%" }}
     >
+
       <div className="absolute left-1/2 top-[46%]" style={{ transformStyle: "preserve-3d" }}>
         {PRODUCTS.map((prod, i) => (
           <div

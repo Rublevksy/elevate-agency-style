@@ -49,11 +49,21 @@ function localBox(o: Object3D, toLocal: Matrix4) {
 }
 
 /**
+ * Measurements are cached per loaded scene: the base / lid nodes get reparented
+ * into the R3F tree, so a second `getObjectByName` pass on the same scene (a
+ * remount or HMR) would no longer find them.
+ */
+const measured = new WeakMap<Object3D, MacbookParts>();
+
+/**
  * Measures the supplied GLB and derives every number the cinematic needs:
  * real hinge axis, display plane, and the scale/offset that map the model onto
  * the existing DEVICE dimensions so the camera track keeps working unchanged.
  */
 export function measureMacbook(scene: Object3D): MacbookParts {
+  const cached = measured.get(scene);
+  if (cached) return cached;
+
   const holder = scene.getObjectByName(NODE.HOLDER);
   const base = scene.getObjectByName(NODE.BASE);
   const lid = scene.getObjectByName(NODE.LID);
@@ -62,6 +72,7 @@ export function measureMacbook(scene: Object3D): MacbookParts {
   if (!holder || !base || !lid || !hingeNode || !panel) {
     throw new Error("macbook GLB: expected nodes not found");
   }
+
 
   scene.updateMatrixWorld(true);
   const toLocal = holder.matrixWorld.clone().invert();
@@ -103,7 +114,7 @@ export function measureMacbook(scene: Object3D): MacbookParts {
   const minY = Math.min(...baseCorners.map((v) => v.y));
   const offset = new Vector3(0, -minY, -hinge.z - DEVICE.D / 2);
 
-  return {
+  const parts: MacbookParts = {
     base,
     lid,
     panel,
@@ -117,4 +128,7 @@ export function measureMacbook(scene: Object3D): MacbookParts {
     openDeg,
     offset,
   };
+  measured.set(scene, parts);
+  return parts;
 }
+

@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import sceneWeb from "@/assets/scene-web.png.asset.json";
-import sceneEshop from "@/assets/scene-eshop.png.asset.json";
-import sceneApps from "@/assets/scene-apps.png.asset.json";
-import sceneSeo from "@/assets/scene-seo.png.asset.json";
-import sceneDesign from "@/assets/scene-design.png.asset.json";
+import sceneWeb from "@/assets/scene-web.webp";
+import sceneEshop from "@/assets/scene-eshop.webp";
+import sceneApps from "@/assets/scene-apps.webp";
+import sceneSeo from "@/assets/scene-seo.webp";
+import sceneDesign from "@/assets/scene-design.webp";
+import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
 import { ServiceElements } from "./ServiceElements";
+
 
 /**
  * ENTER THE ELEVATE STUDIO — one continuous scroll-driven stage where each
@@ -41,7 +43,7 @@ const SCENES: Scene[] = [
     desc: "Firemní weby, landing pages a moderní digitální prezentace.",
     points: ["UX / UI", "Responzivní design", "Výkon", "Konverze"],
     to: "/services/web",
-    src: sceneWeb.url,
+    src: sceneWeb,
     height: "72vh",
     offsetX: "4%",
     fragments: "web",
@@ -54,7 +56,7 @@ const SCENES: Scene[] = [
     desc: "E-shopy navržené pro jednoduchý nákup, důvěru a konverzi.",
     points: ["UX nákupního procesu", "Mobilní optimalizace", "Checkout", "Výkon"],
     to: "/services/eshop",
-    src: sceneEshop.url,
+    src: sceneEshop,
     height: "76vh",
     offsetX: "0%",
     fragments: "shop",
@@ -67,7 +69,7 @@ const SCENES: Scene[] = [
     desc: "Aplikace pro iOS a Android, včetně přípravy a publikace v App Store a Google Play.",
     points: ["iOS", "Android", "App Store", "Google Play"],
     to: "/contact",
-    src: sceneApps.url,
+    src: sceneApps,
     height: "74vh",
     offsetX: "6%",
     fragments: "app",
@@ -80,7 +82,7 @@ const SCENES: Scene[] = [
     desc: "Technické SEO, rychlost webu, Core Web Vitals, indexace a průběžná optimalizace výkonu.",
     points: ["SEO", "Rychlost", "Core Web Vitals", "Indexace"],
     to: "/audit",
-    src: sceneSeo.url,
+    src: sceneSeo,
     height: "58vh",
     offsetX: "10%",
     fragments: "seo",
@@ -93,7 +95,7 @@ const SCENES: Scene[] = [
     desc: "Tvorba loga, vizuální identity, UI/UX a kompletního vizuálního směru značky.",
     points: ["Logo", "Brand identity", "UI/UX", "Visual direction"],
     to: "/services/design",
-    src: sceneDesign.url,
+    src: sceneDesign,
     height: "68vh",
     offsetX: "2%",
     fragments: "brand",
@@ -103,7 +105,7 @@ const SCENES: Scene[] = [
 const CTA = "Detail služby";
 
 /** scroll distance per service — long enough for a real resting state */
-const VH_PER_SCENE = 190;
+const VH_PER_SCENE = 240;
 /** share of each service's scroll unit spent transitioning (the rest is HOLD) */
 const TRANSITION = 0.34;
 
@@ -133,15 +135,12 @@ function holdStage(p: number, count: number) {
 function Depth({ progress }: { progress: React.RefObject<number> }) {
   const ref = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    let raf = 0;
-    const tick = () => {
+    return startFrameLoop(() => {
       const el = ref.current;
       if (el) el.style.setProperty("--p", String(progress.current ?? 0));
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
+    }, ref.current);
   }, [progress]);
+
 
   return (
     <div ref={ref} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
@@ -197,10 +196,9 @@ export function CinematicServices() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersReducedMotion();
     const pointer = { x: 0, y: 0 };
     const smooth = { x: 0, y: 0 };
-    let raf = 0;
 
     const onMove = (e: PointerEvent) => {
       pointer.x = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -209,6 +207,7 @@ export function CinematicServices() {
     if (!reduced) window.addEventListener("pointermove", onMove, { passive: true });
 
     const tick = () => {
+
       const section = sectionRef.current;
       if (section) {
         const rect = section.getBoundingClientRect();
@@ -271,15 +270,15 @@ export function CinematicServices() {
         const next = Math.min(SCENES.length - 1, Math.round(stage));
         setActive((prev) => (prev === next ? prev : next));
       }
-      raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+    const stop = startFrameLoop(tick, sectionRef.current);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("pointermove", onMove);
     };
   }, []);
+
 
   return (
     <section ref={sectionRef} className="relative" style={{ height: `${SCENES.length * VH_PER_SCENE}vh` }}>
@@ -321,7 +320,7 @@ export function CinematicServices() {
               className="absolute inset-0 z-10 flex items-center"
               style={{ opacity: i === 0 ? 1 : 0, pointerEvents: "none" }}
             >
-              <Stage scene={s} />
+              <Stage scene={s} eager={i === 0} />
             </div>
           ))}
         </div>
@@ -330,7 +329,7 @@ export function CinematicServices() {
   );
 }
 
-function Stage({ scene }: { scene: Scene }) {
+function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
   return (
     <div className="container-luxe grid w-full items-center gap-6 md:grid-cols-[0.85fr_1.15fr] md:gap-10">
       {/* copy */}
@@ -390,7 +389,7 @@ function Stage({ scene }: { scene: Scene }) {
             <img
               src={scene.src}
               alt=""
-              loading="eager"
+              loading={eager ? "eager" : "lazy"}
               decoding="async"
               className="h-[40vh] w-auto max-w-none md:h-[var(--fh)]"
               style={

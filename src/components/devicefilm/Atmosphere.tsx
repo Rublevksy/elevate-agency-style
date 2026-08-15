@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
 import { PHASE, clamp01, range } from "./film";
+
 
 /**
  * THE ENVIRONMENT — a premium digital infrastructure, not a space scene.
@@ -22,7 +24,7 @@ export function Atmosphere({
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersReducedMotion();
     const smooth = { x: 0, y: 0 };
     const cursor = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, energy: 0 };
     let last = performance.now();
@@ -34,7 +36,6 @@ export function Atmosphere({
     };
     if (!reduced && !mobile) window.addEventListener("pointermove", onMove, { passive: true });
 
-    let raf = 0;
     const tick = () => {
       const el = root.current;
       if (el) {
@@ -56,14 +57,14 @@ export function Atmosphere({
         el.style.setProperty("--ce", cursor.energy.toFixed(3));
         el.style.setProperty("--thin", (1 - range(PHASE.ENTER, PHASE.HANDOFF, p) * 0.85).toFixed(4));
       }
-      raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+    const stop = startFrameLoop(tick, root.current);
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("pointermove", onMove);
     };
   }, [progress, pointer, mobile]);
+
 
 
   const plane = (depth: number) =>
