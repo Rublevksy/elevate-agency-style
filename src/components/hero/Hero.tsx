@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import heroMaster from "@/assets/elevate-hero-master.png.asset.json";
 import { FiberField } from "@/components/hero/FiberField";
