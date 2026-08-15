@@ -7,6 +7,7 @@ import sceneApps from "@/assets/scene-apps.webp";
 import sceneSeo from "@/assets/scene-seo.webp";
 import sceneDesign from "@/assets/scene-design.webp";
 import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
+import { useFilmProgress } from "@/components/devicefilm/film";
 import { ServiceElements } from "./ServiceElements";
 
 
@@ -104,10 +105,10 @@ const SCENES: Scene[] = [
 
 const CTA = "Detail služby";
 
-/** scroll distance per service — long enough for a real resting state */
-const VH_PER_SCENE = 240;
+/** scroll distance per service — one comfortable gesture per scene */
+const VH_PER_SCENE = 125;
 /** share of each service's scroll unit spent transitioning (the rest is HOLD) */
-const TRANSITION = 0.34;
+const TRANSITION = 0.5;
 
 const smoothstep = (t: number) => t * t * (3 - 2 * t);
 
@@ -192,7 +193,7 @@ function Depth({ progress }: { progress: React.RefObject<number> }) {
 export function CinematicServices() {
   const sectionRef = useRef<HTMLElement>(null);
   const sceneRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const progress = useRef(0);
+  const progress = useFilmProgress(sectionRef);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
@@ -210,10 +211,7 @@ export function CinematicServices() {
 
       const section = sectionRef.current;
       if (section) {
-        const rect = section.getBoundingClientRect();
-        const total = rect.height - window.innerHeight;
-        const p = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
-        progress.current = p;
+        const p = progress.current ?? 0;
 
         smooth.x += (pointer.x - smooth.x) * 0.07;
         smooth.y += (pointer.y - smooth.y) * 0.07;
@@ -277,7 +275,7 @@ export function CinematicServices() {
       stop();
       window.removeEventListener("pointermove", onMove);
     };
-  }, []);
+  }, [progress]);
 
 
   return (
@@ -286,7 +284,7 @@ export function CinematicServices() {
         <Depth progress={progress} />
 
         {/* vertical chapter indicator */}
-        <div className="pointer-events-none absolute left-4 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-4 md:flex lg:left-8">
+        <div className="pointer-events-none absolute left-6 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-4 xl:flex">
           {SCENES.map((s, i) => {
             const on = i === active;
             return (
