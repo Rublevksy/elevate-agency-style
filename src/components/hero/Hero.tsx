@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 
 import laptopLarge from "@/assets/elevate-laptop-1120.webp.asset.json";
 import laptopSmall from "@/assets/elevate-laptop-520.webp.asset.json";
-import markAsset from "@/assets/elevate-a-mark.png.asset.json";
+import markAsset from "@/assets/elevate-mark-small.webp.asset.json";
 import { Logo } from "@/components/Logo";
 import { HeroLight } from "@/components/hero/HeroLight";
 import { ProductScreen } from "@/components/hero/ProductScreen";
@@ -145,8 +145,8 @@ export function Hero() {
               src={markAsset.url}
               alt=""
               aria-hidden
-              width={64}
-              height={64}
+              width={128}
+              height={128}
               loading="lazy"
               decoding="async"
               className="absolute right-[28%] top-[42%] h-auto w-[4%] opacity-80"
