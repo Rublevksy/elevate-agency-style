@@ -321,7 +321,7 @@ export function CinematicServices() {
               className="absolute inset-0 z-10 flex items-center"
               style={{ opacity: i === 0 ? 1 : 0, pointerEvents: "none" }}
             >
-              <Stage scene={s} eager={i === 0} />
+              <Stage scene={s} />
             </div>
           ))}
         </div>
@@ -330,7 +330,7 @@ export function CinematicServices() {
   );
 }
 
-function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
+function Stage({ scene }: { scene: Scene }) {
   return (
     <div className="container-luxe grid w-full items-center gap-6 md:grid-cols-[0.85fr_1.15fr] md:gap-10">
       {/* copy */}
@@ -390,7 +390,7 @@ function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
             <img
               src={scene.src}
               alt=""
-              loading={eager ? "eager" : "lazy"}
+              loading="eager"
               decoding="async"
               className="h-[40vh] w-auto max-w-none md:h-[var(--fh)]"
               style={
