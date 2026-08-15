@@ -1,32 +1,38 @@
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
 import deviceAsset from "@/assets/elevate-device.png.asset.json";
-import { PortalLight } from "./PortalLight";
-import { ServicePanels, HERO_SERVICES } from "./ServicePanels";
-import { ScreenFrame } from "./ScreenFrame";
+import { RibbonField } from "./RibbonField";
 import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
 
 const Laptop3D = lazy(() => import("./Laptop3D"));
 
+const SERVICES = [
+  { label: "Weby", to: "/services/web" as const },
+  { label: "E-shopy", to: "/services/eshop" as const },
+  { label: "Aplikace", to: "/services/web" as const },
+  { label: "Design", to: "/services/design" as const },
+  { label: "SEO", to: "/services/branding" as const },
+];
+
+const PAGES = ["01", "02", "03", "04"];
+
 /**
- * ELEVATE HERO — the reference composition rebuilt as a live scene:
- * black cinematic environment, animated blue light portal + data streaks,
- * the real MacBook GLB with a DOM interface on its display, real typography
- * and real links. Native scroll; motion is transform/opacity only.
+ * ELEVATE HERO — the reference composition as a live scene:
+ * near-black cinematic environment, animated blue/white light ribbons, the real
+ * MacBook GLB on the right at a 3/4 rear angle, and real HTML typography on the
+ * left. Native scroll; motion is transform/opacity only.
  */
 export function Hero() {
   const sectionRef = useRef<HTMLElement | null>(null);
   const deviceRef = useRef<HTMLDivElement | null>(null);
   const lightRef = useRef<HTMLDivElement | null>(null);
   const copyRef = useRef<HTMLDivElement | null>(null);
-  const panelsRef = useRef<HTMLDivElement | null>(null);
   const [heavy, setHeavy] = useState(false);
 
-  // only bring in the 3D device after first paint (and never for reduced motion)
+  // bring in the 3D device only after first paint (never for reduced motion)
   useEffect(() => {
     if (prefersReducedMotion()) return;
-    const id = window.setTimeout(() => setHeavy(true), 250);
+    const id = window.setTimeout(() => setHeavy(true), 220);
     return () => window.clearTimeout(id);
   }, []);
 
@@ -51,27 +57,20 @@ export function Hero() {
 
       const device = deviceRef.current;
       if (device) {
-        device.style.transform = `perspective(1800px) translate3d(${p.x * 14}px, ${
-          p.y * 10 - e * h * 0.16
-        }px, 0) rotateX(${p.y * 2.6 - e * 5}deg) rotateY(${p.x * -3.6 + e * 4}deg) scale(${
-          1 + e * 0.08
-        })`;
-        device.style.opacity = `${1 - e * 0.92}`;
+        device.style.transform = `perspective(1800px) translate3d(${p.x * 8}px, ${
+          p.y * 6 - e * h * 0.14
+        }px, 0) rotateX(${p.y * 1.6 - e * 4}deg) rotateY(${p.x * -2.2 + e * 4}deg) scale(${1 + e * 0.07})`;
+        device.style.opacity = `${1 - e * 0.9}`;
       }
       const light = lightRef.current;
       if (light) {
-        light.style.transform = `translate3d(${p.x * -18}px, ${-e * h * 0.07}px, 0)`;
-        light.style.opacity = `${1 - e * 0.8}`;
+        light.style.transform = `translate3d(${p.x * -6}px, ${-e * h * 0.05}px, 0)`;
+        light.style.opacity = `${1 - e * 0.75}`;
       }
       const copy = copyRef.current;
       if (copy) {
-        copy.style.transform = `translate3d(0, ${-e * h * 0.11}px, 0)`;
+        copy.style.transform = `translate3d(0, ${-e * h * 0.1}px, 0)`;
         copy.style.opacity = `${1 - e}`;
-      }
-      const panels = panelsRef.current;
-      if (panels) {
-        panels.style.transform = `translate3d(${e * 90 + p.x * -26}px, ${-e * h * 0.05}px, 0)`;
-        panels.style.opacity = `${1 - e * 0.95}`;
       }
     }, section);
 
@@ -85,26 +84,26 @@ export function Hero() {
     <section
       ref={sectionRef}
       aria-label="ELEVATE — digitální studio Praha"
-      className="relative isolate flex min-h-[100svh] w-full items-center overflow-hidden bg-[#02040a] pt-24 pb-16 md:pt-28"
+      className="relative isolate flex min-h-[100svh] w-full items-center overflow-hidden bg-[#010307]"
     >
-      {/* ————— live light field ————— */}
+      {/* ————— live light ribbons ————— */}
       <div ref={lightRef} className="pointer-events-none absolute inset-0 -z-10 will-change-transform">
-        <PortalLight />
+        <RibbonField />
       </div>
 
-      {/* core bloom behind the device */}
+      {/* atmospheric bloom behind the device */}
       <div
         aria-hidden
-        className="pointer-events-none absolute left-[50%] top-[46%] -z-10 h-[80vh] w-[80vh] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-[120px]"
-        style={{ background: "radial-gradient(circle, rgba(28,88,225,0.4), rgba(2,4,10,0) 70%)" }}
+        className="pointer-events-none absolute left-[68%] top-[48%] -z-10 h-[75vh] w-[75vh] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-[130px]"
+        style={{ background: "radial-gradient(circle, rgba(24,84,220,0.38), rgba(1,3,7,0) 70%)" }}
       />
-      {/* cinematic floor */}
+      {/* glossy dark floor */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[34vh]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 -z-10 h-[30vh]"
         style={{
           background:
-            "linear-gradient(to top, rgba(7,13,28,0.92) 0%, rgba(4,8,18,0.4) 45%, rgba(2,4,10,0) 100%)",
+            "linear-gradient(to top, rgba(5,10,22,0.95) 0%, rgba(3,6,14,0.5) 50%, rgba(1,3,7,0) 100%)",
         }}
       />
       {/* left vignette keeps the type clean */}
@@ -113,77 +112,72 @@ export function Hero() {
         className="pointer-events-none absolute inset-0 -z-10"
         style={{
           background:
-            "radial-gradient(110% 90% at 6% 50%, rgba(2,4,10,0.96) 0%, rgba(2,4,10,0.6) 32%, rgba(2,4,10,0) 62%)",
+            "radial-gradient(105% 95% at 4% 50%, rgba(1,3,7,0.97) 0%, rgba(1,3,7,0.66) 34%, rgba(1,3,7,0) 64%)",
         }}
       />
 
-      <div className="relative mx-auto w-full max-w-[1560px] px-6 md:px-10">
-        <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,0.78fr)_minmax(0,1.22fr)]">
+      <div className="relative mx-auto w-full max-w-[1536px] px-6 md:px-10">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,1.38fr)]">
           {/* ————— editorial copy ————— */}
-          <div ref={copyRef} className="relative z-20 will-change-transform">
-            {/* numbered index rail */}
-            <ul className="absolute -left-8 top-1/2 hidden -translate-y-1/2 space-y-4 xl:block">
-              {HERO_SERVICES.map((s, i) => (
-                <li key={s.n}>
-                  <Link
-                    to={s.to}
-                    aria-label={s.label}
-                    className={`flex items-center gap-2 text-[10px] tracking-[0.3em] transition-colors ${
-                      i === 0 ? "text-foreground" : "text-muted-foreground/45 hover:text-foreground"
-                    }`}
-                  >
-                    <span className={`h-px ${i === 0 ? "w-4 bg-primary" : "w-2.5 bg-white/25"}`} />
-                    {s.n}
+          <div ref={copyRef} className="relative z-20 py-20 will-change-transform lg:py-28">
+            {/* thin vertical blue light accent */}
+            <span
+              aria-hidden
+              className="absolute -left-4 top-[6%] hidden h-[76%] w-px md:block"
+              style={{
+                background:
+                  "linear-gradient(to bottom, rgba(45,116,255,0) 0%, rgba(120,180,255,0.9) 42%, rgba(45,116,255,0.55) 58%, rgba(45,116,255,0) 100%)",
+                boxShadow: "0 0 26px 3px rgba(45,116,255,0.45)",
+              }}
+            />
+
+            <h1 className="text-[clamp(1.75rem,2.75vw,2.6rem)] font-extralight uppercase leading-[1.34] tracking-[0.1em] text-foreground">
+              <span className="block">Digitální řešení,</span>
+              <span className="block">která posouvají</span>
+              <span className="block text-primary" style={{ textShadow: "0 0 40px rgba(45,116,255,0.55)" }}>
+                vaše podnikání
+              </span>
+            </h1>
+
+            <ul className="mt-12 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] uppercase tracking-[0.3em] text-muted-foreground">
+              {SERVICES.map((s, i) => (
+                <li key={s.label} className="flex items-center gap-3">
+                  <Link to={s.to} className="transition-colors duration-300 hover:text-foreground">
+                    {s.label}
                   </Link>
+                  {i < SERVICES.length - 1 && <span className="text-primary/80">·</span>}
                 </li>
               ))}
             </ul>
 
-            <p className="text-[10px] font-medium uppercase tracking-[0.42em] text-primary">
-              Digitální studio · Praha
-            </p>
-
-            <h1 className="mt-7 text-[clamp(2.1rem,4vw,3.6rem)] font-light leading-[1.1] tracking-[-0.02em] text-foreground">
-              <span className="block">Weby, e-shopy</span>
-              <span className="block">a aplikace, které</span>
-              <span className="block text-primary" style={{ textShadow: "0 0 44px rgba(45,116,255,0.5)" }}>
-                prodávají.
-              </span>
-            </h1>
-
-            <p className="mt-8 text-[10px] uppercase tracking-[0.34em] text-muted-foreground">
-              UX / UI · Vývoj · Optimalizace
-            </p>
-
-            <div className="mt-10 flex flex-wrap items-center gap-6">
-              <Link
-                to="/contact"
-                className="group inline-flex items-center gap-3 rounded-full bg-primary px-7 py-3.5 text-[13px] font-medium text-primary-foreground shadow-[0_22px_60px_-18px_oklch(0.62_0.2_260/0.95)] transition-transform duration-300 hover:scale-[1.03]"
-              >
-                Chci projekt
-                <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
-              <Link
-                to="/projects"
-                className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
-              >
-                Naše práce
-              </Link>
-            </div>
+            {/* page indicator */}
+            <ol className="mt-16 flex items-center gap-5 text-[10px] tracking-[0.34em]">
+              {PAGES.map((n, i) => (
+                <li key={n} className={i === 0 ? "text-primary" : "text-muted-foreground/45"}>
+                  {i === 0 ? (
+                    <a href="#services" className="transition-colors hover:text-primary">
+                      {n}
+                    </a>
+                  ) : (
+                    n
+                  )}
+                </li>
+              ))}
+            </ol>
           </div>
 
-          {/* ————— device + service windows ————— */}
+          {/* ————— device layer ————— */}
           <div className="relative">
             <div
               ref={deviceRef}
-              className="relative z-10 mx-auto aspect-[16/11] w-[min(100%,900px)] will-change-transform"
+              className="relative z-10 ml-auto aspect-[16/10] w-[min(112%,1000px)] will-change-transform"
             >
               {heavy ? (
                 <Suspense
                   fallback={
                     <img
                       src={deviceAsset.url}
-                      alt="Ukázka webu ELEVATE na MacBooku"
+                      alt="MacBook s webem od studia ELEVATE"
                       className="h-full w-full object-contain"
                       draggable={false}
                     />
@@ -194,46 +188,33 @@ export function Hero() {
               ) : (
                 <img
                   src={deviceAsset.url}
-                  alt="Ukázka webu ELEVATE na MacBooku"
-                  width={900}
-                  height={620}
+                  alt="MacBook s webem od studia ELEVATE"
+                  width={1000}
+                  height={625}
                   fetchPriority="high"
                   decoding="async"
                   className="h-full w-full object-contain"
                   draggable={false}
                 />
               )}
-              {heavy && <ScreenFrame />}
 
-              {/* contact shadow */}
+              {/* floor reflection + contact shadow */}
               <div
                 aria-hidden
-                className="pointer-events-none absolute inset-x-[14%] bottom-[3%] h-[8%] rounded-[50%] opacity-80 blur-[26px]"
-                style={{ background: "radial-gradient(closest-side, rgba(0,0,0,0.85), transparent)" }}
+                className="pointer-events-none absolute inset-x-[16%] -bottom-[6%] h-[18%] opacity-45 blur-[22px]"
+                style={{
+                  background:
+                    "radial-gradient(60% 100% at 50% 0%, rgba(48,110,235,0.45), rgba(1,3,7,0) 72%)",
+                }}
               />
-            </div>
-
-            <div ref={panelsRef} className="absolute inset-0 z-20 will-change-transform">
-              <ServicePanels />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-[20%] bottom-[2%] h-[7%] rounded-[50%] opacity-90 blur-[26px]"
+                style={{ background: "radial-gradient(closest-side, rgba(0,0,0,0.9), transparent)" }}
+              />
             </div>
           </div>
         </div>
-
-        {/* scroll cue */}
-        <div className="mt-8 flex flex-col items-center gap-3">
-          <span className="text-[9px] uppercase tracking-[0.44em] text-muted-foreground/70">Scroll</span>
-          <span className="h-9 w-px bg-gradient-to-b from-primary/70 to-transparent" />
-        </div>
-
-        {/* bottom strip */}
-        <ul className="mt-8 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-[10px] uppercase tracking-[0.34em] text-muted-foreground/70">
-          {["Dobrý design", "Rychlý výkon", "Skvělé výsledky"].map((s, i) => (
-            <li key={s} className="flex items-center gap-5">
-              {s}
-              {i < 2 && <span className="text-primary/70">·</span>}
-            </li>
-          ))}
-        </ul>
       </div>
     </section>
   );
