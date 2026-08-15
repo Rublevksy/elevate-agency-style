@@ -60,25 +60,28 @@ export const Laptop = forwardRef<
     }
   }, [parts]);
 
+  // materials collected once — traversing the scene every frame is what made
+  // the display stutter
+  const fadeMats = useRef<MeshStandardMaterial[]>([]);
+  useLayoutEffect(() => {
+    const list: MeshStandardMaterial[] = [];
+    rootRef.current?.traverse((o) => {
+      const m = (o as Mesh).material as MeshStandardMaterial | undefined;
+      if (!m || Array.isArray(m) || typeof m.opacity !== "number") return;
+      m.transparent = true;
+      list.push(m);
+    });
+    fadeMats.current = list;
+  }, [parts]);
+
+  const lastDensity = useRef(1);
   useFrame(() => {
     const p = progress.current ?? 0;
-    // the display is live from the first frame and hands over at HANDOFF
-    const el = uiRef.current;
-    if (el) {
-      const v = p >= PHASE.HANDOFF ? 0 : 1;
-      el.style.opacity = String(v);
-      el.style.visibility = v < 0.5 ? "hidden" : "visible";
-    }
     // the chassis around the lens loses density as the camera passes it
-    const density = 1 - smoothstep(PHASE.ENTER + 0.12, PHASE.HANDOFF, p);
-    const root = rootRef.current;
-    if (root) {
-      root.traverse((o) => {
-        const m = (o as Mesh).material as MeshStandardMaterial | undefined;
-        if (!m || Array.isArray(m) || typeof m.opacity !== "number") return;
-        m.transparent = true;
-        m.opacity = density;
-      });
+    const density = 1 - smoothstep(PHASE.ENTER + 0.12, 0.98, p);
+    if (Math.abs(density - lastDensity.current) > 0.004) {
+      lastDensity.current = density;
+      for (const m of fadeMats.current) m.opacity = density;
     }
     // an almost imperceptible settle of the hinge during the reveal — the
     // device stays stable, the camera does the acting
@@ -87,6 +90,7 @@ export const Laptop = forwardRef<
       lidRef.current.rotation.x = MathUtils.degToRad(DEVICE.LID_OPEN_DEG - 4 + settle * 4);
     }
   });
+
 
   const { quaternion: q, scale: s, hinge, screenOffset, screenTilt, openDeg, offset } = parts;
   const W = parts.screenW;
