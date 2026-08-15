@@ -16,7 +16,7 @@ type Lid = { center: THREE.Vector3; width: number; height: number; tilt: number 
 function findLid(root: THREE.Object3D): Lid | null {
   const world = new THREE.Box3().setFromObject(root);
   const wc = world.getCenter(new THREE.Vector3());
-  let best: { area: number; box: THREE.Box3 } | null = null;
+  let best: { score: number; box: THREE.Box3 } | null = null;
 
   root.traverse((o) => {
     const mesh = o as THREE.Mesh;
@@ -27,24 +27,24 @@ function findLid(root: THREE.Object3D): Lid | null {
     const c = box.getCenter(new THREE.Vector3());
     if (c.y < wc.y) return; // lid only
     if (c.z > wc.z) return; // sits toward the back
-    const area = size.x * size.y;
-    if (area < 0.2 * (world.getSize(new THREE.Vector3()).x * size.y || 1)) return;
-    const hit = { area, box };
-    if (!best || area > best.area) best = hit;
+    const score = size.x * Math.hypot(size.y, size.z);
+    const hit = { score, box };
+    if (!best || score > best.score) best = hit;
   });
 
-  const found = best as { area: number; box: THREE.Box3 } | null;
+  const found = best as { score: number; box: THREE.Box3 } | null;
   if (!found) return null;
   const size = found.box.getSize(new THREE.Vector3());
   const center = found.box.getCenter(new THREE.Vector3());
   const tilt = Math.atan2(size.z, size.y);
   return {
     center,
-    width: size.x * 0.935,
-    height: Math.hypot(size.y, size.z) * 0.925,
+    width: size.x * 0.93,
+    height: Math.hypot(size.y, size.z) * 0.92,
     tilt,
   };
 }
+
 
 function Model() {
   const { scene } = useGLTF(glbAsset.url);
