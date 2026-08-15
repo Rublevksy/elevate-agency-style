@@ -200,7 +200,7 @@ export default function HeroScene({ progress }: { progress: RefObject<number> })
         </Environment>
 
         <RibbonField progress={progress} pointer={pointer} count={mobile ? 4 : 8} quality={mobile ? 0.6 : 1} />
-        <Device progress={progress} pointer={pointer} shift={mobile ? 0 : -0.075} />
+        <Device progress={progress} pointer={pointer} shift={mobile ? 0 : -0.075} mobile={mobile} />
       </Canvas>
     </div>
   );
