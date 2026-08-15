@@ -1,12 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import sceneWeb from "@/assets/scene-web.png.asset.json";
-import sceneEshop from "@/assets/scene-eshop.png.asset.json";
-import sceneApps from "@/assets/scene-apps.png.asset.json";
-import sceneSeo from "@/assets/scene-seo.png.asset.json";
-import sceneDesign from "@/assets/scene-design.png.asset.json";
+import sceneWeb from "@/assets/scene-web.webp";
+import sceneEshop from "@/assets/scene-eshop.webp";
+import sceneApps from "@/assets/scene-apps.webp";
+import sceneSeo from "@/assets/scene-seo.webp";
+import sceneDesign from "@/assets/scene-design.webp";
+import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
 import { ServiceElements } from "./ServiceElements";
+
 
 /**
  * ENTER THE ELEVATE STUDIO — one continuous scroll-driven stage where each
