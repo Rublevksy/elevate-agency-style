@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
+import laptopLarge from "@/assets/elevate-laptop-1120.webp.asset.json";
+
 import { Hero } from "@/components/hero/Hero";
 import { ServiceStage } from "@/components/services/ServiceStage";
 
