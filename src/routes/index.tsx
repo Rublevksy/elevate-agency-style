@@ -47,7 +47,7 @@ function Home() {
       <DeviceFilm />
 
       {/* 02 — the seam: what ELEVATE can actually do for you */}
-      <ServicesIntro />
+      <ServiceDecision />
 
       {/* 02 — device-based service gallery: one shot through five products */}
       <DeviceServices />
