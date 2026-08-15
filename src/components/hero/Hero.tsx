@@ -202,7 +202,7 @@ export function Hero() {
                 src={deviceAsset.url}
                 alt=""
                 aria-hidden
-                className="mx-auto -mt-[3%] block h-auto w-[min(100%,780px)] select-none opacity-[0.16] blur-[3px]"
+                className="mx-auto -mt-[3%] block h-auto w-[min(100%,740px)] select-none opacity-[0.16] blur-[3px]"
                 style={{
                   transform: "scaleY(-0.42)",
                   transformOrigin: "top",
