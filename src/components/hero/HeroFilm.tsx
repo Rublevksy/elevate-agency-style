@@ -362,17 +362,13 @@ export function HeroFilm() {
                   </span>
                 ))}
               </p>
-              <Link to="/contact" className="btn-primary group pointer-events-auto mt-9 inline-flex">
-                Chci projekt
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-              </Link>
             </div>
           </div>
 
         </div>
 
         {/* chapter indicator */}
-        <div className="pointer-events-none absolute left-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-4 xl:flex">
+        <div className="pointer-events-none absolute bottom-[6vh] left-[5vw] z-40 hidden flex-row items-center gap-5 md:flex">
           {SCENES.map((s, i) => {
             const on = i === active;
             return (
