@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { HomeFilm } from "@/components/homefilm/HomeFilm";
+import { HeroFilm } from "@/components/hero/HeroFilm";
 
 
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
@@ -9,7 +9,6 @@ import { ProcessFilm } from "@/components/process/ProcessFilm";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { CINEMATIC } from "@/lib/cinematic-copy";
 import { useT } from "@/lib/i18n";
-import glbAsset from "@/assets/macbook-pro-14-m5.glb.asset.json";
 import aMarkAsset from "@/assets/elevate-a-mark.png.asset.json";
 
 
@@ -27,8 +26,6 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://elevateit.cz/" },
-      // the hero device is the critical above-the-fold asset
-      { rel: "preload", as: "fetch", href: glbAsset.url, crossOrigin: "anonymous" },
       { rel: "preload", as: "image", href: aMarkAsset.url },
     ],
 
@@ -41,8 +38,8 @@ function Home() {
 
   return (
     <>
-      {/* 01 — one cinematic system: MacBook → Weby → E-shopy → Aplikace → SEO → Design */}
-      <HomeFilm />
+      {/* 01 — one cinematic system: hero → screen → portal → services */}
+      <HeroFilm />
 
       <ProcessFilm />
 

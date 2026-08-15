@@ -1,10 +1,11 @@
-import { Suspense, lazy, useEffect, useRef, useState } from "react";
-import { ClientOnly, Link } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 
 import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
-import { useFilmProgress, clamp01, easeFilm, range, smoothstep } from "@/components/devicefilm/film";
-import { HeroType } from "@/components/devicefilm/HeroType";
+import { useFilmProgress, clamp01, easeFilm, lerp, range, smoothstep } from "@/lib/film";
+import { CssLaptop } from "./CssLaptop";
+import { Portal } from "./Portal";
 import { SceneArt } from "./SceneArt";
 
 import sceneWeb from "@/assets/scene-web.webp";
@@ -13,20 +14,12 @@ import sceneApps from "@/assets/scene-apps.webp";
 import sceneSeo from "@/assets/scene-seo.webp";
 import sceneDesign from "@/assets/scene-design.webp";
 
-const FilmScene = lazy(() => import("@/components/devicefilm/FilmScene"));
-
 /**
- * ELEVATE — ONE cinematic homepage system.
+ * ELEVATE — ONE homepage hero system.
  *
- * A single normal-scroll section with a single sticky stage, a single progress
- * value and a single rAF loop:
- *
- *   MACBOOK (finished ELEVATE interface + character)
- *     → camera enters the display
- *       → 01 WEBY → 02 E-SHOPY → 03 APLIKACE → 04 SEO → 05 LOGO & DESIGN
- *
- * Every scene gets a long stable hold and a short transformation window, so one
- * normal scroll gesture always produces meaningful, reversible movement.
+ * HERO → SCREEN → PORTAL → SERVICES, driven by a single scroll progress value
+ * and a single rAF loop. Everything is transform/opacity on a handful of layers;
+ * no canvas, no WebGL, no per-frame React state except the chapter index.
  */
 
 type Scene = {
@@ -38,7 +31,6 @@ type Scene = {
   to: string;
   src: string;
   art: "web" | "shop" | "app" | "seo" | "brand";
-  /** cut-out height + horizontal anchor: each scene is composed differently */
   height: string;
   x: string;
 };
@@ -53,7 +45,7 @@ const SCENES: Scene[] = [
     to: "/services/web",
     src: sceneWeb,
     art: "web",
-    height: "72vh",
+    height: "70vh",
     x: "2%",
   },
   {
@@ -65,25 +57,25 @@ const SCENES: Scene[] = [
     to: "/services/eshop",
     src: sceneEshop,
     art: "shop",
-    height: "78vh",
+    height: "76vh",
     x: "-4%",
   },
   {
     id: "apps",
     index: "03",
-    title: "Mobilní aplikace",
+    title: "Aplikace",
     desc: "Aplikace pro iOS a Android včetně publikace v App Store a Google Play.",
     points: ["iOS", "Android", "App Store", "Google Play"],
     to: "/contact",
     src: sceneApps,
     art: "app",
-    height: "74vh",
+    height: "72vh",
     x: "6%",
   },
   {
     id: "seo",
     index: "04",
-    title: "SEO & optimalizace",
+    title: "SEO",
     desc: "Technické SEO, rychlost, Core Web Vitals a průběžná optimalizace.",
     points: ["SEO", "Rychlost", "Core Web Vitals", "Indexace"],
     to: "/audit",
@@ -95,25 +87,26 @@ const SCENES: Scene[] = [
   {
     id: "design",
     index: "05",
-    title: "Logo & design",
+    title: "Design",
     desc: "Logo, vizuální identita a kompletní vizuální směr značky.",
     points: ["Logo", "Brand identity", "UI / UX", "Visual direction"],
     to: "/services/design",
     src: sceneDesign,
     art: "brand",
-    height: "68vh",
+    height: "66vh",
     x: "0%",
   },
 ];
 
-/** timeline: the device owns the opening, then the five services share the rest */
-const HERO = 0.22;
-const SERVICES_FROM = 0.25;
-/** share of a service unit spent transforming (rest is a stable hold) → 20/60/20 */
-const TRANSITION = 0.4;
+/** timeline: hold → the screen activates → the portal opens → the services */
+const ACTIVATE = 0.1;
+const PULL = 0.22;
+const SERVICES_FROM = 0.34;
+/** share of a service unit spent transforming (rest is a stable hold) */
+const TRANSITION = 0.42;
 
 const HERO_VH = 150;
-const SCENE_VH = 118;
+const SCENE_VH = 92;
 
 function stageOf(p: number, count: number) {
   const raw = Math.min(count - 1, Math.max(0, range(SERVICES_FROM, 1, p) * (count - 1)));
@@ -124,22 +117,23 @@ function stageOf(p: number, count: number) {
   return i + smoothstep(0, 1, t);
 }
 
-export function HomeFilm() {
+export function HeroFilm() {
   const wrap = useRef<HTMLDivElement>(null);
   const progress = useFilmProgress(wrap);
-  const device = useRef(0);
-  const pointer = useRef({ x: 0, y: 0 });
+
+  const stage = useRef<HTMLDivElement>(null);
+  const lid = useRef<HTMLDivElement>(null);
+  const chassis = useRef<HTMLDivElement>(null);
+  const screen = useRef<HTMLDivElement>(null);
   const deviceLayer = useRef<HTMLDivElement>(null);
+  const portal = useRef<HTMLDivElement>(null);
   const bloom = useRef<HTMLDivElement>(null);
+  const type = useRef<HTMLDivElement>(null);
   const sceneRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [mobile, setMobile] = useState(false);
+
   const [active, setActive] = useState(-1);
 
   useEffect(() => {
-    const check = () => setMobile(window.innerWidth < 768);
-    check();
-    window.addEventListener("resize", check);
-
     const reduced = prefersReducedMotion();
     const raw = { x: 0, y: 0 };
     const smooth = { x: 0, y: 0 };
@@ -155,36 +149,55 @@ export function HomeFilm() {
       const cursor = isMobile || reduced ? 0 : 1;
       const vh = window.innerHeight / 100;
 
-      // the device timeline: one continuous camera move into the display
-      device.current = range(0, HERO, p);
-      pointer.current.x = smooth.x * 12;
-      pointer.current.y = -smooth.y * 12;
-
       smooth.x += (raw.x - smooth.x) * 0.07;
       smooth.y += (raw.y - smooth.y) * 0.07;
 
-      // the display light takes the frame, then releases into the first service
-      const light = easeFilm(range(HERO * 0.7, HERO, p));
-      const release = easeFilm(range(HERO * 0.84, SERVICES_FROM, p));
-      if (bloom.current) {
-        bloom.current.style.opacity = (light * (1 - release * 0.9)).toFixed(3);
-        bloom.current.style.transform = `scale(${(0.6 + light * 1.8).toFixed(3)})`;
+      // 01 — the device: settle, then commit forward through the display
+      const settle = easeFilm(range(0, ACTIVATE, p));
+      const pull = easeFilm(range(PULL, SERVICES_FROM, p));
+      const through = easeFilm(range(PULL + 0.05, SERVICES_FROM, p));
+
+      if (lid.current) {
+        lid.current.style.transform = `rotateX(${lerp(9, -1.5, settle).toFixed(2)}deg)`;
       }
+      if (stage.current) {
+        const sc = lerp(isMobile ? 0.9 : 0.92, isMobile ? 1.8 : 2.4, pull);
+        const ry = smooth.x * (1 - pull) * 7 * cursor;
+        const rx = -smooth.y * (1 - pull) * 4 * cursor;
+        stage.current.style.transform = `translate3d(0, ${(pull * 16 * vh).toFixed(2)}px, 0) scale(${sc.toFixed(4)}) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+      }
+      // the chassis dissolves as the camera passes the glass — only light remains
+      if (chassis.current) chassis.current.style.opacity = (1 - pull).toFixed(3);
+      if (screen.current) screen.current.style.opacity = (1 - through).toFixed(3);
       if (deviceLayer.current) {
-        deviceLayer.current.style.opacity = (1 - release).toFixed(3);
-        deviceLayer.current.style.visibility = release >= 0.995 ? "hidden" : "visible";
-        deviceLayer.current.style.transform = `translate3d(0, ${(-release * 6).toFixed(2)}vh, 0) scale(${(1 + release * 0.06).toFixed(4)})`;
+        deviceLayer.current.style.opacity = (1 - through * 0.98).toFixed(3);
+        deviceLayer.current.style.visibility = through >= 0.995 ? "hidden" : "visible";
       }
 
-      // the five services: only the active and neighbouring scene do any work
-      const stage = stageOf(p, SCENES.length);
-      const started = p > SERVICES_FROM - 0.03;
-      // the first scene rises exactly as the device light releases the frame
-      const entry = easeFilm(range(SERVICES_FROM - 0.03, SERVICES_FROM + 0.02, p));
+      // 02 — the portal: an energy field forms on the display plane and opens
+      const form = easeFilm(range(ACTIVATE, PULL + 0.04, p));
+      if (portal.current) {
+        portal.current.style.setProperty("--form", form.toFixed(3));
+        portal.current.style.setProperty("--open", pull.toFixed(3));
+      }
+      if (bloom.current) {
+        bloom.current.style.opacity = (form * 0.35 + pull * 0.65).toFixed(3);
+        bloom.current.style.transform = `translate3d(-50%, -50%, 0) scale(${(0.35 + form * 0.5 + pull * 1.5).toFixed(3)})`;
+      }
+      if (type.current) {
+        const out = easeFilm(range(ACTIVATE, PULL, p));
+        type.current.style.opacity = (1 - out).toFixed(3);
+        type.current.style.transform = `translate3d(${(-out * 4).toFixed(2)}vw, 0, 0)`;
+      }
+
+      // 03 — the services rise out of the portal
+      const s = stageOf(p, SCENES.length);
+      const started = p > SERVICES_FROM - 0.06;
+      const entry = easeFilm(range(SERVICES_FROM - 0.06, SERVICES_FROM + 0.01, p));
 
       sceneRefs.current.forEach((el, i) => {
         if (!el) return;
-        const d = stage - i;
+        const d = s - i;
         const away = Math.min(1.4, Math.abs(d));
         if (!started || away >= 1) {
           if (el.style.visibility !== "hidden") {
@@ -195,32 +208,27 @@ export function HomeFilm() {
           return;
         }
         el.style.visibility = "visible";
-        // a true crossfade: the two neighbouring scenes always sum to 1, so the
-        // stage never dips to black and never shows two bright copies
         el.style.opacity = (clamp01(1 - away) * entry).toFixed(3);
-
         el.style.pointerEvents = away < 0.25 ? "auto" : "none";
 
         const near = 1 - away;
+        const emerge = i === 0 ? 1 - entry : 0;
         const text = el.querySelector<HTMLElement>("[data-layer='text']");
         const fig = el.querySelector<HTMLElement>("[data-layer='figure']");
         const art = el.querySelector<HTMLElement>("[data-layer='art']");
         const glow = el.querySelector<HTMLElement>("[data-layer='glow']");
 
         if (text) {
-          // only the dominant scene's copy is readable — no ghosted headlines
           text.style.opacity = clamp01(1 - away * 2.6).toFixed(3);
-          text.style.transform = `translate3d(${(smooth.x * 4 * cursor).toFixed(2)}px, ${(-d * 4 * vh).toFixed(2)}px, 0)`;
+          text.style.transform = `translate3d(${(smooth.x * 4 * cursor).toFixed(2)}px, ${(-d * 4 * vh + emerge * 4 * vh).toFixed(2)}px, 0)`;
         }
         if (fig) {
-          // the character stays one continuous, always-sharp subject
-          fig.style.transform = `translate3d(${(smooth.x * 8 * cursor - d * 3 * vh).toFixed(2)}px, ${(-d * 5 * vh + smooth.y * 5 * cursor).toFixed(2)}px, 0) scale(${(0.95 + near * 0.05).toFixed(4)})`;
+          fig.style.transform = `translate3d(${(smooth.x * 8 * cursor - d * 3 * vh).toFixed(2)}px, ${(-d * 5 * vh + smooth.y * 5 * cursor).toFixed(2)}px, 0) scale(${(0.95 + near * 0.05 - emerge * 0.06).toFixed(4)})`;
         }
         if (glow) {
           glow.style.opacity = (0.3 + near * 0.7).toFixed(3);
           glow.style.transform = `translate3d(-50%, calc(-50% + ${(-d * 4 * vh).toFixed(2)}px), 0) scale(${(0.92 + near * 0.12).toFixed(3)})`;
         }
-
         if (art) {
           const floats = art.querySelectorAll<HTMLElement>("[data-float]");
           floats.forEach((f) => {
@@ -229,20 +237,19 @@ export function HomeFilm() {
             const mx = smooth.x * (4 + depth * 14) * cursor;
             const my = smooth.y * (2 + depth * 8) * cursor;
             const sy = -d * (4 + depth * 12) * vh;
-            f.style.transform = `translate3d(${(mx - d * depth * 14).toFixed(2)}px, ${(my + sy).toFixed(2)}px, 0) scale(${(0.96 + enter * 0.04).toFixed(4)})`;
-            f.style.opacity = enter.toFixed(3);
+            f.style.transform = `translate3d(${(mx - d * depth * 14).toFixed(2)}px, ${(my + sy + emerge * depth * 40).toFixed(2)}px, 0) scale(${(0.96 + enter * 0.04 - emerge * 0.08).toFixed(4)})`;
+            f.style.opacity = (enter * (1 - emerge)).toFixed(3);
           });
         }
       });
 
-      const next = started ? Math.min(SCENES.length - 1, Math.round(stage)) : -1;
+      const next = started ? Math.min(SCENES.length - 1, Math.round(s)) : -1;
       setActive((prev) => (prev === next ? prev : next));
     };
 
     const stop = startFrameLoop(tick, wrap.current);
     return () => {
       stop();
-      window.removeEventListener("resize", check);
       window.removeEventListener("pointermove", onMove);
     };
   }, [progress]);
@@ -250,18 +257,18 @@ export function HomeFilm() {
   return (
     <div ref={wrap} className="relative" style={{ height: `${HERO_VH + SCENES.length * SCENE_VH}vh` }}>
       <div className="sticky top-0 h-[100svh] overflow-hidden">
-        {/* environment — light and one static grid; it never competes */}
+        {/* environment — one deep navy volume with a single static grid */}
         <div
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(58% 52% at 56% 34%, oklch(0.3 0.07 258 / 0.2) 0%, transparent 70%), radial-gradient(90% 80% at 46% 112%, oklch(0.18 0.045 258 / 0.34) 0%, transparent 66%)",
+              "radial-gradient(56% 50% at 58% 32%, oklch(0.3 0.07 258 / 0.22) 0%, transparent 70%), radial-gradient(90% 80% at 46% 112%, oklch(0.18 0.045 258 / 0.34) 0%, transparent 66%)",
           }}
         />
         <div
           aria-hidden
-          className="absolute inset-0 opacity-[0.1]"
+          className="absolute inset-0 opacity-[0.09]"
           style={{
             backgroundImage:
               "linear-gradient(to right, oklch(0.65 0.18 255 / 0.16) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.65 0.18 255 / 0.12) 1px, transparent 1px)",
@@ -271,30 +278,52 @@ export function HomeFilm() {
           }}
         />
 
-        {/* 01 — THE DEVICE: the stage the whole film starts from */}
-        <div ref={deviceLayer} className="absolute inset-0 z-20" style={{ willChange: "opacity, transform" }}>
-          <ClientOnly fallback={<div className="absolute inset-0" />}>
-            <Suspense fallback={<div className="absolute inset-0" />}>
-              <div className="absolute inset-0">
-                <FilmScene progress={device} pointer={pointer} mobile={mobile} />
-              </div>
-            </Suspense>
-          </ClientOnly>
-          <HeroType progress={device} />
-        </div>
-
-        {/* the display light: the single bridge from the device into the services */}
+        {/* the display light: the bridge from the screen into the services */}
         <div
           ref={bloom}
           aria-hidden
-          className="pointer-events-none absolute left-1/2 top-1/2 z-30 h-[120vh] w-[120vh] -translate-x-1/2 -translate-y-1/2 rounded-full"
+          className="pointer-events-none absolute left-1/2 top-1/2 z-[25] h-[110vh] w-[110vh] rounded-full"
           style={{
             opacity: 0,
+            transform: "translate3d(-50%, -50%, 0) scale(0.35)",
             background:
-              "radial-gradient(circle, oklch(0.78 0.09 250 / 0.5) 0%, oklch(0.45 0.14 255 / 0.24) 38%, transparent 72%)",
+              "radial-gradient(circle, oklch(0.8 0.09 250 / 0.42) 0%, oklch(0.45 0.14 255 / 0.2) 40%, transparent 72%)",
             willChange: "opacity, transform",
           }}
         />
+
+        {/* 01 — THE DEVICE + PORTAL */}
+        <div ref={deviceLayer} className="absolute inset-0 z-20" style={{ willChange: "opacity" }}>
+          <div className="absolute inset-0 md:left-[38%]">
+            <Portal rootRef={portal} />
+            <CssLaptop stageRef={stage} lidRef={lid} chassisRef={chassis} screenRef={screen} />
+          </div>
+
+          {/* HERO COPY */}
+          <div
+            ref={type}
+            className="pointer-events-none absolute inset-x-0 bottom-[8vh] z-30 px-7 md:bottom-0 md:top-0 md:flex md:w-[42%] md:items-center md:px-[5vw]"
+            style={{ willChange: "opacity, transform" }}
+          >
+            <div className="max-w-[34rem]">
+              <span className="block font-mono text-[10px] uppercase tracking-[0.42em] text-primary">
+                Digitální studio · Praha
+              </span>
+              <h1 className="mt-5 text-[2.1rem] font-medium leading-[1.04] tracking-[-0.04em] text-foreground md:text-[3.6vw]">
+                Weby, e-shopy
+                <br />
+                a aplikace <span className="text-primary">na míru.</span>
+              </h1>
+              <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
+                Navrhujeme, vyvíjíme a optimalizujeme digitální produkty, které posouvají firmy dál.
+              </p>
+              <Link to="/contact" className="btn-primary group pointer-events-auto mt-8 inline-flex">
+                Chci projekt
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </div>
+          </div>
+        </div>
 
         {/* chapter indicator */}
         <div className="pointer-events-none absolute left-6 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-4 xl:flex">
@@ -321,7 +350,7 @@ export function HomeFilm() {
           })}
         </div>
 
-        {/* 02–06 — THE SERVICES */}
+        {/* 02–06 — THE SERVICES, emerging from the portal */}
         {SCENES.map((s, i) => (
           <div
             key={s.id}
@@ -364,7 +393,7 @@ export function HomeFilm() {
                 <div
                   data-layer="glow"
                   aria-hidden
-                  className="pointer-events-none absolute left-1/2 top-1/2 h-[48vh] w-[48vh] rounded-full blur-[110px] will-change-transform"
+                  className="pointer-events-none absolute left-1/2 top-1/2 h-[46vh] w-[46vh] rounded-full blur-[110px] will-change-transform"
                   style={{ background: "oklch(0.6 0.17 258 / 0.26)", transform: "translate3d(-50%, -50%, 0)" }}
                 />
                 <div
@@ -394,8 +423,7 @@ export function HomeFilm() {
                     style={
                       {
                         "--fh": s.height,
-                        filter:
-                          "saturate(1.04) contrast(1.06) drop-shadow(0 42px 64px oklch(0.03 0.01 258 / 0.66))",
+                        filter: "saturate(1.04) contrast(1.06) drop-shadow(0 42px 64px oklch(0.03 0.01 258 / 0.66))",
                       } as React.CSSProperties
                     }
                   />
@@ -408,7 +436,7 @@ export function HomeFilm() {
         {/* the seam onward: light falloff only, never a colour cut */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-[22vh]"
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-40 h-[20vh]"
           style={{
             background:
               "linear-gradient(180deg, transparent 0%, oklch(0.115 0.018 258 / 0.14) 55%, oklch(0.115 0.018 258 / 0.34) 100%)",
