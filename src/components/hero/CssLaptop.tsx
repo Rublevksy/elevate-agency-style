@@ -27,6 +27,17 @@ export function CssLaptop({
         className="relative w-[min(86vw,520px)] md:w-[min(44vw,700px)]"
         style={{ transformStyle: "preserve-3d", willChange: "transform" }}
       >
+        {/* blue ambient glow behind the device */}
+        <div
+          aria-hidden
+          className="absolute left-1/2 top-1/2 -z-10 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 rounded-[50%]"
+          style={{
+            background:
+              "radial-gradient(closest-side, oklch(0.55 0.15 256 / 0.3) 0%, oklch(0.4 0.12 258 / 0.14) 48%, transparent 78%)",
+            filter: "blur(28px)",
+          }}
+        />
+
         {/* contact shadow on the environment floor */}
         <div
           ref={chassisRef}
@@ -34,6 +45,7 @@ export function CssLaptop({
           className="absolute left-1/2 top-full h-[26%] w-[112%] -translate-x-1/2 rounded-[50%] blur-2xl"
           style={{ background: "radial-gradient(closest-side, rgba(0,0,0,0.75), transparent 78%)" }}
         />
+
 
         {/* LID */}
         <div
