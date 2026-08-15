@@ -21,10 +21,10 @@ export function CssLaptop({
   screenRef: RefObject<HTMLDivElement | null>;
 }) {
   return (
-    <div className="absolute inset-0 flex items-center justify-center" style={{ perspective: "1800px" }}>
+    <div className="absolute inset-0 flex items-center justify-center pb-[13vh]" style={{ perspective: "1800px" }}>
       <div
         ref={stageRef}
-        className="relative w-[min(86vw,520px)] -translate-y-[13%] md:w-[min(44vw,700px)]"
+        className="relative w-[min(86vw,520px)] md:w-[min(44vw,700px)]"
         style={{ transformStyle: "preserve-3d", willChange: "transform" }}
       >
         {/* contact shadow on the environment floor */}

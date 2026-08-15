@@ -302,7 +302,7 @@ export function HeroFilm() {
           {/* HERO COPY */}
           <div
             ref={type}
-            className="pointer-events-none absolute inset-x-0 bottom-[8vh] z-30 px-7 md:inset-y-0 md:flex md:w-[42%] md:items-center md:px-[5vw]"
+            className="pointer-events-none absolute inset-x-0 bottom-[8vh] z-30 px-7 md:bottom-0 md:top-0 md:flex md:w-[42%] md:items-center md:px-[5vw]"
             style={{ willChange: "opacity, transform" }}
           >
             <div className="max-w-[34rem]">
