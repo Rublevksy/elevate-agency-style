@@ -196,10 +196,9 @@ export function CinematicServices() {
   const [active, setActive] = useState(0);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersReducedMotion();
     const pointer = { x: 0, y: 0 };
     const smooth = { x: 0, y: 0 };
-    let raf = 0;
 
     const onMove = (e: PointerEvent) => {
       pointer.x = (e.clientX / window.innerWidth - 0.5) * 2;
@@ -208,6 +207,7 @@ export function CinematicServices() {
     if (!reduced) window.addEventListener("pointermove", onMove, { passive: true });
 
     const tick = () => {
+
       const section = sectionRef.current;
       if (section) {
         const rect = section.getBoundingClientRect();
