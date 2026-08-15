@@ -11,8 +11,8 @@ useGLTF.preload(glbAsset.url);
 function findScreen(root: THREE.Object3D) {
   const box = new THREE.Box3().setFromObject(root);
   const center = box.getCenter(new THREE.Vector3());
-  let best: { mesh: THREE.Mesh; size: THREE.Vector3; center: THREE.Vector3; area: number } | null =
-    null;
+  type Hit = { mesh: THREE.Mesh; size: THREE.Vector3; center: THREE.Vector3; area: number };
+  let best: Hit | null = null;
 
   root.traverse((o) => {
     const mesh = o as THREE.Mesh;
@@ -26,7 +26,8 @@ function findScreen(root: THREE.Object3D) {
     const thin = dims[2] / Math.max(dims[0], 1e-6);
     if (thin > 0.06) return; // must be a flat panel
     if (c.y < center.y) return; // must sit in the upper half (the lid)
-    if (!best || area > best.area) best = { mesh, size, center: c, area };
+    const hit: Hit = { mesh, size, center: c, area };
+    if (!best || area > best.area) best = hit;
   });
   return best;
 }
