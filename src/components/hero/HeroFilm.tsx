@@ -5,7 +5,6 @@ import { ArrowUpRight } from "lucide-react";
 import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
 import { useFilmProgress, clamp01, easeFilm, lerp, range, smoothstep } from "@/lib/film";
 import { CssLaptop } from "./CssLaptop";
-import { Portal } from "./Portal";
 import { SceneArt } from "./SceneArt";
 
 import sceneWeb from "@/assets/scene-web.webp";
@@ -150,7 +149,7 @@ export function HeroFilm() {
   const [use3D, setUse3D] = useState(false);
 
   useEffect(() => {
-    setUse3D(window.innerWidth >= 768 && !prefersReducedMotion());
+    setUse3D(!prefersReducedMotion());
   }, []);
 
 
@@ -311,18 +310,6 @@ export function HeroFilm() {
               "radial-gradient(56% 50% at 58% 32%, oklch(0.3 0.07 258 / 0.22) 0%, transparent 70%), radial-gradient(90% 80% at 46% 112%, oklch(0.18 0.045 258 / 0.34) 0%, transparent 66%)",
           }}
         />
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-[0.09]"
-          style={{
-            backgroundImage:
-              "linear-gradient(to right, oklch(0.65 0.18 255 / 0.16) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.65 0.18 255 / 0.12) 1px, transparent 1px)",
-            backgroundSize: "128px 128px",
-            maskImage: "radial-gradient(72% 62% at 55% 45%, #000 0%, transparent 100%)",
-            WebkitMaskImage: "radial-gradient(72% 62% at 55% 45%, #000 0%, transparent 100%)",
-          }}
-        />
-
         {/* the display light: the bridge from the screen into the services */}
         <div
           ref={bloom}
@@ -339,8 +326,7 @@ export function HeroFilm() {
 
         {/* 01 — THE DEVICE + PORTAL */}
         <div ref={deviceLayer} className="absolute inset-0 z-20" style={{ willChange: "opacity" }}>
-          <div className="absolute inset-0 md:left-[38%]">
-            <Portal rootRef={portal} />
+          <div className="absolute inset-0">
             {use3D ? (
               <Suspense fallback={null}>
                 <Laptop3D progress={progress} />
@@ -361,20 +347,28 @@ export function HeroFilm() {
               <span className="block font-mono text-[10px] uppercase tracking-[0.42em] text-primary">
                 Digitální studio · Praha
               </span>
-              <h1 className="mt-5 text-[2.1rem] font-medium leading-[1.04] tracking-[-0.04em] text-foreground md:text-[3.6vw]">
-                Weby, e-shopy
+              <h1 className="mt-6 text-[2rem] font-medium uppercase leading-[1.02] tracking-[-0.035em] text-foreground md:text-[3.1vw]">
+                Digitální řešení,
                 <br />
-                a aplikace <span className="text-primary">na míru.</span>
+                která posouvají
+                <br />
+                <span className="text-primary">vaše podnikání.</span>
               </h1>
-              <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">
-                Navrhujeme, vyvíjíme a optimalizujeme digitální produkty, které posouvají firmy dál.
+              <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/80 md:text-[11px]">
+                {["Weby", "E-shopy", "Aplikace", "Design", "SEO"].map((s, i) => (
+                  <span key={s} className="flex items-center gap-3">
+                    {i > 0 && <span className="h-1 w-1 rounded-full bg-primary/70" />}
+                    {s}
+                  </span>
+                ))}
               </p>
-              <Link to="/contact" className="btn-primary group pointer-events-auto mt-8 inline-flex">
+              <Link to="/contact" className="btn-primary group pointer-events-auto mt-9 inline-flex">
                 Chci projekt
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
             </div>
           </div>
+
         </div>
 
         {/* chapter indicator */}
