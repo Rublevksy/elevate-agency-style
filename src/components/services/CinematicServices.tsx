@@ -102,6 +102,29 @@ const SCENES: Scene[] = [
 
 const CTA = "Detail služby";
 
+/** scroll distance per service — long enough for a real resting state */
+const VH_PER_SCENE = 190;
+/** share of each service's scroll unit spent transitioning (the rest is HOLD) */
+const TRANSITION = 0.34;
+
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
+
+/**
+ * Map the raw 0→1 section progress onto a stage position where each service
+ * gets a long stable plateau and only a short window is used to cross-fade
+ * into the next one. Purely a function of progress, so scrubbing backwards
+ * reverses the film exactly.
+ */
+function holdStage(p: number, count: number) {
+  const raw = Math.min(count - 1, Math.max(0, p * (count - 1)));
+  const i = Math.min(count - 2, Math.floor(raw));
+  const fr = raw - i;
+  const start = (1 - TRANSITION) / 2;
+  const t = Math.min(1, Math.max(0, (fr - start) / TRANSITION));
+  return i + smoothstep(t);
+}
+
+
 
 /* ------------------------------------------------------------------ */
 /* shared environment                                                  */
