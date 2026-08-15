@@ -6,7 +6,7 @@ import heroArtwork from "@/assets/elevate-hero.png.asset.json";
  */
 export function Hero() {
   return (
-    <section className="relative w-full" aria-label="ELEVATE">
+    <section className="relative w-full pt-[4.5rem] md:pt-[5.5rem]" aria-label="ELEVATE">
       <img
         src={heroArtwork.url}
         alt="ELEVATE — digitální studio: weby, e-shopy a aplikace"
