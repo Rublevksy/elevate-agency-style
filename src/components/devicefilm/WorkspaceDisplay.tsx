@@ -219,7 +219,15 @@ function State({
 }
 
 /** thin wireframe box */
-function Box({ className, label }: { className?: string; label?: string }) {
+function Box({
+  className,
+  label,
+  children,
+}: {
+  className?: string;
+  label?: string;
+  children?: React.ReactNode;
+}) {
   return (
     <div
       className={`relative rounded-[0.4cqw] border border-dashed ${className ?? ""}`}
@@ -230,6 +238,7 @@ function Box({ className, label }: { className?: string; label?: string }) {
           {label}
         </span>
       )}
+      {children}
     </div>
   );
 }
