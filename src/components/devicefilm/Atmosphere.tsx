@@ -24,7 +24,7 @@ export function Atmosphere({
   const root = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const reduced = prefersReducedMotion();
     const smooth = { x: 0, y: 0 };
     const cursor = { x: 0.5, y: 0.5, tx: 0.5, ty: 0.5, energy: 0 };
     let last = performance.now();
