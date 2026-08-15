@@ -271,7 +271,7 @@ export function RibbonField({
   });
 
   return (
-    <group ref={root} scale={0.33} position={[0.02, 0.03, 0]}>
+    <group ref={root} scale={0.33} position={[0.02, 0.03, -0.12]}>
       {built.map((b, i) => (
         <primitive key={i} object={b.group} />
       ))}
