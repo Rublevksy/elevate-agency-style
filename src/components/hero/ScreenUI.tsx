@@ -148,7 +148,7 @@ export function ScreenUI() {
 
             {/* micro panel — session graph, behind the shoulder */}
             <span
-              className="absolute left-[-24%] top-[-2%] block w-[40%] rounded-[0.45em] px-[0.7em] py-[0.6em]"
+              className="absolute right-[-4%] top-[2%] block w-[42%] rounded-[0.45em] px-[0.7em] py-[0.6em]"
               style={{ border: `1px solid ${LINE}`, background: "rgba(7,13,24,0.7)" }}
             >
               <span className="font-mono text-[0.42em] uppercase tracking-[0.2em]" style={{ color: DIM }}>
