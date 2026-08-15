@@ -125,7 +125,6 @@ export default function LaptopStage({ progress }: { progress: { current: number 
       frameloop={prefersReducedMotion() ? "demand" : "always"}
       style={{ pointerEvents: "none" }}
     >
-      <color attach="background" args={["#000000"]} />
       <fog attach="fog" args={["#02050a", 11, 22]} />
       <ambientLight intensity={0.18} />
       {/* cool key from the light streams behind the device */}
