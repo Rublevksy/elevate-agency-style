@@ -133,7 +133,8 @@ export function SceneArt({ kind }: { kind: "web" | "shop" | "app" | "seo" | "bra
     return (
       <>
         {/* MAIN — product grid */}
-        <div data-float data-depth={0.55} className="absolute left-[1%] top-[14%] grid h-[44%] w-[52%] grid-cols-3 gap-3">
+        <div data-float data-depth={0.55} className="absolute left-[1%] top-[16%] grid h-[34%] w-[52%] grid-cols-3 gap-3">
+
           {[0, 1, 2].map((i) => (
             <div
               key={i}

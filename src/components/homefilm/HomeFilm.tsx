@@ -183,23 +183,29 @@ export function HomeFilm() {
         if (!el) return;
         const d = stage - i;
         const away = Math.min(1.4, Math.abs(d));
-        if (!started || away >= 1.05) {
+        if (!started || away >= 1) {
           if (el.style.visibility !== "hidden") {
             el.style.visibility = "hidden";
             el.style.opacity = "0";
+            el.style.pointerEvents = "none";
           }
           return;
         }
         el.style.visibility = "visible";
-        el.style.opacity = clamp01(1 - away * 1.25).toFixed(3);
+        // a true crossfade: the two neighbouring scenes always sum to 1, so the
+        // stage never dips to black and never shows two bright copies
+        el.style.opacity = clamp01(1 - away).toFixed(3);
+        el.style.pointerEvents = away < 0.25 ? "auto" : "none";
 
-        const near = 1 - Math.min(1, away);
+        const near = 1 - away;
         const text = el.querySelector<HTMLElement>("[data-layer='text']");
         const fig = el.querySelector<HTMLElement>("[data-layer='figure']");
         const art = el.querySelector<HTMLElement>("[data-layer='art']");
         const glow = el.querySelector<HTMLElement>("[data-layer='glow']");
 
         if (text) {
+          // only the dominant scene's copy is readable — no ghosted headlines
+          text.style.opacity = clamp01(1 - away * 2.6).toFixed(3);
           text.style.transform = `translate3d(${(smooth.x * 4 * cursor).toFixed(2)}px, ${(-d * 4 * vh).toFixed(2)}px, 0)`;
         }
         if (fig) {
@@ -210,6 +216,7 @@ export function HomeFilm() {
           glow.style.opacity = (0.3 + near * 0.7).toFixed(3);
           glow.style.transform = `translate3d(-50%, calc(-50% + ${(-d * 4 * vh).toFixed(2)}px), 0) scale(${(0.92 + near * 0.12).toFixed(3)})`;
         }
+
         if (art) {
           const floats = art.querySelectorAll<HTMLElement>("[data-float]");
           floats.forEach((f) => {
