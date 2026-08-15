@@ -1,136 +1,58 @@
 import { Link } from "@tanstack/react-router";
-import { ArrowRight } from "lucide-react";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 
-import heroStage from "@/assets/elevate-hero-stage.png.asset.json";
+import heroMaster from "@/assets/elevate-hero.png.asset.json";
 import { setCinematicActive } from "@/lib/cinematic-state";
+import { useT, type Lang } from "@/lib/i18n";
 
-const clamp01 = (value: number) => (value < 0 ? 0 : value > 1 ? 1 : value);
+const languages: Lang[] = ["CZ", "EN", "RU", "UA"];
 
-/**
- * Hero = the approved ELEVATE master artwork (device + light ring + service
- * cards) as the exact base graphic layer on the right, with real HTML
- * typography and links on the left. Live enhancement is limited to pointer
- * parallax and a scroll transform — the resting look equals the artwork.
- */
 export function Hero() {
-  const wrapRef = useRef<HTMLDivElement>(null);
-  const stageRef = useRef<HTMLElement>(null);
+  const { setLang } = useT();
 
   useEffect(() => {
-    const wrap = wrapRef.current;
-    const stage = stageRef.current;
-    if (!wrap || !stage) return;
-
-    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
-    let frame = 0;
-    let px = 0;
-    let py = 0;
-
-    const update = () => {
-      frame = 0;
-      const rect = wrap.getBoundingClientRect();
-      const distance = wrap.offsetHeight - window.innerHeight;
-      const progress = reducedMotion.matches || distance <= 0 ? 0 : clamp01(-rect.top / distance);
-      stage.style.setProperty("--hero-scroll", progress.toFixed(4));
-      stage.style.setProperty("--hero-px", px.toFixed(3));
-      stage.style.setProperty("--hero-py", py.toFixed(3));
-    };
-
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(update);
-    };
-
-    const onPointer = (event: PointerEvent) => {
-      if (reducedMotion.matches) return;
-      px = (event.clientX / window.innerWidth - 0.5) * 2;
-      py = (event.clientY / window.innerHeight - 0.5) * 2;
-      schedule();
-    };
-
-    update();
-    setCinematicActive(false);
-    window.addEventListener("scroll", schedule, { passive: true });
-    window.addEventListener("resize", schedule, { passive: true });
-    window.addEventListener("pointermove", onPointer, { passive: true });
-    reducedMotion.addEventListener("change", schedule);
-
-    return () => {
-      cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", schedule);
-      window.removeEventListener("resize", schedule);
-      window.removeEventListener("pointermove", onPointer);
-      reducedMotion.removeEventListener("change", schedule);
-    };
+    setCinematicActive(true);
+    return () => setCinematicActive(false);
   }, []);
 
   return (
-    <div ref={wrapRef} className="relative h-[100svh] md:h-[130svh]">
-      <section
-        ref={stageRef}
-        aria-label="ELEVATE — digitální studio"
-        className="sticky top-0 h-[100svh] overflow-hidden bg-background"
-      >
-        {/* exact master artwork — base graphic layer, right side of the composition */}
-        <img
-          src={heroStage.url}
-          alt="ELEVATE — MacBook s ukázkou webu, e-shopu a aplikací"
-          width={988}
-          height={746}
-          fetchPriority="high"
-          decoding="sync"
-          className="hero-master pointer-events-none absolute right-[-30%] top-[64%] z-[1] h-[42%] w-auto max-w-none md:right-[-1%] md:top-1/2 md:h-[82%]"
-        />
+    <section aria-label="ELEVATE — digitální studio" className="hero-reference relative h-[100svh] overflow-hidden bg-background">
+      <h1 className="sr-only">Digitální řešení, která posouvají vaše podnikání</h1>
+      <img
+        src={heroMaster.url}
+        alt="ELEVATE — digitální studio, MacBook a světelný portál"
+        width={1536}
+        height={1024}
+        fetchPriority="high"
+        decoding="sync"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+      />
 
-        {/* soft edge blends so the artwork sits in the black space */}
-        <div aria-hidden className="hero-scrim-left pointer-events-none absolute inset-y-0 left-0 z-[2] w-full md:w-[36%]" />
-        <div aria-hidden className="hero-scrim-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[14%]" />
+      <nav aria-label="Hlavní navigace" className="absolute inset-0 z-10 hidden md:block">
+        <Link to="/" aria-label="ELEVATE — domů" className="hero-hotspot left-[3.8%] top-[2.2%] h-[5.3%] w-[11.4%]" />
+        <Link to="/projects" aria-label="Projekty" className="hero-hotspot left-[24.8%] top-[2.2%] h-[5.3%] w-[6.8%]" />
+        <Link to="/services" aria-label="Služby" className="hero-hotspot left-[32.6%] top-[2.2%] h-[5.3%] w-[6.6%]" />
+        <Link to="/pricing" aria-label="Ceník" className="hero-hotspot left-[40.5%] top-[2.2%] h-[5.3%] w-[5.8%]" />
+        <Link to="/about" aria-label="O nás" className="hero-hotspot left-[47.5%] top-[2.2%] h-[5.3%] w-[5.2%]" />
+        <Link to="/contact" aria-label="Kontakt" className="hero-hotspot left-[54%] top-[2.2%] h-[5.3%] w-[6.2%]" />
+        <Link to="/contact" aria-label="Začít projekt" className="hero-hotspot left-[79.7%] top-[2%] h-[5.6%] w-[12.3%]" />
+        {languages.map((language, index) => (
+          <button
+            key={language}
+            type="button"
+            aria-label={`Přepnout jazyk na ${language}`}
+            onClick={() => setLang(language)}
+            className="hero-hotspot top-[2.2%] h-[5.3%] w-[2.1%]"
+            style={{ left: `${69.1 + index * 2.4}%` }}
+          />
+        ))}
+      </nav>
 
-        {/* real, clickable content aligned to the master composition */}
-        <div className="relative z-10 mx-auto h-full w-full max-w-[1536px]">
-          <div className="absolute left-6 top-[21%] w-[90%] max-w-[420px] md:left-[5.6%] md:top-[27%] md:w-[36%] md:max-w-[460px]">
-            <p className="text-[10px] uppercase tracking-[0.3em] text-primary">Digitální studio · Praha</p>
-
-            <h1 className="mt-5 text-[2rem] font-medium leading-[1.1] tracking-[-0.02em] text-foreground md:mt-6 md:text-[2.6rem] lg:text-[3.1rem]">
-              <span className="block">Weby, e-shopy</span>
-              <span className="block">a aplikace, které</span>
-              <span className="block text-primary">prodávají.</span>
-            </h1>
-
-            <p className="mt-6 text-[10px] uppercase tracking-[0.26em] text-muted-foreground md:mt-7">
-              UX <span className="text-primary/70">·</span> UI <span className="text-primary/70">·</span> Vývoj{" "}
-              <span className="text-primary/70">·</span> Optimalizace
-            </p>
-
-            <Link to="/contact" className="btn-primary group mt-8 inline-flex md:mt-10">
-              Chci projekt
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-
-          {/* section index, as in the master */}
-          <div
-            aria-hidden
-            className="absolute left-[1.4%] top-[33%] hidden flex-col gap-4 text-[10px] tracking-[0.24em] md:flex"
-          >
-            {["01", "02", "03", "04", "05"].map((n, i) => (
-              <span key={n} className="flex items-center gap-2">
-                <span className={i === 0 ? "h-px w-3 bg-primary" : "h-px w-3 bg-muted-foreground/40"} />
-                <span className={i === 0 ? "text-foreground" : "text-muted-foreground/60"}>{n}</span>
-              </span>
-            ))}
-          </div>
-
-          <p
-            aria-hidden
-            className="absolute inset-x-0 bottom-[6%] hidden text-center text-[10px] uppercase tracking-[0.34em] text-muted-foreground md:block"
-            style={{ opacity: "calc(1 - var(--hero-scroll, 0) * 2)" }}
-          >
-            Dobrý design <span className="text-primary/70">·</span> Rychlý výkon{" "}
-            <span className="text-primary/70">·</span> Skvělé výsledky
-          </p>
-        </div>
-      </section>
-    </div>
+      <Link
+        to="/contact"
+        aria-label="Chci projekt"
+        className="hero-hotspot z-10 left-[8.1%] top-[56.8%] h-[6.4%] w-[12.5%]"
+      />
+    </section>
   );
 }
