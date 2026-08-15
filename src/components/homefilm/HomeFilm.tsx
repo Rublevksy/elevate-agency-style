@@ -157,6 +157,7 @@ export function HomeFilm() {
 
       // the device timeline: one continuous camera move into the display
       device.current = range(0, HERO, p);
+      (window as unknown as Record<string, unknown>).__film = { p, dev: device.current };
       pointer.current.x = smooth.x * 12;
       pointer.current.y = -smooth.y * 12;
 
