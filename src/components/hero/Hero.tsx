@@ -74,7 +74,7 @@ export function Hero() {
       {/* light-ribbon field — behind everything */}
       <div
         ref={wavesRef}
-        className="pointer-events-none absolute inset-y-0 left-[18%] right-[-6%] -z-10 will-change-transform"
+        className="pointer-events-none absolute inset-y-0 left-[34%] right-[-8%] -z-10 will-change-transform"
       >
         <LightWaves />
       </div>
@@ -95,7 +95,7 @@ export function Hero() {
       />
 
       <div className="relative mx-auto w-full max-w-[1600px] px-6 md:px-12">
-        <div className="relative grid items-center gap-10 lg:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
+        <div className="relative grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)]">
           {/* ————— copy column ————— */}
           <div className="relative z-20">
             <div className="flex items-center gap-6">
@@ -118,11 +118,9 @@ export function Hero() {
                   Digitální studio · Praha
                 </p>
                 <h1 className="mt-6 text-[clamp(2.4rem,4.6vw,4.3rem)] font-medium leading-[1.06] tracking-[-0.03em] text-foreground">
-                  Weby, e-shopy
-                  <br />
-                  a aplikace, které
-                  <br />
-                  <span className="text-primary">prodávají.</span>
+                  <span className="block whitespace-nowrap">Weby, e-shopy</span>
+                  <span className="block whitespace-nowrap">a aplikace, které</span>
+                  <span className="block text-primary">prodávají.</span>
                 </h1>
                 <p className="mt-7 text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
                   UX / UI · Vývoj · Optimalizace
@@ -143,7 +141,6 @@ export function Hero() {
             <div
               ref={deviceRef}
               className="relative z-10 will-change-transform"
-              style={{ mixBlendMode: "screen" }}
             >
               <img
                 src={deviceAsset.url}
@@ -152,13 +149,13 @@ export function Hero() {
                 height={615}
                 fetchPriority="high"
                 decoding="async"
-                className="mx-auto block h-auto w-[min(105%,860px)] select-none"
+                className="mx-auto block h-auto w-[min(100%,760px)] select-none"
                 draggable={false}
               />
             </div>
 
             {/* real, clickable service field */}
-            <ul className="pointer-events-none absolute -right-2 top-0 z-20 hidden h-full flex-col justify-center gap-3 xl:flex">
+            <ul className="pointer-events-none absolute -right-6 top-0 z-20 hidden h-full flex-col justify-center gap-3 xl:flex">
               {CARDS.map(({ n, label, Icon, to }, i) => (
                 <li
                   key={n}
