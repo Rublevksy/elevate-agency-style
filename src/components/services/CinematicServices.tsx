@@ -43,7 +43,7 @@ const SCENES: Scene[] = [
     desc: "Firemní weby, landing pages a moderní digitální prezentace.",
     points: ["UX / UI", "Responzivní design", "Výkon", "Konverze"],
     to: "/services/web",
-    src: sceneWeb.url,
+    src: sceneWeb,
     height: "72vh",
     offsetX: "4%",
     fragments: "web",
@@ -56,7 +56,7 @@ const SCENES: Scene[] = [
     desc: "E-shopy navržené pro jednoduchý nákup, důvěru a konverzi.",
     points: ["UX nákupního procesu", "Mobilní optimalizace", "Checkout", "Výkon"],
     to: "/services/eshop",
-    src: sceneEshop.url,
+    src: sceneEshop,
     height: "76vh",
     offsetX: "0%",
     fragments: "shop",
@@ -69,7 +69,7 @@ const SCENES: Scene[] = [
     desc: "Aplikace pro iOS a Android, včetně přípravy a publikace v App Store a Google Play.",
     points: ["iOS", "Android", "App Store", "Google Play"],
     to: "/contact",
-    src: sceneApps.url,
+    src: sceneApps,
     height: "74vh",
     offsetX: "6%",
     fragments: "app",
@@ -82,7 +82,7 @@ const SCENES: Scene[] = [
     desc: "Technické SEO, rychlost webu, Core Web Vitals, indexace a průběžná optimalizace výkonu.",
     points: ["SEO", "Rychlost", "Core Web Vitals", "Indexace"],
     to: "/audit",
-    src: sceneSeo.url,
+    src: sceneSeo,
     height: "58vh",
     offsetX: "10%",
     fragments: "seo",
@@ -95,7 +95,7 @@ const SCENES: Scene[] = [
     desc: "Tvorba loga, vizuální identity, UI/UX a kompletního vizuálního směru značky.",
     points: ["Logo", "Brand identity", "UI/UX", "Visual direction"],
     to: "/services/design",
-    src: sceneDesign.url,
+    src: sceneDesign,
     height: "68vh",
     offsetX: "2%",
     fragments: "brand",
@@ -105,7 +105,7 @@ const SCENES: Scene[] = [
 const CTA = "Detail služby";
 
 /** scroll distance per service — long enough for a real resting state */
-const VH_PER_SCENE = 190;
+const VH_PER_SCENE = 240;
 /** share of each service's scroll unit spent transitioning (the rest is HOLD) */
 const TRANSITION = 0.34;
 
