@@ -55,10 +55,12 @@ function Device({
   progress,
   pointer,
   shift,
+  mobile,
 }: {
   progress: RefObject<number>;
   pointer: { x: number; y: number };
   shift: number;
+  mobile: boolean;
 }) {
   const { scene } = useGLTF(glb.url);
   const group = useRef<THREE.Group>(null);
@@ -107,8 +109,10 @@ function Device({
       g.position.y = -0.045 + Math.sin(t * 0.32) * 0.0035 - p * 0.06;
     }
 
-    camera.position.set(shift + smooth.current.x * 0.035, 0.24 - smooth.current.y * 0.02, 1.34);
-    camera.lookAt(shift * 0.62, 0.1, -0.08);
+    const dist = mobile ? 2.05 : 1.34;
+    const height = mobile ? 0.3 : 0.24;
+    camera.position.set(shift + smooth.current.x * 0.035, height - smooth.current.y * 0.02, dist);
+    camera.lookAt(shift * 0.62, mobile ? 0.12 : 0.1, -0.08);
     camera.updateProjectionMatrix();
   });
 
@@ -196,7 +200,7 @@ export default function HeroScene({ progress }: { progress: RefObject<number> })
         </Environment>
 
         <RibbonField progress={progress} pointer={pointer} count={mobile ? 4 : 8} quality={mobile ? 0.6 : 1} />
-        <Device progress={progress} pointer={pointer} shift={mobile ? 0 : -0.075} />
+        <Device progress={progress} pointer={pointer} shift={mobile ? 0 : -0.075} mobile={mobile} />
       </Canvas>
     </div>
   );

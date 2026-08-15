@@ -283,7 +283,7 @@ export function RibbonField({
         baseOpacity: opacity,
       });
       const bands: Band[] = [
-        band(6.5, HALO, 0.105 * spec.power, textures.soft),
+        band(6.5, HALO, 0.08 * spec.power, textures.soft),
         band(1.9, BODY, 0.3 * spec.power, textures.soft),
       ];
       if (spec.white > 0) bands.push(band(0.34, CORE, 0.62 * spec.power * spec.white, textures.tight));

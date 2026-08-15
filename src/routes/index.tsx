@@ -1,8 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { Hero } from "@/components/hero/Hero";
-import { ServicesIntro } from "@/components/sections/ServicesIntro";
-import { Services } from "@/components/sections/Services";
+import { ServiceStage } from "@/components/services/ServiceStage";
 
 
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
@@ -44,8 +43,7 @@ function Home() {
       <Hero />
 
       {/* 02 — services */}
-      <ServicesIntro />
-      <Services />
+      <ServiceStage />
 
       <ProcessFilm />
 
