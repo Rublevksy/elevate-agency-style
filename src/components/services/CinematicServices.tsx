@@ -275,7 +275,7 @@ function Chapter({ service, i, eager }: { service: Service; i: number; eager: bo
         <div
           className="order-2 relative"
           style={{
-            transform: `translate3d(calc(var(--mx, 0) * 6px), calc((${d}) * -9vh + var(--my, 0) * 5px), 0) scale(calc(1 - ${near} * 0 + 0.94 + ${near} * 0.06))`,
+            transform: `translate3d(calc(var(--mx, 0) * 6px), calc((${d}) * -9vh + var(--my, 0) * 5px), 0) scale(calc(0.94 + ${near} * 0.06))`,
             filter: `blur(calc(clamp(0, ${d} * ${d}, 1) * 10px))`,
           }}
         >
