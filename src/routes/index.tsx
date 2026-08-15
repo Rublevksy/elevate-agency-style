@@ -31,7 +31,7 @@ export const Route = createFileRoute("/")({
       { rel: "canonical", href: "https://elevateit.cz/" },
       // the hero device is the critical above-the-fold asset
       { rel: "preload", as: "fetch", href: glbAsset.url, crossOrigin: "anonymous" },
-      { rel: "preload", as: "image", href: aMarkAsset.url, fetchpriority: "high" },
+      { rel: "preload", as: "image", href: aMarkAsset.url },
     ],
 
   }),
