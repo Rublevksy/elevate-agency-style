@@ -1,9 +1,8 @@
 import { Suspense, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
-import { Environment, Html, useGLTF } from "@react-three/drei";
+import { Environment, useGLTF } from "@react-three/drei";
 import * as THREE from "three";
 import glbAsset from "@/assets/macbook-pro-14-m5.glb.asset.json";
-import { ScreenUI } from "./ScreenUI";
 
 useGLTF.preload(glbAsset.url);
 
@@ -96,29 +95,12 @@ function Model() {
     return { root, scale, center, lid };
   }, [scene]);
 
-  const { root, scale, center, lid } = built;
+  const { root, scale, center } = built;
 
   return (
     <group scale={scale}>
       <group position={[-center.x, -center.y, -center.z]}>
         <primitive object={root} />
-        {lid && (
-          <group
-            position={[lid.center.x, lid.center.y, lid.center.z + 0.004]}
-            rotation={[-lid.tilt, 0, 0]}
-          >
-            <Html
-              transform
-              occlude={false}
-              distanceFactor={undefined}
-              scale={(lid.width / 1600) * 100}
-              style={{ pointerEvents: "none" }}
-              zIndexRange={[5, 0]}
-            >
-              <ScreenUI />
-            </Html>
-          </group>
-        )}
       </group>
     </group>
   );

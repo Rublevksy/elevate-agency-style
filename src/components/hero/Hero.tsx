@@ -4,6 +4,7 @@ import { ArrowRight } from "lucide-react";
 import deviceAsset from "@/assets/elevate-device.png.asset.json";
 import { PortalLight } from "./PortalLight";
 import { ServicePanels, HERO_SERVICES } from "./ServicePanels";
+import { ScreenFrame } from "./ScreenFrame";
 import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
 
 const Laptop3D = lazy(() => import("./Laptop3D"));
@@ -202,6 +203,8 @@ export function Hero() {
                   draggable={false}
                 />
               )}
+              {heavy && <ScreenFrame />}
+
               {/* contact shadow */}
               <div
                 aria-hidden
