@@ -108,7 +108,7 @@ const SCENES: Scene[] = [
 
 /** timeline: the device owns the opening, then the five services share the rest */
 const HERO = 0.22;
-const SERVICES_FROM = 0.18;
+const SERVICES_FROM = 0.25;
 /** share of a service unit spent transforming (rest is a stable hold) → 20/60/20 */
 const TRANSITION = 0.4;
 
