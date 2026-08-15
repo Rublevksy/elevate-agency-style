@@ -133,20 +133,18 @@
     background-size: 48px 48px;
   }
   .hero-master {
-    transform: translate3d(calc(var(--hero-px, 0) * -8px), calc(var(--hero-py, 0) * -6px + var(--hero-scroll, 0) * -4vh), 0)
-      scale(calc(1.03 + var(--hero-scroll, 0) * 0.05));
+    transform: translate(-50%, -50%)
+      translate3d(calc(var(--hero-px, 0) * -8px), calc(var(--hero-py, 0) * -6px + var(--hero-scroll, 0) * -4vh), 0)
+      scale(calc(1 + var(--hero-scroll, 0) * 0.05));
     transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
-  }
-  .hero-scrim-top {
-    background: linear-gradient(to bottom, var(--background) 0%, color-mix(in oklab, var(--background) 82%, transparent) 55%, transparent 100%);
   }
   .hero-scrim-left {
     background: linear-gradient(
       to right,
       var(--background) 0%,
-      color-mix(in oklab, var(--background) 96%, transparent) 52%,
-      color-mix(in oklab, var(--background) 70%, transparent) 78%,
+      var(--background) 40%,
+      color-mix(in oklab, var(--background) 86%, transparent) 70%,
       transparent 100%
     );
   }
