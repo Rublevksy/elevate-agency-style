@@ -85,7 +85,7 @@ export function LightWaves({ className = "" }: { className?: string }) {
       const grad = ctx.createLinearGradient(0, 0, w, 0);
       grad.addColorStop(0, "rgba(56,132,255,0)");
       grad.addColorStop(0.22, `rgba(56,132,255,${0.45 * r.hue})`);
-      grad.addColorStop(0.5, `rgba(190,225,255,${0.9 * r.hue})`);
+      grad.addColorStop(0.5, `rgba(140,196,255,${0.82 * r.hue})`);
       grad.addColorStop(0.78, `rgba(56,132,255,${0.45 * r.hue})`);
       grad.addColorStop(1, "rgba(56,132,255,0)");
 
@@ -93,7 +93,7 @@ export function LightWaves({ className = "" }: { className?: string }) {
       ctx.strokeStyle = grad;
 
       // outer halo
-      ctx.globalAlpha = 0.16 + r.depth * 0.1;
+      ctx.globalAlpha = 0.2 + r.depth * 0.12;
       ctx.lineWidth = r.width * 13;
       ctx.stroke();
       // mid glow
@@ -103,7 +103,7 @@ export function LightWaves({ className = "" }: { className?: string }) {
       // bright core
       ctx.globalAlpha = 0.9;
       ctx.lineWidth = r.width;
-      ctx.strokeStyle = `rgba(226,240,255,${0.5 + r.hue * 0.45})`;
+      ctx.strokeStyle = `rgba(198,226,255,${0.28 + r.hue * 0.34})`;
       ctx.stroke();
       ctx.globalAlpha = 1;
     };
