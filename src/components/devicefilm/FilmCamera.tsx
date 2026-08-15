@@ -57,7 +57,7 @@ export function FilmCamera({
     // dolly: establishing → approach → through the glass
     const approach = easeFilm(range(0.02, PHASE.ENTER, t));
     const enter = easeFilm(range(PHASE.ENTER, 1, t));
-    const dist = lerp(fit * (mobile ? 3.1 : 2.85), fit * 1.1, approach) * (1 - enter) + enter * -6;
+    const dist = lerp(fit * (mobile ? 3.35 : 3.2), fit * 1.1, approach) * (1 - enter) + enter * -6;
 
     // orbit: a slow arc, decaying to dead-on before the entry
     const orbitAmp = 1 - smoothstep(PHASE.PRODUCTS_IN, PHASE.ENTER, t);
@@ -68,12 +68,13 @@ export function FilmCamera({
     const py = Math.sin(elev) * dist;
     const pz = Math.cos(yaw) * Math.cos(elev) * dist;
 
-    // the device holds the right of frame while the typography owns the left;
-    // it re-centres exactly as the camera commits to the display
+    // the device holds the lower right of frame while the typography owns the
+    // left; it re-centres exactly as the camera commits to the display
     const frame = easeFilm(range(0.02, PHASE.PRODUCTS_IN, t));
-    const bias = (1 - frame) * (mobile ? 0 : 11);
+    const bias = (1 - frame) * (mobile ? 0 : 15);
     // early on the whole product is framed, so the aim sits at device centre
-    const drop = (1 - frame) * 7.5;
+    const drop = (1 - frame) * 4.5;
+
 
 
     // mouse parallax: the laptop is almost completely stable
