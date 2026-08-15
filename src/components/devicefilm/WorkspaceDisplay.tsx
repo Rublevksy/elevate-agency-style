@@ -70,7 +70,7 @@ export function WorkspaceDisplay({
         className="absolute inset-0"
         style={{
           background:
-            "radial-gradient(70% 70% at 22% 12%, oklch(0.32 0.09 258 / 0.24) 0%, transparent 70%), radial-gradient(60% 60% at 88% 96%, oklch(0.26 0.07 258 / 0.2) 0%, transparent 72%)",
+            "radial-gradient(70% 70% at 22% 12%, oklch(0.38 0.1 258 / 0.32) 0%, transparent 70%), radial-gradient(60% 60% at 88% 96%, oklch(0.3 0.08 258 / 0.26) 0%, transparent 72%)",
         }}
       />
       <div
