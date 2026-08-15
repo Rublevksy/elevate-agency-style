@@ -141,9 +141,8 @@ export function Hero() {
               aria-hidden
               width={128}
               height={128}
-              loading="lazy"
               decoding="async"
-              className="absolute right-[28%] top-[42%] h-auto w-[4%] opacity-80"
+              className="absolute right-[26.5%] top-[40%] h-auto w-[6.5%] opacity-90"
             />
 
             {/* the interfaces rising out of the display */}
@@ -152,20 +151,13 @@ export function Hero() {
             </div>
           </div>
 
-          {/* contact shadow + restrained floor reflection, no blur stack */}
+          {/* contact shadow only — soft, edgeless, no blur stack */}
           <div
             aria-hidden
-            className="mx-auto h-[6vh] w-[74%] rounded-[50%]"
-            style={{ background: "radial-gradient(ellipse at center, oklch(0 0 0 / 0.85) 0%, transparent 72%)" }}
+            className="mx-auto -mt-[2vh] h-[7vh] w-[76%]"
+            style={{ background: "radial-gradient(ellipse at 50% 30%, oklch(0 0 0 / 0.8) 0%, transparent 70%)" }}
           />
-          <div
-            aria-hidden
-            className="mx-auto -mt-[5vh] hidden h-[12vh] w-[66%] scale-y-[-1] md:block"
-            style={{
-              background: "linear-gradient(to bottom, oklch(0.65 0.18 255 / 0.14), transparent 76%)",
-              opacity: "calc(0.7 - var(--film, 0) * 0.7)",
-            }}
-          />
+
         </div>
 
         {/* minimal opening frame: brand + restrained copy only */}
