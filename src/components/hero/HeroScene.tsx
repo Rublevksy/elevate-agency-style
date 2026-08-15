@@ -110,9 +110,9 @@ function Device({
     }
 
     const dist = mobile ? 1.95 : 1.34;
-    const height = mobile ? 0.34 : 0.24;
+    const height = mobile ? 0.3 : 0.24;
     camera.position.set(shift + smooth.current.x * 0.035, height - smooth.current.y * 0.02, dist);
-    camera.lookAt(shift * 0.62, mobile ? 0.19 : 0.1, -0.08);
+    camera.lookAt(shift * 0.62, mobile ? 0.115 : 0.1, -0.08);
     camera.updateProjectionMatrix();
   });
 
