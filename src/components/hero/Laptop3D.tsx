@@ -111,7 +111,7 @@ function Model() {
               transform
               occlude={false}
               distanceFactor={undefined}
-              scale={lid.width / 1600}
+              scale={(lid.width / 1600) * 100}
               style={{ pointerEvents: "none" }}
               zIndexRange={[5, 0]}
             >
