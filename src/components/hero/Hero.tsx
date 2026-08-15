@@ -101,22 +101,16 @@ export function Hero() {
       >
         <HeroLight className="opacity-90" />
 
+        {/* one seamless vignette — no panel edges, keeps the copy side calm */}
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-y-0 left-0 z-[2] w-full md:w-[56%]"
+          className="pointer-events-none absolute inset-0 z-[2]"
           style={{
             background:
-              "linear-gradient(180deg, var(--background) 0%, oklch(0.115 0.018 258 / 0.72) 46%, var(--background) 100%)",
+              "radial-gradient(120% 90% at 78% 58%, transparent 0%, oklch(0.11 0.016 258 / 0.55) 52%, var(--background) 100%)",
           }}
         />
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-y-0 left-0 z-[2] hidden w-[58%] md:block"
-          style={{
-            background:
-              "linear-gradient(90deg, var(--background) 0%, oklch(0.115 0.018 258 / 0.96) 38%, oklch(0.115 0.018 258 / 0.55) 74%, transparent 100%)",
-          }}
-        />
+
 
         {/* the product — first paint shows it immediately, scroll moves it */}
         <div
