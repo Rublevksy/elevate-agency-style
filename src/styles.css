@@ -132,6 +132,15 @@
       linear-gradient(90deg, oklch(1 0 0 / 0.04) 1px, transparent 1px);
     background-size: 48px 48px;
   }
+  /* master artwork: jen velmi jemný posun/scale při scrollu, aby scéna dýchala */
+  .hero-master {
+    transform: translate3d(0, calc(var(--hs, 0) * -1.6%), 0) scale(calc(1 + var(--hs, 0) * 0.016));
+    transform-origin: 72% 55%;
+    will-change: transform;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-master { transform: none; }
+  }
   .hero-hotspot {
     position: absolute;
     display: block;
