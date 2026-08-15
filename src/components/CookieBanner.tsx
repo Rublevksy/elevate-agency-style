@@ -30,13 +30,13 @@ export function CookieBanner() {
   if (!show) return null;
   const c = COPY[lang];
   return (
-    <div className="fixed bottom-0 right-0 z-50 w-full max-w-md px-4 pb-[max(env(safe-area-inset-bottom),12px)] md:w-auto">
-      <div className="ml-auto rounded-xl border border-border bg-background/90 backdrop-blur-xl p-3 md:p-4 shadow-2xl flex flex-col md:flex-row items-center gap-3">
+    <div className="fixed bottom-3 right-3 z-50 max-w-[min(22rem,calc(100vw-1.5rem))]">
+      <div className="flex items-center gap-3 rounded-md border border-border bg-background/95 p-3 shadow-xl">
 
         <p className="text-sm text-muted-foreground flex-1">{c.text}</p>
         <div className="flex gap-2 shrink-0">
-          <button onClick={() => choose("decline")} className="rounded-md border border-border px-4 py-2 text-xs font-medium text-foreground hover:bg-accent/40 transition-colors">{c.decline}</button>
-          <button onClick={() => choose("accept")} className="rounded-md bg-primary px-4 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">{c.accept}</button>
+          <button onClick={() => choose("decline")} className="rounded-md border border-border px-3 py-2 text-xs font-medium text-foreground hover:bg-accent/40 transition-colors">{c.decline}</button>
+          <button onClick={() => choose("accept")} className="rounded-md bg-primary px-3 py-2 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-colors">{c.accept}</button>
         </div>
       </div>
     </div>
