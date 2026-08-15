@@ -91,11 +91,11 @@ const SPECS: Spec[] = [
   },
   {
     pts: [
-      [-1.45, 0.44, -0.62],
-      [-0.7, 0.42, -0.55],
-      [0.0, 0.3, -0.5],
-      [0.75, 0.1, -0.56],
-      [1.45, -0.08, -0.72],
+      [-1.5, 0.1, -0.6],
+      [-0.72, 0.32, -0.52],
+      [0.02, 0.52, -0.48],
+      [0.78, 0.66, -0.54],
+      [1.5, 0.9, -0.7],
     ],
     w: 0.085,
     layer: 1,
@@ -141,11 +141,11 @@ const SPECS: Spec[] = [
   },
   {
     pts: [
-      [-1.1, 0.8, -0.26],
-      [-0.55, 0.52, -0.3],
-      [0.0, 0.24, -0.34],
-      [0.6, -0.04, -0.3],
-      [1.1, -0.26, -0.24],
+      [-1.15, -0.16, -0.28],
+      [-0.58, 0.06, -0.32],
+      [0.0, 0.2, -0.34],
+      [0.6, 0.38, -0.3],
+      [1.15, 0.62, -0.24],
     ],
     w: 0.06,
     layer: 2,
@@ -261,7 +261,7 @@ export function RibbonField({
   const root = useRef<THREE.Group>(null);
   const smooth = useRef({ x: 0, y: 0 });
 
-  const textures = useMemo(() => ({ soft: bandTexture(1.1), tight: bandTexture(2.4) }), []);
+  const textures = useMemo(() => ({ soft: bandTexture(0.75), tight: bandTexture(2.4) }), []);
 
   const built = useMemo<Built[]>(() => {
     const specs = SPECS.slice(0, Math.max(3, count));
@@ -283,10 +283,10 @@ export function RibbonField({
         baseOpacity: opacity,
       });
       const bands: Band[] = [
-        band(4.2, HALO, 0.13 * spec.power, textures.soft),
-        band(1, BODY, 0.5 * spec.power, textures.soft),
+        band(6.5, HALO, 0.16 * spec.power, textures.soft),
+        band(1.9, BODY, 0.34 * spec.power, textures.soft),
       ];
-      if (spec.white > 0) bands.push(band(0.26, CORE, 0.7 * spec.power * spec.white, textures.tight));
+      if (spec.white > 0) bands.push(band(0.34, CORE, 0.62 * spec.power * spec.white, textures.tight));
       return {
         spec,
         bands,
@@ -371,7 +371,7 @@ export function RibbonField({
   });
 
   return (
-    <group ref={root} position={[0, 0.02, 0]}>
+    <group ref={root} position={[0.14, 0.03, 0]}>
       {built.map((b, i) =>
         b.bands.map((band, n) => <mesh key={`${i}-${n}`} geometry={band.geo} material={band.mat} />),
       )}
