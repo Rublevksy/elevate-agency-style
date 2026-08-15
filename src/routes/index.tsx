@@ -1,6 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import heroMaster from "@/assets/elevate-hero-master.png.asset.json";
 
 import { Hero } from "@/components/hero/Hero";
 import { ServiceStage } from "@/components/services/ServiceStage";
@@ -28,8 +27,6 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://elevateit.cz/" },
-      // the hero device is the LCP element — let the browser find it before hydration
-      { rel: "preload", as: "image", href: heroMaster.url, type: "image/png" },
     ],
 
 
@@ -46,7 +43,9 @@ function Home() {
       <Hero />
 
       {/* 02 — services */}
-      <ServiceStage />
+      <div id="services">
+        <ServiceStage />
+      </div>
 
       <ProcessFilm />
 
