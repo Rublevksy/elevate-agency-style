@@ -1,5 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+
 
 import laptopLarge from "@/assets/elevate-laptop-1120.webp.asset.json";
 import laptopSmall from "@/assets/elevate-laptop-520.webp.asset.json";
@@ -36,6 +37,8 @@ const ease = (value: number) => value * value * (3 - 2 * value);
 export function Hero() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const [pinned, setPinned] = useState(false);
+
 
   useEffect(() => {
     const wrap = wrapRef.current;
