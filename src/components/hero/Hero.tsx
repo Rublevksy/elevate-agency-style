@@ -79,7 +79,7 @@ export function Hero() {
           height={746}
           fetchPriority="high"
           decoding="sync"
-          className="hero-master pointer-events-none absolute right-[-6%] top-[62%] z-[1] h-[46%] w-auto max-w-none md:right-[-1%] md:top-1/2 md:h-[82%]"
+          className="hero-master pointer-events-none absolute right-[-30%] top-[64%] z-[1] h-[42%] w-auto max-w-none md:right-[-1%] md:top-1/2 md:h-[82%]"
         />
 
         {/* soft edge blends so the artwork sits in the black space */}
