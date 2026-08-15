@@ -2,10 +2,11 @@ import { useEffect, useRef } from "react";
 import {
   BrandComposition,
   CommerceComposition,
-  ProductComposition,
   WebComposition,
 } from "@/components/cinematic/ServicePreviews";
+import { startFrameLoop } from "@/lib/raf";
 import { PHASE, clamp01, easeFilm, lerp, range } from "./film";
+
 
 type Product = {
   id: string;
