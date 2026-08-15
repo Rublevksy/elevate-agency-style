@@ -58,11 +58,7 @@ export function Hero() {
         <div aria-hidden className="hero-device-light pointer-events-none absolute inset-0" />
 
         <div
-          className="pointer-events-none absolute left-1/2 top-[45%] z-[3] w-[128vw] max-w-[680px] md:left-auto md:right-[-12vw] md:top-1/2 md:w-[76vw] md:max-w-[1220px]"
-          style={{
-            transform:
-              "translate3d(calc(-47% - var(--hero-scroll, 0) * 3.5vw), calc(-48% + var(--hero-scroll, 0) * 5vh), 0) rotate(calc(var(--hero-scroll, 0) * -1.5deg)) scale(calc(1 + var(--hero-scroll, 0) * 0.055))",
-          }}
+          className="hero-device pointer-events-none absolute left-1/2 top-[56%] z-[3] w-[132vw] max-w-[700px] md:left-auto md:right-[-10vw] md:top-1/2 md:w-[75vw] md:max-w-[1200px]"
         >
           <div className="relative">
             <img
@@ -100,7 +96,7 @@ export function Hero() {
             <Logo className="h-6 w-auto md:h-8" />
           </Link>
 
-          <div className="absolute left-6 top-[17%] w-[78%] max-w-[340px] md:left-12 md:top-[38%] md:w-[36%] md:max-w-[540px] lg:left-[5.5vw]">
+          <div className="absolute left-6 top-[17%] w-[88%] max-w-[340px] md:left-12 md:top-[38%] md:w-[34%] md:max-w-[500px] lg:left-[5.5vw]">
             <h1 className="text-4xl font-normal leading-[1.08] text-foreground md:text-5xl lg:text-6xl">
               <span className="block">Tvoříme digitální</span>
               <span className="block">produkty, které</span>
