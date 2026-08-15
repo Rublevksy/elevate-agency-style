@@ -146,7 +146,7 @@ export function Hero() {
             />
 
             {/* the interfaces rising out of the machine, alongside it — never pasted on the lid */}
-            <div className="absolute -left-[54%] top-[10%] h-[46%] w-[62%] md:-left-[58%]" style={{ position: "absolute" }}>
+            <div className="absolute -left-[54%] top-[10%] h-[46%] w-[62%] md:-left-[58%]">
               <ProductScreen />
             </div>
 
