@@ -179,7 +179,7 @@ export const Laptop = forwardRef<
                     ref={uiRef}
                     style={{ width: "100%", height: "100%", fontSize: activeW * PX_PER_UNIT * 0.0145 }}
                   >
-                    <ElevateScreen progress={progress} />
+                    <ElevateScreen />
                   </div>
                 </Html>
 

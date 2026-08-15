@@ -6,7 +6,6 @@ import { CinematicServices } from "@/components/services/CinematicServices";
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
 import { ProcessFilm } from "@/components/process/ProcessFilm";
-import { StudioPhilosophy } from "@/components/sections/StudioPhilosophy";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { CINEMATIC } from "@/lib/cinematic-copy";
 import { useT } from "@/lib/i18n";
@@ -47,11 +46,6 @@ function Home() {
 
       {/* 02 — cinematic service sequence: five campaign chapters */}
       <CinematicServices />
-
-
-      {/* 03 — how we work + studio point of view */}
-      <StudioPhilosophy />
-
       <ProcessFilm />
 
       {/* 04 — proof */}
