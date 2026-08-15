@@ -157,7 +157,6 @@ export function HomeFilm() {
 
       // the device timeline: one continuous camera move into the display
       device.current = range(0, HERO, p);
-      (window as unknown as Record<string, unknown>).__film = { p, dev: device.current };
       pointer.current.x = smooth.x * 12;
       pointer.current.y = -smooth.y * 12;
 
@@ -165,10 +164,10 @@ export function HomeFilm() {
       smooth.y += (raw.y - smooth.y) * 0.07;
 
       // the display light takes the frame, then releases into the first service
-      const light = easeFilm(range(HERO * 0.72, HERO, p));
-      const release = easeFilm(range(HERO * 0.78, HERO + 0.05, p));
+      const light = easeFilm(range(HERO * 0.7, HERO, p));
+      const release = easeFilm(range(HERO * 0.84, SERVICES_FROM, p));
       if (bloom.current) {
-        bloom.current.style.opacity = (light * (1 - release)).toFixed(3);
+        bloom.current.style.opacity = (light * (1 - release * 0.9)).toFixed(3);
         bloom.current.style.transform = `scale(${(0.6 + light * 1.8).toFixed(3)})`;
       }
       if (deviceLayer.current) {
@@ -179,7 +178,8 @@ export function HomeFilm() {
 
       // the five services: only the active and neighbouring scene do any work
       const stage = stageOf(p, SCENES.length);
-      const started = p > SERVICES_FROM - 0.02;
+      const started = p > SERVICES_FROM - 0.03;
+
       sceneRefs.current.forEach((el, i) => {
         if (!el) return;
         const d = stage - i;
