@@ -270,15 +270,15 @@ export function CinematicServices() {
         const next = Math.min(SCENES.length - 1, Math.round(stage));
         setActive((prev) => (prev === next ? prev : next));
       }
-      raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+    const stop = startFrameLoop(tick, sectionRef.current);
 
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("pointermove", onMove);
     };
   }, []);
+
 
   return (
     <section ref={sectionRef} className="relative" style={{ height: `${SCENES.length * VH_PER_SCENE}vh` }}>
