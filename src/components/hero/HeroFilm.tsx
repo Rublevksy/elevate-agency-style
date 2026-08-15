@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 
@@ -13,6 +13,10 @@ import sceneEshop from "@/assets/scene-eshop.webp";
 import sceneApps from "@/assets/scene-apps.webp";
 import sceneSeo from "@/assets/scene-seo.webp";
 import sceneDesign from "@/assets/scene-design.webp";
+
+/** the real GLB product render — desktop only, loaded after hydration */
+const Laptop3D = lazy(() => import("./Laptop3D"));
+
 
 /**
  * ELEVATE — ONE homepage hero system.
@@ -143,6 +147,12 @@ export function HeroFilm() {
   const sceneRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const [active, setActive] = useState(-1);
+  const [use3D, setUse3D] = useState(false);
+
+  useEffect(() => {
+    setUse3D(window.innerWidth >= 768 && !prefersReducedMotion());
+  }, []);
+
 
   useEffect(() => {
     const reduced = prefersReducedMotion();
@@ -331,7 +341,14 @@ export function HeroFilm() {
         <div ref={deviceLayer} className="absolute inset-0 z-20" style={{ willChange: "opacity" }}>
           <div className="absolute inset-0 md:left-[38%]">
             <Portal rootRef={portal} />
-            <CssLaptop stageRef={stage} lidRef={lid} chassisRef={chassis} screenRef={screen} />
+            {use3D ? (
+              <Suspense fallback={null}>
+                <Laptop3D progress={progress} />
+              </Suspense>
+            ) : (
+              <CssLaptop stageRef={stage} lidRef={lid} chassisRef={chassis} screenRef={screen} />
+            )}
+
           </div>
 
           {/* HERO COPY */}
