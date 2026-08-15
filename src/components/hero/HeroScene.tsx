@@ -5,16 +5,17 @@ import * as THREE from "three";
 
 import glb from "@/assets/macbook-pro-14-m5.glb.asset.json";
 import { ScreenUI } from "./ScreenUI";
-import { RibbonField } from "./RibbonField";
-import { clamp01, easeFilm, range } from "@/lib/film";
+import { RibbonField } from "./Ribbons";
+import { clamp01 } from "@/lib/film";
 
 /**
- * THE HERO SET — the real MacBook Pro 14" GLB as a product shot, suspended in a
- * near-black volume with luminous ribbons sweeping behind it and a restrained
- * glossy spill on the ground. One canvas, one render loop, no post-processing.
+ * THE HERO SET — one single scene: luminous blue/white light ribbons in the deep
+ * navy volume, the real MacBook Pro 14" GLB floating right of the headline with a
+ * blue rim light and a soft contact shadow underneath.
  *
- * The ELEVATE interface is a DOM plane placed exactly on the display quad of the
- * model, so the screen shows the real design at native sharpness.
+ * No scroll-jacking, no camera fly-through: the composition stays exactly as
+ * composed, the ribbons drift slowly and the device only breathes and reacts a
+ * few pixels to the pointer. Scroll adds nothing but a gentle drift/fade.
  */
 
 /** display quad, measured from the GLB itself (metres, model space) */
@@ -31,9 +32,7 @@ const UI_W = 1200;
 const UI_H = Math.round((UI_W * SCREEN.h) / SCREEN.w);
 const UI_SCALE = SCREEN.w / (UI_W / 40);
 
-const SERVICES_FROM = 0.26;
-
-/** soft radial texture reused for the ground spill and the aperture bloom */
+/** soft radial texture reused for the ground spill */
 function useGlowTexture() {
   return useMemo(() => {
     const size = 128;
@@ -65,7 +64,6 @@ function Device({
   const group = useRef<THREE.Group>(null);
   const camera = useThree((s) => s.camera);
   const smooth = useRef({ x: 0, y: 0 });
-  const aperture = useRef<THREE.Mesh>(null);
   const glow = useGlowTexture();
 
   const model = useMemo(() => {
@@ -94,58 +92,29 @@ function Device({
     return holder;
   }, [scene]);
 
-  useFrame(() => {
-    const p = progress.current ?? 0;
-    const hp = clamp01(p / SERVICES_FROM);
-    const approach = easeFilm(range(0.2, 0.5, hp));
-    const pass = easeFilm(range(0.6, 0.9, hp));
-    const settle = easeFilm(range(0, 0.16, hp));
-    const open = easeFilm(range(0.34, 0.8, hp));
+  useFrame((state) => {
+    const t = state.clock.elapsedTime;
+    // scroll only drifts the whole scene a little — the composition never changes
+    const p = clamp01(progress.current ?? 0);
 
-    smooth.current.x += (pointer.x - smooth.current.x) * 0.06;
-    smooth.current.y += (pointer.y - smooth.current.y) * 0.06;
-    const damp = 1 - approach;
+    smooth.current.x += (pointer.x - smooth.current.x) * 0.05;
+    smooth.current.y += (pointer.y - smooth.current.y) * 0.05;
 
     if (group.current) {
       const g = group.current;
-      g.rotation.y = (-0.34 + settle * 0.28 + smooth.current.x * 0.1 * damp) * damp;
-      g.rotation.x = -smooth.current.y * 0.03 * damp;
-      g.position.y = -0.045 + settle * 0.008;
+      g.rotation.y = -0.3 + smooth.current.x * 0.09;
+      g.rotation.x = -smooth.current.y * 0.028;
+      g.position.y = -0.045 + Math.sin(t * 0.32) * 0.0035 - p * 0.06;
     }
 
-    if (aperture.current) {
-      const m = aperture.current.material as THREE.MeshBasicMaterial;
-      m.opacity = open * 0.85;
-      const s = 0.22 + open * 0.95;
-      aperture.current.scale.set(s, s * 0.8, 1);
-    }
-
-    // camera pushes in on the display, then travels through the glass
-    const z = 1.34 - approach * 0.68 - pass * 0.62;
-    const y = 0.24 - approach * 0.1 - pass * 0.03;
-    const x = shift * (1 - approach) + smooth.current.x * 0.04 * damp;
-    camera.position.set(x, y, z);
-    camera.lookAt(shift * 0.62 * (1 - approach), 0.1 + approach * 0.008, -0.08);
+    camera.position.set(shift + smooth.current.x * 0.035, 0.24 - smooth.current.y * 0.02, 1.34);
+    camera.lookAt(shift * 0.62, 0.1, -0.08);
     camera.updateProjectionMatrix();
   });
 
   return (
     <group ref={group} position={[0, -0.045, 0]}>
       <primitive object={model} />
-
-      {/* the aperture: light gathering behind the display, fed by the ribbons */}
-      <mesh ref={aperture} position={[SCREEN.x, SCREEN.y + 0.01, SCREEN.z - 0.03]} rotation={[SCREEN.tilt, 0, 0]}>
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial
-          map={glow}
-          transparent
-          opacity={0}
-          blending={THREE.AdditiveBlending}
-          depthWrite={false}
-          toneMapped={false}
-          color="#8fbcff"
-        />
-      </mesh>
 
       <Html
         transform
@@ -168,7 +137,7 @@ function Device({
         <meshBasicMaterial
           map={glow}
           transparent
-          opacity={0.3}
+          opacity={0.28}
           blending={THREE.AdditiveBlending}
           depthWrite={false}
           toneMapped={false}
@@ -178,7 +147,7 @@ function Device({
 
       <ContactShadows
         position={[0, -0.0092, -0.03]}
-        opacity={0.78}
+        opacity={0.8}
         scale={1.1}
         blur={2.6}
         far={0.3}
@@ -189,7 +158,7 @@ function Device({
   );
 }
 
-export default function Laptop3D({ progress }: { progress: RefObject<number> }) {
+export default function HeroScene({ progress }: { progress: RefObject<number> }) {
   const pointer = useRef({ x: 0, y: 0 }).current;
   const mobile = typeof window !== "undefined" && window.innerWidth < 768;
 
@@ -216,8 +185,8 @@ export default function Laptop3D({ progress }: { progress: RefObject<number> }) 
         {/* studio light rig — soft key, cool fill, tight ELEVATE-blue rim */}
         <ambientLight intensity={0.14} />
         <directionalLight position={[0.5, 1.0, 0.6]} intensity={1.75} color="#e6eeff" />
-        <directionalLight position={[-0.8, 0.5, -0.5]} intensity={0.85} color="#4b8ef0" />
-        <pointLight position={[0, 0.22, -0.5]} intensity={0.3} color="#2f6fd6" distance={2} />
+        <directionalLight position={[-0.8, 0.5, -0.5]} intensity={0.9} color="#4b8ef0" />
+        <pointLight position={[0, 0.22, -0.5]} intensity={0.32} color="#2f6fd6" distance={2} />
 
         <Environment resolution={128}>
           <Lightformer form="rect" intensity={2.6} position={[0, 1.2, 0.6]} scale={[2, 1.2, 1]} color="#eaf1ff" />
@@ -226,12 +195,7 @@ export default function Laptop3D({ progress }: { progress: RefObject<number> }) 
           <Lightformer form="ring" intensity={0.7} position={[0, 0.1, -1.6]} scale={2} color="#1a3d78" />
         </Environment>
 
-        <RibbonField
-          progress={progress}
-          pointer={pointer}
-          count={mobile ? 4 : 8}
-          quality={mobile ? 0.6 : 1}
-        />
+        <RibbonField progress={progress} pointer={pointer} count={mobile ? 4 : 8} quality={mobile ? 0.6 : 1} />
         <Device progress={progress} pointer={pointer} shift={mobile ? 0 : -0.075} />
       </Canvas>
     </div>
