@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { clamp01, easeFilm, lerp, range, useFilmProgress } from "@/components/devicefilm/film";
+import { clamp01, easeFilm, lerp, range, useFilmProgress } from "@/lib/film";
 import { BriefStage, BuildStage, DesignStage, LaunchStage } from "./ProcessStages";
 
 type Step = { n: string; title: string; desc: string; Stage: () => React.JSX.Element };
