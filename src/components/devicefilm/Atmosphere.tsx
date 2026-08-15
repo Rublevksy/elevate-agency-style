@@ -34,7 +34,6 @@ export function Atmosphere({
     };
     if (!reduced && !mobile) window.addEventListener("pointermove", onMove, { passive: true });
 
-    let raf = 0;
     const tick = () => {
       const el = root.current;
       if (el) {
@@ -56,14 +55,14 @@ export function Atmosphere({
         el.style.setProperty("--ce", cursor.energy.toFixed(3));
         el.style.setProperty("--thin", (1 - range(PHASE.ENTER, PHASE.HANDOFF, p) * 0.85).toFixed(4));
       }
-      raf = requestAnimationFrame(tick);
     };
-    raf = requestAnimationFrame(tick);
+    const stop = startFrameLoop(tick, root.current);
     return () => {
-      cancelAnimationFrame(raf);
+      stop();
       window.removeEventListener("pointermove", onMove);
     };
   }, [progress, pointer, mobile]);
+
 
 
   const plane = (depth: number) =>
