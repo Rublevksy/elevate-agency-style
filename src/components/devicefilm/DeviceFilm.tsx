@@ -1,5 +1,7 @@
 import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
+import { startFrameLoop } from "@/lib/raf";
+
 import { PHASE, clamp01, easeFilm, range } from "./film";
 import { HeroType } from "./HeroType";
 import { ProductLayer } from "./ProductLayer";
