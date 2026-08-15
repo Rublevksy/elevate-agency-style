@@ -30,8 +30,9 @@ export function CookieBanner() {
   if (!show) return null;
   const c = COPY[lang];
   return (
-    <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-[max(env(safe-area-inset-bottom),12px)]">
-      <div className="mx-auto max-w-3xl rounded-xl border border-border bg-background/95 backdrop-blur-xl p-4 md:p-5 shadow-2xl flex flex-col md:flex-row items-center gap-3 md:gap-5">
+    <div className="fixed bottom-0 right-0 z-50 w-full max-w-md px-4 pb-[max(env(safe-area-inset-bottom),12px)] md:w-auto">
+      <div className="ml-auto rounded-xl border border-border bg-background/90 backdrop-blur-xl p-3 md:p-4 shadow-2xl flex flex-col md:flex-row items-center gap-3">
+
         <p className="text-sm text-muted-foreground flex-1">{c.text}</p>
         <div className="flex gap-2 shrink-0">
           <button onClick={() => choose("decline")} className="rounded-md border border-border px-4 py-2 text-xs font-medium text-foreground hover:bg-accent/40 transition-colors">{c.decline}</button>
