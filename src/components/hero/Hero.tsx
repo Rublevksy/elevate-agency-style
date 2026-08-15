@@ -72,7 +72,7 @@ export function Hero() {
       {/* editorial copy */}
       <div
         ref={type}
-        className="pointer-events-none absolute inset-x-0 bottom-[9vh] z-30 px-7 md:bottom-auto md:top-[26vh] md:px-[6vw]"
+        className="pointer-events-none absolute inset-x-0 top-[13vh] z-30 px-7 md:top-[26vh] md:px-[6vw]"
         style={{ willChange: "opacity, transform" }}
       >
         <HeroCopy />
