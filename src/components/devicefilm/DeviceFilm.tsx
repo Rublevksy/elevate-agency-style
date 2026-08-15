@@ -38,17 +38,19 @@ export function DeviceFilm() {
     const tick = () => {
       const p = progress.current ?? 0;
       // the display light expands into the frame, then releases into the services
-      const bloom = easeFilm(range(PHASE.HANDOFF, 0.97, p));
-      const release = easeFilm(range(0.9, 1, p));
+      const bloom = easeFilm(range(PHASE.HANDOFF, 0.94, p));
+      const release = easeFilm(range(0.86, 0.99, p));
       if (light.current) {
-        light.current.style.opacity = (bloom * (1 - release * 0.85)).toFixed(3);
+        light.current.style.opacity = (bloom * (1 - release)).toFixed(3);
         light.current.style.transform = `scale(${(0.6 + bloom * 1.9).toFixed(3)})`;
       }
       if (stage.current) {
-        stage.current.style.opacity = (1 - release * 0.9).toFixed(3);
+        stage.current.style.opacity = (1 - release).toFixed(3);
+        stage.current.style.visibility = release >= 0.995 ? "hidden" : "visible";
         stage.current.style.transform = `translate3d(0, ${(-release * 5).toFixed(2)}vh, 0) scale(${(1 + release * 0.05).toFixed(4)})`;
       }
     };
+
     const stop = startFrameLoop(tick, wrap.current);
     return () => {
       stop();
