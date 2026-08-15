@@ -64,7 +64,7 @@ export function DesignStage() {
         <div className="col-span-3 flex flex-col justify-center px-6 md:px-8">
           <span className="font-mono text-[9px] uppercase tracking-[0.32em] text-primary">Studio</span>
           <h4 className="mt-3 text-[1.35rem] font-medium leading-[1.05] tracking-[-0.03em] text-foreground md:text-[2vw]">
-            Digitální produkt,
+            Nový web,
             <br />
             který prodává.
           </h4>
@@ -179,7 +179,7 @@ export function LaunchStage() {
             spuštěno
           </span>
           <h4 className="relative mt-3 text-[1.4rem] font-medium leading-[1.03] tracking-[-0.035em] text-foreground md:text-[2.1vw]">
-            Digitální produkt
+            Váš web
             <br />
             v reálném provozu.
           </h4>

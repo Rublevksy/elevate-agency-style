@@ -5,7 +5,7 @@ import type { Group, Mesh, MeshStandardMaterial } from "three";
 import { MathUtils } from "three";
 import glb from "@/assets/macbook-pro-14-m5.glb.asset.json";
 import markAsset from "@/assets/elevate-a-mark.png.asset.json";
-import { WorkspaceDisplay } from "./WorkspaceDisplay";
+import { ElevateScreen } from "./ElevateScreen";
 import { measureMacbook } from "./glbParts";
 import { DEVICE, PHASE, clamp01, range, smoothstep } from "./film";
 
@@ -171,8 +171,11 @@ export const Laptop = forwardRef<
                     userSelect: "none",
                   }}
                 >
-                  <div ref={uiRef} style={{ width: "100%", height: "100%" }}>
-                    <WorkspaceDisplay progress={progress} />
+                  <div
+                    ref={uiRef}
+                    style={{ width: "100%", height: "100%", fontSize: activeW * PX_PER_UNIT * 0.0145 }}
+                  >
+                    <ElevateScreen progress={progress} />
                   </div>
                 </Html>
 

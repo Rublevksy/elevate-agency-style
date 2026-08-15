@@ -2,25 +2,20 @@ import { Suspense, lazy, useEffect, useRef, useState } from "react";
 import { ClientOnly } from "@tanstack/react-router";
 import { startFrameLoop } from "@/lib/raf";
 
-import { PHASE, clamp01, easeFilm, range } from "./film";
+import { PHASE, easeFilm, range, useFilmProgress } from "./film";
 import { HeroType } from "./HeroType";
-import { ProductLayer } from "./ProductLayer";
 import { Atmosphere } from "./Atmosphere";
-import { WorkspaceDisplay } from "./WorkspaceDisplay";
-import { useFilmProgress } from "./film";
+import { ElevateScreen } from "./ElevateScreen";
 
 const FilmScene = lazy(() => import("./FilmScene"));
 
 /**
- * ELEVATE — CINEMATIC DEVICE FILM.
+ * ELEVATE — HERO FILM (one system, one timeline).
  *
- * A short scroll timeline (≈2.5 viewports) with one sticky frame:
- * physical device → cinematic camera → digital products → the workspace itself.
- * Scroll is the film: it stops when the user stops and reverses when they
- * scroll back. Nothing autoplays.
- *
- * The closing beat does not cut: the interface keeps travelling toward the lens
- * while the environment stays, so the next section emerges from the same world.
+ * ~200vh of normal page scroll with a single sticky frame: the physical device
+ * holds a finished ELEVATE interface, the camera moves into that interface, and
+ * the interface itself becomes the frame that the first service scene inherits.
+ * No product interstitials, no scroll locking, no second animation system.
  */
 export function DeviceFilm() {
   const wrap = useRef<HTMLDivElement>(null);
@@ -28,7 +23,6 @@ export function DeviceFilm() {
   const pointer = useRef({ x: 0, y: 0 });
   const [mobile, setMobile] = useState(false);
   const full = useRef<HTMLDivElement>(null);
-  const haze = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const check = () => setMobile(window.innerWidth < 768);
@@ -42,25 +36,15 @@ export function DeviceFilm() {
 
     const tick = () => {
       const p = progress.current ?? 0;
-      // fullscreen workspace: takes over exactly where the 3D display switches
-      // off — overlapping the two would read as doubled interface
+      // the interface takes the full frame exactly where the 3D display stops
       if (full.current) {
-        const v = p >= PHASE.HANDOFF ? 1 : 0;
-        const settle = easeFilm(range(PHASE.HANDOFF, PHASE.HANDOFF + 0.04, p));
-        // the camera keeps moving through the interface into the next section
-        const exit = easeFilm(range(0.955, 1, p));
-        full.current.style.opacity = String(v * (1 - exit));
-        full.current.style.transform = `perspective(1400px) scale(${1 + (1 - settle) * 0.03 + exit * 0.14}) translate3d(0, ${-exit * 6}vh, 0)`;
-        full.current.style.filter = `blur(${(exit * 18).toFixed(2)}px)`;
-        full.current.style.visibility = v < 0.01 ? "hidden" : "visible";
-      }
-
-      // the atmosphere thins as the display takes the frame, then returns for
-      // the handover so the environment is continuous across the section seam
-      if (haze.current) {
-        const enter = range(PHASE.ENTER, PHASE.HANDOFF, p);
-        const back = range(0.95, 1, p);
-        haze.current.style.opacity = String(clamp01(1 - enter * 0.75 + back * 0.75));
+        const on = p >= PHASE.HANDOFF;
+        const settle = easeFilm(range(PHASE.HANDOFF, PHASE.HANDOFF + 0.05, p));
+        // it keeps travelling forward, so the service section starts inside it
+        const exit = easeFilm(range(0.93, 1, p));
+        full.current.style.opacity = String((on ? 1 : 0) * (1 - exit));
+        full.current.style.transform = `perspective(1400px) scale(${1 + (1 - settle) * 0.04 + exit * 0.12}) translate3d(0, ${-exit * 5}vh, 0)`;
+        full.current.style.visibility = on ? "visible" : "hidden";
       }
     };
     const stop = startFrameLoop(tick, wrap.current);
@@ -71,34 +55,21 @@ export function DeviceFilm() {
     };
   }, [progress]);
 
-
   return (
-    <div ref={wrap} className="relative h-[380vh]">
+    <div ref={wrap} className="relative h-[200vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
-        {/* refined technology environment: lighting only — the colour comes from
-            the one continuous page environment underneath */}
+        {/* environment: light only — the page keeps one continuous background */}
         <div
-          ref={haze}
           aria-hidden
           className="absolute inset-0"
           style={{
             background:
-              "radial-gradient(60% 55% at 52% 40%, oklch(0.32 0.07 258 / 0.24) 0%, transparent 70%), radial-gradient(90% 80% at 50% 112%, oklch(0.2 0.05 258 / 0.35) 0%, transparent 66%)",
+              "radial-gradient(58% 52% at 54% 38%, oklch(0.3 0.07 258 / 0.22) 0%, transparent 70%), radial-gradient(90% 80% at 50% 112%, oklch(0.19 0.05 258 / 0.32) 0%, transparent 66%)",
           }}
         />
 
-
-        {/* layered digital infrastructure: wireframes, lines, data points */}
+        {/* thin technical structure — the only background animation on the page */}
         <Atmosphere progress={progress} pointer={pointer} mobile={mobile} />
-
-        <div
-          aria-hidden
-          className="absolute inset-0 opacity-[0.42]"
-          style={{
-            background:
-              "linear-gradient(90deg, oklch(0.05 0.01 258 / 0.85) 0%, oklch(0.05 0.01 258 / 0.3) 38%, transparent 62%), radial-gradient(120% 100% at 50% 50%, transparent 48%, oklch(0.03 0.01 258 / 0.7) 100%)",
-          }}
-        />
 
         <ClientOnly fallback={<div className="absolute inset-0" />}>
           <Suspense fallback={<div className="absolute inset-0" />}>
@@ -108,29 +79,26 @@ export function DeviceFilm() {
           </Suspense>
         </ClientOnly>
 
-        <ProductLayer progress={progress} pointer={pointer} />
         <HeroType progress={progress} />
 
-        {/* PHASE 04 — inside the workspace, fullscreen */}
+        {/* the interface, fullscreen — the frame the first service inherits */}
         <div
           ref={full}
-          className="absolute inset-0 z-40"
-          style={{ opacity: 0, visibility: "hidden", willChange: "opacity, transform, filter" }}
+          className="absolute inset-0 z-40 text-[1.05vw]"
+          style={{ opacity: 0, visibility: "hidden", willChange: "opacity, transform" }}
         >
-          <WorkspaceDisplay progress={progress} chrome={false} />
+          <ElevateScreen progress={progress} chrome={false} />
         </div>
 
-        {/* the seam into the next section: light falloff only, never a colour cut */}
+        {/* the seam into the services: light falloff only, never a colour cut */}
         <div
           aria-hidden
-          className="absolute inset-x-0 bottom-0 z-50 h-[30vh]"
+          className="absolute inset-x-0 bottom-0 z-50 h-[26vh]"
           style={{
             background:
-              "linear-gradient(180deg, transparent 0%, oklch(0.115 0.018 258 / 0.18) 55%, oklch(0.115 0.018 258 / 0.4) 100%)",
+              "linear-gradient(180deg, transparent 0%, oklch(0.115 0.018 258 / 0.16) 55%, oklch(0.115 0.018 258 / 0.38) 100%)",
           }}
         />
-
-
       </div>
     </div>
   );

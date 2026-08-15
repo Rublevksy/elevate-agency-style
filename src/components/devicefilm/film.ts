@@ -1,50 +1,34 @@
 import { useEffect, useRef, type RefObject } from "react";
+import { registerSection } from "@/lib/scroll-film";
 
 /**
- * ONE scroll timeline for the cinematic device film.
- * Scroll is the film: a single normalised 0 → 1 value. Nothing autoplays,
- * everything reverses.
+ * ONE scroll timeline for the cinematic homepage.
+ * Progress comes from the single shared scroll engine: a normalised 0 → 1 value
+ * per section. Nothing autoplays, everything reverses, scroll is never trapped.
  */
 export function useFilmProgress(wrapper: RefObject<HTMLElement | null>) {
   const progress = useRef(0);
 
   useEffect(() => {
-    let raf = 0;
-    const read = () => {
-      const el = wrapper.current;
-      if (!el) return;
-      const total = el.offsetHeight - window.innerHeight;
-      const raw = total > 0 ? -el.getBoundingClientRect().top / total : 0;
-      progress.current = Math.min(1, Math.max(0, raw));
-    };
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(read);
-    };
-    read();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
-    return () => {
-      cancelAnimationFrame(raf);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
-    };
+    const el = wrapper.current;
+    if (!el) return;
+    return registerSection(el, progress);
   }, [wrapper]);
 
   return progress;
 }
 
-/** film phases on the master timeline */
+/** film phases on the master timeline — tightened so one gesture moves the story */
 export const PHASE = {
   /** product reveal / approach begins */
-  APPROACH: 0.18,
-  /** digital products start escaping the display */
-  PRODUCTS_IN: 0.4,
-  PRODUCTS_HOLD: 0.6,
+  APPROACH: 0.14,
+  /** the interface layers gain depth */
+  PRODUCTS_IN: 0.34,
+  PRODUCTS_HOLD: 0.48,
   /** the camera commits to entering the display */
-  ENTER: 0.66,
+  ENTER: 0.56,
   /** the 3D display hands the frame to the fullscreen interface */
-  HANDOFF: 0.9,
+  HANDOFF: 0.84,
 } as const;
 
 /** device geometry — 1 world unit = 1 cm */
