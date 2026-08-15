@@ -161,7 +161,7 @@ export function HeroFilm() {
         lid.current.style.transform = `rotateX(${lerp(9, -1.5, settle).toFixed(2)}deg)`;
       }
       if (stage.current) {
-        const sc = lerp(isMobile ? 0.98 : 1, isMobile ? 1.9 : 2.5, pull);
+        const sc = lerp(isMobile ? 0.9 : 0.92, isMobile ? 1.8 : 2.4, pull);
         const ry = smooth.x * (1 - pull) * 7 * cursor;
         const rx = -smooth.y * (1 - pull) * 4 * cursor;
         stage.current.style.transform = `translate3d(0, ${(pull * 16 * vh).toFixed(2)}px, 0) scale(${sc.toFixed(4)}) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
@@ -295,14 +295,14 @@ export function HeroFilm() {
         {/* 01 — THE DEVICE + PORTAL */}
         <div ref={deviceLayer} className="absolute inset-0 z-20" style={{ willChange: "opacity" }}>
           <div className="absolute inset-0 md:left-[38%]">
-            <CssLaptop stageRef={stage} lidRef={lid} chassisRef={chassis} screenRef={screen} />
             <Portal rootRef={portal} />
+            <CssLaptop stageRef={stage} lidRef={lid} chassisRef={chassis} screenRef={screen} />
           </div>
 
           {/* HERO COPY */}
           <div
             ref={type}
-            className="pointer-events-none absolute inset-x-0 bottom-[8vh] z-30 px-7 md:inset-y-0 md:bottom-auto md:flex md:w-[42%] md:items-center md:px-[5vw]"
+            className="pointer-events-none absolute inset-x-0 bottom-[8vh] z-30 px-7 md:inset-y-0 md:flex md:w-[42%] md:items-center md:px-[5vw]"
             style={{ willChange: "opacity, transform" }}
           >
             <div className="max-w-[34rem]">
