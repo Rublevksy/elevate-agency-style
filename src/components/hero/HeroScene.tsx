@@ -55,10 +55,12 @@ function Device({
   progress,
   pointer,
   shift,
+  mobile,
 }: {
   progress: RefObject<number>;
   pointer: { x: number; y: number };
   shift: number;
+  mobile: boolean;
 }) {
   const { scene } = useGLTF(glb.url);
   const group = useRef<THREE.Group>(null);
