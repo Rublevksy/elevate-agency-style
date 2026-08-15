@@ -170,6 +170,8 @@ export function HeroFilm() {
       const settle = easeFilm(range(0, 0.14, hp));
       const approach = easeFilm(range(0.2, 0.62, hp));
       const pass = easeFilm(range(0.58, 0.96, hp));
+      /** the device sits right of centre in the hero; the camera re-centres on it */
+      const recentre = isMobile ? 0 : -approach * 19 * (window.innerWidth / 100);
 
       if (lid.current) {
         lid.current.style.transform = `rotateX(${lerp(9, -1.5, settle).toFixed(2)}deg)`;
@@ -179,7 +181,7 @@ export function HeroFilm() {
         const damp = 1 - approach;
         const ry = smooth.x * damp * 7 * cursor;
         const rx = -smooth.y * damp * 4 * cursor;
-        stage.current.style.transform = `translate3d(0, ${((approach * 4 + pass * 14) * vh).toFixed(2)}px, 0) scale(${sc.toFixed(4)}) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+        stage.current.style.transform = `translate3d(${recentre.toFixed(2)}px, ${((approach * 4 + pass * 14) * vh).toFixed(2)}px, 0) scale(${sc.toFixed(4)}) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
       }
       // the chassis dissolves as the camera passes the glass — only light remains
       if (chassis.current) chassis.current.style.opacity = (1 - pass).toFixed(3);
@@ -198,7 +200,9 @@ export function HeroFilm() {
         portal.current.style.setProperty("--form", form.toFixed(3));
         portal.current.style.setProperty("--open", open.toFixed(3));
         portal.current.style.opacity = (1 - settled * 0.9).toFixed(3);
+        portal.current.style.transform = `translate3d(${recentre.toFixed(2)}px, 0, 0)`;
       }
+
       if (bloom.current) {
         bloom.current.style.opacity = ((form * 0.3 + open * 0.5) * (1 - settled * 0.72)).toFixed(3);
         bloom.current.style.transform = `translate3d(-50%, -50%, 0) scale(${(0.35 + form * 0.5 + open * 1.4).toFixed(3)})`;
