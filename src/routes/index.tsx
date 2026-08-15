@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { DeviceFilm } from "@/components/devicefilm/DeviceFilm";
-import { CinematicServices } from "@/components/services/CinematicServices";
+import { HomeFilm } from "@/components/homefilm/HomeFilm";
+
 
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
@@ -41,11 +41,9 @@ function Home() {
 
   return (
     <>
-      {/* 01 — cinematic device film: product → camera → digital products → website */}
-      <DeviceFilm />
+      {/* 01 — one cinematic system: MacBook → Weby → E-shopy → Aplikace → SEO → Design */}
+      <HomeFilm />
 
-      {/* 02 — cinematic service sequence: five campaign chapters */}
-      <CinematicServices />
       <ProcessFilm />
 
       {/* 04 — proof */}
