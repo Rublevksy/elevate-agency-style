@@ -430,7 +430,9 @@ export function HeroFilm() {
                   data-layer="art"
                   aria-hidden
                   className="pointer-events-none absolute inset-0 hidden will-change-transform md:block"
+                  style={{ transformOrigin: "18% 46%" }}
                 >
+
                   <SceneArt kind={s.art} />
                 </div>
                 <div
