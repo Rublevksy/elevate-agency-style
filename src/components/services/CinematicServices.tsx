@@ -1,85 +1,181 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import webAsset from "@/assets/campaign-web.png.asset.json";
-import eshopAsset from "@/assets/campaign-eshop.png.asset.json";
-import appsAsset from "@/assets/campaign-apps.png.asset.json";
-import seoAsset from "@/assets/campaign-seo.png.asset.json";
-import designAsset from "@/assets/campaign-design.png.asset.json";
+import sceneWeb from "@/assets/scene-web.png.asset.json";
+import sceneEshop from "@/assets/scene-eshop.png.asset.json";
+import sceneApps from "@/assets/scene-apps.png.asset.json";
+import sceneSeo from "@/assets/scene-seo.png.asset.json";
+import sceneDesign from "@/assets/scene-design.png.asset.json";
 
 /**
- * Cinematic service sequence — five ELEVATE campaign visuals presented as
- * chapters of one continuous scroll-driven scene. Progress is read from the
- * section's own scroll position inside a rAF loop and written to CSS variables,
- * so scrolling backwards reverses the film naturally.
+ * ENTER THE ELEVATE STUDIO — one continuous scroll-driven stage where each
+ * capability becomes the active scene. The campaign character and devices are
+ * used as transparent cut-outs floating in the shared dark environment (no
+ * cards, no framed thumbnails), layered with native interface fragments,
+ * blue light and depth. Progress is written straight to transforms in a rAF
+ * loop, so scrolling back reverses the film.
  */
 
-type Service = {
+type Scene = {
   id: string;
   index: string;
   label: string;
   title: string;
   desc: string;
+  points: string[];
   to: string;
   src: string;
-  /** object-position tuned per visual so faces / devices / logo stay in frame */
-  position: string;
+  /** cut-out sizing / anchoring inside the stage */
+  height: string;
+  offsetX: string;
+  fragments: "web" | "shop" | "app" | "seo" | "brand";
 };
 
-const SERVICES: Service[] = [
+const SCENES: Scene[] = [
   {
     id: "web",
     index: "01",
     label: "Weby",
     title: "Weby",
-    desc: "Firemní weby, landing pages a digitální prezentace navržené tak, aby přiváděly zákazníky.",
+    desc: "Firemní weby, landing pages a moderní digitální prezentace.",
+    points: ["UX / UI", "Responzivní design", "Výkon", "Konverze"],
     to: "/services/web",
-    src: webAsset.url,
-    position: "50% 45%",
+    src: sceneWeb.url,
+    height: "72vh",
+    offsetX: "4%",
+    fragments: "web",
   },
   {
     id: "eshop",
     index: "02",
     label: "E-shopy",
     title: "E-shopy",
-    desc: "Moderní e-shopy postavené pro důvěru, pohodlný nákup a růst prodejů.",
+    desc: "E-shopy navržené pro jednoduchý nákup, důvěru a konverzi.",
+    points: ["UX nákupního procesu", "Mobilní optimalizace", "Checkout", "Výkon"],
     to: "/services/eshop",
-    src: eshopAsset.url,
-    position: "55% 50%",
+    src: sceneEshop.url,
+    height: "76vh",
+    offsetX: "0%",
+    fragments: "shop",
   },
   {
     id: "apps",
     index: "03",
     label: "Aplikace",
-    title: "Aplikace",
-    desc: "Vývoj aplikací pro iOS a Android včetně přípravy a publikace v App Store a Google Play.",
+    title: "Mobilní aplikace",
+    desc: "Aplikace pro iOS a Android, včetně přípravy a publikace v App Store a Google Play.",
+    points: ["iOS", "Android", "App Store", "Google Play"],
     to: "/contact",
-    src: appsAsset.url,
-    position: "58% 45%",
+    src: sceneApps.url,
+    height: "74vh",
+    offsetX: "6%",
+    fragments: "app",
   },
   {
     id: "seo",
     index: "04",
     label: "SEO & optimalizace",
     title: "SEO & optimalizace",
-    desc: "Technické SEO, rychlost, Core Web Vitals a optimalizace webu pro lepší viditelnost a výkon.",
+    desc: "Technické SEO, rychlost webu, Core Web Vitals, indexace a průběžná optimalizace výkonu.",
+    points: ["SEO", "Rychlost", "Core Web Vitals", "Indexace"],
     to: "/audit",
-    src: seoAsset.url,
-    position: "55% 42%",
+    src: sceneSeo.url,
+    height: "58vh",
+    offsetX: "10%",
+    fragments: "seo",
   },
   {
     id: "design",
     index: "05",
     label: "Logo & design",
     title: "Logo & design",
-    desc: "Logo, vizuální identita, UX/UI a kompletní digitální design.",
+    desc: "Tvorba loga, vizuální identity, UI/UX a kompletního vizuálního směru značky.",
+    points: ["Logo", "Brand identity", "UI/UX", "Visual direction"],
     to: "/services/design",
-    src: designAsset.url,
-    position: "52% 46%",
+    src: sceneDesign.url,
+    height: "68vh",
+    offsetX: "2%",
+    fragments: "brand",
   },
 ];
 
 const CTA = "Detail služby";
+
+/* ------------------------------------------------------------------ */
+/* native interface fragments — thin-line geometry, never a dashboard */
+/* ------------------------------------------------------------------ */
+
+const line = "oklch(0.65 0.18 255 / 0.35)";
+const faint = "oklch(0.65 0.18 255 / 0.14)";
+
+function Frag({ kind }: { kind: Scene["fragments"] }) {
+  if (kind === "web") {
+    return (
+      <>
+        <div
+          className="absolute left-[2%] top-[16%] h-[26%] w-[34%] rounded-lg"
+          style={{ border: `1px solid ${faint}`, background: "oklch(0.2 0.03 258 / 0.25)" }}
+        />
+        <div className="absolute left-[6%] top-[24%] h-px w-[22%]" style={{ background: line }} />
+        <div className="absolute left-[6%] top-[29%] h-px w-[14%]" style={{ background: faint }} />
+        <div className="absolute bottom-[14%] left-[6%] h-[10%] w-[18%] rounded" style={{ border: `1px solid ${faint}` }} />
+      </>
+    );
+  }
+  if (kind === "shop") {
+    return (
+      <>
+        {[0, 1, 2].map((i) => (
+          <div
+            key={i}
+            className="absolute h-[14%] w-[12%] rounded-md"
+            style={{
+              left: `${3 + i * 13}%`,
+              top: `${22 + i * 9}%`,
+              border: `1px solid ${faint}`,
+              background: "oklch(0.2 0.03 258 / 0.22)",
+            }}
+          />
+        ))}
+        <div className="absolute bottom-[18%] left-[5%] h-[8%] w-[22%] rounded-full" style={{ border: `1px solid ${line}` }} />
+      </>
+    );
+  }
+  if (kind === "app") {
+    return (
+      <>
+        <div className="absolute left-[4%] top-[14%] h-[46%] w-[16%] rounded-2xl" style={{ border: `1px solid ${faint}` }} />
+        <div className="absolute left-[24%] top-[26%] h-[30%] w-[12%] rounded-xl" style={{ border: `1px solid ${faint}` }} />
+        <div className="absolute bottom-[20%] left-[6%] h-px w-[28%]" style={{ background: line }} />
+      </>
+    );
+  }
+  if (kind === "seo") {
+    return (
+      <>
+        <svg viewBox="0 0 200 100" className="absolute left-[2%] top-[22%] h-[26%] w-[40%]" fill="none" preserveAspectRatio="none">
+          <path d="M0 88 L38 70 L74 76 L112 40 L150 30 L200 6" stroke="oklch(0.65 0.18 255 / 0.55)" strokeWidth="1.2" />
+          <path d="M0 96 L200 96" stroke="oklch(0.65 0.18 255 / 0.18)" strokeWidth="1" />
+        </svg>
+        {[0, 1, 2, 3].map((i) => (
+          <div key={i} className="absolute h-px" style={{ left: "4%", top: `${56 + i * 5}%`, width: `${26 - i * 5}%`, background: faint }} />
+        ))}
+      </>
+    );
+  }
+  return (
+    <>
+      <div className="absolute left-[4%] top-[18%] h-[18%] w-[18%] rounded-full" style={{ border: `1px solid ${faint}` }} />
+      <div className="absolute left-[16%] top-[30%] h-[18%] w-[18%]" style={{ border: `1px solid ${line}` }} />
+      <div className="absolute bottom-[22%] left-[5%] h-px w-[30%]" style={{ background: faint }} />
+      <div className="absolute bottom-[17%] left-[5%] h-px w-[18%]" style={{ background: faint }} />
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* shared environment                                                  */
+/* ------------------------------------------------------------------ */
 
 function Depth({ progress }: { progress: React.RefObject<number> }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -96,56 +192,54 @@ function Depth({ progress }: { progress: React.RefObject<number> }) {
 
   return (
     <div ref={ref} aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
-      {/* soft blue light field, drifts with the sequence */}
       <div
-        className="absolute -top-[20%] left-[42%] h-[70vh] w-[70vh] rounded-full blur-[120px]"
+        className="absolute -top-[18%] left-[46%] h-[78vh] w-[78vh] rounded-full blur-[130px]"
         style={{
-          background: "oklch(0.55 0.15 258 / 0.16)",
-          transform: "translate3d(calc(var(--p, 0) * -6vw), calc(var(--p, 0) * 12vh), 0)",
+          background: "oklch(0.55 0.15 258 / 0.18)",
+          transform: "translate3d(calc(var(--p, 0) * -8vw), calc(var(--p, 0) * 14vh), 0)",
         }}
       />
       <div
-        className="absolute bottom-[-10%] left-[-8%] h-[50vh] w-[50vh] rounded-full blur-[130px]"
+        className="absolute bottom-[-12%] left-[-10%] h-[54vh] w-[54vh] rounded-full blur-[140px]"
         style={{
           background: "oklch(0.45 0.11 258 / 0.14)",
-          transform: "translate3d(calc(var(--p, 0) * 5vw), calc(var(--p, 0) * -8vh), 0)",
+          transform: "translate3d(calc(var(--p, 0) * 6vw), calc(var(--p, 0) * -9vh), 0)",
         }}
       />
-      {/* very subtle technical grid */}
       <div
-        className="absolute inset-0 opacity-[0.16]"
+        className="absolute inset-0 opacity-[0.14]"
         style={{
           backgroundImage:
             "linear-gradient(to right, oklch(0.65 0.18 255 / 0.16) 1px, transparent 1px), linear-gradient(to bottom, oklch(0.65 0.18 255 / 0.1) 1px, transparent 1px)",
           backgroundSize: "120px 120px",
-          maskImage: "radial-gradient(70% 60% at 50% 45%, #000 0%, transparent 100%)",
-          WebkitMaskImage: "radial-gradient(70% 60% at 50% 45%, #000 0%, transparent 100%)",
-          transform: "translate3d(0, calc(var(--p, 0) * -6vh), 0)",
+          maskImage: "radial-gradient(75% 65% at 55% 45%, #000 0%, transparent 100%)",
+          WebkitMaskImage: "radial-gradient(75% 65% at 55% 45%, #000 0%, transparent 100%)",
+          transform: "translate3d(0, calc(var(--p, 0) * -7vh), 0)",
         }}
       />
-      {/* thin technical lines */}
       <div
-        className="absolute inset-y-0 left-[18%] w-px"
+        className="absolute inset-y-0 left-[20%] w-px"
         style={{
-          background: "linear-gradient(to bottom, transparent, oklch(0.65 0.18 255 / 0.18), transparent)",
-          transform: "translate3d(0, calc(var(--p, 0) * 10vh), 0)",
+          background: "linear-gradient(to bottom, transparent, oklch(0.65 0.18 255 / 0.16), transparent)",
+          transform: "translate3d(0, calc(var(--p, 0) * 12vh), 0)",
         }}
       />
       <div
-        className="absolute inset-x-0 top-[38%] h-px"
+        className="absolute inset-x-0 top-[40%] h-px"
         style={{
           background: "linear-gradient(to right, transparent, oklch(0.65 0.18 255 / 0.12), transparent)",
-          transform: "translate3d(calc(var(--p, 0) * -4vw), 0, 0)",
+          transform: "translate3d(calc(var(--p, 0) * -5vw), 0, 0)",
         }}
       />
     </div>
   );
 }
 
+/* ------------------------------------------------------------------ */
+
 export function CinematicServices() {
   const sectionRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
-  const chapterRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const sceneRefs = useRef<(HTMLDivElement | null)[]>([]);
   const progress = useRef(0);
   const [active, setActive] = useState(0);
 
@@ -169,31 +263,46 @@ export function CinematicServices() {
         const p = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
         progress.current = p;
 
-        smooth.x += (pointer.x - smooth.x) * 0.08;
-        smooth.y += (pointer.y - smooth.y) * 0.08;
+        smooth.x += (pointer.x - smooth.x) * 0.07;
+        smooth.y += (pointer.y - smooth.y) * 0.07;
 
-        const scene = p * (SERVICES.length - 1);
+        const mobile = window.innerWidth < 768;
+        const par = mobile ? 0.3 : 1;
+        const cursor = mobile ? 0 : 1;
+        const stage = p * (SCENES.length - 1);
         const vh = window.innerHeight / 100;
 
-        chapterRefs.current.forEach((el, i) => {
+        sceneRefs.current.forEach((el, i) => {
           if (!el) return;
-          const d = scene - i;
+          const d = stage - i;
           const away = Math.min(1, Math.abs(d));
           const near = 1 - away;
-          el.style.opacity = String(Math.max(0, 1 - away * 1.35));
+          el.style.opacity = String(Math.max(0, 1 - away * 1.4));
           el.style.visibility = away >= 0.99 ? "hidden" : "visible";
+
           const text = el.querySelector<HTMLElement>("[data-layer='text']");
-          const media = el.querySelector<HTMLElement>("[data-layer='media']");
+          const figure = el.querySelector<HTMLElement>("[data-layer='figure']");
+          const frag = el.querySelector<HTMLElement>("[data-layer='frag']");
+          const glow = el.querySelector<HTMLElement>("[data-layer='glow']");
+
           if (text) {
-            text.style.transform = `translate3d(${smooth.x * 3}px, ${-d * 5 * vh + smooth.y * 2}px, 0)`;
+            text.style.transform = `translate3d(${smooth.x * 3 * cursor}px, ${(-d * 4 * vh + smooth.y * 2 * cursor).toFixed(2)}px, 0)`;
           }
-          if (media) {
-            media.style.transform = `translate3d(${smooth.x * 6}px, ${-d * 9 * vh + smooth.y * 5}px, 0) scale(${(0.94 + near * 0.06).toFixed(4)})`;
-            media.style.filter = `blur(${(away * away * 10).toFixed(2)}px)`;
+          if (frag) {
+            frag.style.transform = `translate3d(${smooth.x * 10 * cursor}px, ${(-d * 12 * vh * par + smooth.y * 6 * cursor).toFixed(2)}px, 0)`;
+            frag.style.opacity = String(0.35 + near * 0.65);
+          }
+          if (figure) {
+            figure.style.transform = `translate3d(${smooth.x * 6 * cursor}px, ${(-d * 7 * vh * par + smooth.y * 4 * cursor).toFixed(2)}px, 0) scale(${(0.93 + near * 0.07).toFixed(4)}) rotate(${(d * -0.7).toFixed(3)}deg)`;
+            figure.style.filter = `blur(${(away * away * 8).toFixed(2)}px)`;
+          }
+          if (glow) {
+            glow.style.opacity = String(0.25 + near * 0.75);
+            glow.style.transform = `translate3d(${smooth.x * -4 * cursor}px, ${(-d * 5 * vh).toFixed(2)}px, 0) scale(${(0.9 + near * 0.15).toFixed(3)})`;
           }
         });
 
-        const next = Math.min(SERVICES.length - 1, Math.round(scene));
+        const next = Math.min(SCENES.length - 1, Math.round(stage));
         setActive((prev) => (prev === next ? prev : next));
       }
       raf = requestAnimationFrame(tick);
@@ -207,13 +316,13 @@ export function CinematicServices() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative" style={{ height: `${SERVICES.length * 100}vh` }}>
-      <div ref={stageRef} className="sticky top-0 h-screen overflow-hidden">
+    <section ref={sectionRef} className="relative" style={{ height: `${SCENES.length * 100}vh` }}>
+      <div className="sticky top-0 h-screen overflow-hidden">
         <Depth progress={progress} />
 
         {/* vertical chapter indicator */}
         <div className="pointer-events-none absolute left-4 top-1/2 z-20 hidden -translate-y-1/2 flex-col gap-4 md:flex lg:left-8">
-          {SERVICES.map((s, i) => {
+          {SCENES.map((s, i) => {
             const on = i === active;
             return (
               <span key={s.id} className="flex items-center gap-2">
@@ -237,16 +346,16 @@ export function CinematicServices() {
         </div>
 
         <div className="relative h-full">
-          {SERVICES.map((s, i) => (
+          {SCENES.map((s, i) => (
             <div
               key={s.id}
               ref={(el) => {
-                chapterRefs.current[i] = el;
+                sceneRefs.current[i] = el;
               }}
               className="absolute inset-0 z-10 flex items-center"
               style={{ opacity: i === 0 ? 1 : 0, pointerEvents: "none" }}
             >
-              <Chapter service={s} eager={i === 0} />
+              <Stage scene={s} eager={i === 0} />
             </div>
           ))}
         </div>
@@ -255,20 +364,28 @@ export function CinematicServices() {
   );
 }
 
-function Chapter({ service, eager }: { service: Service; eager: boolean }) {
+function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
   return (
-    <div className="container-luxe grid w-full items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
-      {/* text — moves less than the image */}
-      <div data-layer="text" className="relative z-10 order-1 will-change-transform">
+    <div className="container-luxe grid w-full items-center gap-6 md:grid-cols-[0.85fr_1.15fr] md:gap-10">
+      {/* copy */}
+      <div data-layer="text" className="relative z-20 order-2 will-change-transform md:order-1">
         <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-primary">
-          {service.index} / {service.label}
+          {scene.index} / {scene.label}
         </p>
-        <h3 className="mt-5 text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-foreground md:text-[4vw]">
-          {service.title}
+        <h3 className="mt-5 text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-foreground md:text-[3.6vw]">
+          {scene.title}
         </h3>
-        <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">{service.desc}</p>
+        <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">{scene.desc}</p>
+        <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2">
+          {scene.points.map((pt) => (
+            <li key={pt} className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-muted-foreground/70">
+              <span className="h-px w-3 bg-primary/60" />
+              {pt}
+            </li>
+          ))}
+        </ul>
         <Link
-          to={service.to}
+          to={scene.to}
           className="group mt-8 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/80 transition-colors hover:text-primary"
           style={{ pointerEvents: "auto" }}
         >
@@ -277,46 +394,46 @@ function Chapter({ service, eager }: { service: Service; eager: boolean }) {
         </Link>
       </div>
 
-      {/* campaign visual — a floating cinematic panel, not a card */}
-      <div data-layer="media" className="relative order-2 will-change-transform">
+      {/* composition — cut-out character/devices floating in the environment */}
+      <div className="relative order-1 h-[42vh] md:order-2 md:h-[80vh]">
+        {/* blue key light behind the subject */}
         <div
+          data-layer="glow"
           aria-hidden
-          className="pointer-events-none absolute -inset-8 rounded-[2rem] blur-3xl"
-          style={{ background: "oklch(0.55 0.16 258 / 0.18)" }}
+          className="pointer-events-none absolute left-1/2 top-1/2 h-[52vh] w-[52vh] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[110px] will-change-transform"
+          style={{ background: "oklch(0.6 0.17 258 / 0.3)" }}
         />
-        <figure className="relative overflow-hidden rounded-2xl">
+        {/* native interface fragments — deepest layer */}
+        <div data-layer="frag" aria-hidden className="pointer-events-none absolute inset-0 will-change-transform">
+          <Frag kind={scene.fragments} />
+        </div>
+
+        {/* the fixed brand character + devices, alpha-faded into the page */}
+        <div
+          data-layer="figure"
+          className="absolute bottom-0 right-0 will-change-transform"
+          style={{ transform: `translateX(${scene.offsetX})` }}
+        >
           <img
-            src={service.src}
+            src={scene.src}
             alt=""
             loading={eager ? "eager" : "lazy"}
             decoding="async"
-            className="h-[42vh] w-full object-cover md:h-[58vh]"
-            style={{ objectPosition: service.position }}
+            className="h-[40vh] w-auto max-w-none md:h-[var(--fh)]"
+            style={
+              {
+                "--fh": scene.height,
+                filter: "drop-shadow(0 40px 60px oklch(0.05 0.01 258 / 0.65)) drop-shadow(0 0 40px oklch(0.6 0.17 258 / 0.16))",
+                maskImage:
+                  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0%, #000 10%, #000 100%)",
+                WebkitMaskImage:
+                  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0%, #000 10%, #000 100%)",
+                maskComposite: "intersect",
+                WebkitMaskComposite: "source-in",
+              } as React.CSSProperties
+            }
           />
-          {/* edge integration into the dark environment */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(125% 105% at 50% 50%, transparent 52%, oklch(0.13 0.02 258 / 0.5) 90%, oklch(0.11 0.02 258 / 0.85) 100%)",
-            }}
-          />
-          {/* subtle glass reflection */}
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 mix-blend-screen"
-            style={{
-              background:
-                "linear-gradient(115deg, oklch(0.75 0.06 258 / 0.1) 0%, transparent 38%, transparent 70%, oklch(0.65 0.18 255 / 0.06) 100%)",
-            }}
-          />
-          <div
-            aria-hidden
-            className="pointer-events-none absolute inset-0 rounded-2xl"
-            style={{ boxShadow: "inset 0 0 0 1px oklch(0.65 0.18 255 / 0.14)" }}
-          />
-        </figure>
+        </div>
       </div>
     </div>
   );
