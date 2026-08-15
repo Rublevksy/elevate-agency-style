@@ -50,31 +50,31 @@ export const RIBBONS: Ribbon[] = [
     x0: -320, y0: 905, x1: 1880, y1: 288,
     bow: 168, width: 300, amp: 60, freq: 1.15, speed: 0.13,
     amp2: 40, freq2: 0.5, speed2: 0.05, phase: 0.4,
-    alpha: 0.15, tint: 0.16, depth: 1, fibers: 4, packets: 3, samples: 168,
+    alpha: 0.115, tint: 0.16, depth: 1, fibers: 4, packets: 3, samples: 168,
   },
   {
     x0: -280, y0: 782, x1: 1840, y1: 232,
     bow: 128, width: 208, amp: 52, freq: 1.5, speed: 0.17,
     amp2: 34, freq2: 0.62, speed2: 0.06, phase: 2.1,
-    alpha: 0.13, tint: 0.44, depth: 0.86, fibers: 3, packets: 2, samples: 152,
+    alpha: 0.1, tint: 0.44, depth: 0.86, fibers: 3, packets: 2, samples: 152,
   },
   {
     x0: -360, y0: 968, x1: 1900, y1: 452,
     bow: 196, width: 156, amp: 46, freq: 0.95, speed: 0.1,
     amp2: 30, freq2: 0.42, speed2: 0.04, phase: 4.3,
-    alpha: 0.1, tint: 0.72, depth: 0.68, fibers: 3, packets: 2, samples: 140,
+    alpha: 0.08, tint: 0.72, depth: 0.68, fibers: 3, packets: 2, samples: 140,
   },
   {
     x0: -240, y0: 690, x1: 1820, y1: 196,
     bow: 96, width: 118, amp: 38, freq: 1.85, speed: 0.21,
     amp2: 26, freq2: 0.74, speed2: 0.07, phase: 5.5,
-    alpha: 0.085, tint: 0.3, depth: 0.55, fibers: 2, packets: 1, samples: 128,
+    alpha: 0.065, tint: 0.3, depth: 0.55, fibers: 2, packets: 1, samples: 128,
   },
   {
     x0: -300, y0: 852, x1: 1860, y1: 556,
     bow: 74, width: 92, amp: 30, freq: 2.3, speed: 0.26,
     amp2: 20, freq2: 0.9, speed2: 0.09, phase: 1.2,
-    alpha: 0.07, tint: 0.62, depth: 0.44, fibers: 2, packets: 1, samples: 112,
+    alpha: 0.055, tint: 0.62, depth: 0.44, fibers: 2, packets: 1, samples: 112,
   },
 ];
 

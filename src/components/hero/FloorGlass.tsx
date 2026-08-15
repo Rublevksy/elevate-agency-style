@@ -57,7 +57,7 @@ export function FloorGlass({
       ctx.save();
       ctx.setTransform(sx * dpr, 0, 0, sx * dpr, 0, 0);
       ctx.globalCompositeOperation = "lighter";
-      ctx.filter = mobile ? "blur(6px)" : "blur(14px)";
+      ctx.filter = mobile ? "blur(8px)" : "blur(22px)";
 
       // mirror around the horizon, squashed for perspective
       const horizon = STAGE_H * 0.02;
@@ -71,7 +71,7 @@ export function FloorGlass({
         const ripple = Math.sin(time * 0.5 + r.phase) * 16;
         drawStream(ctx, r, time, drift, {
           quality: mobile ? 0.4 : 0.6,
-          alpha: (mobile ? 0.3 : 0.42) * (1 - p * 0.4),
+          alpha: (mobile ? 0.2 : 0.3) * (1 - p * 0.4),
           pointerX: ripple - p * 30,
           pointerY: 0,
           reflection: true,

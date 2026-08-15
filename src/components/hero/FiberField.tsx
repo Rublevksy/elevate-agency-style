@@ -84,12 +84,13 @@ export function FiberField({
 
       // keep the editorial column clean: the light only fades softly into it
       ctx.globalCompositeOperation = "destination-out";
-      const fade = ctx.createLinearGradient(0, 0, 700, 0);
-      fade.addColorStop(0, "rgba(0,0,0,0.96)");
-      fade.addColorStop(0.5, "rgba(0,0,0,0.7)");
+      const fade = ctx.createLinearGradient(0, 0, 900, 0);
+      fade.addColorStop(0, "rgba(0,0,0,0.98)");
+      fade.addColorStop(0.45, "rgba(0,0,0,0.9)");
+      fade.addColorStop(0.78, "rgba(0,0,0,0.5)");
       fade.addColorStop(1, "rgba(0,0,0,0)");
       ctx.fillStyle = fade;
-      ctx.fillRect(-400, -400, 1100, STAGE_H + 800);
+      ctx.fillRect(-400, -400, 1300, STAGE_H + 800);
       ctx.globalCompositeOperation = "source-over";
     };
 
