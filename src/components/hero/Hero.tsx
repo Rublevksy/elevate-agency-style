@@ -1,17 +1,18 @@
 import { Link } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-import laptopLarge from "@/assets/elevate-laptop-1120.webp.asset.json";
-import laptopSmall from "@/assets/elevate-laptop-520.webp.asset.json";
-import markAsset from "@/assets/elevate-mark-small.webp.asset.json";
-import { Logo } from "@/components/Logo";
-import { FiberField } from "@/components/hero/FiberField";
+import heroStage from "@/assets/elevate-hero-stage.png.asset.json";
 import { setCinematicActive } from "@/lib/cinematic-state";
 
 const clamp01 = (value: number) => (value < 0 ? 0 : value > 1 ? 1 : value);
 
-const SERVICES = ["Weby", "E-shopy", "Aplikace", "Design", "SEO"];
-
+/**
+ * Hero = the approved ELEVATE master artwork (device + light ring + service
+ * cards) as the exact base graphic layer on the right, with real HTML
+ * typography and links on the left. Live enhancement is limited to pointer
+ * parallax and a scroll transform — the resting look equals the artwork.
+ */
 export function Hero() {
   const wrapRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLElement>(null);
@@ -23,6 +24,8 @@ export function Hero() {
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let frame = 0;
+    let px = 0;
+    let py = 0;
 
     const update = () => {
       frame = 0;
@@ -30,118 +33,102 @@ export function Hero() {
       const distance = wrap.offsetHeight - window.innerHeight;
       const progress = reducedMotion.matches || distance <= 0 ? 0 : clamp01(-rect.top / distance);
       stage.style.setProperty("--hero-scroll", progress.toFixed(4));
-      setCinematicActive(rect.top <= 0 && rect.bottom > window.innerHeight * 0.3);
+      stage.style.setProperty("--hero-px", px.toFixed(3));
+      stage.style.setProperty("--hero-py", py.toFixed(3));
     };
 
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);
     };
 
+    const onPointer = (event: PointerEvent) => {
+      if (reducedMotion.matches) return;
+      px = (event.clientX / window.innerWidth - 0.5) * 2;
+      py = (event.clientY / window.innerHeight - 0.5) * 2;
+      schedule();
+    };
+
     update();
+    setCinematicActive(false);
     window.addEventListener("scroll", schedule, { passive: true });
     window.addEventListener("resize", schedule, { passive: true });
+    window.addEventListener("pointermove", onPointer, { passive: true });
     reducedMotion.addEventListener("change", schedule);
 
     return () => {
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", schedule);
       window.removeEventListener("resize", schedule);
+      window.removeEventListener("pointermove", onPointer);
       reducedMotion.removeEventListener("change", schedule);
-      setCinematicActive(false);
     };
   }, []);
 
   return (
-    <div ref={wrapRef} className="relative h-[100svh] md:h-[138svh]">
+    <div ref={wrapRef} className="relative h-[100svh] md:h-[130svh]">
       <section
         ref={stageRef}
         aria-label="ELEVATE — digitální studio"
         className="sticky top-0 h-[100svh] overflow-hidden bg-background"
       >
-        {/* cool atmospheric pool behind the device */}
-        <div aria-hidden className="hero-device-light pointer-events-none absolute inset-0 z-[1]" />
+        {/* exact master artwork — base graphic layer, right side of the composition */}
+        <img
+          src={heroStage.url}
+          alt="ELEVATE — MacBook s ukázkou webu, e-shopu a aplikací"
+          width={988}
+          height={746}
+          fetchPriority="high"
+          decoding="sync"
+          className="hero-master pointer-events-none absolute right-[-30%] top-[64%] z-[1] h-[42%] w-auto max-w-none md:right-[-1%] md:top-1/2 md:h-[82%]"
+        />
 
-        {/* live fiber-optic light field */}
-        <FiberField className="hero-fiber pointer-events-none absolute inset-x-0 top-[8%] z-[2] h-[74%] w-full" />
+        {/* soft edge blends so the artwork sits in the black space */}
+        <div aria-hidden className="hero-scrim-left pointer-events-none absolute inset-y-0 left-0 z-[2] w-full md:w-[36%]" />
+        <div aria-hidden className="hero-scrim-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[14%]" />
 
-        {/* the device — dominant object on the right */}
-        <div className="hero-device pointer-events-none absolute left-1/2 top-[54%] z-[3] w-[136vw] max-w-[720px] md:left-auto md:right-[-2vw] md:top-[54%] md:w-[60vw] md:max-w-[1120px]">
-          <div className="relative">
-            <img
-              src={laptopLarge.url}
-              srcSet={`${laptopSmall.url} 520w, ${laptopLarge.url} 1120w`}
-              sizes="(max-width: 767px) 132vw, 62vw"
-              alt="MacBook s identitou digitálního studia ELEVATE"
-              width={1120}
-              height={738}
-              fetchPriority="high"
-              decoding="sync"
-              className="hero-device-img block h-auto w-full"
-            />
-            <img
-              src={markAsset.url}
-              alt=""
-              aria-hidden
-              width={128}
-              height={128}
-              decoding="async"
-              className="absolute right-[26.5%] top-[40%] h-auto w-[6.5%] opacity-70"
-            />
-            {/* glossy floor reflection */}
-            <img
-              src={laptopLarge.url}
-              alt=""
-              aria-hidden
-              width={1120}
-              height={738}
-              decoding="async"
-              className="hero-device-reflection absolute inset-x-0 top-full block h-auto w-full"
-            />
-          </div>
-          <div aria-hidden className="hero-device-shadow mx-auto -mt-[6%] h-[9vh] w-[68%]" />
-        </div>
+        {/* real, clickable content aligned to the master composition */}
+        <div className="relative z-10 mx-auto h-full w-full max-w-[1536px]">
+          <div className="absolute left-6 top-[21%] w-[90%] max-w-[420px] md:left-[5.6%] md:top-[27%] md:w-[36%] md:max-w-[460px]">
+            <p className="text-[10px] uppercase tracking-[0.3em] text-primary">Digitální studio · Praha</p>
 
-        {/* editorial left column */}
-        <div
-          className="relative z-10 mx-auto h-full w-full max-w-[1600px] px-6 pt-7 md:px-12 md:pt-10 lg:px-[5.2vw]"
-          style={{
-            opacity: "calc(1 - var(--hero-scroll, 0) * 0.32)",
-            transform: "translate3d(0, calc(var(--hero-scroll, 0) * -2vh), 0)",
-          }}
-        >
-          <Link to="/" aria-label="ELEVATE" className="inline-block transition-opacity hover:opacity-70">
-            <Logo className="h-7 w-auto md:h-9 lg:h-10" />
-          </Link>
-
-          {/* thin vertical light accent */}
-          <div aria-hidden className="hero-accent-line absolute left-4 top-[28%] hidden h-[48%] w-px md:block lg:left-[3.2vw]" />
-
-          <div className="absolute left-6 top-[19%] w-[88%] max-w-[360px] md:left-12 md:top-[34%] md:w-[36%] md:max-w-[460px] lg:left-[5.2vw]">
-            <h1 className="text-[1.75rem] font-light uppercase leading-[1.18] tracking-[0.06em] text-foreground md:text-[2.1rem] lg:text-[2.6rem]">
-              <span className="block">Digitální řešení,</span>
-              <span className="block">která posouvají</span>
-              <span className="block text-primary">vaše podnikání</span>
+            <h1 className="mt-5 text-[2rem] font-medium leading-[1.1] tracking-[-0.02em] text-foreground md:mt-6 md:text-[2.6rem] lg:text-[3.1rem]">
+              <span className="block">Weby, e-shopy</span>
+              <span className="block">a aplikace, které</span>
+              <span className="block text-primary">prodávají.</span>
             </h1>
 
-            <ul className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] uppercase tracking-[0.24em] text-muted-foreground md:mt-14">
-              {SERVICES.map((service, i) => (
-                <li key={service} className="flex items-center gap-3">
-                  {i > 0 && <span aria-hidden className="h-1 w-1 rounded-full bg-primary/80" />}
-                  <span>{service}</span>
-                </li>
-              ))}
-            </ul>
+            <p className="mt-6 text-[10px] uppercase tracking-[0.26em] text-muted-foreground md:mt-7">
+              UX <span className="text-primary/70">·</span> UI <span className="text-primary/70">·</span> Vývoj{" "}
+              <span className="text-primary/70">·</span> Optimalizace
+            </p>
+
+            <Link to="/contact" className="btn-primary group mt-8 inline-flex md:mt-10">
+              Chci projekt
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </Link>
           </div>
 
+          {/* section index, as in the master */}
           <div
             aria-hidden
-            className="absolute bottom-[8%] left-6 hidden gap-6 text-[11px] tracking-[0.3em] md:flex lg:left-[5.2vw]"
+            className="absolute left-[1.4%] top-[33%] hidden flex-col gap-4 text-[10px] tracking-[0.24em] md:flex"
           >
-            <span className="text-primary">01</span>
-            <span className="text-muted-foreground/60">02</span>
-            <span className="text-muted-foreground/60">03</span>
-            <span className="text-muted-foreground/60">04</span>
+            {["01", "02", "03", "04", "05"].map((n, i) => (
+              <span key={n} className="flex items-center gap-2">
+                <span className={i === 0 ? "h-px w-3 bg-primary" : "h-px w-3 bg-muted-foreground/40"} />
+                <span className={i === 0 ? "text-foreground" : "text-muted-foreground/60"}>{n}</span>
+              </span>
+            ))}
           </div>
+
+          <p
+            aria-hidden
+            className="absolute inset-x-0 bottom-[6%] hidden text-center text-[10px] uppercase tracking-[0.34em] text-muted-foreground md:block"
+            style={{ opacity: "calc(1 - var(--hero-scroll, 0) * 2)" }}
+          >
+            Dobrý design <span className="text-primary/70">·</span> Rychlý výkon{" "}
+            <span className="text-primary/70">·</span> Skvělé výsledky
+          </p>
         </div>
       </section>
     </div>
