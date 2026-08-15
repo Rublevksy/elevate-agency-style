@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { DeviceFilm } from "@/components/devicefilm/DeviceFilm";
-import { DeviceServices } from "@/components/deviceservices/DeviceServices";
+import { CinematicServices } from "@/components/services/CinematicServices";
 import { ServiceDecision } from "@/components/sections/ServiceDecision";
 
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
@@ -49,8 +49,8 @@ function Home() {
       {/* 02 — the seam: what ELEVATE can actually do for you */}
       <ServiceDecision />
 
-      {/* 02 — device-based service gallery: one shot through five products */}
-      <DeviceServices />
+      {/* 02 — cinematic service sequence: five campaign chapters */}
+      <CinematicServices />
 
 
       {/* 03 — how we work + studio point of view */}
