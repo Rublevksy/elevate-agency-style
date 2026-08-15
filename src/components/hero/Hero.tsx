@@ -28,8 +28,11 @@ export function Hero() {
         height={1024}
         fetchPriority="high"
         decoding="sync"
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className="hero-master absolute inset-0 h-full w-full object-cover object-center"
       />
+      {/* živá fiber-optic světelná vrstva — proudí za MacBookem (silueta je vymaskovaná) */}
+      <FiberField className="pointer-events-none absolute inset-0 h-full w-full" />
+
 
       <nav aria-label="Hlavní navigace" className="absolute inset-0 z-10 hidden md:block">
         <Link to="/" aria-label="ELEVATE — domů" className="hero-hotspot left-[4.8%] top-[12.4%] h-[6.2%] w-[18.2%]" />
