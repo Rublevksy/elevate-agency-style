@@ -98,15 +98,24 @@ const SCENES: Scene[] = [
   },
 ];
 
-/** timeline: hold → the screen activates → the portal opens → the services */
-const ACTIVATE = 0.1;
-const PULL = 0.22;
-const SERVICES_FROM = 0.34;
+/**
+ * ONE timeline. `p` is the section's normalised scroll progress (0 → 1) and the
+ * hero act lives in the first `SERVICES_FROM` of it, so all beats below are
+ * expressed in hero-local time `hp = p / SERVICES_FROM`:
+ *
+ *   0.00 – 0.20  hero holds, the user reads it
+ *   0.20 – 0.45  the camera approaches the display
+ *   0.32 – 0.64  the portal forms and opens behind the screen
+ *   0.50 – 0.84  UI is extracted out of the portal
+ *   0.62 – 0.96  the device dissolves into light, off frame
+ *   0.96 – 1.00  the Web service is fully stable
+ */
+const SERVICES_FROM = 0.26;
 /** share of a service unit spent transforming (rest is a stable hold) */
-const TRANSITION = 0.42;
+const TRANSITION = 0.4;
 
-const HERO_VH = 150;
-const SCENE_VH = 92;
+const HERO_VH = 165;
+const SCENE_VH = 96;
 
 function stageOf(p: number, count: number) {
   const raw = Math.min(count - 1, Math.max(0, range(SERVICES_FROM, 1, p) * (count - 1)));
@@ -116,6 +125,7 @@ function stageOf(p: number, count: number) {
   const t = clamp01((fr - start) / TRANSITION);
   return i + smoothstep(0, 1, t);
 }
+
 
 export function HeroFilm() {
   const wrap = useRef<HTMLDivElement>(null);
