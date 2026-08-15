@@ -145,10 +145,11 @@ export function Hero() {
               className="absolute right-[26.5%] top-[40%] h-auto w-[6.5%] opacity-90"
             />
 
-            {/* the interfaces rising out of the display */}
-            <div className="absolute left-[46%] top-[16%] h-[42%] w-[46%]">
+            {/* the interfaces rising out of the machine, alongside it — never pasted on the lid */}
+            <div className="absolute -left-[54%] top-[10%] h-[46%] w-[62%] md:-left-[58%]">
               <ProductScreen />
             </div>
+
           </div>
 
           {/* contact shadow only — soft, edgeless, no blur stack */}
