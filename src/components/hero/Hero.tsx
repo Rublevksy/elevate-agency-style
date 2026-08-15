@@ -121,16 +121,8 @@ export function Hero() {
         </div>
 
         {/* 4 — real content */}
-        <div className="relative z-10 flex h-full flex-col justify-between">
-          <div className="container-luxe flex items-center justify-between pt-8">
-            <Link
-              to="/"
-              aria-label="ELEVATE — domů"
-              className="text-sm font-semibold tracking-[0.42em] text-foreground/90 transition-colors hover:text-primary"
-            >
-              ELEVATE
-            </Link>
-          </div>
+        <div className="relative z-10 flex h-full flex-col justify-end">
+
 
           <div
             className="container-luxe pb-[16vh]"
