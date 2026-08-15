@@ -219,8 +219,21 @@ export function CinematicServices() {
             text.style.transform = `translate3d(${smooth.x * 3 * cursor}px, ${(-d * 4 * vh + smooth.y * 2 * cursor).toFixed(2)}px, 0)`;
           }
           if (frag) {
-            frag.style.transform = `translate3d(${smooth.x * 10 * cursor}px, ${(-d * 12 * vh * par + smooth.y * 6 * cursor).toFixed(2)}px, 0)`;
-            frag.style.opacity = String(0.35 + near * 0.65);
+            frag.style.transform = `translate3d(0px, ${(-d * 4 * vh * par).toFixed(2)}px, 0)`;
+            frag.style.opacity = "1";
+            const floats = frag.querySelectorAll<HTMLElement>("[data-float]");
+            floats.forEach((f, k) => {
+              const depth = Number(f.dataset.depth ?? 0.5);
+              const mx = smooth.x * (3 + depth * 9) * cursor;
+              const my = smooth.y * (2 + depth * 6) * cursor;
+              const sy = -d * (5 + depth * 14) * vh * par;
+              const rot = (k % 2 === 0 ? -1 : 1) * (0.5 + depth * 1.1) - d * depth * 1.4;
+              const enter = Math.max(0, Math.min(1, 1 - (away - depth * 0.1) * 2.1));
+              f.style.transform = `translate3d(${(mx + depth * d * -16).toFixed(2)}px, ${(my + sy).toFixed(2)}px, 0) scale(${(0.93 + enter * 0.07 + depth * 0.02).toFixed(4)}) rotate(${rot.toFixed(2)}deg)`;
+              f.style.opacity = String(enter);
+              f.style.filter = `blur(${((1 - enter) * 5).toFixed(2)}px)`;
+              f.style.willChange = "transform, opacity";
+            });
           }
           if (figure) {
             figure.style.transform = `translate3d(${smooth.x * 6 * cursor}px, ${(-d * 7 * vh * par + smooth.y * 4 * cursor).toFixed(2)}px, 0) scale(${(0.93 + near * 0.07).toFixed(4)}) rotate(${(d * -0.7).toFixed(3)}deg)`;
