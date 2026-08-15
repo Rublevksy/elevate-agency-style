@@ -28,7 +28,7 @@ export const PHASE = {
   /** the camera commits to entering the display */
   ENTER: 0.56,
   /** the 3D display hands the frame to the fullscreen interface */
-  HANDOFF: 0.84,
+  HANDOFF: 0.72,
 } as const;
 
 /** device geometry — 1 world unit = 1 cm */
