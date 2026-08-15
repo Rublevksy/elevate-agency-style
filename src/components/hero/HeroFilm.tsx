@@ -75,9 +75,10 @@ const SCENES: Scene[] = [
   {
     id: "seo",
     index: "04",
-    title: "SEO",
-    desc: "Technické SEO, rychlost, Core Web Vitals a průběžná optimalizace.",
-    points: ["SEO", "Rychlost", "Core Web Vitals", "Indexace"],
+    title: "Optimalizace",
+    desc: "SEO, rychlost, Core Web Vitals a průběžná optimalizace výkonu.",
+    points: ["SEO", "Rychlost", "Core Web Vitals", "Analytika"],
+
     to: "/audit",
     src: sceneSeo,
     art: "seo",
