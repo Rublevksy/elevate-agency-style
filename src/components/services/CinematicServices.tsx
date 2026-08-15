@@ -333,9 +333,9 @@ function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
           className="pointer-events-none absolute left-1/2 top-1/2 h-[52vh] w-[52vh] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[110px] will-change-transform"
           style={{ background: "oklch(0.6 0.17 258 / 0.3)" }}
         />
-        {/* native interface fragments — deepest layer */}
-        <div data-layer="frag" aria-hidden className="pointer-events-none absolute inset-0 will-change-transform">
-          <Frag kind={scene.fragments} />
+        {/* composed floating service elements — foreground / mid layers */}
+        <div data-layer="frag" aria-hidden className="pointer-events-none absolute inset-0 hidden will-change-transform md:block">
+          <ServiceElements kind={scene.fragments} />
         </div>
 
         {/* the fixed brand character + devices, alpha-faded into the page */}
