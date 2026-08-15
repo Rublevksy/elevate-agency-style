@@ -6,6 +6,7 @@ import sceneEshop from "@/assets/scene-eshop.png.asset.json";
 import sceneApps from "@/assets/scene-apps.png.asset.json";
 import sceneSeo from "@/assets/scene-seo.png.asset.json";
 import sceneDesign from "@/assets/scene-design.png.asset.json";
+import { ServiceElements } from "./ServiceElements";
 
 /**
  * ENTER THE ELEVATE STUDIO — one continuous scroll-driven stage where each
@@ -101,77 +102,6 @@ const SCENES: Scene[] = [
 
 const CTA = "Detail služby";
 
-/* ------------------------------------------------------------------ */
-/* native interface fragments — thin-line geometry, never a dashboard */
-/* ------------------------------------------------------------------ */
-
-const line = "oklch(0.65 0.18 255 / 0.35)";
-const faint = "oklch(0.65 0.18 255 / 0.14)";
-
-function Frag({ kind }: { kind: Scene["fragments"] }) {
-  if (kind === "web") {
-    return (
-      <>
-        <div
-          className="absolute left-[2%] top-[16%] h-[26%] w-[34%] rounded-lg"
-          style={{ border: `1px solid ${faint}`, background: "oklch(0.2 0.03 258 / 0.25)" }}
-        />
-        <div className="absolute left-[6%] top-[24%] h-px w-[22%]" style={{ background: line }} />
-        <div className="absolute left-[6%] top-[29%] h-px w-[14%]" style={{ background: faint }} />
-        <div className="absolute bottom-[14%] left-[6%] h-[10%] w-[18%] rounded" style={{ border: `1px solid ${faint}` }} />
-      </>
-    );
-  }
-  if (kind === "shop") {
-    return (
-      <>
-        {[0, 1, 2].map((i) => (
-          <div
-            key={i}
-            className="absolute h-[14%] w-[12%] rounded-md"
-            style={{
-              left: `${3 + i * 13}%`,
-              top: `${22 + i * 9}%`,
-              border: `1px solid ${faint}`,
-              background: "oklch(0.2 0.03 258 / 0.22)",
-            }}
-          />
-        ))}
-        <div className="absolute bottom-[18%] left-[5%] h-[8%] w-[22%] rounded-full" style={{ border: `1px solid ${line}` }} />
-      </>
-    );
-  }
-  if (kind === "app") {
-    return (
-      <>
-        <div className="absolute left-[4%] top-[14%] h-[46%] w-[16%] rounded-2xl" style={{ border: `1px solid ${faint}` }} />
-        <div className="absolute left-[24%] top-[26%] h-[30%] w-[12%] rounded-xl" style={{ border: `1px solid ${faint}` }} />
-        <div className="absolute bottom-[20%] left-[6%] h-px w-[28%]" style={{ background: line }} />
-      </>
-    );
-  }
-  if (kind === "seo") {
-    return (
-      <>
-        <svg viewBox="0 0 200 100" className="absolute left-[2%] top-[22%] h-[26%] w-[40%]" fill="none" preserveAspectRatio="none">
-          <path d="M0 88 L38 70 L74 76 L112 40 L150 30 L200 6" stroke="oklch(0.65 0.18 255 / 0.55)" strokeWidth="1.2" />
-          <path d="M0 96 L200 96" stroke="oklch(0.65 0.18 255 / 0.18)" strokeWidth="1" />
-        </svg>
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="absolute h-px" style={{ left: "4%", top: `${56 + i * 5}%`, width: `${26 - i * 5}%`, background: faint }} />
-        ))}
-      </>
-    );
-  }
-  return (
-    <>
-      <div className="absolute left-[4%] top-[18%] h-[18%] w-[18%] rounded-full" style={{ border: `1px solid ${faint}` }} />
-      <div className="absolute left-[16%] top-[30%] h-[18%] w-[18%]" style={{ border: `1px solid ${line}` }} />
-      <div className="absolute bottom-[22%] left-[5%] h-px w-[30%]" style={{ background: faint }} />
-      <div className="absolute bottom-[17%] left-[5%] h-px w-[18%]" style={{ background: faint }} />
-    </>
-  );
-}
 
 /* ------------------------------------------------------------------ */
 /* shared environment                                                  */
@@ -289,8 +219,21 @@ export function CinematicServices() {
             text.style.transform = `translate3d(${smooth.x * 3 * cursor}px, ${(-d * 4 * vh + smooth.y * 2 * cursor).toFixed(2)}px, 0)`;
           }
           if (frag) {
-            frag.style.transform = `translate3d(${smooth.x * 10 * cursor}px, ${(-d * 12 * vh * par + smooth.y * 6 * cursor).toFixed(2)}px, 0)`;
-            frag.style.opacity = String(0.35 + near * 0.65);
+            frag.style.transform = `translate3d(0px, ${(-d * 4 * vh * par).toFixed(2)}px, 0)`;
+            frag.style.opacity = "1";
+            const floats = frag.querySelectorAll<HTMLElement>("[data-float]");
+            floats.forEach((f, k) => {
+              const depth = Number(f.dataset.depth ?? 0.5);
+              const mx = smooth.x * (3 + depth * 9) * cursor;
+              const my = smooth.y * (2 + depth * 6) * cursor;
+              const sy = -d * (5 + depth * 14) * vh * par;
+              const rot = (k % 2 === 0 ? -1 : 1) * (0.5 + depth * 1.1) - d * depth * 1.4;
+              const enter = Math.max(0, Math.min(1, 1 - (away - depth * 0.1) * 2.1));
+              f.style.transform = `translate3d(${(mx + depth * d * -16).toFixed(2)}px, ${(my + sy).toFixed(2)}px, 0) scale(${(0.93 + enter * 0.07 + depth * 0.02).toFixed(4)}) rotate(${rot.toFixed(2)}deg)`;
+              f.style.opacity = String(enter);
+              f.style.filter = `blur(${((1 - enter) * 5).toFixed(2)}px)`;
+              f.style.willChange = "transform, opacity";
+            });
           }
           if (figure) {
             figure.style.transform = `translate3d(${smooth.x * 6 * cursor}px, ${(-d * 7 * vh * par + smooth.y * 4 * cursor).toFixed(2)}px, 0) scale(${(0.93 + near * 0.07).toFixed(4)}) rotate(${(d * -0.7).toFixed(3)}deg)`;
@@ -403,36 +346,59 @@ function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
           className="pointer-events-none absolute left-1/2 top-1/2 h-[52vh] w-[52vh] -translate-x-1/2 -translate-y-1/2 rounded-full blur-[110px] will-change-transform"
           style={{ background: "oklch(0.6 0.17 258 / 0.3)" }}
         />
-        {/* native interface fragments — deepest layer */}
-        <div data-layer="frag" aria-hidden className="pointer-events-none absolute inset-0 will-change-transform">
-          <Frag kind={scene.fragments} />
+        {/* composed floating service elements — foreground / mid layers */}
+        <div data-layer="frag" aria-hidden className="pointer-events-none absolute inset-0 hidden will-change-transform md:block">
+          <ServiceElements kind={scene.fragments} />
         </div>
 
-        {/* the fixed brand character + devices, alpha-faded into the page */}
+        {/* the fixed brand character + devices, lit into the environment */}
         <div
           data-layer="figure"
           className="absolute bottom-0 right-0 will-change-transform"
           style={{ transform: `translateX(${scene.offsetX})` }}
         >
-          <img
-            src={scene.src}
-            alt=""
-            loading={eager ? "eager" : "lazy"}
-            decoding="async"
-            className="h-[40vh] w-auto max-w-none md:h-[var(--fh)]"
-            style={
-              {
-                "--fh": scene.height,
-                filter: "drop-shadow(0 40px 60px oklch(0.05 0.01 258 / 0.65)) drop-shadow(0 0 40px oklch(0.6 0.17 258 / 0.16))",
-                maskImage:
-                  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0%, #000 10%, #000 100%)",
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0%, #000 10%, #000 100%)",
-                maskComposite: "intersect",
-                WebkitMaskComposite: "source-in",
-              } as React.CSSProperties
-            }
+          {/* contact shadow grounding the subject */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute bottom-[2%] left-1/2 h-[7%] w-[78%] -translate-x-1/2 rounded-[50%] blur-2xl"
+            style={{ background: "oklch(0.03 0.01 258 / 0.75)" }}
           />
+          <div className="relative">
+            <img
+              src={scene.src}
+              alt=""
+              loading={eager ? "eager" : "lazy"}
+              decoding="async"
+              className="h-[40vh] w-auto max-w-none md:h-[var(--fh)]"
+              style={
+                {
+                  "--fh": scene.height,
+                  filter:
+                    "saturate(1.06) contrast(1.08) brightness(1.03) drop-shadow(0 46px 70px oklch(0.03 0.01 258 / 0.7)) drop-shadow(-14px -6px 26px oklch(0.6 0.17 258 / 0.3))",
+                  maskImage:
+                    "linear-gradient(to bottom, transparent 0%, #000 9%, #000 88%, transparent 100%), linear-gradient(to right, transparent 0%, #000 8%, #000 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, transparent 0%, #000 9%, #000 88%, transparent 100%), linear-gradient(to right, transparent 0%, #000 8%, #000 100%)",
+                  maskComposite: "intersect",
+                  WebkitMaskComposite: "source-in",
+                } as React.CSSProperties
+              }
+            />
+            {/* blue rim light hugging the subject silhouette */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 mix-blend-screen"
+              style={{
+                background: "linear-gradient(115deg, oklch(0.65 0.18 255 / 0.4) 0%, transparent 42%)",
+                maskImage: `url(${scene.src})`,
+                WebkitMaskImage: `url(${scene.src})`,
+                maskSize: "100% 100%",
+                WebkitMaskSize: "100% 100%",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
