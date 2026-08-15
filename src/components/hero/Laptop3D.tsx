@@ -84,12 +84,11 @@ function Device({ progress, pointer }: { progress: RefObject<number>; pointer: {
     }
 
     // camera pushes in on the display, then travels through the glass
-    const z = 3.0 - approach * 0.68 - pass * 0.62;
+    const z = 1.34 - approach * 0.68 - pass * 0.62;
     const y = 0.24 - approach * 0.1 - pass * 0.03;
     camera.position.set(smooth.current.x * 0.05 * damp, y, z);
     camera.lookAt(0, 0.1 + approach * 0.008, -0.08);
     camera.updateProjectionMatrix();
-    (window as any).__cam = camera.position.toArray();
 
   });
 
