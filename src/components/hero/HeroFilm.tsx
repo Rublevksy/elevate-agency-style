@@ -3,9 +3,9 @@ import { Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 
 import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
-import { useFilmProgress, clamp01, easeFilm, lerp, range, smoothstep } from "@/lib/film";
-import { CssLaptop } from "./CssLaptop";
+import { useFilmProgress, clamp01, easeFilm, range, smoothstep } from "@/lib/film";
 import { SceneArt } from "./SceneArt";
+import { HeroCopy, HeroIndex } from "./HeroCopy";
 
 import sceneWeb from "@/assets/scene-web.webp";
 import sceneEshop from "@/assets/scene-eshop.webp";
@@ -13,8 +13,8 @@ import sceneApps from "@/assets/scene-apps.webp";
 import sceneSeo from "@/assets/scene-seo.webp";
 import sceneDesign from "@/assets/scene-design.webp";
 
-/** the real GLB product render — desktop only, loaded after hydration */
-const Laptop3D = lazy(() => import("./Laptop3D"));
+/** the real GLB product render — loaded after hydration */
+const HeroScene = lazy(() => import("./HeroScene"));
 
 
 /**
@@ -135,10 +135,6 @@ export function HeroFilm() {
   const wrap = useRef<HTMLDivElement>(null);
   const progress = useFilmProgress(wrap);
 
-  const stage = useRef<HTMLDivElement>(null);
-  const lid = useRef<HTMLDivElement>(null);
-  const chassis = useRef<HTMLDivElement>(null);
-  const screen = useRef<HTMLDivElement>(null);
   const deviceLayer = useRef<HTMLDivElement>(null);
   const portal = useRef<HTMLDivElement>(null);
   const bloom = useRef<HTMLDivElement>(null);
@@ -149,7 +145,7 @@ export function HeroFilm() {
   const [use3D, setUse3D] = useState(false);
 
   useEffect(() => {
-    setUse3D(!prefersReducedMotion());
+    setUse3D(true);
   }, []);
 
 
@@ -175,26 +171,13 @@ export function HeroFilm() {
       // hero-local time — every beat below is a slice of the hero act
       const hp = clamp01(p / SERVICES_FROM);
 
-      // 01 — the device: hold, approach the display, then pass through it
-      const settle = easeFilm(range(0, 0.14, hp));
+      // 01 — the device: the 3D scene owns its own camera move; the DOM layer
+      // only fades out once the camera has travelled through the glass
       const approach = easeFilm(range(0.2, 0.5, hp));
       const pass = easeFilm(range(0.64, 0.88, hp));
       /** the device sits right of centre in the hero; the camera re-centres on it */
-      const recentre = isMobile ? 0 : -approach * 19 * (window.innerWidth / 100);
+      const recentre = isMobile ? 0 : -approach * 12 * (window.innerWidth / 100);
 
-      if (lid.current) {
-        lid.current.style.transform = `rotateX(${lerp(9, -1.5, settle).toFixed(2)}deg)`;
-      }
-      if (stage.current) {
-        const sc = lerp(isMobile ? 0.9 : 0.94, isMobile ? 1.3 : 1.5, approach) + pass * (isMobile ? 1.1 : 1.5);
-        const damp = 1 - approach;
-        const ry = smooth.x * damp * 7 * cursor;
-        const rx = -smooth.y * damp * 4 * cursor;
-        stage.current.style.transform = `translate3d(${recentre.toFixed(2)}px, ${((approach * 4 + pass * 14) * vh).toFixed(2)}px, 0) scale(${sc.toFixed(4)}) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
-      }
-      // the chassis dissolves as the camera passes the glass — only light remains
-      if (chassis.current) chassis.current.style.opacity = (1 - pass).toFixed(3);
-      if (screen.current) screen.current.style.opacity = (1 - pass * 1.05).toFixed(3);
       if (deviceLayer.current) {
         deviceLayer.current.style.opacity = (1 - pass).toFixed(3);
         deviceLayer.current.style.visibility = pass >= 0.995 ? "hidden" : "visible";
@@ -329,68 +312,24 @@ export function HeroFilm() {
           <div className="absolute inset-0">
             {use3D ? (
               <Suspense fallback={null}>
-                <Laptop3D progress={progress} />
+                <HeroScene progress={progress} />
               </Suspense>
-            ) : (
-              <CssLaptop stageRef={stage} lidRef={lid} chassisRef={chassis} screenRef={screen} />
-            )}
-
+            ) : null}
           </div>
 
           {/* HERO COPY */}
           <div
             ref={type}
-            className="pointer-events-none absolute inset-x-0 bottom-[8vh] z-30 px-7 md:bottom-0 md:top-0 md:flex md:w-[42%] md:items-center md:px-[5vw]"
+            className="pointer-events-none absolute inset-x-0 bottom-[10vh] z-30 px-7 md:bottom-auto md:top-[27vh] md:px-[6vw]"
             style={{ willChange: "opacity, transform" }}
           >
-            <div className="max-w-[34rem]">
-              <span className="block font-mono text-[10px] uppercase tracking-[0.42em] text-primary">
-                Digitální studio · Praha
-              </span>
-              <h1 className="mt-6 text-[2rem] font-medium uppercase leading-[1.02] tracking-[-0.035em] text-foreground md:text-[3.1vw]">
-                Digitální řešení,
-                <br />
-                která posouvají
-                <br />
-                <span className="text-primary">vaše podnikání.</span>
-              </h1>
-              <p className="mt-7 flex flex-wrap items-center gap-x-3 gap-y-2 font-mono text-[10px] uppercase tracking-[0.28em] text-muted-foreground/80 md:text-[11px]">
-                {["Weby", "E-shopy", "Aplikace", "Design", "SEO"].map((s, i) => (
-                  <span key={s} className="flex items-center gap-3">
-                    {i > 0 && <span className="h-1 w-1 rounded-full bg-primary/70" />}
-                    {s}
-                  </span>
-                ))}
-              </p>
-            </div>
+            <HeroCopy />
           </div>
-
         </div>
 
-        {/* chapter indicator */}
-        <div className="pointer-events-none absolute bottom-[6vh] left-[5vw] z-40 hidden flex-row items-center gap-5 md:flex">
-          {SCENES.map((s, i) => {
-            const on = i === active;
-            return (
-              <span key={s.id} className="flex items-center gap-2">
-                <span
-                  className="h-px transition-all duration-500"
-                  style={{
-                    width: on ? 22 : 8,
-                    background: on ? "oklch(0.65 0.18 255)" : "oklch(0.65 0.18 255 / 0.22)",
-                  }}
-                />
-                <span
-                  className={`font-mono text-[10px] tracking-[0.24em] transition-colors duration-500 ${
-                    on ? "text-primary" : "text-muted-foreground/40"
-                  }`}
-                >
-                  {s.index}
-                </span>
-              </span>
-            );
-          })}
-        </div>
+        {/* numbered index */}
+        <HeroIndex active={active} />
+
 
         {/* 02–06 — THE SERVICES, emerging from the portal */}
         {SCENES.map((s, i) => (
