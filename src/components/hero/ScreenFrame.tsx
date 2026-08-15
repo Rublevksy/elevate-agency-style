@@ -27,10 +27,10 @@ export function ScreenFrame() {
       aria-hidden={false}
       className="absolute overflow-hidden rounded-[4px]"
       style={{
-        left: "14.3%",
-        top: "1.4%",
-        width: "65.4%",
-        height: "45.6%",
+        left: "23.2%",
+        top: "22%",
+        width: "53.5%",
+        height: "50.6%",
         transform: "perspective(1400px) rotateX(1.1deg)",
         transformOrigin: "top center",
         boxShadow: "0 0 60px -20px rgba(60,130,255,0.45)",
