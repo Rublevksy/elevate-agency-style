@@ -241,6 +241,13 @@ export function FiberField({ className }: { className?: string }) {
 
     const punchLaptop = () => {
       ctx.globalCompositeOperation = "destination-out";
+      // levý sloupec s textem zůstává čistý — světlo se do něj jen měkce vytrácí
+      const fade = ctx.createLinearGradient(0, 0, 720, 0);
+      fade.addColorStop(0, "rgba(0,0,0,1)");
+      fade.addColorStop(0.42, "rgba(0,0,0,0.86)");
+      fade.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = fade;
+      ctx.fillRect(-200, -200, 920, H + 400);
       ctx.filter = "blur(7px)";
       ctx.fillStyle = "rgba(0,0,0,1)";
       ctx.beginPath();
