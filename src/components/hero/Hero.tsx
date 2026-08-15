@@ -120,19 +120,18 @@ export function Hero() {
           ) : null}
         </div>
 
-        {/* 4 — real content */}
-        <div className="relative z-10 flex h-full flex-col justify-end">
-
-
+        {/* 4 — real content: editorial column on the left ~38 % of the stage */}
+        <div className="relative z-10 h-full">
           <div
-            className="container-luxe pb-[16vh]"
+            className="absolute bottom-[16vh] left-6 w-[86%] md:left-[6.5%] md:w-[40%]"
             style={{
               transform: "translate3d(0, calc(var(--hp) * -6%), 0)",
               opacity: "calc(1 - var(--hp) * 0.85)",
               willChange: "transform, opacity",
             }}
           >
-            <div className="relative max-w-[38ch] pl-6 md:pl-8">
+            <div className="relative pl-6 md:pl-8">
+
               <span
                 aria-hidden="true"
                 className="absolute left-0 top-1 h-[calc(100%-0.5rem)] w-px"
