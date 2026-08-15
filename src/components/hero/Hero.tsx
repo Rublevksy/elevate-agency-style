@@ -179,9 +179,14 @@ export function Hero() {
           className="relative z-10 mx-auto flex h-full w-full max-w-[1536px] flex-col justify-between px-7 pb-[10vh] pt-8 md:px-12 md:pb-[9vh] lg:px-[6.4vw]"
           style={{ opacity: "calc(1 - var(--film-reveal, 0) * 0.92)" }}
         >
-          <Link to="/" aria-label="ELEVATE" className="w-fit transition-opacity hover:opacity-70">
-            <Logo className="h-5 w-auto md:h-6" />
-          </Link>
+          {pinned ? (
+            <Link to="/" aria-label="ELEVATE" className="w-fit transition-opacity hover:opacity-70">
+              <Logo className="h-5 w-auto md:h-6" />
+            </Link>
+          ) : (
+            <span aria-hidden className="block h-5 md:h-6" />
+          )}
+
 
           <div className="relative max-w-[590px] pl-6 md:pl-8">
             <span
