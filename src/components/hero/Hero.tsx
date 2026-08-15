@@ -1,15 +1,18 @@
 import { Link } from "@tanstack/react-router";
 import { useEffect } from "react";
 
-import heroMaster from "@/assets/elevate-hero.png.asset.json";
+import heroMaster from "@/assets/elevate-hero-master.png.asset.json";
 import { setCinematicActive } from "@/lib/cinematic-state";
-import { useT, type Lang } from "@/lib/i18n";
 
-const languages: Lang[] = ["CZ", "EN", "RU", "UA"];
+const services: { label: string; to: string; left: number; width: number }[] = [
+  { label: "Weby", to: "/services/web", left: 8.4, width: 3.5 },
+  { label: "E-shopy", to: "/services/eshop", left: 13.6, width: 5.4 },
+  { label: "Aplikace", to: "/services", left: 20.7, width: 6.0 },
+  { label: "Design", to: "/services/design", left: 28.3, width: 4.7 },
+  { label: "SEO", to: "/services", left: 34.5, width: 2.7 },
+];
 
 export function Hero() {
-  const { setLang } = useT();
-
   useEffect(() => {
     setCinematicActive(true);
     return () => setCinematicActive(false);
@@ -20,7 +23,7 @@ export function Hero() {
       <h1 className="sr-only">Digitální řešení, která posouvají vaše podnikání</h1>
       <img
         src={heroMaster.url}
-        alt="ELEVATE — digitální studio, MacBook a světelný portál"
+        alt="ELEVATE — digitální studio, MacBook ve světelné scéně"
         width={1536}
         height={1024}
         fetchPriority="high"
@@ -29,30 +32,23 @@ export function Hero() {
       />
 
       <nav aria-label="Hlavní navigace" className="absolute inset-0 z-10 hidden md:block">
-        <Link to="/" aria-label="ELEVATE — domů" className="hero-hotspot left-[3.8%] top-[2.2%] h-[5.3%] w-[11.4%]" />
-        <Link to="/projects" aria-label="Projekty" className="hero-hotspot left-[24.8%] top-[2.2%] h-[5.3%] w-[6.8%]" />
-        <Link to="/services" aria-label="Služby" className="hero-hotspot left-[32.6%] top-[2.2%] h-[5.3%] w-[6.6%]" />
-        <Link to="/pricing" aria-label="Ceník" className="hero-hotspot left-[40.5%] top-[2.2%] h-[5.3%] w-[5.8%]" />
-        <Link to="/about" aria-label="O nás" className="hero-hotspot left-[47.5%] top-[2.2%] h-[5.3%] w-[5.2%]" />
-        <Link to="/contact" aria-label="Kontakt" className="hero-hotspot left-[54%] top-[2.2%] h-[5.3%] w-[6.2%]" />
-        <Link to="/contact" aria-label="Začít projekt" className="hero-hotspot left-[79.7%] top-[2%] h-[5.6%] w-[12.3%]" />
-        {languages.map((language, index) => (
-          <button
-            key={language}
-            type="button"
-            aria-label={`Přepnout jazyk na ${language}`}
-            onClick={() => setLang(language)}
-            className="hero-hotspot top-[2.2%] h-[5.3%] w-[2.1%]"
-            style={{ left: `${69.1 + index * 2.4}%` }}
+        <Link to="/" aria-label="ELEVATE — domů" className="hero-hotspot left-[4.8%] top-[12.4%] h-[6.2%] w-[18.2%]" />
+        {services.map((service) => (
+          <Link
+            key={service.label}
+            to={service.to}
+            aria-label={service.label}
+            className="hero-hotspot top-[59.2%] h-[3%]"
+            style={{ left: `${service.left}%`, width: `${service.width}%` }}
           />
         ))}
+        <Link
+          to="/contact"
+          aria-label="Chci projekt"
+          className="hero-hotspot left-[8.4%] top-[36%] h-[17%] w-[28%]"
+        />
       </nav>
-
-      <Link
-        to="/contact"
-        aria-label="Chci projekt"
-        className="hero-hotspot z-10 left-[8.1%] top-[56.8%] h-[6.4%] w-[12.5%]"
-      />
     </section>
   );
 }
+

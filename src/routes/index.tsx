@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import heroMaster from "@/assets/elevate-hero.png.asset.json";
+import heroMaster from "@/assets/elevate-hero-master.png.asset.json";
 
 import { Hero } from "@/components/hero/Hero";
 import { ServiceStage } from "@/components/services/ServiceStage";
