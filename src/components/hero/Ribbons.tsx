@@ -283,8 +283,8 @@ export function RibbonField({
         baseOpacity: opacity,
       });
       const bands: Band[] = [
-        band(6.5, HALO, 0.16 * spec.power, textures.soft),
-        band(1.9, BODY, 0.34 * spec.power, textures.soft),
+        band(6.5, HALO, 0.105 * spec.power, textures.soft),
+        band(1.9, BODY, 0.3 * spec.power, textures.soft),
       ];
       if (spec.white > 0) bands.push(band(0.34, CORE, 0.62 * spec.power * spec.white, textures.tight));
       return {
@@ -308,11 +308,12 @@ export function RibbonField({
 
   useFrame((state) => {
     const t = state.clock.elapsedTime;
-    const p = progress.current ?? 0;
-    const hp = clamp01(p / SERVICES_FROM);
-    const intensity = 1 + easeFilm(range(0.08, 0.6, hp)) * 0.95;
-    const converge = easeFilm(range(0.28, 0.82, hp));
-    const dissolve = easeFilm(range(0.84, 1, hp));
+    // scroll only softens the field as the hero leaves — no convergence, no cuts
+    const p = clamp01(progress.current ?? 0);
+    const intensity = 1;
+    const converge = 0;
+    const dissolve = easeFilm(range(0.35, 1, p)) * 0.85;
+
 
     smooth.current.x += (pointer.x - smooth.current.x) * 0.04;
     smooth.current.y += (pointer.y - smooth.current.y) * 0.04;
