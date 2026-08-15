@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
-import { DeviceFilm } from "@/components/devicefilm/DeviceFilm";
-import { CinematicServices } from "@/components/services/CinematicServices";
+import { HomeFilm } from "@/components/homefilm/HomeFilm";
+
 
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";

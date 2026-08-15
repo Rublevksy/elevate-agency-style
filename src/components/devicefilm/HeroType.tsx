@@ -14,7 +14,7 @@ export function HeroType({ progress }: { progress: React.RefObject<number> }) {
     let raf = 0;
     const tick = () => {
       const p = progress.current ?? 0;
-      const out = easeFilm(range(0.05, PHASE.APPROACH + 0.06, p));
+      const out = easeFilm(range(0.08, PHASE.APPROACH + 0.2, p));
       if (root.current) {
         root.current.style.opacity = String(1 - out);
         root.current.style.filter = `blur(${out * 12}px)`;
