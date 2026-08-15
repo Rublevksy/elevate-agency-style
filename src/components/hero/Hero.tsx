@@ -83,7 +83,7 @@ export function Hero() {
         />
 
         {/* soft edge blends so the artwork sits in the black space */}
-        <div aria-hidden className="hero-scrim-left pointer-events-none absolute inset-y-0 left-0 z-[2] w-full md:w-[46%]" />
+        <div aria-hidden className="hero-scrim-left pointer-events-none absolute inset-y-0 left-0 z-[2] w-full md:w-[36%]" />
         <div aria-hidden className="hero-scrim-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[14%]" />
 
         {/* real, clickable content aligned to the master composition */}
