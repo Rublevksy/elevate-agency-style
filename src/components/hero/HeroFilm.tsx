@@ -75,9 +75,10 @@ const SCENES: Scene[] = [
   {
     id: "seo",
     index: "04",
-    title: "SEO",
-    desc: "Technické SEO, rychlost, Core Web Vitals a průběžná optimalizace.",
-    points: ["SEO", "Rychlost", "Core Web Vitals", "Indexace"],
+    title: "Optimalizace",
+    desc: "SEO, rychlost, Core Web Vitals a průběžná optimalizace výkonu.",
+    points: ["SEO", "Rychlost", "Core Web Vitals", "Analytika"],
+
     to: "/audit",
     src: sceneSeo,
     art: "seo",
@@ -98,15 +99,24 @@ const SCENES: Scene[] = [
   },
 ];
 
-/** timeline: hold → the screen activates → the portal opens → the services */
-const ACTIVATE = 0.1;
-const PULL = 0.22;
-const SERVICES_FROM = 0.34;
+/**
+ * ONE timeline. `p` is the section's normalised scroll progress (0 → 1) and the
+ * hero act lives in the first `SERVICES_FROM` of it, so all beats below are
+ * expressed in hero-local time `hp = p / SERVICES_FROM`:
+ *
+ *   0.00 – 0.20  hero holds, the user reads it
+ *   0.20 – 0.45  the camera approaches the display
+ *   0.32 – 0.64  the portal forms and opens behind the screen
+ *   0.50 – 0.84  UI is extracted out of the portal
+ *   0.62 – 0.96  the device dissolves into light, off frame
+ *   0.96 – 1.00  the Web service is fully stable
+ */
+const SERVICES_FROM = 0.26;
 /** share of a service unit spent transforming (rest is a stable hold) */
-const TRANSITION = 0.42;
+const TRANSITION = 0.4;
 
-const HERO_VH = 150;
-const SCENE_VH = 92;
+const HERO_VH = 165;
+const SCENE_VH = 96;
 
 function stageOf(p: number, count: number) {
   const raw = Math.min(count - 1, Math.max(0, range(SERVICES_FROM, 1, p) * (count - 1)));
@@ -116,6 +126,7 @@ function stageOf(p: number, count: number) {
   const t = clamp01((fr - start) / TRANSITION);
   return i + smoothstep(0, 1, t);
 }
+
 
 export function HeroFilm() {
   const wrap = useRef<HTMLDivElement>(null);
@@ -152,48 +163,63 @@ export function HeroFilm() {
       smooth.x += (raw.x - smooth.x) * 0.07;
       smooth.y += (raw.y - smooth.y) * 0.07;
 
-      // 01 — the device: settle, then commit forward through the display
-      const settle = easeFilm(range(0, ACTIVATE, p));
-      const pull = easeFilm(range(PULL, SERVICES_FROM, p));
-      const through = easeFilm(range(PULL + 0.05, SERVICES_FROM, p));
+      // hero-local time — every beat below is a slice of the hero act
+      const hp = clamp01(p / SERVICES_FROM);
+
+      // 01 — the device: hold, approach the display, then pass through it
+      const settle = easeFilm(range(0, 0.14, hp));
+      const approach = easeFilm(range(0.2, 0.62, hp));
+      const pass = easeFilm(range(0.58, 0.96, hp));
+      /** the device sits right of centre in the hero; the camera re-centres on it */
+      const recentre = isMobile ? 0 : -approach * 19 * (window.innerWidth / 100);
 
       if (lid.current) {
         lid.current.style.transform = `rotateX(${lerp(9, -1.5, settle).toFixed(2)}deg)`;
       }
       if (stage.current) {
-        const sc = lerp(isMobile ? 0.9 : 0.92, isMobile ? 1.8 : 2.4, pull);
-        const ry = smooth.x * (1 - pull) * 7 * cursor;
-        const rx = -smooth.y * (1 - pull) * 4 * cursor;
-        stage.current.style.transform = `translate3d(0, ${(pull * 16 * vh).toFixed(2)}px, 0) scale(${sc.toFixed(4)}) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
+        const sc = lerp(isMobile ? 0.9 : 0.94, isMobile ? 1.3 : 1.5, approach) + pass * (isMobile ? 1.1 : 1.5);
+        const damp = 1 - approach;
+        const ry = smooth.x * damp * 7 * cursor;
+        const rx = -smooth.y * damp * 4 * cursor;
+        stage.current.style.transform = `translate3d(${recentre.toFixed(2)}px, ${((approach * 4 + pass * 14) * vh).toFixed(2)}px, 0) scale(${sc.toFixed(4)}) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg)`;
       }
       // the chassis dissolves as the camera passes the glass — only light remains
-      if (chassis.current) chassis.current.style.opacity = (1 - pull).toFixed(3);
-      if (screen.current) screen.current.style.opacity = (1 - through).toFixed(3);
+      if (chassis.current) chassis.current.style.opacity = (1 - pass).toFixed(3);
+      if (screen.current) screen.current.style.opacity = (1 - pass * 1.05).toFixed(3);
       if (deviceLayer.current) {
-        deviceLayer.current.style.opacity = (1 - through * 0.98).toFixed(3);
-        deviceLayer.current.style.visibility = through >= 0.995 ? "hidden" : "visible";
+        deviceLayer.current.style.opacity = (1 - pass).toFixed(3);
+        deviceLayer.current.style.visibility = pass >= 0.995 ? "hidden" : "visible";
       }
 
-      // 02 — the portal: an energy field forms on the display plane and opens
-      const form = easeFilm(range(ACTIVATE, PULL + 0.04, p));
+      // 02 — the portal: light first, then the gate opens behind the display
+      const form = easeFilm(range(0.26, 0.62, hp));
+      const open = easeFilm(range(0.4, 0.92, hp));
+      // once the first service is stable the gate has done its job
+      const settled = easeFilm(range(0.9, 1, hp));
       if (portal.current) {
         portal.current.style.setProperty("--form", form.toFixed(3));
-        portal.current.style.setProperty("--open", pull.toFixed(3));
-      }
-      if (bloom.current) {
-        bloom.current.style.opacity = (form * 0.35 + pull * 0.65).toFixed(3);
-        bloom.current.style.transform = `translate3d(-50%, -50%, 0) scale(${(0.35 + form * 0.5 + pull * 1.5).toFixed(3)})`;
-      }
-      if (type.current) {
-        const out = easeFilm(range(ACTIVATE, PULL, p));
-        type.current.style.opacity = (1 - out).toFixed(3);
-        type.current.style.transform = `translate3d(${(-out * 4).toFixed(2)}vw, 0, 0)`;
+        portal.current.style.setProperty("--open", open.toFixed(3));
+        portal.current.style.opacity = (1 - settled * 0.9).toFixed(3);
+        portal.current.style.transform = `translate3d(${recentre.toFixed(2)}px, 0, 0)`;
       }
 
-      // 03 — the services rise out of the portal
+      if (bloom.current) {
+        bloom.current.style.opacity = ((form * 0.3 + open * 0.5) * (1 - settled * 0.72)).toFixed(3);
+        bloom.current.style.transform = `translate3d(-50%, -50%, 0) scale(${(0.35 + form * 0.5 + open * 1.4).toFixed(3)})`;
+      }
+      if (type.current) {
+        const out = easeFilm(range(0.18, 0.44, hp));
+        type.current.style.opacity = (1 - out).toFixed(3);
+        type.current.style.transform = `translate3d(${(-out * 4).toFixed(2)}vw, 0, 0)`;
+        type.current.style.visibility = out >= 0.995 ? "hidden" : "visible";
+      }
+
+      // 03 — the services are extracted out of the portal
       const s = stageOf(p, SCENES.length);
-      const started = p > SERVICES_FROM - 0.06;
-      const entry = easeFilm(range(SERVICES_FROM - 0.06, SERVICES_FROM + 0.01, p));
+      /** the first scene is pulled out of the gate while the device is still there */
+      const extract = easeFilm(range(0.5, 0.94, hp));
+      const started = hp > 0.48;
+      const copyIn = easeFilm(range(0.74, 1, hp));
 
       sceneRefs.current.forEach((el, i) => {
         if (!el) return;
@@ -207,44 +233,53 @@ export function HeroFilm() {
           }
           return;
         }
+        const first = i === 0;
         el.style.visibility = "visible";
-        el.style.opacity = (clamp01(1 - away) * entry).toFixed(3);
+        el.style.opacity = (clamp01(1 - away) * (first ? extract : 1)).toFixed(3);
         el.style.pointerEvents = away < 0.25 ? "auto" : "none";
 
         const near = 1 - away;
-        const emerge = i === 0 ? 1 - entry : 0;
+        // 1 → still inside the portal, 0 → settled in the frame
+        const emerge = first ? 1 - extract : 0;
         const text = el.querySelector<HTMLElement>("[data-layer='text']");
         const fig = el.querySelector<HTMLElement>("[data-layer='figure']");
         const art = el.querySelector<HTMLElement>("[data-layer='art']");
         const glow = el.querySelector<HTMLElement>("[data-layer='glow']");
 
         if (text) {
-          text.style.opacity = clamp01(1 - away * 2.6).toFixed(3);
-          text.style.transform = `translate3d(${(smooth.x * 4 * cursor).toFixed(2)}px, ${(-d * 4 * vh + emerge * 4 * vh).toFixed(2)}px, 0)`;
+          text.style.opacity = (clamp01(1 - away * 2.6) * (first ? copyIn : 1)).toFixed(3);
+          text.style.transform = `translate3d(${(smooth.x * 4 * cursor).toFixed(2)}px, ${(-d * 4 * vh + emerge * 3 * vh).toFixed(2)}px, 0)`;
         }
         if (fig) {
-          fig.style.transform = `translate3d(${(smooth.x * 8 * cursor - d * 3 * vh).toFixed(2)}px, ${(-d * 5 * vh + smooth.y * 5 * cursor).toFixed(2)}px, 0) scale(${(0.95 + near * 0.05 - emerge * 0.06).toFixed(4)})`;
+          fig.style.opacity = (first ? clamp01(extract * 1.25) : 1).toFixed(3);
+          fig.style.transform = `translate3d(${(smooth.x * 8 * cursor - d * 3 * vh - emerge * 4 * vh).toFixed(2)}px, ${(-d * 5 * vh + smooth.y * 5 * cursor + emerge * 3 * vh).toFixed(2)}px, 0) scale(${(0.95 + near * 0.05 - emerge * 0.22).toFixed(4)})`;
         }
         if (glow) {
           glow.style.opacity = (0.3 + near * 0.7).toFixed(3);
           glow.style.transform = `translate3d(-50%, calc(-50% + ${(-d * 4 * vh).toFixed(2)}px), 0) scale(${(0.92 + near * 0.12).toFixed(3)})`;
         }
         if (art) {
+          // the whole composition is thrown out of the gate: 0.7 → 1.0
+          art.style.transform = `scale(${(1 - emerge * 0.3).toFixed(4)})`;
           const floats = art.querySelectorAll<HTMLElement>("[data-float]");
-          floats.forEach((f) => {
+          floats.forEach((f, fi) => {
             const depth = Number(f.dataset.depth ?? 0.5);
-            const enter = clamp01(1 - away * 1.6);
+            // staggered ejection — near objects arrive first, deep ones trail
+            const shot = first ? clamp01((extract - fi * 0.05) / 0.6) : 1;
+            const enter = clamp01(1 - away * 1.6) * shot;
             const mx = smooth.x * (4 + depth * 14) * cursor;
             const my = smooth.y * (2 + depth * 8) * cursor;
             const sy = -d * (4 + depth * 12) * vh;
-            f.style.transform = `translate3d(${(mx - d * depth * 14).toFixed(2)}px, ${(my + sy + emerge * depth * 40).toFixed(2)}px, 0) scale(${(0.96 + enter * 0.04 - emerge * 0.08).toFixed(4)})`;
-            f.style.opacity = (enter * (1 - emerge)).toFixed(3);
+            const eject = (1 - shot) * (10 + depth * 26);
+            f.style.transform = `translate3d(${(mx - d * depth * 14 - eject * 1.4).toFixed(2)}px, ${(my + sy + eject).toFixed(2)}px, 0) scale(${(0.7 + shot * 0.3 + enter * 0.02).toFixed(4)})`;
+            f.style.opacity = enter.toFixed(3);
           });
         }
       });
 
-      const next = started ? Math.min(SCENES.length - 1, Math.round(s)) : -1;
+      const next = started && extract > 0.35 ? Math.min(SCENES.length - 1, Math.round(s)) : -1;
       setActive((prev) => (prev === next ? prev : next));
+
     };
 
     const stop = startFrameLoop(tick, wrap.current);
@@ -400,7 +435,9 @@ export function HeroFilm() {
                   data-layer="art"
                   aria-hidden
                   className="pointer-events-none absolute inset-0 hidden will-change-transform md:block"
+                  style={{ transformOrigin: "18% 46%" }}
                 >
+
                   <SceneArt kind={s.art} />
                 </div>
                 <div
