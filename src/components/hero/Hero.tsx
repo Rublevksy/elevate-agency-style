@@ -119,11 +119,11 @@ export function Hero() {
       <div className="relative mx-auto w-full max-w-[1536px] px-6 md:px-10">
         <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
           {/* ————— editorial copy ————— */}
-          <div ref={copyRef} className="relative z-20 py-20 will-change-transform lg:py-28">
+          <div ref={copyRef} className="relative z-20 py-20 pl-6 will-change-transform lg:py-28 lg:pl-10">
             {/* thin vertical blue light accent */}
             <span
               aria-hidden
-              className="absolute -left-4 top-[6%] hidden h-[76%] w-px md:block"
+              className="absolute left-0 top-[8%] hidden h-[74%] w-px md:block"
               style={{
                 background:
                   "linear-gradient(to bottom, rgba(45,116,255,0) 0%, rgba(120,180,255,0.9) 42%, rgba(45,116,255,0.55) 58%, rgba(45,116,255,0) 100%)",
@@ -170,7 +170,7 @@ export function Hero() {
           <div className="relative">
             <div
               ref={deviceRef}
-              className="relative z-10 ml-auto aspect-[16/10] w-[min(106%,900px)] will-change-transform"
+              className="relative z-10 ml-auto aspect-[16/10] w-[min(112%,960px)] translate-x-[3%] translate-y-[4%] will-change-transform"
             >
               {heavy ? (
                 <Suspense
@@ -198,7 +198,17 @@ export function Hero() {
                 />
               )}
 
-              {/* floor reflection + contact shadow */}
+              {/* floor reflection: mirrored device, faded into the glossy floor */}
+              <img
+                aria-hidden
+                src={deviceAsset.url}
+                alt=""
+                className="pointer-events-none absolute inset-x-0 top-[97%] h-[62%] w-full -scale-y-100 object-contain opacity-[0.13] blur-[6px]"
+                style={{ maskImage: "linear-gradient(to top, transparent 12%, black 92%)", WebkitMaskImage: "linear-gradient(to top, transparent 12%, black 92%)" }}
+                draggable={false}
+              />
+
+              {/* rim glow + contact shadow */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-x-[16%] -bottom-[6%] h-[18%] opacity-45 blur-[22px]"

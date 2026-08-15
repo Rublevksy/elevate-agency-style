@@ -45,7 +45,7 @@ function Model() {
 
   return (
     // strong 3/4 rear angle, as in the reference art direction
-    <group scale={scale} rotation={[0.05, Math.PI * 0.72, 0]}>
+    <group scale={scale} rotation={[0.02, Math.PI * 0.7, 0]}>
       <group position={[-center.x, -center.y, -center.z]}>
         <primitive object={root} />
       </group>
@@ -63,19 +63,20 @@ export default function Laptop3D() {
     <Canvas
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      camera={{ fov: 24, position: [0, 1.05, 6.4] }}
+      camera={{ fov: 24, position: [0, 0.72, 6.4] }}
       style={{ width: "100%", height: "100%", background: "transparent" }}
     >
-      <ambientLight intensity={0.24} />
+      <ambientLight intensity={0.34} />
       {/* key */}
-      <directionalLight position={[-3, 4, 5]} intensity={1.1} color="#cfe0ff" />
+      <directionalLight position={[-3, 4, 5]} intensity={1.5} color="#cfe0ff" />
+      <directionalLight position={[-1.5, 2.5, 4]} intensity={1.8} color="#dce8ff" />
       {/* blue rim from behind, matching the ribbon field */}
       <directionalLight position={[4, 1.5, -3.5]} intensity={3.2} color="#2f7bff" />
       <directionalLight position={[-4.5, 0.8, -3]} intensity={1.9} color="#3b82f6" />
       <spotLight position={[0, 5, 2]} angle={0.75} penumbra={1} intensity={1} color="#ffffff" />
       <Suspense fallback={null}>
         <Model />
-        <Environment preset="night" environmentIntensity={0.4} />
+        <Environment preset="night" environmentIntensity={0.65} />
       </Suspense>
     </Canvas>
   );
