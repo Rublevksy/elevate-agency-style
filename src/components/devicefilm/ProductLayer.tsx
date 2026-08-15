@@ -45,16 +45,7 @@ const PRODUCTS: Product[] = [
     Body: CommerceComposition,
   },
   {
-    id: "product",
-    label: "Digitální produkt",
-    to: { x: 13, y: -19, z: -160, ry: -9, rx: 4 },
-    from: PHASE.PRODUCTS_IN + 0.06,
-    par: 0.35,
-    w: "26vw",
-    h: "17vw",
-    Body: ProductComposition,
-  },
-  {
+
     id: "brand",
     label: "Branding",
     to: { x: -28, y: 22, z: -90, ry: 12, rx: -3 },
