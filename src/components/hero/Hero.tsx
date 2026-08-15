@@ -117,7 +117,7 @@ export function Hero() {
       />
 
       <div className="relative mx-auto w-full max-w-[1536px] px-6 md:px-10">
-        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.62fr)_minmax(0,1.38fr)]">
+        <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,0.72fr)_minmax(0,1.28fr)]">
           {/* ————— editorial copy ————— */}
           <div ref={copyRef} className="relative z-20 py-20 will-change-transform lg:py-28">
             {/* thin vertical blue light accent */}
@@ -131,7 +131,7 @@ export function Hero() {
               }}
             />
 
-            <h1 className="text-[clamp(1.75rem,2.75vw,2.6rem)] font-extralight uppercase leading-[1.34] tracking-[0.1em] text-foreground">
+            <h1 className="text-[clamp(1.4rem,2.15vw,2.15rem)] font-extralight uppercase leading-[1.4] tracking-[0.07em] whitespace-nowrap text-foreground">
               <span className="block">Digitální řešení,</span>
               <span className="block">která posouvají</span>
               <span className="block text-primary" style={{ textShadow: "0 0 40px rgba(45,116,255,0.55)" }}>
@@ -170,7 +170,7 @@ export function Hero() {
           <div className="relative">
             <div
               ref={deviceRef}
-              className="relative z-10 ml-auto aspect-[16/10] w-[min(112%,1000px)] will-change-transform"
+              className="relative z-10 ml-auto aspect-[16/10] w-[min(106%,900px)] will-change-transform"
             >
               {heavy ? (
                 <Suspense

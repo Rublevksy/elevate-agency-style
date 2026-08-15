@@ -16,7 +16,7 @@ function Model() {
     const box = new THREE.Box3().setFromObject(root);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
-    const scale = 2.6 / Math.max(size.x, 1e-6);
+    const scale = 2.2 / Math.max(size.x, 1e-6);
 
     root.traverse((o) => {
       const mesh = o as THREE.Mesh;
@@ -27,11 +27,12 @@ function Model() {
       ) as THREE.MeshStandardMaterial[];
       for (const m of list) {
         if (!m || !("metalness" in m)) continue;
-        if (m.metalness > 0.35) {
-          // Space Black aluminium
-          m.color = new THREE.Color("#1e222a");
-          m.metalness = 0.9;
-          m.roughness = 0.34;
+        const dark = m.color ? m.color.getHex() < 0x151515 : false;
+        if (m.metalness > 0.2 || dark) {
+          // Space Black aluminium — keeps a readable sheen on the lid back
+          m.color = new THREE.Color("#2a2f38");
+          m.metalness = 0.82;
+          m.roughness = 0.3;
         }
         m.needsUpdate = true;
       }
@@ -44,7 +45,7 @@ function Model() {
 
   return (
     // strong 3/4 rear angle, as in the reference art direction
-    <group scale={scale} rotation={[0.06, Math.PI * 0.78, 0]}>
+    <group scale={scale} rotation={[0.05, Math.PI * 0.72, 0]}>
       <group position={[-center.x, -center.y, -center.z]}>
         <primitive object={root} />
       </group>
@@ -62,7 +63,7 @@ export default function Laptop3D() {
     <Canvas
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      camera={{ fov: 26, position: [0, 0.85, 6.2] }}
+      camera={{ fov: 24, position: [0, 1.05, 6.4] }}
       style={{ width: "100%", height: "100%", background: "transparent" }}
     >
       <ambientLight intensity={0.24} />
