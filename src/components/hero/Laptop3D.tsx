@@ -47,13 +47,8 @@ function findLid(root: THREE.Object3D): Lid | null {
 }
 
 function Model() {
-  const prepared = useMemo(() => {
-    const gltf = useGLTF.get?.(glbAsset.url);
-    return gltf;
-  }, []);
-  void prepared;
-
   const { scene } = useGLTF(glbAsset.url);
+
 
   const built = useMemo(() => {
     const root = scene.clone(true);
