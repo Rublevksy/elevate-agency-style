@@ -132,29 +132,15 @@
       linear-gradient(90deg, oklch(1 0 0 / 0.04) 1px, transparent 1px);
     background-size: 48px 48px;
   }
-  .hero-master {
-    transform: translateY(-50%)
-      translate3d(calc(var(--hero-px, 0) * -8px), calc(var(--hero-py, 0) * -6px + var(--hero-scroll, 0) * -4vh), 0)
-      scale(calc(1 + var(--hero-scroll, 0) * 0.05));
-    transition: transform 600ms cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: transform;
+  .hero-hotspot {
+    position: absolute;
+    display: block;
+    border-radius: 0.25rem;
+    background: transparent;
   }
-  .hero-scrim-left {
-    background: linear-gradient(
-      to right,
-      var(--background) 0%,
-      var(--background) 40%,
-      color-mix(in oklab, var(--background) 86%, transparent) 70%,
-      transparent 100%
-    );
-  }
-  .hero-scrim-bottom {
-    background: linear-gradient(to top, var(--background) 0%, color-mix(in oklab, var(--background) 60%, transparent) 60%, transparent 100%);
-  }
-  @media (max-width: 767px) {
-    .hero-scrim-left {
-      background: linear-gradient(to bottom, var(--background) 0%, color-mix(in oklab, var(--background) 88%, transparent) 46%, color-mix(in oklab, var(--background) 40%, transparent) 72%, transparent 100%);
-    }
+  .hero-hotspot:focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
   }
 
   /* rare atmospheric events: a line draws itself, a point travels it, dust drifts */
