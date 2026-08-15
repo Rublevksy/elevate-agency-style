@@ -57,7 +57,6 @@ function Model() {
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     const scale = 2.5 / Math.max(size.x, 1e-6);
-    const lid = findLid(root);
 
     root.traverse((o) => {
       const mesh = o as THREE.Mesh;
@@ -92,7 +91,7 @@ function Model() {
       }
     });
 
-    return { root, scale, center, lid };
+    return { root, scale, center };
   }, [scene]);
 
   const { root, scale, center } = built;
