@@ -72,7 +72,7 @@ export function DeviceFilm() {
   }, [progress]);
 
   return (
-    <div ref={wrap} className="relative h-[250vh]">
+    <div ref={wrap} className="relative h-[380vh]">
       <div className="sticky top-0 h-[100svh] overflow-hidden">
         {/* refined technology environment: lighting only — the colour comes from
             the one continuous page environment underneath */}

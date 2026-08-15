@@ -102,6 +102,29 @@ const SCENES: Scene[] = [
 
 const CTA = "Detail služby";
 
+/** scroll distance per service — long enough for a real resting state */
+const VH_PER_SCENE = 190;
+/** share of each service's scroll unit spent transitioning (the rest is HOLD) */
+const TRANSITION = 0.34;
+
+const smoothstep = (t: number) => t * t * (3 - 2 * t);
+
+/**
+ * Map the raw 0→1 section progress onto a stage position where each service
+ * gets a long stable plateau and only a short window is used to cross-fade
+ * into the next one. Purely a function of progress, so scrubbing backwards
+ * reverses the film exactly.
+ */
+function holdStage(p: number, count: number) {
+  const raw = Math.min(count - 1, Math.max(0, p * (count - 1)));
+  const i = Math.min(count - 2, Math.floor(raw));
+  const fr = raw - i;
+  const start = (1 - TRANSITION) / 2;
+  const t = Math.min(1, Math.max(0, (fr - start) / TRANSITION));
+  return i + smoothstep(t);
+}
+
+
 
 /* ------------------------------------------------------------------ */
 /* shared environment                                                  */
@@ -199,7 +222,7 @@ export function CinematicServices() {
         const mobile = window.innerWidth < 768;
         const par = mobile ? 0.3 : 1;
         const cursor = mobile ? 0 : 1;
-        const stage = p * (SCENES.length - 1);
+        const stage = holdStage(p, SCENES.length);
         const vh = window.innerHeight / 100;
 
         sceneRefs.current.forEach((el, i) => {
@@ -259,7 +282,7 @@ export function CinematicServices() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative" style={{ height: `${SCENES.length * 100}vh` }}>
+    <section ref={sectionRef} className="relative" style={{ height: `${SCENES.length * VH_PER_SCENE}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden">
         <Depth progress={progress} />
 
@@ -298,7 +321,7 @@ export function CinematicServices() {
               className="absolute inset-0 z-10 flex items-center"
               style={{ opacity: i === 0 ? 1 : 0, pointerEvents: "none" }}
             >
-              <Stage scene={s} eager={i === 0} />
+              <Stage scene={s} />
             </div>
           ))}
         </div>
@@ -307,7 +330,7 @@ export function CinematicServices() {
   );
 }
 
-function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
+function Stage({ scene }: { scene: Scene }) {
   return (
     <div className="container-luxe grid w-full items-center gap-6 md:grid-cols-[0.85fr_1.15fr] md:gap-10">
       {/* copy */}
@@ -367,7 +390,7 @@ function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
             <img
               src={scene.src}
               alt=""
-              loading={eager ? "eager" : "lazy"}
+              loading="eager"
               decoding="async"
               className="h-[40vh] w-auto max-w-none md:h-[var(--fh)]"
               style={
