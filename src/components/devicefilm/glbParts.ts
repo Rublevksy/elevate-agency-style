@@ -114,7 +114,7 @@ export function measureMacbook(scene: Object3D): MacbookParts {
   const minY = Math.min(...baseCorners.map((v) => v.y));
   const offset = new Vector3(0, -minY, -hinge.z - DEVICE.D / 2);
 
-  return {
+  const parts: MacbookParts = {
     base,
     lid,
     panel,
@@ -128,4 +128,7 @@ export function measureMacbook(scene: Object3D): MacbookParts {
     openDeg,
     offset,
   };
+  measured.set(scene, parts);
+  return parts;
 }
+
