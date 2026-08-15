@@ -10,7 +10,6 @@ import { ProcessFilm } from "@/components/process/ProcessFilm";
 import { TrustBar } from "@/components/sections/TrustBar";
 import { CINEMATIC } from "@/lib/cinematic-copy";
 import { useT } from "@/lib/i18n";
-import aMarkAsset from "@/assets/elevate-a-mark.png.asset.json";
 
 
 export const Route = createFileRoute("/")({
@@ -27,7 +26,6 @@ export const Route = createFileRoute("/")({
     ],
     links: [
       { rel: "canonical", href: "https://elevateit.cz/" },
-      { rel: "preload", as: "image", href: aMarkAsset.url },
     ],
 
   }),

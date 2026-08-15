@@ -1,10 +1,9 @@
-import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useEffect, useRef } from "react";
 
+import laptopAsset from "@/assets/elevate-laptop.webp.asset.json";
+import markAsset from "@/assets/elevate-a-mark.png.asset.json";
 import { RibbonField } from "@/components/hero/RibbonField";
-import { prefersReducedMotion } from "@/lib/raf";
-
-const Laptop3D = lazy(() => import("@/components/hero/Laptop3D"));
 
 const SERVICES = [
   { label: "Weby", to: "/services/web" as const },
@@ -14,125 +13,82 @@ const SERVICES = [
   { label: "SEO", to: "/services/branding" as const },
 ];
 
-const PAGES = ["01", "02", "03", "04"];
-
-/**
- * ELEVATE HERO — a real, interactive cinematic scene.
- *
- * Layers, back to front: near-black void → procedural light ribbons →
- * the real MacBook GLB on a glossy reflective floor → foreground ribbons at low
- * opacity → live HTML typography on the left. Pointer drives parallax, scroll
- * drives a slow cinematic exit of the machine. Nothing here is a screenshot.
- */
 export function Hero() {
-  const [heavy, setHeavy] = useState(false);
-  const copy = useRef<HTMLDivElement>(null);
+  const deviceRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (typeof window === "undefined") return;
-    if (window.innerWidth < 768 || prefersReducedMotion()) return;
-    const id = window.setTimeout(() => setHeavy(true), 220);
-    return () => window.clearTimeout(id);
-  }, []);
-
-  // gentle scroll fade of the copy — no scroll-jacking, purely opacity/translate
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const el = copy.current;
-    if (!el) return;
-    const on = () => {
-      const p = Math.min(1, Math.max(0, window.scrollY / 700));
-      el.style.opacity = String(1 - p * 0.95);
-      el.style.transform = `translate3d(0, ${(-p * 60).toFixed(1)}px, 0)`;
+    const device = deviceRef.current;
+    if (!device || window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const progress = Math.min(1, Math.max(0, window.scrollY / 720));
+      device.style.transform = `translate3d(${(progress * 5).toFixed(2)}vw, ${(progress * 13).toFixed(2)}vh, 0) rotate(${(progress * 2).toFixed(2)}deg) scale(${(1 - progress * 0.05).toFixed(3)})`;
+      device.style.opacity = String(1 - progress * 0.82);
     };
-    on();
-    window.addEventListener("scroll", on, { passive: true });
-    return () => window.removeEventListener("scroll", on);
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   return (
-    <section
-      aria-label="ELEVATE — digitální studio Praha"
-      className="relative isolate flex min-h-[100svh] w-full items-center overflow-hidden bg-[#000103]"
-    >
-      {/* ————— background ribbons (far + mid) ————— */}
-      <RibbonField layer="back" className="-z-20 opacity-90" />
+    <section aria-label="ELEVATE — digitální studio Praha" className="relative isolate min-h-[100svh] overflow-hidden bg-[#010204]">
+      <RibbonField />
 
-      {/* ————— the machine, right side of the frame ————— */}
-      <div className="pointer-events-none absolute inset-y-0 right-[-6%] -z-10 w-[74%] md:w-[62%] lg:w-[58%]">
-        {heavy && (
-          <Suspense fallback={null}>
-            <Laptop3D />
-          </Suspense>
-        )}
+      <div aria-hidden className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_54%_72%_at_76%_55%,rgba(5,18,42,0.34),transparent_74%)]" />
+      <div aria-hidden className="pointer-events-none absolute inset-y-0 left-0 z-[2] w-[58%] bg-[linear-gradient(90deg,#010204_0%,rgba(1,2,4,0.97)_34%,rgba(1,2,4,0.64)_70%,transparent_100%)]" />
+
+      <div ref={deviceRef} className="pointer-events-none absolute bottom-[3.8vh] right-[1%] z-[3] w-[59vw] max-w-[940px] min-w-[660px] origin-bottom-right will-change-transform">
+        <div aria-hidden className="absolute bottom-[7%] left-[8%] right-[3%] h-[13%] rounded-[50%] bg-primary/20 blur-3xl" />
+        <img
+          src={laptopAsset.url}
+          alt="Space Black MacBook zobrazený zezadu v tříčtvrtečním pohledu"
+          width={780}
+          height={514}
+          fetchPriority="high"
+          decoding="async"
+          className="relative h-auto w-full object-contain drop-shadow-[0_30px_42px_rgba(0,0,0,0.95)]"
+        />
+        <img src={markAsset.url} alt="" aria-hidden className="absolute right-[27.8%] top-[43%] h-auto w-[3.7%] opacity-90 drop-shadow-[0_0_12px_rgba(34,112,255,0.7)]" />
+        <div aria-hidden className="mx-auto -mt-[3.4%] h-[10vh] w-[76%] origin-top scale-y-[-1] bg-[linear-gradient(to_bottom,rgba(66,142,255,0.13),transparent_75%)] opacity-60 blur-xl" />
       </div>
 
-      {/* ————— foreground ribbons crossing in front, very low depth ————— */}
-      <RibbonField layer="front" className="z-10 opacity-[0.38] mix-blend-screen" />
+      <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-[1536px] items-end px-7 pb-[9vh] pt-32 md:px-12 lg:px-[6.4vw] lg:pb-[8.8vh]">
+        <div className="relative w-full max-w-[590px] pl-6 md:pl-8">
+          <span aria-hidden className="absolute bottom-[4%] left-0 top-[3%] hidden w-px bg-[linear-gradient(to_bottom,transparent,#82b6ff_35%,#236fff_64%,transparent)] shadow-[0_0_18px_rgba(43,118,255,0.8)] md:block" />
 
-      {/* left vignette preserves the black negative space behind the type */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-10"
-        style={{
-          background:
-            "radial-gradient(120% 100% at -4% 46%, rgba(0,1,3,0.98) 0%, rgba(0,1,3,0.86) 26%, rgba(0,1,3,0.35) 52%, rgba(0,1,3,0) 70%)",
-        }}
-      />
-      {/* top + bottom cinematic falloff */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 z-10 h-[26vh]"
-        style={{ background: "linear-gradient(to bottom, rgba(0,1,3,0.92), rgba(0,1,3,0))" }}
-      />
-
-      <div className="relative z-20 mx-auto flex w-full max-w-[1536px] items-end px-6 pb-[12vh] pt-[46vh] md:px-12 md:pb-[14vh] md:pt-[42vh]">
-        <div ref={copy} className="relative max-w-[40rem] pl-5 md:pl-8 will-change-transform">
-          {/* thin vertical blue light accent */}
-          <span
-            aria-hidden
-            className="absolute left-0 top-[4%] hidden h-[74%] w-px md:block"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(45,116,255,0) 0%, rgba(150,199,255,0.95) 40%, rgba(45,116,255,0.5) 62%, rgba(45,116,255,0) 100%)",
-              boxShadow: "0 0 28px 3px rgba(45,116,255,0.5)",
-            }}
-          />
-
-          <h1 className="text-[clamp(1.2rem,1.95vw,2rem)] font-extralight uppercase leading-[1.45] tracking-[0.09em] text-foreground md:whitespace-nowrap">
+          <h1 className="text-[clamp(1.2rem,1.85vw,1.78rem)] font-extralight uppercase leading-[1.48] tracking-[0.09em] text-foreground">
             <span className="block">Digitální řešení,</span>
             <span className="block">která posouvají</span>
-            <span className="block text-primary" style={{ textShadow: "0 0 42px rgba(45,116,255,0.6)" }}>
-              vaše podnikání
-            </span>
+            <span className="block text-primary drop-shadow-[0_0_20px_rgba(40,114,255,0.48)]">vaše podnikání</span>
           </h1>
 
-          <ul className="mt-10 flex flex-wrap items-center gap-x-3 gap-y-2 text-[10px] uppercase tracking-[0.32em] text-muted-foreground">
-            {SERVICES.map((s, i) => (
-              <li key={s.label} className="flex items-center gap-3">
-                <Link to={s.to} className="transition-colors duration-300 hover:text-foreground">
-                  {s.label}
-                </Link>
-                {i < SERVICES.length - 1 && <span className="text-primary/70">·</span>}
+          <ul className="mt-8 flex flex-wrap items-center gap-x-3 gap-y-2 text-[9px] uppercase tracking-[0.3em] text-muted-foreground">
+            {SERVICES.map((service, index) => (
+              <li key={service.label} className="flex items-center gap-3">
+                <Link to={service.to} className="transition-colors hover:text-foreground">{service.label}</Link>
+                {index < SERVICES.length - 1 && <span className="text-primary">·</span>}
               </li>
             ))}
           </ul>
 
-          <ol className="mt-14 flex items-center gap-5 text-[10px] tracking-[0.34em]">
-            {PAGES.map((n, i) => (
-              <li key={n} className={i === 0 ? "text-primary" : "text-muted-foreground/40"}>
-                {i === 0 ? (
-                  <a href="#services" className="transition-colors hover:text-primary">
-                    {n}
-                  </a>
-                ) : (
-                  n
-                )}
+          <ol className="mt-12 flex gap-5 text-[9px] tracking-[0.3em]">
+            {["01", "02", "03", "04"].map((number, index) => (
+              <li key={number} className={index === 0 ? "text-primary" : "text-muted-foreground/35"}>
+                {index === 0 ? <a href="#services">{number}</a> : number}
               </li>
             ))}
           </ol>
         </div>
       </div>
+
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-[8] h-20 bg-gradient-to-t from-background to-transparent" />
     </section>
   );
 }
