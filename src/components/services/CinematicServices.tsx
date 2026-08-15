@@ -6,6 +6,7 @@ import sceneEshop from "@/assets/scene-eshop.png.asset.json";
 import sceneApps from "@/assets/scene-apps.png.asset.json";
 import sceneSeo from "@/assets/scene-seo.png.asset.json";
 import sceneDesign from "@/assets/scene-design.png.asset.json";
+import { ServiceElements } from "./ServiceElements";
 
 /**
  * ENTER THE ELEVATE STUDIO — one continuous scroll-driven stage where each
