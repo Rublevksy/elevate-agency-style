@@ -132,6 +132,19 @@
       linear-gradient(90deg, oklch(1 0 0 / 0.04) 1px, transparent 1px);
     background-size: 48px 48px;
   }
+  .hero-device-light {
+    background:
+      radial-gradient(ellipse 52% 58% at 79% 47%, color-mix(in oklab, var(--surface-elevated) 58%, transparent) 0%, transparent 72%),
+      radial-gradient(ellipse 34% 24% at 82% 72%, color-mix(in oklab, var(--foreground) 5%, transparent) 0%, transparent 78%);
+  }
+  .hero-device-shadow {
+    background: radial-gradient(ellipse at 50% 32%, color-mix(in oklab, var(--background) 92%, transparent) 0%, transparent 72%);
+  }
+  @media (max-width: 767px) {
+    .hero-device-light {
+      background: radial-gradient(ellipse 92% 45% at 60% 66%, color-mix(in oklab, var(--surface-elevated) 52%, transparent) 0%, transparent 76%);
+    }
+  }
 
   /* rare atmospheric events: a line draws itself, a point travels it, dust drifts */
   .atmo-draw {
