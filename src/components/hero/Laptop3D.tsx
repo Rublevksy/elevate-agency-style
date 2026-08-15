@@ -7,11 +7,12 @@ import { ScreenUI } from "./ScreenUI";
 
 useGLTF.preload(glbAsset.url);
 
+type Hit = { mesh: THREE.Mesh; size: THREE.Vector3; center: THREE.Vector3; area: number };
+
 /** Finds the display panel of the model: the widest, thinnest mesh in the lid. */
 function findScreen(root: THREE.Object3D) {
   const box = new THREE.Box3().setFromObject(root);
   const center = box.getCenter(new THREE.Vector3());
-  type Hit = { mesh: THREE.Mesh; size: THREE.Vector3; center: THREE.Vector3; area: number };
   let best: Hit | null = null;
 
   root.traverse((o) => {
@@ -29,7 +30,7 @@ function findScreen(root: THREE.Object3D) {
     const hit: Hit = { mesh, size, center: c, area };
     if (!best || area > best.area) best = hit;
   });
-  return best;
+  return best as Hit | null;
 }
 
 function Model() {
