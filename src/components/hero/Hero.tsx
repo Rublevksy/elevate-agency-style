@@ -185,9 +185,18 @@ export function Hero() {
                 height={615}
                 fetchPriority="high"
                 decoding="async"
-                className="relative mx-auto block h-auto w-[min(100%,780px)] select-none"
+                className="relative mx-auto block h-auto w-[min(100%,740px)] select-none"
+                style={{
+                  maskImage:
+                    "linear-gradient(to right, transparent 0, #000 3%, #000 96.5%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 3%, #000 96%, transparent 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to right, transparent 0, #000 3%, #000 96.5%, transparent 100%), linear-gradient(to bottom, transparent 0, #000 3%, #000 96%, transparent 100%)",
+                  maskComposite: "intersect",
+                  WebkitMaskComposite: "source-in",
+                }}
                 draggable={false}
               />
+
               {/* floor reflection */}
               <img
                 src={deviceAsset.url}
