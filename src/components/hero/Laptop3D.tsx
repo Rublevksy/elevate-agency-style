@@ -69,6 +69,10 @@ function Model() {
       }
     });
 
+    if (typeof window !== "undefined") {
+      // eslint-disable-next-line no-console
+      console.log("[laptop] bbox", size.toArray(), "screen", screen && [screen.size.toArray(), screen.center.toArray(), screen.area]);
+    }
     return { root, scale, center, screen };
   }, [scene]);
 
