@@ -351,31 +351,54 @@ function Stage({ scene, eager }: { scene: Scene; eager: boolean }) {
           <ServiceElements kind={scene.fragments} />
         </div>
 
-        {/* the fixed brand character + devices, alpha-faded into the page */}
+        {/* the fixed brand character + devices, lit into the environment */}
         <div
           data-layer="figure"
           className="absolute bottom-0 right-0 will-change-transform"
           style={{ transform: `translateX(${scene.offsetX})` }}
         >
-          <img
-            src={scene.src}
-            alt=""
-            loading={eager ? "eager" : "lazy"}
-            decoding="async"
-            className="h-[40vh] w-auto max-w-none md:h-[var(--fh)]"
-            style={
-              {
-                "--fh": scene.height,
-                filter: "drop-shadow(0 40px 60px oklch(0.05 0.01 258 / 0.65)) drop-shadow(0 0 40px oklch(0.6 0.17 258 / 0.16))",
-                maskImage:
-                  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0%, #000 10%, #000 100%)",
-                WebkitMaskImage:
-                  "linear-gradient(to bottom, transparent 0%, #000 12%, #000 82%, transparent 100%), linear-gradient(to right, transparent 0%, #000 10%, #000 100%)",
-                maskComposite: "intersect",
-                WebkitMaskComposite: "source-in",
-              } as React.CSSProperties
-            }
+          {/* contact shadow grounding the subject */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute bottom-[2%] left-1/2 h-[7%] w-[78%] -translate-x-1/2 rounded-[50%] blur-2xl"
+            style={{ background: "oklch(0.03 0.01 258 / 0.75)" }}
           />
+          <div className="relative">
+            <img
+              src={scene.src}
+              alt=""
+              loading={eager ? "eager" : "lazy"}
+              decoding="async"
+              className="h-[40vh] w-auto max-w-none md:h-[var(--fh)]"
+              style={
+                {
+                  "--fh": scene.height,
+                  filter:
+                    "saturate(1.06) contrast(1.08) brightness(1.03) drop-shadow(0 46px 70px oklch(0.03 0.01 258 / 0.7)) drop-shadow(-14px -6px 26px oklch(0.6 0.17 258 / 0.3))",
+                  maskImage:
+                    "linear-gradient(to bottom, transparent 0%, #000 9%, #000 88%, transparent 100%), linear-gradient(to right, transparent 0%, #000 8%, #000 100%)",
+                  WebkitMaskImage:
+                    "linear-gradient(to bottom, transparent 0%, #000 9%, #000 88%, transparent 100%), linear-gradient(to right, transparent 0%, #000 8%, #000 100%)",
+                  maskComposite: "intersect",
+                  WebkitMaskComposite: "source-in",
+                } as React.CSSProperties
+              }
+            />
+            {/* blue rim light hugging the subject silhouette */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute inset-0 mix-blend-screen"
+              style={{
+                background: "linear-gradient(115deg, oklch(0.65 0.18 255 / 0.4) 0%, transparent 42%)",
+                maskImage: `url(${scene.src})`,
+                WebkitMaskImage: `url(${scene.src})`,
+                maskSize: "100% 100%",
+                WebkitMaskSize: "100% 100%",
+                maskRepeat: "no-repeat",
+                WebkitMaskRepeat: "no-repeat",
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
