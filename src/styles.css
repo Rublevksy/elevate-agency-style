@@ -138,7 +138,9 @@
       radial-gradient(ellipse 30% 22% at 80% 74%, color-mix(in oklab, var(--primary) 10%, transparent) 0%, transparent 76%);
   }
   .hero-fiber {
-    opacity: 0.92;
+    opacity: 0.95;
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, oklch(0 0 0 / 0.25) 22%, oklch(0 0 0 / 0.75) 40%, #000 58%);
+    mask-image: linear-gradient(to right, transparent 0%, oklch(0 0 0 / 0.25) 22%, oklch(0 0 0 / 0.75) 40%, #000 58%);
     transform: translate3d(0, calc(var(--hero-scroll, 0) * -3vh), 0);
   }
   .hero-device-shadow {

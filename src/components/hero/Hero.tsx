@@ -65,7 +65,7 @@ export function Hero() {
         <FiberField className="hero-fiber pointer-events-none absolute inset-x-0 top-[8%] z-[2] h-[74%] w-full" />
 
         {/* the device — dominant object on the right */}
-        <div className="hero-device pointer-events-none absolute left-1/2 top-[54%] z-[3] w-[136vw] max-w-[720px] md:left-auto md:right-[-6vw] md:top-[54%] md:w-[62vw] md:max-w-[1120px]">
+        <div className="hero-device pointer-events-none absolute left-1/2 top-[54%] z-[3] w-[136vw] max-w-[720px] md:left-auto md:right-[-2vw] md:top-[54%] md:w-[60vw] md:max-w-[1120px]">
           <div className="relative">
             <img
               src={laptopLarge.url}
