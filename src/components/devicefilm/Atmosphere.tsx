@@ -1,5 +1,7 @@
 import { useEffect, useRef } from "react";
+import { startFrameLoop, prefersReducedMotion } from "@/lib/raf";
 import { PHASE, clamp01, range } from "./film";
+
 
 /**
  * THE ENVIRONMENT — a premium digital infrastructure, not a space scene.
