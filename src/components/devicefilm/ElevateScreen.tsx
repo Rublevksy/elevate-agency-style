@@ -1,44 +1,19 @@
-import { useEffect, useRef } from "react";
 import mark from "@/assets/elevate-a-mark.png.asset.json";
-import { startFrameLoop } from "@/lib/raf";
-import { clamp01, easeFilm, range } from "./film";
 
 /**
- * THE SCREEN — a finished ELEVATE digital product, live from the first frame.
+ * THE SCREEN — a finished ELEVATE digital product, static and stable.
  *
- * No wireframes, no skeletons, no dashboard: a real premium website interface
- * (browser chrome, navigation, hero, capability cards, a responsive preview and
- * two quiet metrics). Scroll gives it depth — the layers separate slightly
- * toward the lens as the camera commits, which is exactly the move that hands
- * the frame over to the first service scene.
+ * Deliberately free of per-frame work: the display lives inside a 3D plane, so
+ * any animation here forces layout/paint every frame and makes the device
+ * stutter. It renders once and stays perfectly smooth while the camera moves.
  */
-export function ElevateScreen({
-  progress,
-  chrome = true,
-}: {
-  progress: React.RefObject<number>;
-  chrome?: boolean;
-}) {
-  const root = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = root.current;
-    if (!el) return;
-    return startFrameLoop(() => {
-      const p = progress.current ?? 0;
-      // depth separation of the interface layers as the camera approaches
-      const d = easeFilm(range(0.35, 1, p));
-      el.style.setProperty("--d", d.toFixed(4));
-      el.style.setProperty("--lift", clamp01(range(0.05, 0.4, p)).toFixed(4));
-    }, el);
-  }, [progress]);
-
+export function ElevateScreen({ chrome = true }: { chrome?: boolean }) {
   return (
     <div
-      ref={root}
       className="relative h-full w-full overflow-hidden bg-[#05070d] text-white"
       style={{ ["--d" as string]: 0, ["--lift" as string]: 0 }}
     >
+
       {/* interior light — a gradient, not a blur stack */}
       <div
         aria-hidden
