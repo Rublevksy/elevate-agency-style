@@ -161,7 +161,7 @@ export function Hero() {
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
               <Link
-                to="/work"
+                to="/projects"
                 className="text-[11px] uppercase tracking-[0.28em] text-muted-foreground transition-colors duration-300 hover:text-foreground"
               >
                 Naše práce
