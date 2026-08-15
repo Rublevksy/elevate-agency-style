@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import heroMaster from "@/assets/elevate-hero-master.png.asset.json";
+import { FiberField } from "@/components/hero/FiberField";
 import { setCinematicActive } from "@/lib/cinematic-state";
 
 const services: { label: string; to: string; left: number; width: number }[] = [
@@ -13,13 +14,41 @@ const services: { label: string; to: string; left: number; width: number }[] = [
 ];
 
 export function Hero() {
+  const stageRef = useRef<HTMLElement>(null);
+
   useEffect(() => {
     setCinematicActive(true);
     return () => setCinematicActive(false);
   }, []);
 
+  // jemný scroll parallax celé scény — zapisuje se přímo do CSS proměnné, bez re-renderu
+  useEffect(() => {
+    const el = stageRef.current;
+    if (!el) return;
+    let raf = 0;
+    const write = () => {
+      raf = 0;
+      const p = Math.min(1, Math.max(0, window.scrollY / Math.max(1, window.innerHeight)));
+      el.style.setProperty("--hs", p.toFixed(4));
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(write);
+    };
+    write();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
+  }, []);
+
   return (
-    <section aria-label="ELEVATE — digitální studio" className="hero-reference relative h-[100svh] overflow-hidden bg-background">
+    <section
+      ref={stageRef}
+      aria-label="ELEVATE — digitální studio"
+      className="hero-reference relative h-[100svh] overflow-hidden bg-background"
+    >
+
       <h1 className="sr-only">Digitální řešení, která posouvají vaše podnikání</h1>
       <img
         src={heroMaster.url}
@@ -28,8 +57,11 @@ export function Hero() {
         height={1024}
         fetchPriority="high"
         decoding="sync"
-        className="absolute inset-0 h-full w-full object-cover object-center"
+        className="hero-master absolute inset-0 h-full w-full object-cover object-center"
       />
+      {/* živá fiber-optic světelná vrstva — proudí za MacBookem (silueta je vymaskovaná) */}
+      <FiberField className="pointer-events-none absolute inset-0 h-full w-full" />
+
 
       <nav aria-label="Hlavní navigace" className="absolute inset-0 z-10 hidden md:block">
         <Link to="/" aria-label="ELEVATE — domů" className="hero-hotspot left-[4.8%] top-[12.4%] h-[6.2%] w-[18.2%]" />
