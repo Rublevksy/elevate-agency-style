@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowUpRight } from "lucide-react";
 import { DeviceFilm } from "@/components/devicefilm/DeviceFilm";
 import { DeviceServices } from "@/components/deviceservices/DeviceServices";
-import { ServicesIntro } from "@/components/sections/ServicesIntro";
+import { ServiceDecision } from "@/components/sections/ServiceDecision";
 
 import { CaseFilm } from "@/components/cinematic/CaseFilm";
 import { Results } from "@/components/sections/Results";
