@@ -2,16 +2,16 @@ import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useRef } from "react";
 
-import heroMaster from "@/assets/elevate-hero.png.asset.json";
+import heroStage from "@/assets/elevate-hero-stage.png.asset.json";
 import { setCinematicActive } from "@/lib/cinematic-state";
 
 const clamp01 = (value: number) => (value < 0 ? 0 : value > 1 ? 1 : value);
 
 /**
- * Hero = the approved ELEVATE master artwork (1536×1024) as the exact base
- * graphic layer, with real HTML typography and links composed on top at the
- * same coordinates. Live enhancement is limited to pointer parallax and a
- * scroll transform — the resting look is never worse than the PNG.
+ * Hero = the approved ELEVATE master artwork (device + light ring + service
+ * cards) as the exact base graphic layer on the right, with real HTML
+ * typography and links on the left. Live enhancement is limited to pointer
+ * parallax and a scroll transform — the resting look equals the artwork.
  */
 export function Hero() {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -71,25 +71,26 @@ export function Hero() {
         aria-label="ELEVATE — digitální studio"
         className="sticky top-0 h-[100svh] overflow-hidden bg-background"
       >
-        {/* exact master artwork — the base graphic layer */}
-        <img
-          src={heroMaster.url}
-          alt="ELEVATE — digitální studio: weby, e-shopy a aplikace"
-          width={1536}
-          height={1024}
-          fetchPriority="high"
-          decoding="sync"
-          className="hero-master absolute inset-0 h-full w-full object-cover object-[68%_center] md:object-center"
-        />
+        {/* exact master artwork — base graphic layer, right side of the composition */}
+        <div className="pointer-events-none absolute inset-y-0 right-0 z-[1] w-full md:w-[68%]">
+          <img
+            src={heroStage.url}
+            alt="ELEVATE — MacBook s ukázkou webu, e-shopu a aplikací"
+            width={988}
+            height={746}
+            fetchPriority="high"
+            decoding="sync"
+            className="hero-master absolute left-1/2 top-[54%] w-[126%] max-w-none -translate-x-1/2 -translate-y-1/2 md:top-1/2 md:w-[104%]"
+          />
+        </div>
 
-        {/* scrims: hide the artwork's baked-in nav and left copy so the real HTML reads cleanly */}
-        <div aria-hidden className="hero-scrim-top pointer-events-none absolute inset-x-0 top-0 z-[2] h-[13%]" />
-        <div aria-hidden className="hero-scrim-left pointer-events-none absolute inset-y-0 left-0 z-[2] w-full md:w-[42%]" />
-        <div aria-hidden className="hero-scrim-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[16%]" />
+        {/* soft edge blends so the artwork sits in the black space */}
+        <div aria-hidden className="hero-scrim-left pointer-events-none absolute inset-y-0 left-0 z-[2] w-full md:w-[46%]" />
+        <div aria-hidden className="hero-scrim-bottom pointer-events-none absolute inset-x-0 bottom-0 z-[2] h-[14%]" />
 
         {/* real, clickable content aligned to the master composition */}
-        <div className="relative z-10 mx-auto h-full w-full max-w-[1536px] px-6 md:px-0">
-          <div className="absolute left-6 top-[24%] w-[92%] max-w-[420px] md:left-[5.6%] md:top-[27%] md:w-[36%] md:max-w-[460px]">
+        <div className="relative z-10 mx-auto h-full w-full max-w-[1536px]">
+          <div className="absolute left-6 top-[21%] w-[90%] max-w-[420px] md:left-[5.6%] md:top-[27%] md:w-[36%] md:max-w-[460px]">
             <p className="text-[10px] uppercase tracking-[0.3em] text-primary">Digitální studio · Praha</p>
 
             <h1 className="mt-5 text-[2rem] font-medium leading-[1.1] tracking-[-0.02em] text-foreground md:mt-6 md:text-[2.6rem] lg:text-[3.1rem]">
