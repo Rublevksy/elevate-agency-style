@@ -71,7 +71,8 @@ function Model() {
       const b = mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
       const c = b.getCenter(new THREE.Vector3());
       const s = b.getSize(new THREE.Vector3());
-      const isLidFace = c.y > center.y && c.z < center.z && s.x * s.y > 0.5 * size.x * 0.18;
+      const isLidFace =
+        c.y > center.y && c.z < center.z && s.x > size.x * 0.7 && Math.hypot(s.y, s.z) > size.y * 0.6;
 
       for (const m of list) {
         if (!m || !("metalness" in m)) continue;
