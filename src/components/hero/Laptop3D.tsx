@@ -6,43 +6,6 @@ import glbAsset from "@/assets/macbook-pro-14-m5.glb.asset.json";
 
 useGLTF.preload(glbAsset.url);
 
-type Lid = { center: THREE.Vector3; width: number; height: number; tilt: number };
-
-/**
- * Derives the display plane from the model itself: the largest panel that sits
- * in the upper/back half of the bounding box is the lid.
- */
-function findLid(root: THREE.Object3D): Lid | null {
-  const world = new THREE.Box3().setFromObject(root);
-  const wc = world.getCenter(new THREE.Vector3());
-  let best: { score: number; box: THREE.Box3 } | null = null;
-
-  root.traverse((o) => {
-    const mesh = o as THREE.Mesh;
-    if (!mesh.isMesh || !mesh.geometry) return;
-    mesh.geometry.computeBoundingBox();
-    const box = mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
-    const size = box.getSize(new THREE.Vector3());
-    const c = box.getCenter(new THREE.Vector3());
-    if (c.y < wc.y) return; // lid only
-    if (c.z > wc.z) return; // sits toward the back
-    const score = size.x * Math.hypot(size.y, size.z);
-    const hit = { score, box };
-    if (!best || score > best.score) best = hit;
-  });
-
-  const found = best as { score: number; box: THREE.Box3 } | null;
-  if (!found) return null;
-  const size = found.box.getSize(new THREE.Vector3());
-  const center = found.box.getCenter(new THREE.Vector3());
-  const tilt = Math.atan2(size.z, size.y);
-  return {
-    center,
-    width: size.x * 0.93,
-    height: Math.hypot(size.y, size.z) * 0.92,
-    tilt,
-  };
-}
 
 
 function Model() {
