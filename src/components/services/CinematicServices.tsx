@@ -145,6 +145,7 @@ function Depth({ progress }: { progress: React.RefObject<number> }) {
 export function CinematicServices() {
   const sectionRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
+  const chapterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const progress = useRef(0);
   const [active, setActive] = useState(0);
 
@@ -162,8 +163,7 @@ export function CinematicServices() {
 
     const tick = () => {
       const section = sectionRef.current;
-      const stage = stageRef.current;
-      if (section && stage) {
+      if (section) {
         const rect = section.getBoundingClientRect();
         const total = rect.height - window.innerHeight;
         const p = total > 0 ? Math.min(1, Math.max(0, -rect.top / total)) : 0;
@@ -173,9 +173,25 @@ export function CinematicServices() {
         smooth.y += (pointer.y - smooth.y) * 0.08;
 
         const scene = p * (SERVICES.length - 1);
-        stage.style.setProperty("--scene", scene.toFixed(4));
-        stage.style.setProperty("--mx", smooth.x.toFixed(4));
-        stage.style.setProperty("--my", smooth.y.toFixed(4));
+        const vh = window.innerHeight / 100;
+
+        chapterRefs.current.forEach((el, i) => {
+          if (!el) return;
+          const d = scene - i;
+          const away = Math.min(1, Math.abs(d));
+          const near = 1 - away;
+          el.style.opacity = String(Math.max(0, 1 - away * 1.35));
+          el.style.visibility = away >= 0.99 ? "hidden" : "visible";
+          const text = el.querySelector<HTMLElement>("[data-layer='text']");
+          const media = el.querySelector<HTMLElement>("[data-layer='media']");
+          if (text) {
+            text.style.transform = `translate3d(${smooth.x * 3}px, ${-d * 5 * vh + smooth.y * 2}px, 0)`;
+          }
+          if (media) {
+            media.style.transform = `translate3d(${smooth.x * 6}px, ${-d * 9 * vh + smooth.y * 5}px, 0) scale(${(0.94 + near * 0.06).toFixed(4)})`;
+            media.style.filter = `blur(${(away * away * 10).toFixed(2)}px)`;
+          }
+        });
 
         const next = Math.min(SERVICES.length - 1, Math.round(scene));
         setActive((prev) => (prev === next ? prev : next));
@@ -222,7 +238,16 @@ export function CinematicServices() {
 
         <div className="relative h-full">
           {SERVICES.map((s, i) => (
-            <Chapter key={s.id} service={s} i={i} eager={i === 0} />
+            <div
+              key={s.id}
+              ref={(el) => {
+                chapterRefs.current[i] = el;
+              }}
+              className="absolute inset-0 z-10 flex items-center"
+              style={{ opacity: i === 0 ? 1 : 0, pointerEvents: "none" }}
+            >
+              <Chapter service={s} eager={i === 0} />
+            </div>
           ))}
         </div>
       </div>
@@ -230,103 +255,68 @@ export function CinematicServices() {
   );
 }
 
-function Chapter({ service, i, eager }: { service: Service; i: number; eager: boolean }) {
-  // distance from the active scene, expressed purely in CSS so the whole
-  // sequence is driven by a single scroll-written variable.
-  const d = `calc(var(--scene, 0) - ${i})`;
-  const near = `clamp(0, calc(1 - ${d} * ${d}), 1)`;
-
+function Chapter({ service, eager }: { service: Service; eager: boolean }) {
   return (
-    <div
-      className="absolute inset-0 flex items-center"
-      style={{
-        opacity: `clamp(0, calc(1.15 - (${d} * ${d}) * 1.5), 1)` as unknown as number,
-        pointerEvents: "none",
-        zIndex: 10,
-      }}
-    >
-      <div className="container-luxe grid w-full items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
-        {/* text — moves less than the image */}
-        <div
-          className="relative z-10 order-1"
-          style={{
-            transform: `translate3d(calc(var(--mx, 0) * 3px), calc((${d}) * -5vh + var(--my, 0) * 2px), 0)`,
-            opacity: `clamp(0, calc(1.25 - (${d} * ${d}) * 1.4), 1)` as unknown as number,
-          }}
+    <div className="container-luxe grid w-full items-center gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-14">
+      {/* text — moves less than the image */}
+      <div data-layer="text" className="relative z-10 order-1 will-change-transform">
+        <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-primary">
+          {service.index} / {service.label}
+        </p>
+        <h3 className="mt-5 text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-foreground md:text-[4vw]">
+          {service.title}
+        </h3>
+        <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">{service.desc}</p>
+        <Link
+          to={service.to}
+          className="group mt-8 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/80 transition-colors hover:text-primary"
+          style={{ pointerEvents: "auto" }}
         >
-          <p className="font-mono text-[10px] uppercase tracking-[0.4em] text-primary">
-            {service.index} / {service.label}
-          </p>
-          <h3 className="mt-5 text-4xl font-medium leading-[1.02] tracking-[-0.035em] text-foreground md:text-[4vw]">
-            {service.title}
-          </h3>
-          <p className="mt-5 max-w-md text-sm leading-relaxed text-muted-foreground md:text-base">{service.desc}</p>
-          <Link
-            to={service.to}
-            className="group mt-8 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.3em] text-foreground/80 transition-colors hover:text-primary"
-            style={{ pointerEvents: "auto" }}
-          >
-            {CTA}
-            <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </Link>
-        </div>
+          {CTA}
+          <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </Link>
+      </div>
 
-        {/* campaign visual — a floating cinematic panel, not a card */}
+      {/* campaign visual — a floating cinematic panel, not a card */}
+      <div data-layer="media" className="relative order-2 will-change-transform">
         <div
-          className="order-2 relative"
-          style={{
-            transform: `translate3d(calc(var(--mx, 0) * 6px), calc((${d}) * -9vh + var(--my, 0) * 5px), 0) scale(calc(0.94 + ${near} * 0.06))`,
-            filter: `blur(calc(clamp(0, ${d} * ${d}, 1) * 10px))`,
-          }}
-        >
+          aria-hidden
+          className="pointer-events-none absolute -inset-8 rounded-[2rem] blur-3xl"
+          style={{ background: "oklch(0.55 0.16 258 / 0.18)" }}
+        />
+        <figure className="relative overflow-hidden rounded-2xl">
+          <img
+            src={service.src}
+            alt=""
+            loading={eager ? "eager" : "lazy"}
+            decoding="async"
+            className="h-[42vh] w-full object-cover md:h-[58vh]"
+            style={{ objectPosition: service.position }}
+          />
+          {/* edge integration into the dark environment */}
           <div
             aria-hidden
-            className="pointer-events-none absolute -inset-8 rounded-[2rem] blur-3xl"
-            style={{ background: "oklch(0.55 0.16 258 / 0.18)" }}
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(125% 105% at 50% 50%, transparent 52%, oklch(0.13 0.02 258 / 0.5) 90%, oklch(0.11 0.02 258 / 0.85) 100%)",
+            }}
           />
-          <figure className="relative overflow-hidden rounded-2xl">
-            <img
-              src={service.src}
-              alt=""
-              loading={eager ? "eager" : "lazy"}
-              decoding="async"
-              className="h-[46vh] w-full object-cover md:h-[62vh]"
-              style={{ objectPosition: service.position }}
-            />
-            {/* edge integration into the dark environment */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-              style={{
-                background:
-                  "radial-gradient(120% 100% at 50% 50%, transparent 45%, oklch(0.13 0.02 258 / 0.55) 88%, oklch(0.11 0.02 258 / 0.9) 100%)",
-              }}
-            />
-            {/* subtle glass reflection */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 mix-blend-screen"
-              style={{
-                background:
-                  "linear-gradient(115deg, oklch(0.75 0.06 258 / 0.1) 0%, transparent 38%, transparent 70%, oklch(0.65 0.18 255 / 0.06) 100%)",
-              }}
-            />
-            {/* very subtle grain */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 opacity-[0.06]"
-              style={{
-                backgroundImage:
-                  "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E\")",
-              }}
-            />
-            <div
-              aria-hidden
-              className="pointer-events-none absolute inset-0 rounded-2xl ring-1 ring-inset"
-              style={{ boxShadow: "inset 0 0 0 1px oklch(0.65 0.18 255 / 0.14)" }}
-            />
-          </figure>
-        </div>
+          {/* subtle glass reflection */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 mix-blend-screen"
+            style={{
+              background:
+                "linear-gradient(115deg, oklch(0.75 0.06 258 / 0.1) 0%, transparent 38%, transparent 70%, oklch(0.65 0.18 255 / 0.06) 100%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-2xl"
+            style={{ boxShadow: "inset 0 0 0 1px oklch(0.65 0.18 255 / 0.14)" }}
+          />
+        </figure>
       </div>
     </div>
   );
