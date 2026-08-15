@@ -179,6 +179,8 @@ export function HomeFilm() {
       // the five services: only the active and neighbouring scene do any work
       const stage = stageOf(p, SCENES.length);
       const started = p > SERVICES_FROM - 0.03;
+      // the first scene rises exactly as the device light releases the frame
+      const entry = easeFilm(range(SERVICES_FROM - 0.03, SERVICES_FROM + 0.02, p));
 
       sceneRefs.current.forEach((el, i) => {
         if (!el) return;
@@ -195,7 +197,8 @@ export function HomeFilm() {
         el.style.visibility = "visible";
         // a true crossfade: the two neighbouring scenes always sum to 1, so the
         // stage never dips to black and never shows two bright copies
-        el.style.opacity = clamp01(1 - away).toFixed(3);
+        el.style.opacity = (clamp01(1 - away) * entry).toFixed(3);
+
         el.style.pointerEvents = away < 0.25 ? "auto" : "none";
 
         const near = 1 - away;
