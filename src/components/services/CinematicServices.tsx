@@ -222,7 +222,7 @@ export function CinematicServices() {
         const mobile = window.innerWidth < 768;
         const par = mobile ? 0.3 : 1;
         const cursor = mobile ? 0 : 1;
-        const stage = p * (SCENES.length - 1);
+        const stage = holdStage(p, SCENES.length);
         const vh = window.innerHeight / 100;
 
         sceneRefs.current.forEach((el, i) => {
@@ -282,7 +282,7 @@ export function CinematicServices() {
   }, []);
 
   return (
-    <section ref={sectionRef} className="relative" style={{ height: `${SCENES.length * 100}vh` }}>
+    <section ref={sectionRef} className="relative" style={{ height: `${SCENES.length * VH_PER_SCENE}vh` }}>
       <div className="sticky top-0 h-screen overflow-hidden">
         <Depth progress={progress} />
 
