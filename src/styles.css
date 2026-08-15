@@ -88,8 +88,9 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
-  /* ONE continuous environment: a fixed atmospheric layer behind every section,
-     so scrolling changes the lighting, never the colour */
+  /* ONE continuous environment. Kept deliberately cheap: a fixed layer with a
+     stack of radial gradients is a per-frame GPU cost on mobile, so this is a
+     single linear wash plus one soft top glow. */
   body::before {
     content: "";
     position: fixed;
@@ -97,11 +98,10 @@
     z-index: -1;
     pointer-events: none;
     background:
-      radial-gradient(120% 80% at 50% -10%, #071321 0%, transparent 60%),
-      radial-gradient(70% 55% at 18% 30%, oklch(0.34 0.08 258 / 0.16) 0%, transparent 70%),
-      radial-gradient(80% 60% at 82% 72%, oklch(0.3 0.07 258 / 0.13) 0%, transparent 72%),
+      radial-gradient(110% 70% at 50% -10%, #071321 0%, transparent 62%),
       linear-gradient(180deg, #03060b 0%, #050b14 46%, #04080f 100%);
   }
+
 
   ::selection {
     background-color: oklch(0.65 0.18 255 / 0.3);
