@@ -7,111 +7,123 @@ import { ScreenUI } from "./ScreenUI";
 
 useGLTF.preload(glbAsset.url);
 
-type Hit = { mesh: THREE.Mesh; size: THREE.Vector3; center: THREE.Vector3; area: number };
+type Lid = { center: THREE.Vector3; width: number; height: number; tilt: number };
 
-/** Finds the display panel of the model: the widest, thinnest mesh in the lid. */
-function findScreen(root: THREE.Object3D) {
-  const box = new THREE.Box3().setFromObject(root);
-  const center = box.getCenter(new THREE.Vector3());
-  let best: Hit | null = null;
+/**
+ * Derives the display plane from the model itself: the largest panel that sits
+ * in the upper/back half of the bounding box is the lid.
+ */
+function findLid(root: THREE.Object3D): Lid | null {
+  const world = new THREE.Box3().setFromObject(root);
+  const wc = world.getCenter(new THREE.Vector3());
+  let best: { area: number; box: THREE.Box3 } | null = null;
 
   root.traverse((o) => {
     const mesh = o as THREE.Mesh;
     if (!mesh.isMesh || !mesh.geometry) return;
     mesh.geometry.computeBoundingBox();
-    const b = mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
-    const size = b.getSize(new THREE.Vector3());
-    const c = b.getCenter(new THREE.Vector3());
-    const dims = [size.x, size.y, size.z].sort((a, z) => z - a);
-    const area = dims[0] * dims[1];
-    const thin = dims[2] / Math.max(dims[0], 1e-6);
-    if (thin > 0.06) return; // must be a flat panel
-    if (c.y < center.y) return; // must sit in the upper half (the lid)
-    const hit: Hit = { mesh, size, center: c, area };
+    const box = mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
+    const size = box.getSize(new THREE.Vector3());
+    const c = box.getCenter(new THREE.Vector3());
+    if (c.y < wc.y) return; // lid only
+    if (c.z > wc.z) return; // sits toward the back
+    const area = size.x * size.y;
+    if (area < 0.2 * (world.getSize(new THREE.Vector3()).x * size.y || 1)) return;
+    const hit = { area, box };
     if (!best || area > best.area) best = hit;
   });
-  return best as Hit | null;
+
+  const found = best as { area: number; box: THREE.Box3 } | null;
+  if (!found) return null;
+  const size = found.box.getSize(new THREE.Vector3());
+  const center = found.box.getCenter(new THREE.Vector3());
+  const tilt = Math.atan2(size.z, size.y);
+  return {
+    center,
+    width: size.x * 0.935,
+    height: Math.hypot(size.y, size.z) * 0.925,
+    tilt,
+  };
 }
 
 function Model() {
+  const prepared = useMemo(() => {
+    const gltf = useGLTF.get?.(glbAsset.url);
+    return gltf;
+  }, []);
+  void prepared;
+
   const { scene } = useGLTF(glbAsset.url);
 
-  const prepared = useMemo(() => {
+  const built = useMemo(() => {
     const root = scene.clone(true);
     root.updateMatrixWorld(true);
 
-    // normalize: centre at origin, scale to a stable width
     const box = new THREE.Box3().setFromObject(root);
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
-    const scale = 2.6 / Math.max(size.x, 1e-6);
-
-    const screen = findScreen(root);
+    const scale = 2.5 / Math.max(size.x, 1e-6);
+    const lid = findLid(root);
 
     root.traverse((o) => {
       const mesh = o as THREE.Mesh;
       if (!mesh.isMesh) return;
-      mesh.castShadow = false;
-      mesh.receiveShadow = false;
-      const mat = mesh.material as THREE.MeshStandardMaterial | THREE.MeshStandardMaterial[];
-      const list = Array.isArray(mat) ? mat : [mat];
+      mesh.frustumCulled = false;
+      const list = (
+        Array.isArray(mesh.material) ? mesh.material : [mesh.material]
+      ) as THREE.MeshStandardMaterial[];
+      mesh.geometry.computeBoundingBox();
+      const b = mesh.geometry.boundingBox!.clone().applyMatrix4(mesh.matrixWorld);
+      const c = b.getCenter(new THREE.Vector3());
+      const s = b.getSize(new THREE.Vector3());
+      const isLidFace = c.y > center.y && c.z < center.z && s.x * s.y > 0.5 * size.x * 0.18;
+
       for (const m of list) {
         if (!m || !("metalness" in m)) continue;
-        // Space Black aluminium
-        if (m.metalness > 0.4) {
-          m.color = new THREE.Color("#22262e");
-          m.metalness = 0.95;
-          m.roughness = 0.34;
+        if (isLidFace) {
+          // black out the baked wallpaper — the live DOM screen sits in front
+          m.map = null;
+          m.color = new THREE.Color("#04060d");
+          m.metalness = 0.2;
+          m.roughness = 0.28;
+          if ("emissive" in m) m.emissive = new THREE.Color("#000000");
+        } else if (m.metalness > 0.35) {
+          // Space Black aluminium
+          m.color = new THREE.Color("#242830");
+          m.metalness = 0.92;
+          m.roughness = 0.36;
         }
-      }
-      if (screen && mesh === screen.mesh) {
-        mesh.visible = false;
+        m.needsUpdate = true;
       }
     });
 
-    if (typeof window !== "undefined") {
-      // eslint-disable-next-line no-console
-      console.log("[laptop] bbox", size.toArray(), "screen", screen && [screen.size.toArray(), screen.center.toArray(), screen.area]);
-    }
-    return { root, scale, center, screen };
+    return { root, scale, center, lid };
   }, [scene]);
 
-  const { root, scale, center, screen } = prepared;
-
-  const screenTransform = useMemo(() => {
-    if (!screen) return null;
-    const q = new THREE.Quaternion();
-    const p = new THREE.Vector3();
-    const s = new THREE.Vector3();
-    screen.mesh.matrixWorld.decompose(p, q, s);
-    const normal = new THREE.Vector3(0, 0, 1).applyQuaternion(q).multiplyScalar(0.004);
-    const dims = [screen.size.x, screen.size.y, screen.size.z].sort((a, z) => z - a);
-    return {
-      position: screen.center.clone().sub(center).add(normal),
-      quaternion: q,
-      width: dims[0],
-      height: dims[1],
-    };
-  }, [screen, center]);
+  const { root, scale, center, lid } = built;
 
   return (
-    <group scale={scale} position={[0, 0, 0]}>
+    <group scale={scale}>
       <group position={[-center.x, -center.y, -center.z]}>
         <primitive object={root} />
-      </group>
-      {screenTransform && (
-        <group position={screenTransform.position} quaternion={screenTransform.quaternion}>
-          <Html
-            transform
-            occlude={false}
-            distanceFactor={1}
-            scale={screenTransform.width / 1600}
-            style={{ pointerEvents: "none" }}
+        {lid && (
+          <group
+            position={[lid.center.x, lid.center.y, lid.center.z + 0.004]}
+            rotation={[-lid.tilt, 0, 0]}
           >
-            <ScreenUI />
-          </Html>
-        </group>
-      )}
+            <Html
+              transform
+              occlude={false}
+              distanceFactor={undefined}
+              scale={lid.width / 1600}
+              style={{ pointerEvents: "none" }}
+              zIndexRange={[5, 0]}
+            >
+              <ScreenUI />
+            </Html>
+          </group>
+        )}
+      </group>
     </group>
   );
 }
@@ -126,16 +138,17 @@ export default function Laptop3D() {
     <Canvas
       dpr={[1, 1.6]}
       gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
-      camera={{ fov: 26, position: [0, 0.55, 6.2] }}
+      camera={{ fov: 24, position: [0, 0.5, 6.4] }}
       style={{ width: "100%", height: "100%", background: "transparent" }}
     >
-      <ambientLight intensity={0.35} />
-      <directionalLight position={[-3, 4, 5]} intensity={1.5} color="#cfe0ff" />
-      <directionalLight position={[4, 2, -3]} intensity={2.2} color="#2f7bff" />
-      <spotLight position={[0, 5, 2]} angle={0.7} penumbra={1} intensity={1.2} color="#ffffff" />
+      <ambientLight intensity={0.3} />
+      <directionalLight position={[-3, 4, 5]} intensity={1.2} color="#cfe0ff" />
+      <directionalLight position={[4, 2, -3]} intensity={2.6} color="#2f7bff" />
+      <directionalLight position={[-4, 1, -3]} intensity={1.6} color="#3b82f6" />
+      <spotLight position={[0, 5, 3]} angle={0.7} penumbra={1} intensity={1.1} color="#ffffff" />
       <Suspense fallback={null}>
         <Model />
-        <Environment preset="night" environmentIntensity={0.5} />
+        <Environment preset="night" environmentIntensity={0.45} />
       </Suspense>
     </Canvas>
   );
