@@ -46,27 +46,30 @@ export function Hero() {
     let frame = 0;
     let cinematic = false;
 
-    const apply = (film: number) => {
+    const apply = (film: number, pinned: boolean) => {
       stage.style.setProperty("--film", film.toFixed(4));
       stage.style.setProperty("--film-light", ease(range(0, 0.85, film)).toFixed(4));
       stage.style.setProperty("--film-reveal", ease(range(0.34, 0.78, film)).toFixed(4));
-      const next = film < 0.9;
+      // the site chrome only steps aside while the film itself owns the viewport
+      const next = pinned && film < 0.9;
       if (next !== cinematic) {
         cinematic = next;
         setCinematicActive(next);
+        setPinned(next);
       }
     };
 
     const update = () => {
       frame = 0;
-      if (reduceQuery.matches) {
-        apply(0);
+      const distance = wrap.offsetHeight - window.innerHeight;
+      if (reduceQuery.matches || distance <= 0) {
+        apply(0, false);
         return;
       }
-      const distance = wrap.offsetHeight - window.innerHeight;
-      const film = distance > 0 ? clamp01(-wrap.getBoundingClientRect().top / distance) : 0;
-      apply(ease(film));
+      const film = clamp01(-wrap.getBoundingClientRect().top / distance);
+      apply(ease(film), true);
     };
+
 
     const schedule = () => {
       if (!frame) frame = requestAnimationFrame(update);
