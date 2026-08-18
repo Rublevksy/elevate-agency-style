@@ -92,6 +92,34 @@
   ::selection {
     background-color: oklch(0.65 0.18 255 / 0.3);
   }
+
+  /*
+   * prefers-reduced-motion fallback (R88). Neutralizes CSS keyframe
+   * animations/transitions site-wide (animate-pulse, .shimmer,
+   * .hero3d-*, .hero-float, .pulse-once, .reveal, hover/focus
+   * transitions, etc.) without touching component markup. !important
+   * is required here because Tailwind's utility classes (incl.
+   * tw-animate-css and Tailwind core's animate-pulse) live in a later
+   * cascade layer than this @layer base block, so a normal-priority
+   * override here would lose to them.
+   *
+   * This is complementary to, not a replacement for, the
+   * useReducedMotion() gating already done in JS by
+   * src/components/hero/useHeroScroll.ts and
+   * src/components/sections/ServiceStage.tsx — those drive Framer
+   * Motion via inline transform/opacity styles, which this rule does
+   * not touch, so there is no conflict.
+   */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
 }
 
 @layer utilities {
