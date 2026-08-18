@@ -82,15 +82,15 @@ function Opening() {
       <motion.div
         className="absolute inset-0"
         initial={reduced ? false : { scale: 1 }}
-        animate={reduced ? undefined : { scale: 1.08 }}
-        transition={reduced ? undefined : { duration: 20, ease: "linear" }}
+        animate={reduced ? undefined : { scale: 1.05 }}
+        transition={reduced ? undefined : { duration: 24, ease: "linear" }}
       >
         <RefImage
           name="hero-macbook"
           priority
           alt={t.hero.tag}
           className="block h-full w-full"
-          imgClassName="h-full w-full object-cover object-center"
+          imgClassName="h-full w-full origin-center scale-[1.05] object-cover object-[50%_70%] md:scale-[1.05] md:object-[50%_100%]"
           sizes="100vw"
         />
       </motion.div>
@@ -101,7 +101,16 @@ function Opening() {
         className="absolute inset-0"
         style={{
           background:
-            "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.72) 28%, rgba(0,0,0,0.15) 62%, rgba(0,0,0,0.55) 100%)",
+            "linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0.78) 30%, rgba(0,0,0,0.4) 54%, rgba(0,0,0,0.16) 72%, rgba(0,0,0,0.45) 100%)",
+        }}
+      />
+      {/* Side scrim: anchors the text column, leaves the plate readable. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.4) 34%, rgba(0,0,0,0.1) 64%, rgba(0,0,0,0) 84%)",
         }}
       />
 
@@ -116,9 +125,9 @@ function Opening() {
           </p>
         </div>
 
-        <div className="max-w-4xl">
+        <div className="mt-auto max-w-3xl pt-24">
           <h1
-            className="text-[2.6rem] font-light leading-[1.03] tracking-[-0.02em] text-white md:text-[5.5rem]"
+            className="text-[2.4rem] font-light leading-[1.03] tracking-[-0.02em] text-white md:text-[5rem]"
             style={{ fontFamily: SERIF }}
           >
             {words.map((word, i) => (
@@ -145,7 +154,7 @@ function Opening() {
           </motion.p>
         </div>
 
-        <div className="flex items-end justify-between gap-6">
+        <div className="mt-8 flex items-end justify-between gap-6 md:mt-10">
           <span
             className="text-[0.6rem] uppercase tracking-[0.35em] text-white/45 md:text-[0.7rem]"
             style={{ fontFamily: MONO }}
