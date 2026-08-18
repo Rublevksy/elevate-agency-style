@@ -14,6 +14,7 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as DesignV4RouteImport } from './routes/design-v4'
 import { Route as DesignV3RouteImport } from './routes/design-v3'
 import { Route as DesignV2RouteImport } from './routes/design-v2'
 import { Route as DesignV1RouteImport } from './routes/design-v1'
@@ -55,6 +56,11 @@ const PricingRoute = PricingRouteImport.update({
 const InsightsRoute = InsightsRouteImport.update({
   id: '/insights',
   path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DesignV4Route = DesignV4RouteImport.update({
+  id: '/design-v4',
+  path: '/design-v4',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DesignV3Route = DesignV3RouteImport.update({
@@ -152,6 +158,7 @@ export interface FileRoutesByFullPath {
   '/design-v1': typeof DesignV1Route
   '/design-v2': typeof DesignV2Route
   '/design-v3': typeof DesignV3Route
+  '/design-v4': typeof DesignV4Route
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
@@ -176,6 +183,7 @@ export interface FileRoutesByTo {
   '/design-v1': typeof DesignV1Route
   '/design-v2': typeof DesignV2Route
   '/design-v3': typeof DesignV3Route
+  '/design-v4': typeof DesignV4Route
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
@@ -201,6 +209,7 @@ export interface FileRoutesById {
   '/design-v1': typeof DesignV1Route
   '/design-v2': typeof DesignV2Route
   '/design-v3': typeof DesignV3Route
+  '/design-v4': typeof DesignV4Route
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
@@ -227,6 +236,7 @@ export interface FileRouteTypes {
     | '/design-v1'
     | '/design-v2'
     | '/design-v3'
+    | '/design-v4'
     | '/insights'
     | '/pricing'
     | '/projects'
@@ -251,6 +261,7 @@ export interface FileRouteTypes {
     | '/design-v1'
     | '/design-v2'
     | '/design-v3'
+    | '/design-v4'
     | '/insights'
     | '/pricing'
     | '/projects'
@@ -275,6 +286,7 @@ export interface FileRouteTypes {
     | '/design-v1'
     | '/design-v2'
     | '/design-v3'
+    | '/design-v4'
     | '/insights'
     | '/pricing'
     | '/projects'
@@ -300,6 +312,7 @@ export interface RootRouteChildren {
   DesignV1Route: typeof DesignV1Route
   DesignV2Route: typeof DesignV2Route
   DesignV3Route: typeof DesignV3Route
+  DesignV4Route: typeof DesignV4Route
   InsightsRoute: typeof InsightsRouteWithChildren
   PricingRoute: typeof PricingRouteWithChildren
   ProjectsRoute: typeof ProjectsRouteWithChildren
@@ -342,6 +355,13 @@ declare module '@tanstack/react-router' {
       path: '/insights'
       fullPath: '/insights'
       preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/design-v4': {
+      id: '/design-v4'
+      path: '/design-v4'
+      fullPath: '/design-v4'
+      preLoaderRoute: typeof DesignV4RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/design-v3': {
@@ -532,6 +552,7 @@ const rootRouteChildren: RootRouteChildren = {
   DesignV1Route: DesignV1Route,
   DesignV2Route: DesignV2Route,
   DesignV3Route: DesignV3Route,
+  DesignV4Route: DesignV4Route,
   InsightsRoute: InsightsRouteWithChildren,
   PricingRoute: PricingRouteWithChildren,
   ProjectsRoute: ProjectsRouteWithChildren,
