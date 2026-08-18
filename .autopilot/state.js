@@ -11,7 +11,7 @@ window.STATE =
   "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.claude/skills/autopilot",
   "startedAt": "2026-08-18T20:54:44+02:00",
   "updatedAt": "2026-08-18T20:54:44+02:00",
-  "finishedAt": null,
+  "finishedAt": "2026-08-18T21:45:00+02:00",
   "stages": [
     { "id": "preflight", "status": "done", "startedAt": "2026-08-18T20:23:00+02:00", "finishedAt": "2026-08-18T20:40:00+02:00", "note": "аудит + карта референсов показаны пользователю" },
     { "id": "manifest",  "status": "done", "startedAt": "2026-08-18T20:40:00+02:00", "finishedAt": "2026-08-18T20:54:00+02:00" },
@@ -20,7 +20,7 @@ window.STATE =
     { "id": "plan",      "status": "done", "startedAt": "2026-08-18T21:00:00+02:00", "finishedAt": "2026-08-18T21:02:00+02:00", "note": "T2, 5 тасков, 2 волны (01 → 02+03+04+05)" },
     { "id": "build",     "status": "done", "startedAt": "2026-08-18T21:02:00+02:00", "finishedAt": "2026-08-18T21:40:00+02:00" },
     { "id": "review",    "status": "done", "startedAt": "2026-08-18T21:08:00+02:00", "finishedAt": "2026-08-18T21:40:00+02:00", "note": "визуальное ревью по реальным скриншотам каждого направления; 5 находок, все починены и переподтверждены" },
-    { "id": "final",     "status": "active", "startedAt": "2026-08-18T21:40:00+02:00" }
+    { "id": "final",     "status": "done", "startedAt": "2026-08-18T21:40:00+02:00", "finishedAt": "2026-08-18T21:45:00+02:00" }
   ],
   "requirements": {
     "total": 52, "done": 48, "inTicket": 0, "inSpec": 3,
