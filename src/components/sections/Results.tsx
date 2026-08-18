@@ -26,8 +26,8 @@ export function Results() {
                 <p
                   className={
                     parsed
-                      ? "text-5xl md:text-6xl font-extrabold text-gradient tracking-tight mb-3 tabular-nums"
-                      : "text-xl md:text-2xl font-bold text-gradient tracking-tight mb-3"
+                      ? "text-5xl md:text-6xl font-extrabold text-foreground tracking-tight mb-3 tabular-nums"
+                      : "text-xl md:text-2xl font-bold text-foreground tracking-tight mb-3"
                   }
                 >
                   {parsed ? <Counter end={parsed.num} suffix={parsed.suffix} /> : it.n}

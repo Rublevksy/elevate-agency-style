@@ -156,7 +156,7 @@ export const translations = {
     },
     cta: {
       title: "Máš projekt?",
-      subtitle: "Pojďme ho posunout na další úroveň.",
+      subtitle: "Pojďme ho probrat — pár otázek, žádný nudný formulář.",
       btn: "Nezávazná konzultace",
     },
     faq: {
@@ -425,7 +425,7 @@ export const translations = {
       title: "Testimonials",
       items: [],
     },
-    cta: { title: "Got a project?", subtitle: "Let's take it to the next level.", btn: "Free consultation" },
+    cta: { title: "Got a project?", subtitle: "Let's talk it through — a few quick questions, not a boring form.", btn: "Free consultation" },
     faq: {
       eyebrow: "FAQ",
       title: "Frequently asked questions",
@@ -686,7 +686,7 @@ export const translations = {
       title: "Отзывы",
       items: [],
     },
-    cta: { title: "Есть проект?", subtitle: "Поднимем его на новый уровень.", btn: "Бесплатная консультация" },
+    cta: { title: "Есть проект?", subtitle: "Обсудим — пара вопросов, никакой скучной анкеты.", btn: "Бесплатная консультация" },
     faq: {
       eyebrow: "FAQ",
       title: "Частые вопросы",
@@ -947,7 +947,7 @@ export const translations = {
       title: "Відгуки",
       items: [],
     },
-    cta: { title: "Маєш проєкт?", subtitle: "Виведемо його на новий рівень.", btn: "Безкоштовна консультація" },
+    cta: { title: "Маєш проєкт?", subtitle: "Обговоримо — кілька запитань, жодної нудної анкети.", btn: "Безкоштовна консультація" },
     faq: {
       eyebrow: "FAQ",
       title: "Часті питання",
