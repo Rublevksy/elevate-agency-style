@@ -54,6 +54,61 @@ Logo.tsx` — не менять сам файл логотипа.
 (только nav/оверлеи). Тикеты 02/03/05/06 используют эти токены, не
 изобретают свои.
 
+## Из тикета 01 — токены и копирайт (готово, commit `bc49f57`)
+
+- CSS (`src/styles.css`): `--primary-glow-strong` (custom property), `.shadow-ambient`, `.shadow-contact`, `.surface-glass` (только nav/оверлеи), `.heading-display` / `.heading-display-sm` (fluid `clamp()`-заголовки, вес 800) — использовать эти классы, не изобретать новые тени/заголовочные размеры.
+- `SectionHeading` (`src/components/sections/SectionHeading.tsx`) — сигнатура пропсов не изменилась (`eyebrow?`, `title`, `subtitle?`), внутри теперь `heading-display-sm`.
+- `Nav.tsx` — логотип `h-10 md:h-12` в незаскроленном состоянии / `h-9 md:h-11` заскроленном; dropdown’ы используют стандартный easing.
+- i18n (`src/lib/i18n.ts`, все 4 языка CZ/EN/RU/UA): `ui.serviceStage: {title, tag}[5]` (порядок: Weby, SEO, E-shopy, Design & Branding, Aplikace — ключи для тикета 03); `contact.form.features: string[7]`, `contact.form.featuresLabel`, `contact.form.goalLabel`, `contact.form.goalPlaceholder` (для тикета 05); `contact.form.stepTitles` теперь **4 элемента** (было 3) — новый второй элемент "Co má projekt umět?"/аналоги — **тикет 05 обязан пересчитать индексы шагов** (`Contact.tsx` сейчас всё ещё жёстко использует `f.stepTitles[0..2]` под старые 3 шага — это несоответствие ожидаемо и закрывается тикетом 05, не является багом тикета 01).
+- Команды в песочнице: `bun`/`bunx` могут быть недоступны — использовать бинарники напрямую из `node_modules/.bin/` (`node_modules/.bin/tsc`, `node_modules/.bin/eslint`, `node_modules/.bin/vite build`) как эквивалент.
+- **Известный факт репозитория**: `bun run lint` возвращает тысячи `prettier/prettier`-ошибок форматирования по всему репозиторию — это не регрессия тикета 01 (проверено — ошибки лежат в нетронутых участках файлов), а уже существовавший до этого захода технический долг форматирования. Не пытаться чинить его попутно — вне рамок редизайна.
+
+## Из тикета 05 — CTA-анкета (готово, commit `78b7a33`)
+
+- `Contact.tsx`: `StepKey = 1 | 2 | 3 | 4`. Шаг 2 (новый, необязательный) — мультивыбор `featureIdxs: number[]` + `goal: string`. Порядок: 1 тип проекта → 2 функции/цель → 3 контакты → 4 бюджет.
+- `sendContactToTelegram` payload-контракт **не менялся** — features/goal добавляются в конец существующего `message` как `${f.featuresLabel} ...` / `${f.goalLabel} ...` строк.
+- `featureIdxs`/`goal` — держатся в локальном state компонента, нигде не отправляются как отдельные API-поля — это и есть задел под R69 (будущий AI-конфигуратор сможет прочитать их оттуда, когда появится).
+
+## Из тикета 03 — ServiceStage (готово, commit `cb26801`)
+
+- `src/components/sections/ServiceStage.tsx` — `export function ServiceStage()`, без пропсов, читает `useT()` сама. Рендерит `<section id="services">`.
+- Внутри: `role="tablist"/"tab"/"tabpanel"`, активная панель — `<Link>` на реальный маршрут из `SERVICE_ROUTES` (тот же порядок, что `t.ui.serviceStage`): `/services/web`, `/audit`, `/services/eshop`, `/services`, `/contact`.
+- Auto-advance каждые 5200мс, останавливается на hover/focus и навсегда после первого клика; выключен при `prefers-reduced-motion`.
+- Использует токены тикета 01: `.heading-display-sm`, `.shadow-contact`, `.hover-lift`, единый easing `[0.22, 1, 0.36, 1]`.
+- **Ещё не вмонтирован ни в один маршрут** — это задача тикета 04 (`import { ServiceStage } from "@/components/sections/ServiceStage"` в `src/routes/index.tsx`, замена инлайн-секции «SERVICES — only 3»).
+
+## Из тикета 02 — DeviceHero (готово, commit `7e57968`)
+
+- `<DeviceHero variant="macbook" | "iphone" lang={Lang} />` — `src/components/hero/DeviceHero.tsx`. Самодостаточная секция: сама владеет своим scroll-треком (`height: 220vh` desktop / `170vh` iphone) и sticky-стадией — просто монтируется на место старого `<Hero3DCube />`, ничего больше не требуется.
+- `useHeroScroll(targetRef, variant) → HeroSceneStyle` — `src/components/hero/useHeroScroll.ts`. Один `scrollYProgress` управляет всем; `reducedMotion: boolean` в возврате — статичный кадр вместо анимации.
+- `DeviceShellMacbook`/`DeviceShellIphone` — не экспортируются наружу пакета, внутренняя деталь `DeviceHero`.
+- Экран устройства крутит 4 кадра (`HERO_SCREEN_FRAME_COUNT = 4`): кадр 0 — лого ELEVATE, кадры 1–3 — первые 3 элемента `t.ui.serviceStage` (тикет 01) — это и есть переход «hero → services» (R37/R38), **ничего нового в i18n не добавлено**, только чтение.
+- **Ещё не вмонтирован ни в один маршрут** — задача тикета 04.
+
+## Из тикета 06 — роллаут (готово, commit `612b443`)
+
+Точечный проход по About/Services/Pricing/Projects/Audit/Insights — `.hover-lift`
+и `SectionHeading` применены там, где были самодельные дубликаты; авторская
+вёрстка отдельных страниц (services.branding, services.design) сознательно не
+унифицирована. `.grid-bg` не тронут (оставлен на тикет 07). `/projects`-карточка
+портфолио живёт в `src/components/sections/Portfolio.tsx`, вне зоны этого
+тикета — сверка с новой карточкой портфолио homepage (тикет 04) осталась
+открытым пунктом для тикета 07.
+
+## Из тикета 04 — сборка homepage (готово, commit `f99e203`)
+
+`src/routes/index.tsx` теперь: `DeviceHero` (macbook/iphone через `hidden md:block`/`md:hidden`) → `ServiceStage` (все 5) → 9 существующих trust-секций (без изменений) → портфолио (реальные проекты, токены `.hover-lift`/`.shadow-contact`) → InstagramStrip → CTA (токены `.shadow-ambient`/`.heading-display-sm`). `Hero3DCube.tsx` остался в репозитории неиспользуемым (не удалён).
+
+**Открытый мелкий пункт для тикета 07**: копирайт CTA-баннера на homepage (`t.cta.title`/`t.cta.subtitle`) не менялся — по-прежнему generic «Máš projekt? Pojďme ho posunout», без явного намёка «дальше короткий диалог, не форма». Не блокирующе (реальная форма на `/contact` уже не выглядит как форма), но стоит решить в финальной сверке: либо добавить новую i18n-строку, либо сознательно принять как есть.
+
+## Из тикета 07 — QA pass (готово, commit `5a59d0d`)
+
+- `.text-gradient` удалён из `src/styles.css` (был только на stat-counter числах `Results.tsx`, заменён на `text-foreground`) — generic-SaaS приём на числах, попал под запрет брифа. Проверено repo-wide grep — других использований не было.
+- `.grid-bg` **оставлен как есть** — ~20 использований сайтвайд, 20-30% opacity, всегда с radial mask — осознанное решение тикета 07: это не тот «громкий» grid-паттерн, который запрещает бриф.
+- Homepage CTA (`t.cta.subtitle`, все 4 языка CZ/EN/RU/UA в `src/lib/i18n.ts`) — copy обновлён на «короткий диалог, не форма», без изменения `t.cta.title`/`t.cta.btn` и без новых i18n-ключей.
+- Нет новых публичных сигнатур — только copy/CSS. `tsc --noEmit`, `vite build` — чисто; `eslint` — 149 prettier/prettier ошибок, все допредсуществующие (сверено `git stash diff`, те же строки падают до/после).
+- Визуальный/mobile QA — структурный (роуты, i18n-ключи, reduced-motion код-пути, реальность данных через чтение исходников), без браузерного рендера — инструмент браузера недоступен в этой песочнице (тот же лимит, что у тикетов 02/03).
+
 ## Новые i18n-ключи (владеет ticket 01)
 
 Ticket 01 добавляет в `src/lib/i18n.ts`/`src/lib/pages-i18n.ts` реальные
