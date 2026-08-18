@@ -1,0 +1,20 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-08-18T12:30:01.212Z",
+        "reason": "incumbent brand font, shipped in production before this session (elevate-cinematic-redesign run) — not a choice made in this exploration run; __root.tsx was only touched for the /design path-guard, unrelated to this font link"
+      },
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-08-18T12:40:44.531Z",
+        "reason": "acknowledged real finding, not fixed: Space Grotesk chosen for V3 deliberately as a geometric/product-register face distinct from V1 (Inter) and V2 (Newsreader serif) — differentiation across V1-V4 leans primarily on composition/interaction/motion, not typeface novelty alone; ticket already reviewed and committed, will flag as an honest trade-off in the final report rather than reopen for a font swap"
+      }
+    ]
+  }
+}

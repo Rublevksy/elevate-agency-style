@@ -1,62 +1,52 @@
 window.STATE =
 {
-  "slug": "elevate-cinematic-redesign",
-  "title": "ELEVATE — cinematic premium redesign (hero/scroll/services + site)",
-  "mode": "full",
+  "slug": "homepage-design-directions",
+  "title": "ELEVATE — 4 изолированных визуальных направления для главной (/design-v1…v4)",
+  "mode": "semi",
   "depth": "normal",
   "polish": null,
   "tier": null,
   "briefFile": "2026-08-18-brief.md",
   "memoryFile": "CLAUDE.md",
   "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.claude/skills/autopilot",
-  "startedAt": "2026-08-18T11:07:51+02:00",
-  "updatedAt": "2026-08-18T12:50:00+02:00",
-  "finishedAt": "2026-08-18T12:50:00+02:00",
+  "startedAt": "2026-08-18T14:05:01+02:00",
+  "updatedAt": "2026-08-18T14:05:01+02:00",
+  "finishedAt": null,
   "stages": [
-    { "id": "preflight", "status": "done", "startedAt": "2026-08-18T11:07:51+02:00", "finishedAt": "2026-08-18T11:09:30+02:00" },
-    { "id": "manifest",  "status": "done", "startedAt": "2026-08-18T11:09:30+02:00", "finishedAt": "2026-08-18T11:31:02+02:00" },
-    { "id": "briefing",  "status": "done", "startedAt": "2026-08-18T11:31:02+02:00", "finishedAt": "2026-08-18T11:31:02+02:00" },
-    { "id": "spec",      "status": "done", "startedAt": "2026-08-18T11:31:02+02:00", "finishedAt": "2026-08-18T11:41:32+02:00" },
-    { "id": "plan",      "status": "done", "startedAt": "2026-08-18T11:41:32+02:00", "finishedAt": "2026-08-18T11:50:30+02:00" },
-    { "id": "build",     "status": "done", "startedAt": "2026-08-18T11:50:30+02:00", "finishedAt": "2026-08-18T12:48:00+02:00", "note": "8 тасков готовы и закоммичены (7 плановых + 1 G4-репарация)" },
-    { "id": "review",    "status": "done", "startedAt": "2026-08-18T11:50:30+02:00", "finishedAt": "2026-08-18T12:32:00+02:00", "note": "ревью выполнено inline после каждого таска (Manifest/Spec/Craft), отдельные reviewer-субагенты не потребовались" },
-    { "id": "final",     "status": "done", "startedAt": "2026-08-18T12:32:00+02:00", "finishedAt": "2026-08-18T12:50:00+02:00", "note": "G4 blind acceptance пройдена, 1 дрифт найден и закрыт (R88 → тикет 08), memory + 6 ADR записаны" }
+    { "id": "preflight", "status": "done", "startedAt": "2026-08-18T14:05:01+02:00", "finishedAt": "2026-08-18T14:20:00+02:00" },
+    { "id": "manifest",  "status": "done", "startedAt": "2026-08-18T14:20:00+02:00", "finishedAt": "2026-08-18T14:35:00+02:00" },
+    { "id": "briefing",  "status": "skipped", "startedAt": "2026-08-18T14:35:00+02:00", "finishedAt": "2026-08-18T14:35:30+02:00", "note": "вопросов не потребовалось — бриф однозначен, форки решены самостоятельно (semi, глубина normal)" },
+    { "id": "spec",      "status": "done", "startedAt": "2026-08-18T14:35:30+02:00", "finishedAt": "2026-08-18T15:10:00+02:00", "note": "G2 независимая проверка нашла 6 расхождений — все закрыты (accessibility, критика-до-постройки, V4 device presentation, область реюза ассетов, mobile-охват trust/CTA); попутно обнаружен headless Chrome в песочнице — R49/R50 сняты с placeholder" },
+    { "id": "plan",      "status": "done", "startedAt": "2026-08-18T15:10:00+02:00", "finishedAt": "2026-08-18T15:20:00+02:00", "note": "T2, 6 тасков, 3 волны (01 → 02+03+04+05 → 06)" },
+    { "id": "build",     "status": "done", "startedAt": "2026-08-18T15:20:00+02:00", "finishedAt": "2026-08-18T17:35:00+02:00" },
+    { "id": "review",    "status": "done", "startedAt": "2026-08-18T15:20:00+02:00", "finishedAt": "2026-08-18T17:35:00+02:00", "note": "ревью выполнено inline после каждого тикета (Manifest/Spec/Craft) + отдельный QA-тикет 06 с реальными скриншотами; отдельные reviewer-субагенты не потребовались при таком масштабе (6 тасков)" },
+    { "id": "final",     "status": "active", "startedAt": "2026-08-18T17:35:00+02:00" }
   ],
   "requirements": {
-    "total": 146, "done": 144, "inTicket": 0, "inSpec": 0,
-    "placeholder": 1, "deferred": 1, "dropped": 0
+    "total": 62, "done": 55, "inTicket": 0, "inSpec": 6,
+    "placeholder": 0, "deferred": 1, "dropped": 0
   },
-  "coverage": { "findings": 9, "actedOn": 9, "note": "G2 independent pass: PRODUCT.md ref, design tokens (R141-149), files-not-to-touch, homepage order, trust no-fabrication, nav, performance detail all added to spec; 3 spec-not-in-brief items (no Three.js, no new test runner, retire hero-mockup.jpg) kept as justified engineering decisions." },
-  "tier": "T2",
+  "coverage": { "findings": 6, "actedOn": 6, "note": "G2 независимая проверка (brief.md + spec.md, без manifest.md): accessibility не покрыта → добавлен раздел; критика Impeccable была только пост-фактум → добавлена критика на этапе спецификации; V4 device presentation неясен → уточнена консоль-панель; область реюза референс-фото не названа явно → ограничена V1; mobile-охват называл только hero/услуги → расширен на trust/CTA; визуальная браузер-проверка была помечена невозможной → обнаружен headless Chrome, пересмотрено на реальную скриншот-проверку" },
   "tickets": [
-    { "id": "01", "title": "Дизайн-токены, общие примитивы, новые i18n-строки", "requirements": ["R01","R04","R21","R22","R70","R120","R141","R142","R143","R144","R145","R146","R147","R148","R149"], "blockedBy": [], "wave": 1, "zone": ["src/styles.css","src/components/sections/SectionHeading.tsx","src/components/Nav.tsx","src/lib/i18n.ts"], "status": "done", "startedAt": "2026-08-18T11:51:32+02:00", "finishedAt": "2026-08-18T12:01:20+02:00", "tests": "tsc --noEmit clean; vite build OK; lint scoped to touched files clean (repo-wide prettier debt pre-existing)", "commit": "bc49f57", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "02", "title": "DeviceHero: hero + scroll-сцена (MacBook/iPhone)", "requirements": ["R02","R03","R23-R41","R76","R77","R79","R133i"], "blockedBy": ["01"], "wave": 2, "zone": ["src/components/hero/"], "status": "done", "startedAt": "2026-08-18T12:01:20+02:00", "finishedAt": "2026-08-18T12:13:23+02:00", "tests": "tsc clean; eslint clean; vite build OK (unwired, expected)", "commit": "7e57968", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "03", "title": "ServiceStage: связанная подача 5 услуг", "requirements": ["R02","R03","R42-R58","R131i","R132i","R134i"], "blockedBy": ["01"], "wave": 2, "zone": ["src/components/sections/ServiceStage.tsx"], "status": "done", "startedAt": "2026-08-18T12:01:20+02:00", "finishedAt": "2026-08-18T12:09:23+02:00", "tests": "tsc clean; eslint clean; vite build OK (unwired, expected)", "commit": "cb26801", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "05", "title": "CTA-анкета: новый шаг в Contact.tsx", "requirements": ["R63-R69","R66.1","R94","R96","R136i","R139"], "blockedBy": ["01"], "wave": 2, "zone": ["src/components/sections/Contact.tsx"], "status": "done", "startedAt": "2026-08-18T12:01:20+02:00", "finishedAt": "2026-08-18T12:07:01+02:00", "tests": "tsc clean; vite build OK", "commit": "78b7a33", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "06", "title": "Роллаут визуальной системы на остальные страницы", "requirements": ["R109","R118","R137-R140"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/about.tsx","src/routes/services*.tsx","src/routes/pricing*.tsx","src/routes/projects*.tsx","src/routes/audit.tsx","src/routes/insights*.tsx"], "status": "done", "startedAt": "2026-08-18T12:07:01+02:00", "finishedAt": "2026-08-18T12:14:38+02:00", "tests": "tsc clean; eslint clean (non-prettier); vite build OK", "commit": "612b443", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "04", "title": "Сборка homepage на новых компонентах", "requirements": ["R08","R09","R19","R42","R59-R62","R101","R102","R129","R135i"], "blockedBy": ["02","03"], "wave": 3, "zone": ["src/routes/index.tsx"], "status": "done", "startedAt": "2026-08-18T12:14:38+02:00", "finishedAt": "2026-08-18T12:19:42+02:00", "tests": "tsc clean; vite build OK (full SSR+client)", "commit": "f99e203", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "07", "title": "QA: сборка, регрессии, критерий премиальности", "requirements": ["R05-R125 (verification)"], "blockedBy": ["04","05","06"], "wave": 4, "zone": ["repo-wide verification"], "status": "done", "startedAt": "2026-08-18T12:19:42+02:00", "finishedAt": "2026-08-18T12:32:00+02:00", "tests": "tsc --noEmit clean; vite build OK (136 modules); eslint 149 pre-existing prettier errors (verified via git stash diff, zero net-new)", "commit": "5a59d0d", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "08", "title": "G4-репарация: global prefers-reduced-motion CSS fallback (R88)", "requirements": ["R88"], "blockedBy": ["07"], "wave": 5, "zone": ["src/styles.css"], "status": "done", "startedAt": "2026-08-18T12:40:00+02:00", "finishedAt": "2026-08-18T12:48:00+02:00", "tests": "tsc --noEmit clean; vite build OK; compiled CSS verified to contain the rule exactly once with !important intact", "commit": "f7b156b", "retries": 0, "repairs": 0, "handoffs": 0, "note": "not part of original 7-ticket plan — cut in Phase 8 to close a real drift the blind-acceptance check (G4) found: manifest said R88 done, but Contact.tsx had no reduced-motion handling at all" }
+    { "id": "01", "title": "Изоляция маршрутов + общий переключатель направлений", "requirements": ["R27","R29","R30","R47","R57i","R58i","R59i"], "blockedBy": [], "wave": 1, "zone": ["src/routes/__root.tsx","src/routes/design.tsx","src/components/design-explore/"], "status": "done", "startedAt": "2026-08-18T15:20:00+02:00", "finishedAt": "2026-08-18T15:35:00+02:00", "tests": "tsc --noEmit clean on all ticket files (1 pre-existing unrelated error in hero WIP, confirmed present before this ticket)", "commit": "1e154dd", "retries": 0, "repairs": 0, "handoffs": 0 },
+    { "id": "02", "title": "/design-v1 — Reference-led premium studio", "requirements": ["R10","R14-R20","R21-R26","R31","R32","R37"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/design-v1.tsx"], "status": "done", "startedAt": "2026-08-18T15:35:00+02:00", "finishedAt": "2026-08-18T15:55:00+02:00", "tests": "tsc --noEmit clean; eslint clean; reuses DeviceHero as-is; fixed pre-existing missing ScreenMockup import in DeviceShell.macbook.tsx", "commit": "0e71d6e", "retries": 0, "repairs": 0, "handoffs": 0 },
+    { "id": "03", "title": "/design-v2 — Editorial / cinematic digital studio", "requirements": ["R11","R14-R20","R21-R26","R31","R32","R33-R36"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/design-v2.tsx"], "status": "done", "startedAt": "2026-08-18T15:35:00+02:00", "finishedAt": "2026-08-18T16:05:00+02:00", "tests": "tsc --noEmit clean; eslint clean; vite build OK", "commit": "ab80cec", "retries": 0, "repairs": 0, "handoffs": 0 },
+    { "id": "04", "title": "/design-v3 — Interactive product showcase", "requirements": ["R12","R14-R20","R21-R26","R31","R32","R33-R36"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/design-v3.tsx"], "status": "done", "startedAt": "2026-08-18T15:35:00+02:00", "finishedAt": "2026-08-18T15:50:00+02:00", "tests": "tsc --noEmit clean; eslint clean; vite build OK", "commit": "bc6b52f", "retries": 0, "repairs": 0, "handoffs": 0 },
+    { "id": "05", "title": "/design-v4 — Experimental premium technology studio", "requirements": ["R13","R14-R20","R21-R26","R31","R32","R33-R36"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/design-v4.tsx"], "status": "done", "startedAt": "2026-08-18T16:10:00+02:00", "finishedAt": "2026-08-18T16:35:00+02:00", "tests": "tsc --noEmit clean; eslint clean", "commit": "f1f7050", "retries": 0, "repairs": 0, "handoffs": 0 },
+    { "id": "06", "title": "QA: сборка, изоляция, реальная скриншот-верификация", "requirements": ["R33-R36","R38-R50","R60i"], "blockedBy": ["02","03","04","05"], "wave": 3, "zone": ["repo-wide verification"], "status": "done", "startedAt": "2026-08-18T16:35:00+02:00", "finishedAt": "2026-08-18T17:35:00+02:00", "tests": "tsc --noEmit 0 errors; vite build OK (5 новых маршрутов в SSR-манифесте); eslint scoped чисто; 10 реальных screenshot'ов (5 маршрутов × desktop/mobile) лично просмотрены; найден и починен реальный баг мобильной адаптивности в 3 раунда репаира (repairs=3)", "commit": "c4f56be", "retries": 0, "repairs": 3, "handoffs": 0 }
   ],
   "singlePass": null,
   "tests": null,
-  "debt": { "placeholders": [], "assumptions": [], "emptyEnv": [], "preExisting": [
-    { "finding": "animate-fade-in/animate-scale-in utility classes (used in Contact.tsx, ContactWidget.tsx, __root.tsx) compile to zero CSS — Tailwind v4 never generates them because styles.css has bare @keyframes fade-in/scale-in with no matching --animate-fade-in/--animate-scale-in theme token. Pre-existing, unrelated to reduced-motion or any ticket's scope — discovered by ticket 08 while verifying its CSS fix, not fixed (out of scope).", "source": "ticket 08" }
-  ] },
+  "debt": { "placeholders": [], "assumptions": [], "emptyEnv": [] },
   "additions": [],
+  "coverage": null,
   "concerns": [
-    { "source": "impeccable design hook, resolved by ticket 07", "file": "src/styles.css (.grid-bg)", "finding": "Kept as-is by explicit ticket-07 judgment call: all ~20 usages are 20-30% opacity, radially masked, consistent sitewide — reads as restrained technical texture, not the loud unmasked-grid AI pattern the brief bans. Full removal judged disproportionate to a QA-fix ticket.", "blocking": false, "resolution": "kept, justified" },
-    { "source": "impeccable design hook, resolved by ticket 07", "file": "src/components/sections/Results.tsx", "finding": ".text-gradient removed (commit 5a59d0d) — swapped to text-foreground on stat-counter numbers; gradient-text-on-numbers judged a generic-SaaS trope the brief bans. Dead utility deleted from styles.css.", "blocking": false, "resolution": "fixed" },
-    { "source": "ticket 04 self-report, resolved by ticket 07", "file": "src/lib/i18n.ts (cta.subtitle, all 4 languages)", "finding": "Homepage CTA subtitle updated (commit 5a59d0d) to signal a short guided Q&A rather than a form, matching the actual /contact stepper UX. Title/btn left unchanged.", "blocking": false, "resolution": "fixed" }
+    { "source": "ticket 06 — реальный headless-Chrome скриншот на 390px", "file": "src/components/design-explore/ExploreSwitcher.tsx", "finding": "было BLOCKING: не помещался в 390px. Раунд 1 репаира починил (flex-wrap, теперь переносится на 2 строки) — подтверждено скриншотом.", "blocking": false, "resolution": "fixed (раунд 1)" },
+    { "source": "ticket 06 — методологическая находка", "file": "инструмент QA, не код", "finding": "`google-chrome --headless=new --screenshot --window-size=W,H` ненадёжен в этой песочнице — реально измерено `window.innerWidth` через CDP: запрошенные 390px давали то 500px, то 980px в зависимости от условий, и PNG обрезался, а не масштабировался — отсюда ложное впечатление «переполнение на всех 5 страницах» после раунда 1. Перепроверено надёжным методом (CDP `Emulation.setDeviceMetricsOverride`, `Page.captureScreenshot`) — раунд 1 (ExploreSwitcher flex-wrap + CTA w-full) и раунд 2 (min-w-0) оба оказались реальными и рабочими фиксами; все 5 страниц подтверждены чистыми на истинных 390px.", "blocking": false, "resolution": "не находка кода — методологический урок, зафиксирован для отчёта" },
+    { "source": "ticket 06 — CDP-скриншот на истинных 390px", "file": "src/routes/design-v1.tsx", "finding": "минорное: 2-строчный ExploreSwitcher визуально перекрывал eyebrow-бейдж hero (`pt-14` недостаточно). Починено (`pt-14`→`pt-24` mobile), подтверждено скриншотом.", "blocking": false, "resolution": "fixed" },
+    { "source": "ticket 06 — design hook (overused-font)", "file": "src/routes/design-v3.tsx, design-v4.tsx", "finding": "Space Grotesk (V3) и Syne (V4) — оба в списке часто используемых AI-инструментами шрифтов (new-work.md калибровка). Осознанно не исправлено: различие направлений держится в первую очередь на композиции/motion, не на редкости шрифта; переделка уже проверенных тикетов ради этого не оправдана.", "blocking": false, "resolution": "kept, justified — см. финальный отчёт" },
+    { "source": "ticket 06 — методологическая находка", "file": "инструмент QA (headless Chrome CDP), не код продукта", "finding": "`Emulation.setDeviceMetricsOverride` при десктопной ширине (1440) специфически ломает scroll-driven MacBook-сцену V1 (зависает в промежуточном кадре) — артефакт не воспроизводится ни нативным `--window-size` на 1440, ни тем же CDP-методом на мобильной ширине (iPhone-шелл). Итоговые скриншоты в отчёте используют нативный `--window-size` для десктопа, CDP для мобильного — оба независимо подтверждены как точные.", "blocking": false, "resolution": "не находка кода — методологический урок, зафиксирован в qa-visual-notes.md" }
   ],
   "reviewers": { "manifestSpec": null, "craft": null },
-  "blind": {
-    "checkedAt": "2026-08-18T12:45:00+02:00",
-    "verdict": "app builds, typechecks, serves; 10 of 12 brief-area checks реализовано, 2 частично",
-    "drift": [
-      { "manifest": "R88 done", "blind": "частично", "finding": "Hero and ServiceStage correctly gate motion via useReducedMotion(); Contact.tsx (the main CTA/conversion surface) had unconditional CSS keyframe animations with no prefers-reduced-motion handling at all.", "action": "fixed — ticket 08 (commit f7b156b) added a global prefers-reduced-motion CSS fallback in styles.css, site-wide, no component changes needed", "status": "resolved" },
-      { "manifest": "R17 done", "blind": "частично", "finding": "One backdrop-blur instance + animate-pulse glow on Contact.tsx's success state, flagged as light glassmorphism/decoration.", "action": "reviewed and accepted — a single instance on one success state is not \"excessive\" glassmorphism at the scale the brief bans; not fixed", "status": "accepted" }
-    ],
-    "alsoFound": "D01 recorded in manifest.md — spec.md said Aplikace routes to /services, shipped code (ticket 03) routes it to /contact instead (Design & Branding got /services). Both are real routes, no brief violation; corrected ADR 0006 to match shipped behavior."
-  }
+  "blind": null
 }
