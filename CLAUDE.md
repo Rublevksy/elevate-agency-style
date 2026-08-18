@@ -24,7 +24,8 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 - `src/components/ui/` — shadcn/radix-обёртки, не редизайнились точечно.
 - `src/components/` (корень) — `Nav.tsx`, `LangProvider.tsx`, прочие общие виджеты + мёртвый код (`Hero3D.tsx`, `Hero3DCube.tsx`, см. «Подводные камни»).
 - `src/lib/` — `i18n.ts` (переводы 4 языков), `pages-i18n.ts` (`usePages()`), `telegram.functions.ts`/`audit.functions.ts` (серверные функции), `projects.tsx`/`projects-i18n.ts`, `pricing.ts`.
-- `src/routes/` — файловый роутинг TanStack Start; `index.tsx` — собранная главная (`DeviceHero` → `ServiceStage` → trust-секции → портфолио → `InstagramStrip` → CTA).
+- `src/routes/` — файловый роутинг TanStack Start; `index.tsx` — собранная главная (`DeviceHero` → `ServiceStage` → trust-секции → портфолио → `InstagramStrip` → CTA); `design.tsx`/`design-v1..v4.tsx` — временная зона exploration (см. ниже).
+- `src/components/design-explore/` — **временная зона**, не часть постоянной архитектуры: витрина 4 визуальных направлений редизайна главной под `/design-v1`…`/design-v4`, удаляется целиком после того, как пользователь выберет направление. `concepts.ts` — единственный источник правды о 4 направлениях (`DESIGN_CONCEPTS`, slug/order/name/oneLiner), `ExploreSwitcher.tsx` — плавающий (fixed, не sticky) переключатель между направлениями + ссылка назад на прод-сайт, монтируется каждой `design-v*`-страницей самостоятельно (не глобально из `__root.tsx`).
 - `src/hooks/` — `use-reveal.ts`, `use-scroll-depth.ts`, `use-mobile.tsx`.
 - `src/styles.css` — дизайн-токены и utility-классы поверх Tailwind 4 `@theme inline`.
 
@@ -38,6 +39,8 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 - `src/lib/i18n.ts` — `translations`, `useT()`, типы `Lang`/`ServiceSlug`; единственный источник 4-язычных строк сайта CZ/EN/RU/UA.
 - `src/lib/pages-i18n.ts` — `usePages(lang)`, отдельный словарь для сервисных и прочих подстраниц.
 - `src/routes/index.tsx` — сборка главной, монтирует `DeviceHero` + `ServiceStage`.
+- `src/routes/design.tsx` — страница-указатель `/design`, карточки-ссылки на все 4 направления, читает названия/описания из `DESIGN_CONCEPTS`.
+- `src/routes/design-v1.tsx` … `design-v4.tsx` — 4 самостоятельных маршрута-направления, каждый сам монтирует `ExploreSwitcher`, без прод-`Nav`/`Footer`. `design-v1.tsx` — «reference-led premium studio», единственное направление, которому по тикету разрешено переиспользовать прод `DeviceHero`/`useHeroScroll` как есть для hero-блока; остальные секции страницы — собственные, независимые от `ServiceStage`/`Contact`.
 
 ## Архитектура
 
@@ -48,6 +51,8 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 **Contact-степпер.** Весь стейт (шаг, тип проекта, фичи/цель, бюджет, поля формы) — один локальный `useState`-набор в компоненте, шаги не вынесены в файлы. `onSubmit` собирает единственный payload для `sendContactToTelegram` (контракт функции не менялся); фичи/цель шага 2 сериализуются в конец текстового `message`, не как отдельные API-поля.
 
 **i18n.** `src/lib/i18n.ts` — единственный источник переводов (`translations[Lang]`, читается через `useT()` из `LangProvider`); `pages-i18n.ts` — параллельный словарь только для сервисных/прочих подстраниц через `usePages(lang)`. Новые ключи добавляются сразу для всех 4 языков в `i18n.ts`; остальной код только читает.
+
+**`/design` exploration-зона (временная).** `SiteShell` в `src/routes/__root.tsx` проверяет `pathname.startsWith("/design")` и для всей зоны разом отключает прод-`Nav`/`Footer`/`FloatingCta` — тот же паттерн, что уже был для `/contact` (там отдельно скрывается только `FloatingCta`). Каждая `design-v*`-страница полностью самодостаточна: сама читает `useT()`, сама монтирует `ExploreSwitcher`, ничего не берёт из `Nav.tsx`. Это explore-инструмент для выбора направления редизайна главной, не кандидат в постоянную архитектуру — весь `src/components/design-explore/` и маршруты `design*.tsx` рассчитаны на полное удаление одним заходом после решения пользователя.
 
 ## Соглашения кода
 
@@ -66,6 +71,7 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 - `src/routeTree.gen.ts`, `vite.config.ts`, всё под `src/integrations/supabase/`, `src/lib/*.functions.ts` (`telegram.functions.ts`/`audit.functions.ts`), SEO/structured data (`STRUCTURED_DATA` в `src/routes/__root.tsx`, `head()` в маршрутах, `src/routes/sitemap[.]xml.ts`) — не редактировать без прямой необходимости.
 - `/references/` (8 файлов) не импортируется в продакшен-код ни при каких обстоятельствах — не трогать.
 - Нет тестового раннера (`vitest`/`jest`) — «зелёный набор» это `tsc --noEmit` + `eslint` + `vite build` + ручной просмотр.
+- `google-chrome --headless=new --screenshot --window-size=W,H` на этой машине ненадёжен для узких (~390px, mobile) ширин — реально отдаёт то ~500px, то ~980px вместо запрошенной, PNG обрезается, а не масштабируется. Для мобильных скриншотов нужен CDP: `--remote-debugging-port` + `Emulation.setDeviceMetricsOverride` через WebSocket (`require('ws')` уже доступен как транзитивная зависимость в `node_modules`, ставить не нужно). Для десктопных ширин (≥1024px) `--window-size` работает точно — использовать его, не CDP: на десктопной ширине CDP-эмуляция специфически ломает scroll-driven макбук-сцену `DeviceHero`/`useHeroScroll` — зависает в промежуточном кадре анимации.
 
 ## Как здесь работает Autopilot
 

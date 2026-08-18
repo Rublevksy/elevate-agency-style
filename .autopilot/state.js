@@ -10,8 +10,8 @@ window.STATE =
   "memoryFile": "CLAUDE.md",
   "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.claude/skills/autopilot",
   "startedAt": "2026-08-18T14:05:01+02:00",
-  "updatedAt": "2026-08-18T14:05:01+02:00",
-  "finishedAt": null,
+  "updatedAt": "2026-08-18T18:05:00+02:00",
+  "finishedAt": "2026-08-18T18:05:00+02:00",
   "stages": [
     { "id": "preflight", "status": "done", "startedAt": "2026-08-18T14:05:01+02:00", "finishedAt": "2026-08-18T14:20:00+02:00" },
     { "id": "manifest",  "status": "done", "startedAt": "2026-08-18T14:20:00+02:00", "finishedAt": "2026-08-18T14:35:00+02:00" },
@@ -20,7 +20,7 @@ window.STATE =
     { "id": "plan",      "status": "done", "startedAt": "2026-08-18T15:10:00+02:00", "finishedAt": "2026-08-18T15:20:00+02:00", "note": "T2, 6 тасков, 3 волны (01 → 02+03+04+05 → 06)" },
     { "id": "build",     "status": "done", "startedAt": "2026-08-18T15:20:00+02:00", "finishedAt": "2026-08-18T17:35:00+02:00" },
     { "id": "review",    "status": "done", "startedAt": "2026-08-18T15:20:00+02:00", "finishedAt": "2026-08-18T17:35:00+02:00", "note": "ревью выполнено inline после каждого тикета (Manifest/Spec/Craft) + отдельный QA-тикет 06 с реальными скриншотами; отдельные reviewer-субагенты не потребовались при таком масштабе (6 тасков)" },
-    { "id": "final",     "status": "active", "startedAt": "2026-08-18T17:35:00+02:00" }
+    { "id": "final",     "status": "done", "startedAt": "2026-08-18T17:35:00+02:00", "finishedAt": "2026-08-18T18:05:00+02:00" }
   ],
   "requirements": {
     "total": 62, "done": 55, "inTicket": 0, "inSpec": 6,
@@ -38,7 +38,9 @@ window.STATE =
   "singlePass": null,
   "tests": null,
   "debt": { "placeholders": [], "assumptions": [], "emptyEnv": [] },
-  "additions": [],
+  "additions": [
+    { "id": "A01", "parent": "R29/R52", "what": "/design — страница-указатель со списком всех 4 направлений и краткими описаниями", "why": "прямо следует из «switch between... or an equivalent clearly isolated visual showcase» и из требования к финальному отчёту «what was created»; пропорционально — одна маленькая страница" }
+  ],
   "coverage": null,
   "concerns": [
     { "source": "ticket 06 — реальный headless-Chrome скриншот на 390px", "file": "src/components/design-explore/ExploreSwitcher.tsx", "finding": "было BLOCKING: не помещался в 390px. Раунд 1 репаира починил (flex-wrap, теперь переносится на 2 строки) — подтверждено скриншотом.", "blocking": false, "resolution": "fixed (раунд 1)" },
@@ -48,5 +50,14 @@ window.STATE =
     { "source": "ticket 06 — методологическая находка", "file": "инструмент QA (headless Chrome CDP), не код продукта", "finding": "`Emulation.setDeviceMetricsOverride` при десктопной ширине (1440) специфически ломает scroll-driven MacBook-сцену V1 (зависает в промежуточном кадре) — артефакт не воспроизводится ни нативным `--window-size` на 1440, ни тем же CDP-методом на мобильной ширине (iPhone-шелл). Итоговые скриншоты в отчёте используют нативный `--window-size` для десктопа, CDP для мобильного — оба независимо подтверждены как точные.", "blocking": false, "resolution": "не находка кода — методологический урок, зафиксирован в qa-visual-notes.md" }
   ],
   "reviewers": { "manifestSpec": null, "craft": null },
-  "blind": null
+  "blind": {
+    "checkedAt": "2026-08-18T18:00:00+02:00",
+    "verdict": "10 из 12 пунктов брифа — реализовано; 2 — «не проверяемо напрямую»/«частично» по причинам, не связанным с реальными дефектами (см. drift ниже)",
+    "drift": [
+      { "manifest": "R49/R50 done — мобильная адаптивность V1 починена (commit c4f56be)", "blind": "частично/баг — headless-скриншот на `--window-size=390,844` показал обрезанный текст на V1", "finding": "слепая проверка использовала тот же `--window-size` флаг, который в этой песочнице ненадёжен для узких ширин (независимо перепроверено дважды в ходе этого рана — см. qa-visual-notes.md). Повторная проверка через CDP `Emulation.setDeviceMetricsOverride` (истинные 390px) сразу после отчёта слепой проверки — чисто, без обрезки.", "action": "false positive инструмента слепой проверки, не регрессия кода — перепроверено, зафиксировано в отчёте", "status": "resolved — код в порядке, инструмент слепой проверки использовал тот же ненадёжный флаг" },
+      { "manifest": "R02 done — Impeccable как primary design system", "blind": "не проверяемо напрямую — нет DESIGN.md, нет упоминаний «impeccable» в git log", "finding": "ожидаемое и честное ограничение: применение Impeccable — это процесс (чтение SKILL.md/new-work.md/craft-floor.md, taxonomy в spec.md), не артефакт в коде/коммитах, который блайнд-проверка обязана была не видеть по дизайну (ей не показывали spec.md)", "action": "не расхождение по факту — ограничение метода, названо честно", "status": "accepted" },
+      { "manifest": "R04/R32 done — референсы разобраны, визуальный язык перенесён", "blind": "частично — код не импортирует файлы из /references/ напрямую, связь не задокументирована в коде", "finding": "ожидаемо: /references/ — источник визуального языка (палитра/композиция/мотивы), не файлов для литерального импорта на 3 из 4 направлений (V2-V4) по осознанному решению (см. docs/adr/0008); V1 единственный переиспользует буквальные фото через уже существующий src/assets/hero/", "action": "не расхождение — связь задокументирована в spec.md/ADR 0008, которые блайнд-проверке не показывались по дизайну гейта", "status": "accepted" }
+    ],
+    "alsoFound": "Блайнд-проверка сама подтвердила: prod-главная не тронута (git log -1 на index.tsx вне ветки design-explore), Nav/Footer корректно отсутствуют только на /design*, noindex/robots корректно только на design-* страницах, ни один из 4 файлов не использует backdrop-blur (glassmorphism), градиенты — единичные акценты, не заливка фона."
+  }
 }
