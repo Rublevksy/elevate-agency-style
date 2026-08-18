@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { Sparkles, MessageCircle, Award, Users, Clock, Zap, ShieldCheck, TrendingUp, Quote, ArrowRight } from "lucide-react";
 import { Guarantee } from "@/components/sections/Guarantee";
 import { CtaBanner } from "@/components/sections/CtaBanner";
+import { SectionHeading } from "@/components/sections/SectionHeading";
 import { Counter } from "@/components/Counter";
 import { useT, type Lang } from "@/lib/i18n";
 
@@ -162,12 +163,7 @@ function AboutPage() {
       {/* VALUES */}
       <section className="py-20 md:py-28 border-t border-border bg-surface/30">
         <div className="container-luxe">
-          <div className="max-w-2xl mb-12 md:mb-16">
-            <p className="text-xs uppercase tracking-[0.25em] text-primary mb-4">{vh.eyebrow}</p>
-            <h2 className="text-3xl md:text-5xl font-bold text-foreground tracking-tight">
-              {vh.title}
-            </h2>
-          </div>
+          <SectionHeading eyebrow={vh.eyebrow} title={vh.title} />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {VALUES.map((v) => {
               const Icon = v.icon;

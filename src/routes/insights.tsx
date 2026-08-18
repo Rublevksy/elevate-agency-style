@@ -88,7 +88,7 @@ function InsightsPage() {
                 key={i.id}
                 to="/insights/$slug"
                 params={{ slug: i.slug }}
-                className="group flex flex-col p-8 rounded-xl border border-border bg-surface/40 backdrop-blur-sm transition-all duration-300 hover:border-primary/40 hover:-translate-y-1 hover:shadow-[0_25px_70px_-25px_rgba(59,130,246,0.45)]"
+                className="hover-lift group flex flex-col p-8 rounded-xl border border-border bg-surface/40"
               >
                 <p className="text-[11px] uppercase tracking-[0.22em] text-primary mb-5">
                   {i.category}

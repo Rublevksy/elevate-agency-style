@@ -71,7 +71,7 @@ function WebServicePage() {
           {s.items.map((item, i) => {
             const Icon = ICONS[i];
             return (
-              <article key={item} className="rounded-xl border border-border bg-surface/40 p-10 min-h-[220px]">
+              <article key={item} className="rounded-xl border border-border bg-surface/40 p-10 min-h-[220px] hover:border-primary/40 transition-colors">
                 <Icon className="h-7 w-7 text-primary mb-8" />
                 <p className="flex items-center gap-3 text-xl font-bold text-foreground"><Check className="h-5 w-5 text-primary" /> {item}</p>
               </article>

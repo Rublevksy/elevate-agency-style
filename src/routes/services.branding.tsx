@@ -96,7 +96,7 @@ function BrandingServicePage() {
               { label: "minimal", bg: "bg-gradient-to-br from-surface to-background", content: <div className="text-2xl font-light tracking-[0.4em] text-foreground">L U M E N</div> },
               { label: "symbol", bg: "bg-background", content: <div className="flex flex-col items-center gap-2"><div className="relative h-12 w-12"><div className="absolute inset-0 rounded-full border-2 border-primary" /><div className="absolute inset-2 rounded-full bg-primary/30" /><div className="absolute inset-4 rounded-full bg-primary shadow-[0_0_15px_rgba(59,130,246,0.7)]" /></div><span className="text-xs font-mono uppercase tracking-widest text-foreground">Pulse</span></div> },
             ].map((logo, i) => (
-              <div key={i} className="group aspect-square rounded-xl border border-border overflow-hidden relative transition-all duration-300 hover:border-primary/60 hover:shadow-[0_15px_50px_-15px_rgba(59,130,246,0.5)] hover:-translate-y-1">
+              <div key={i} className="hover-lift group aspect-square rounded-xl border border-border overflow-hidden relative">
                 <div className={`absolute inset-0 ${logo.bg} grid place-items-center p-4 transition-transform duration-500 group-hover:scale-105`}>
                   {logo.content}
                 </div>
