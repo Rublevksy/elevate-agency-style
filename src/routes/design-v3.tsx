@@ -10,7 +10,20 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { ArrowRight, Check, ShoppingCart, Search, Smartphone, Palette } from "lucide-react";
+import {
+  ArrowRight,
+  Bell,
+  Check,
+  Gauge,
+  Package,
+  Palette,
+  Search,
+  ShieldCheck,
+  ShoppingCart,
+  Smartphone,
+  Sparkles,
+  Zap,
+} from "lucide-react";
 
 import { useT } from "@/lib/i18n";
 import { Logo } from "@/components/Logo";
@@ -343,7 +356,7 @@ function BrowserWindow({
         id="v3-window-panel"
         role="tabpanel"
         aria-labelledby={labelledBy}
-        className="relative min-h-[300px] sm:min-h-[360px] md:min-h-[400px]"
+        className="relative min-h-[240px] sm:min-h-[260px]"
       >
         <AnimatePresence mode="wait">
           <motion.div
@@ -377,11 +390,6 @@ function ServiceScreen({ active }: { active: number }) {
   }
 }
 
-/** Neutral filler used where a real screen would show client artwork. */
-function Block({ className = "" }: { className?: string }) {
-  return <div aria-hidden className={`rounded bg-white/10 ${className}`} />;
-}
-
 /* --- 0 · Weby: a landing-page layout with a CTA --- */
 function WebScreen() {
   const { t } = useT();
@@ -408,11 +416,34 @@ function WebScreen() {
           </span>
         </div>
         <div className="space-y-2">
-          <Block className="h-20 w-full" />
+          <div className="rounded-lg border border-white/10 bg-black/30 p-3">
+            <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-muted-foreground">
+              <Gauge className="h-3 w-3 text-primary" aria-hidden />
+              {t.results.eyebrow}
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              {t.results.items.slice(0, 2).map((r) => (
+                <div key={r.l}>
+                  <p style={DISPLAY} className="text-lg font-bold leading-none text-primary">
+                    {r.n}
+                  </p>
+                  <p className="mt-0.5 text-[10px] leading-tight text-muted-foreground">{r.l}</p>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="grid grid-cols-3 gap-2">
-            <Block className="h-10" />
-            <Block className="h-10" />
-            <Block className="h-10" />
+            {[Zap, ShieldCheck, Search].map((Icon, i) => (
+              <div
+                key={t.services.items[i].title}
+                className="rounded-md border border-white/10 bg-white/[0.03] px-2 py-2"
+              >
+                <Icon className="h-3 w-3 text-primary" aria-hidden />
+                <p className="mt-1 text-[9px] leading-tight text-muted-foreground">
+                  {t.services.items[i].title}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -477,6 +508,7 @@ function SeoScreen() {
           </div>
         ))}
       </div>
+      <ScreenFooter />
     </div>
   );
 }
@@ -496,11 +528,19 @@ function EshopScreen() {
         </span>
       </div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-        {[0, 1, 2, 3].map((i) => (
-          <div key={i} className="rounded-lg border border-white/10 bg-black/30 p-2">
-            <Block className="mb-2 aspect-square w-full" />
-            <Block className="mb-1 h-2 w-4/5" />
-            <Block className="h-2 w-1/2" />
+        {t.services.items.map((item) => (
+          <div key={item.title} className="rounded-lg border border-white/10 bg-black/30 p-2">
+            <div className="mb-2 flex aspect-[4/3] w-full items-center justify-center rounded-md border border-white/10 bg-gradient-to-br from-white/[0.07] to-transparent">
+              <Package className="h-7 w-7 text-primary/70" aria-hidden />
+            </div>
+            <p className="text-[10px] font-semibold leading-tight">{item.title}</p>
+            <p className="mt-0.5 line-clamp-2 text-[9px] leading-tight text-muted-foreground">
+              {item.desc}
+            </p>
+            <span className="mt-1.5 inline-flex items-center gap-1 text-[9px] font-semibold text-primary">
+              {t.services.learnMore}
+              <ArrowRight className="h-2.5 w-2.5" aria-hidden />
+            </span>
           </div>
         ))}
       </div>
@@ -522,6 +562,7 @@ function EshopScreen() {
 function BrandingScreen() {
   const { t } = useT();
   return (
+    <div>
     <div className="grid gap-4 sm:grid-cols-[1fr_1.1fr]">
       <div className="rounded-lg border border-white/10 bg-black/40 p-5">
         <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-muted-foreground">
@@ -555,11 +596,7 @@ function BrandingScreen() {
         <p style={DISPLAY} className="text-sm font-semibold">
           {t.ui.serviceStage[3].title}
         </p>
-        <div className="space-y-1.5">
-          <Block className="h-2 w-full" />
-          <Block className="h-2 w-11/12" />
-          <Block className="h-2 w-8/12" />
-        </div>
+        <p className="text-[10px] leading-relaxed text-muted-foreground">{t.about.body}</p>
         <div className="flex gap-2 pt-1">
           {t.services.items.slice(0, 3).map((s) => (
             <span
@@ -572,6 +609,8 @@ function BrandingScreen() {
         </div>
       </div>
     </div>
+    <ScreenFooter />
+    </div>
   );
 }
 
@@ -579,23 +618,41 @@ function BrandingScreen() {
 function AppScreen() {
   const { t } = useT();
   return (
-    <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:items-center">
+    <div>
+    <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:items-start">
       <div className="mx-auto w-[160px] rounded-[1.6rem] border border-white/15 bg-black/60 p-2.5">
-        <div className="mb-2 flex items-center gap-1.5">
-          <Smartphone className="h-3 w-3 text-primary" aria-hidden />
-          <Block className="h-1.5 w-10" />
+        <div className="mb-2 flex items-center justify-between">
+          <span className="flex items-center gap-1.5 text-[8px] uppercase tracking-[0.18em] text-muted-foreground">
+            <Smartphone className="h-3 w-3 text-primary" aria-hidden />
+            ELEVATE
+          </span>
+          <Bell className="h-2.5 w-2.5 text-muted-foreground" aria-hidden />
         </div>
         <div className="space-y-2 rounded-[1.1rem] bg-white/[0.04] p-2.5">
-          <Block className="h-14 w-full" />
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="flex items-center gap-2">
-              <Block className="h-6 w-6 rounded-full" />
-              <div className="flex-1 space-y-1">
-                <Block className="h-1.5 w-4/5" />
-                <Block className="h-1.5 w-2/5" />
+          <div className="rounded-md border border-white/10 bg-black/40 px-2.5 py-2">
+            <p style={DISPLAY} className="text-base font-bold leading-none text-primary">
+              {t.results.items[0].n}
+            </p>
+            <p className="mt-0.5 text-[8px] leading-tight text-muted-foreground">
+              {t.results.items[0].l}
+            </p>
+          </div>
+          {t.services.items.slice(0, 3).map((item, i) => {
+            const Icon = [Sparkles, ShoppingCart, Palette][i];
+            return (
+            <div key={item.title} className="flex items-center gap-2">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-primary/30 bg-primary/10">
+                <Icon className="h-3 w-3 text-primary" aria-hidden />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-[9px] font-semibold leading-tight">{item.title}</p>
+                <p className="truncate text-[8px] leading-tight text-muted-foreground">
+                  {item.desc}
+                </p>
               </div>
             </div>
-          ))}
+            );
+          })}
           <div className="rounded-md bg-primary py-1.5 text-center text-[9px] font-semibold text-primary-foreground">
             {t.services.detailLabels.cta}
           </div>
@@ -617,6 +674,23 @@ function AppScreen() {
           ))}
         </ul>
       </div>
+    </div>
+    <ScreenFooter />
+    </div>
+  );
+}
+
+/** Bottom status strip — keeps every screen's height honest instead of dead space. */
+function ScreenFooter() {
+  const { t } = useT();
+  return (
+    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-1.5 border-t border-white/10 pt-3 text-[10px] text-muted-foreground">
+      {[t.trust.years, t.trust.projects, t.trust.clients, t.trust.response].map((item) => (
+        <span key={item} className="inline-flex items-center gap-1.5">
+          <Check className="h-3 w-3 text-primary" aria-hidden />
+          {item}
+        </span>
+      ))}
     </div>
   );
 }

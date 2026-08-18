@@ -345,19 +345,35 @@ function ExhibitPlate() {
             strokeDasharray="6 10"
             opacity={0.7}
           />
+          {/* Leader taking the mark callout off the engraving, drawing-style */}
+          <motion.path
+            d={`M${LOGO.x - 68} ${LOGO.y - 68} L${LOGO.x - 156} ${LOGO.y - 156} L${LOGO.x - 250} ${LOGO.y - 156}`}
+            {...draw(1.4)}
+            strokeWidth={1}
+          />
         </g>
 
-        <g fill={SIGNAL} fontSize={20} letterSpacing="2">
+        <g
+          fill={SIGNAL}
+          fontSize={20}
+          letterSpacing="2"
+          stroke="#050608"
+          strokeWidth={5}
+          strokeLinejoin="round"
+          style={{ paintOrder: "stroke fill" }}
+        >
           <motion.text x={92} y={96} {...label(1.5)}>
             REF-01 / LID
           </motion.text>
-          <motion.text x={1160} y={866} textAnchor="end" {...label(1.6)}>
+          {/* Sits above its own leader line (y=872) so the rule never crosses the glyphs */}
+          <motion.text x={1160} y={840} textAnchor="end" {...label(1.6)}>
             HINGE 128°
           </motion.text>
           <motion.text x={531} y={1078} {...label(1.7)}>
             762 U
           </motion.text>
-          <motion.text x={LOGO.x + 108} y={LOGO.y + 6} {...label(1.8)}>
+          {/* Parked at the end of its leader, clear of the engraved ELEVATE mark */}
+          <motion.text x={LOGO.x - 164} y={LOGO.y - 168} textAnchor="end" {...label(1.8)}>
             MARK / OK
           </motion.text>
         </g>
