@@ -19,7 +19,7 @@ export function ExploreSwitcher({ active }: { active: DesignConcept["slug"] }) {
   return (
     <nav
       aria-label="Design direction switcher"
-      className="fixed left-1/2 top-4 z-[100] flex -translate-x-1/2 items-center gap-1 rounded-full border border-white/10 bg-black/70 px-2 py-1.5 text-xs text-white shadow-lg backdrop-blur-md"
+      className="fixed left-1/2 top-4 z-[100] flex max-w-[calc(100vw-1.5rem)] -translate-x-1/2 flex-wrap items-center justify-center gap-1 gap-y-1 rounded-full border border-white/10 bg-black/70 px-2 py-1.5 text-xs text-white shadow-lg backdrop-blur-md"
     >
       <Link
         to="/"

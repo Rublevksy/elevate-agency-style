@@ -84,11 +84,11 @@ function DesignV3Page() {
           <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
             <h1
               style={{ fontFamily: DISPLAY_FONT }}
-              className="max-w-2xl text-3xl font-semibold leading-[1.08] tracking-tight sm:text-4xl md:text-5xl"
+              className="min-w-0 max-w-2xl text-3xl font-semibold leading-[1.08] tracking-tight sm:text-4xl md:text-5xl"
             >
               {t.hero.title1} <span className="text-primary">{t.hero.title2}</span>
             </h1>
-            <p className="max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
+            <p className="min-w-0 max-w-sm text-sm leading-relaxed text-muted-foreground md:text-base">
               {t.hero.tag}. {t.hero.subtitle}
             </p>
           </div>

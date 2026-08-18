@@ -66,22 +66,22 @@ function HeroWithHeadline({ lang }: { lang: Parameters<typeof DeviceHero>[0]["la
         <DeviceHero variant="iphone" lang={lang} />
       </div>
 
-      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex flex-col items-center px-6 pt-14 text-center md:pt-20">
+      <div className="pointer-events-none absolute inset-x-0 top-0 z-20 flex flex-col items-center px-6 pt-24 text-center md:pt-20">
         <motion.div
           initial={reducedMotion ? undefined : { opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: EASE }}
-          className="inline-flex items-center gap-2 rounded-full border border-border px-3 py-1 text-[11px] uppercase tracking-[0.3em] text-muted-foreground"
+          className="inline-flex min-w-0 max-w-full items-center gap-2 rounded-full border border-border px-2.5 py-1 text-[11px] uppercase tracking-[0.15em] text-muted-foreground sm:px-3 sm:tracking-[0.3em]"
         >
-          <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-primary" />
-          {t.hero.tag}
+          <span aria-hidden className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
+          <span className="min-w-0 whitespace-normal">{t.hero.tag}</span>
         </motion.div>
 
         <motion.h1
           initial={reducedMotion ? undefined : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1, ease: EASE }}
-          className="heading-display mt-5 max-w-3xl text-balance text-foreground"
+          className="heading-display mt-5 min-w-0 max-w-3xl text-balance text-foreground"
         >
           {t.hero.title1} <span className="text-primary">{t.hero.title2}</span>
         </motion.h1>
@@ -90,7 +90,7 @@ function HeroWithHeadline({ lang }: { lang: Parameters<typeof DeviceHero>[0]["la
           initial={reducedMotion ? undefined : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2, ease: EASE }}
-          className="mt-4 max-w-md text-sm text-muted-foreground md:text-base"
+          className="mt-4 min-w-0 max-w-md text-sm text-muted-foreground md:text-base"
         >
           {t.hero.subtitle}
         </motion.p>
@@ -99,7 +99,7 @@ function HeroWithHeadline({ lang }: { lang: Parameters<typeof DeviceHero>[0]["la
           initial={reducedMotion ? undefined : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3, ease: EASE }}
-          className="pointer-events-auto mt-8 flex flex-wrap justify-center gap-4"
+          className="pointer-events-auto mt-8 flex w-full flex-wrap justify-center gap-4"
         >
           <Link to="/contact" className={`btn-primary group ${FOCUS_RING}`}>
             {t.hero.cta1}

@@ -83,16 +83,16 @@ function DesignV4Page() {
           <Logo className="col-span-full mb-2 h-6 w-auto md:h-7" />
 
           {/* Title module — left, not full-width, not centered */}
-          <div className="md:col-span-7">
+          <div className="min-w-0 md:col-span-7">
             <h1
               style={{ fontFamily: DISPLAY_FONT }}
-              className="max-w-xl text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-5xl md:text-6xl"
+              className="min-w-0 max-w-xl text-4xl font-extrabold leading-[1.02] tracking-tight sm:text-5xl md:text-6xl"
             >
               {t.hero.title1}
               <br />
               <span style={{ color: SIGNAL }}>{t.hero.title2}</span>
             </h1>
-            <p className="mt-6 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
+            <p className="mt-6 min-w-0 max-w-md text-sm leading-relaxed text-muted-foreground sm:text-base">
               {t.hero.subtitle}
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
@@ -211,7 +211,9 @@ function ConsolePanel({
                 <span style={{ color: SIGNAL }}>{"> "}</span>
                 {line.label}
               </dt>
-              <dd className="truncate text-right font-bold text-foreground">{line.value}</dd>
+              <dd className="min-w-0 truncate text-right font-bold text-foreground">
+                {line.value}
+              </dd>
             </div>
           ))}
         </dl>
@@ -257,7 +259,7 @@ function ServicesGrid({
       <div className="mx-auto max-w-[1400px]">
         <h2
           style={{ fontFamily: DISPLAY_FONT }}
-          className="mb-8 max-w-md text-2xl font-extrabold tracking-tight sm:text-3xl md:mb-10"
+          className="mb-8 min-w-0 max-w-md text-2xl font-extrabold tracking-tight sm:text-3xl md:mb-10"
         >
           {heading}
         </h2>

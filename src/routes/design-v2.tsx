@@ -57,14 +57,14 @@ function V2Hero() {
   return (
     <header className="relative overflow-hidden border-b border-border/60 px-6 pb-16 pt-28 md:px-14 md:pb-24 md:pt-40">
       <div className="mx-auto max-w-5xl">
-        <p className="font-mono text-[0.7rem] uppercase tracking-[0.32em] text-primary md:text-xs">
+        <p className="min-w-0 font-mono text-[0.7rem] uppercase tracking-[0.32em] text-primary md:text-xs">
           {t.hero.tag}
         </p>
         <h1
-          className="mt-6 text-foreground"
+          className="mt-6 min-w-0 text-foreground"
           style={{
             fontFamily: SERIF,
-            fontSize: "clamp(2.75rem, 2rem + 4vw, 6.5rem)",
+            fontSize: "clamp(2.1rem, 1.6rem + 4vw, 6.5rem)",
             lineHeight: 1.04,
             letterSpacing: "-0.01em",
             fontWeight: 500,
@@ -74,7 +74,7 @@ function V2Hero() {
           <br />
           <span className="italic text-primary">{t.hero.title2}</span>
         </h1>
-        <p className="mt-8 max-w-xl text-base text-muted-foreground md:text-lg">
+        <p className="mt-8 min-w-0 max-w-xl text-base text-muted-foreground md:text-lg">
           {t.hero.subtitle}
         </p>
         <Link
