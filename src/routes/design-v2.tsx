@@ -1,35 +1,56 @@
-import { useRef, useState } from "react";
+/**
+ * /design-v2 — "Cinematic chapters".
+ *
+ * Not a page of sections: a film made of chapters. Every service scene from
+ * src/assets/refs/ fills a whole screen through <RefImage>, the chapter text
+ * stays pinned while the plate keeps moving, and chapters hand over to each
+ * other with a scale + darken cut rather than a plain fade.
+ *
+ * Self-contained on purpose (spec §Границы и швы): directions do not reuse
+ * each other's parts, and no production section is imported.
+ */
+import { useRef } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  motion,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import { ArrowRight } from "lucide-react";
+import { motion, useReducedMotion, useScroll, useTransform, type MotionValue } from "framer-motion";
+import { ArrowDown, ArrowRight } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { ExploreSwitcher } from "@/components/design-explore/ExploreSwitcher";
+import { RefImage, type RefName } from "@/components/design-explore/RefImage";
 import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/design-v2")({
   component: DesignV2Page,
   head: () => ({
     meta: [
-      { title: "V2 — Editorial digital studio — ELEVATE design exploration" },
+      { title: "V2 — Cinematic chapters — ELEVATE design exploration" },
       { name: "robots", content: "noindex, nofollow" },
     ],
     links: [
+      { rel: "preconnect", href: "https://fonts.googleapis.com" },
+      { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Newsreader:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,600;1,6..72,300&family=Space+Mono:wght@400;700&display=swap",
       },
     ],
   }),
 });
 
-/** Editorial display gharnitura — self-contained to this route, not the sitewide Inter voice (R11/craft-floor). */
+/** Route-local display voice — the sitewide body voice stays Inter. */
 const SERIF = "'Newsreader', Georgia, 'Times New Roman', serif";
+const MONO = "'Space Mono', ui-monospace, SFMono-Regular, monospace";
+
+/** Cinematic timing: slower and heavier than the site's standard curve. */
+const CUT = [0.65, 0, 0.35, 1] as const;
+
+/** t.ui.serviceStage order is [Weby, SEO, E-shopy, Branding, Aplikace]. */
+const CHAPTER_PLATES: readonly RefName[] = [
+  "svc-web",
+  "svc-seo",
+  "svc-eshop",
+  "svc-branding",
+  "svc-app",
+];
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -37,300 +58,386 @@ function pad(n: number) {
 
 function DesignV2Page() {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="bg-black text-white" style={{ fontFamily: "inherit" }}>
       <ExploreSwitcher active="design-v2" />
-      <V2Hero />
-      <V2Services />
-      <V2Proof />
-      <V2Cta />
+      <Opening />
+      <Chapters />
+      <Proof />
+      <Finale />
     </div>
   );
 }
 
-/* ---------------------------------------------------------------------- */
-/* Hero — no device, no 3D scroll scene. Serif headline + one atmospheric  */
-/* "figure plate" panel, distinct from V1's device-glow arc (R11 risk).    */
-/* ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
+/* Opening frame — full-bleed plate, ken-burns push-in, words arriving */
+/* ------------------------------------------------------------------ */
 
-function V2Hero() {
+function Opening() {
   const { t } = useT();
-  return (
-    <header className="relative overflow-hidden border-b border-border/60 px-6 pb-16 pt-28 md:px-14 md:pb-24 md:pt-40">
-      <div className="mx-auto max-w-5xl">
-        <p className="min-w-0 font-mono text-[0.7rem] uppercase tracking-[0.32em] text-primary md:text-xs">
-          {t.hero.tag}
-        </p>
-        <h1
-          className="mt-6 min-w-0 text-foreground"
-          style={{
-            fontFamily: SERIF,
-            fontSize: "clamp(2.1rem, 1.6rem + 4vw, 6.5rem)",
-            lineHeight: 1.04,
-            letterSpacing: "-0.01em",
-            fontWeight: 500,
-          }}
-        >
-          {t.hero.title1}
-          <br />
-          <span className="italic text-primary">{t.hero.title2}</span>
-        </h1>
-        <p className="mt-8 min-w-0 max-w-xl text-base text-muted-foreground md:text-lg">
-          {t.hero.subtitle}
-        </p>
-        <Link
-          to="/contact"
-          className="mt-10 inline-flex items-center gap-2 border-b border-primary/70 pb-1 text-sm font-medium tracking-wide text-foreground transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-        >
-          {t.hero.cta1}
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-      </div>
+  const reduced = useReducedMotion();
+  const words = `${t.hero.title1} ${t.hero.title2}`.split(" ").filter(Boolean);
 
-      {/* One atmospheric "figure plate" — a quiet editorial panel, not a device photo,
-          not V1's dugообразный arc-glow. A single motivated accent line, no gradient wash. */}
+  return (
+    <section className="relative h-screen w-full overflow-hidden">
+      <motion.div
+        className="absolute inset-0"
+        initial={reduced ? false : { scale: 1 }}
+        animate={reduced ? undefined : { scale: 1.08 }}
+        transition={reduced ? undefined : { duration: 20, ease: "linear" }}
+      >
+        <RefImage
+          name="hero-macbook"
+          priority
+          alt={t.hero.tag}
+          className="block h-full w-full"
+          imgClassName="h-full w-full object-cover object-center"
+          sizes="100vw"
+        />
+      </motion.div>
+
+      {/* Scrim: readability, not decoration. */}
       <div
         aria-hidden="true"
-        className="relative mx-auto mt-20 h-[38vh] max-w-5xl overflow-hidden rounded-sm border border-border/50 md:mt-28 md:h-[46vh]"
-      >
-        <div className="absolute inset-0 grid-bg opacity-20 [mask-image:linear-gradient(to_bottom,black,transparent)]" />
-        <div className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-gradient-to-r from-transparent via-primary/70 to-transparent" />
-        <span className="absolute bottom-4 left-4 font-mono text-[0.65rem] uppercase tracking-[0.25em] text-muted-foreground/70 md:bottom-6 md:left-6">
-          Fig. 01 — Praha
-        </span>
-      </div>
-    </header>
-  );
-}
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to top, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.72) 28%, rgba(0,0,0,0.15) 62%, rgba(0,0,0,0.55) 100%)",
+        }}
+      />
 
-/* ---------------------------------------------------------------------- */
-/* Services — sticky editorial spread. Left: numbered table-of-contents    */
-/* rail. Right: crossfading scene synced to page scroll position (R11).   */
-/* Deliberately not click/hover/auto-timer driven — see useHeroScroll for */
-/* the same principle applied to the production hero.                     */
-/* ---------------------------------------------------------------------- */
-
-function V2Services() {
-  const { t } = useT();
-  const items = t.ui.serviceStage;
-  const prefersReducedMotion = Boolean(useReducedMotion());
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const [active, setActive] = useState(0);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start start", "end end"],
-  });
-
-  // Five services → six stage boundaries; each panel is fully visible across
-  // its own segment and crossfades into the next over a short overlap.
-  const opacity0 = useTransform(scrollYProgress, [0, 0.16, 0.22], [1, 1, 0]);
-  const opacity1 = useTransform(scrollYProgress, [0.18, 0.24, 0.36, 0.42], [0, 1, 1, 0]);
-  const opacity2 = useTransform(scrollYProgress, [0.38, 0.44, 0.56, 0.62], [0, 1, 1, 0]);
-  const opacity3 = useTransform(scrollYProgress, [0.58, 0.64, 0.76, 0.82], [0, 1, 1, 0]);
-  const opacity4 = useTransform(scrollYProgress, [0.78, 0.84, 1], [0, 1, 1]);
-  const opacities = [opacity0, opacity1, opacity2, opacity3, opacity4];
-
-  useMotionValueEvent(scrollYProgress, "change", (value) => {
-    const next = Math.min(items.length - 1, Math.floor(value * items.length));
-    setActive((prev) => (prev === next ? prev : next));
-  });
-
-  if (prefersReducedMotion) {
-    return (
-      <section id="v2-services" className="border-b border-border/60 px-6 py-20 md:px-14">
-        <h2 className="sr-only">{t.ui.homeServicesTitle}</h2>
-        <div className="mx-auto flex max-w-5xl flex-col gap-16">
-          {items.map((item, index) => (
-            <ServiceRow key={item.title} item={item} index={index} />
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <>
-      {/* Mobile: linearized reading flow — no sticky rail/scene squeeze into one
-          viewport (R31.1 explicitly allows this simplification below md). */}
-      <section id="v2-services-mobile" className="border-b border-border/60 px-6 py-20 md:hidden">
-        <h2 className="sr-only">{t.ui.homeServicesTitle}</h2>
-        <div className="flex flex-col gap-16">
-          {items.map((item, index) => (
-            <ServiceRow key={item.title} item={item} index={index} />
-          ))}
-        </div>
-      </section>
-
-      {/* Desktop: sticky editorial spread, scroll-synced crossfade. */}
-      <section
-        id="v2-services"
-        ref={sectionRef}
-        className="relative hidden md:block"
-        style={{ height: `${items.length * 100}vh` }}
-      >
-        <h2 className="sr-only">{t.ui.homeServicesTitle}</h2>
-        <div className="sticky top-0 flex h-screen flex-col border-b border-border/60 md:flex-row">
-          <nav
-            aria-label={t.ui.homeServicesTitle}
-            className="flex w-full shrink-0 flex-col justify-center gap-1 border-b border-border/60 px-6 py-10 md:w-[36%] md:border-b-0 md:border-r md:px-14 md:py-16"
+      <div className="absolute inset-0 flex flex-col justify-between px-6 pb-10 pt-24 md:px-14 md:pb-14 md:pt-16">
+        <div className="flex items-center justify-between gap-4">
+          <Logo className="h-6 w-auto md:h-7" />
+          <p
+            className="text-right text-[0.6rem] uppercase leading-relaxed tracking-[0.3em] text-white/55 md:text-[0.7rem]"
+            style={{ fontFamily: MONO }}
           >
-            <ol className="flex flex-col gap-1">
-              {items.map((item, index) => {
-                const isActive = index === active;
-                return (
-                  <li key={item.title}>
-                    <a
-                      href={`#v2-service-${index}`}
-                      aria-current={isActive ? "true" : undefined}
-                      className={`group flex items-baseline gap-4 rounded-sm px-2 py-2.5 transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
-                        isActive ? "text-foreground" : "text-muted-foreground hover:text-foreground"
-                      }`}
-                    >
-                      <span
-                        className={`font-mono text-xs transition-colors duration-300 ${isActive ? "text-primary" : "text-muted-foreground/60 group-hover:text-primary/70"}`}
-                      >
-                        {pad(index + 1)}
-                      </span>
-                      <span
-                        style={{ fontFamily: SERIF }}
-                        className="text-lg leading-snug md:text-xl"
-                      >
-                        {item.title}
-                      </span>
-                    </a>
-                  </li>
-                );
-              })}
-            </ol>
-          </nav>
+            {t.hero.tag}
+          </p>
+        </div>
 
-          <div className="relative flex-1">
-            {items.map((item, index) => (
-              <motion.div
-                key={item.title}
-                style={{ opacity: opacities[index] }}
-                className="absolute inset-0 flex flex-col justify-center px-6 py-12 md:px-16"
+        <div className="max-w-4xl">
+          <h1
+            className="text-[2.6rem] font-light leading-[1.03] tracking-[-0.02em] text-white md:text-[5.5rem]"
+            style={{ fontFamily: SERIF }}
+          >
+            {words.map((word, i) => (
+              <motion.span
+                key={`${word}-${i}`}
+                className="mr-[0.28em] inline-block"
+                initial={reduced ? false : { opacity: 0, y: "0.5em", filter: "blur(6px)" }}
+                animate={reduced ? undefined : { opacity: 1, y: 0, filter: "blur(0px)" }}
+                transition={
+                  reduced ? undefined : { duration: 0.9, delay: 0.25 + i * 0.13, ease: CUT }
+                }
               >
-                <ServiceScene item={item} index={index} />
-              </motion.div>
+                {word}
+              </motion.span>
             ))}
-          </div>
+          </h1>
+          <motion.p
+            className="mt-6 max-w-xl text-sm leading-relaxed text-white/65 md:mt-8 md:text-base"
+            initial={reduced ? false : { opacity: 0 }}
+            animate={reduced ? undefined : { opacity: 1 }}
+            transition={reduced ? undefined : { duration: 1, delay: 0.4 + words.length * 0.13 }}
+          >
+            {t.hero.subtitle}
+          </motion.p>
         </div>
 
-        {/* Invisible anchor targets spaced across the scroll track — keyboard/Enter
-            on a rail link jumps here, which naturally drives scrollYProgress above. */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0">
-          {items.map((_, index) => (
-            <span
-              key={index}
-              id={`v2-service-${index}`}
-              className="absolute left-0 block h-px w-px"
-              style={{ top: `${(index / items.length) * 100}%` }}
-            />
-          ))}
-        </div>
-      </section>
-    </>
-  );
-}
-
-function ServiceScene({ item, index }: { item: { title: string; tag: string }; index: number }) {
-  return (
-    <div className="max-w-xl">
-      <span className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-        {pad(index + 1)} / 05
-      </span>
-      <h3
-        style={{ fontFamily: SERIF }}
-        className="mt-4 text-[clamp(2.25rem,1.7rem+2.5vw,4rem)] leading-[1.06] text-foreground"
-      >
-        {item.title}
-      </h3>
-      <p className="mt-5 max-w-md text-base text-muted-foreground md:text-lg">{item.tag}</p>
-      <div className="mt-10 h-px w-24 bg-gradient-to-r from-primary to-transparent" />
-    </div>
-  );
-}
-
-function ServiceRow({ item, index }: { item: { title: string; tag: string }; index: number }) {
-  return (
-    <div id={`v2-service-${index}`} className="border-t border-border/60 pt-8">
-      <span className="font-mono text-xs uppercase tracking-[0.3em] text-primary">
-        {pad(index + 1)} / 05
-      </span>
-      <h3
-        style={{ fontFamily: SERIF }}
-        className="mt-4 text-[clamp(1.9rem,1.5rem+1.5vw,2.75rem)] leading-[1.08] text-foreground"
-      >
-        {item.title}
-      </h3>
-      <p className="mt-4 max-w-md text-base text-muted-foreground">{item.tag}</p>
-    </div>
-  );
-}
-
-/* ---------------------------------------------------------------------- */
-/* Proof — quote-spread on t.results, large typography, no icons/cards.    */
-/* ---------------------------------------------------------------------- */
-
-function V2Proof() {
-  const { t } = useT();
-  return (
-    <section className="border-b border-border/60 px-6 py-24 md:px-14 md:py-36">
-      <div className="mx-auto max-w-5xl">
-        <p className="font-mono text-xs uppercase tracking-[0.32em] text-primary">
-          {t.results.eyebrow}
-        </p>
-        <h2
-          style={{ fontFamily: SERIF }}
-          className="mt-6 max-w-3xl text-[clamp(2rem,1.4rem+3vw,4.25rem)] leading-[1.14] text-foreground"
-        >
-          {t.results.title}
-        </h2>
-        <div className="mt-16 grid grid-cols-2 gap-x-8 gap-y-12 md:grid-cols-4">
-          {t.results.items.map((item) => (
-            <div key={item.l} className="border-t border-border/60 pt-5">
-              <div
-                style={{ fontFamily: SERIF }}
-                className="text-[clamp(1.9rem,1.4rem+2vw,3.25rem)] font-medium text-foreground"
-              >
-                {item.n}
-              </div>
-              <div className="mt-2 font-mono text-[0.7rem] uppercase tracking-[0.22em] text-muted-foreground">
-                {item.l}
-              </div>
-            </div>
-          ))}
+        <div className="flex items-end justify-between gap-6">
+          <span
+            className="text-[0.6rem] uppercase tracking-[0.35em] text-white/45 md:text-[0.7rem]"
+            style={{ fontFamily: MONO }}
+          >
+            {pad(0)} / {pad(CHAPTER_PLATES.length)}
+          </span>
+          <motion.span
+            aria-hidden="true"
+            className="flex items-center gap-2 text-[0.6rem] uppercase tracking-[0.3em] text-white/45"
+            style={{ fontFamily: MONO }}
+            animate={reduced ? undefined : { y: [0, 8, 0] }}
+            transition={reduced ? undefined : { duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+          >
+            <ArrowDown className="h-3.5 w-3.5" strokeWidth={1.5} />
+          </motion.span>
         </div>
       </div>
     </section>
   );
 }
 
-/* ---------------------------------------------------------------------- */
-/* CTA                                                                     */
-/* ---------------------------------------------------------------------- */
+/* ------------------------------------------------------------------ */
+/* Chapters — five full-frame plates, pinned text, cut-style handover  */
+/* ------------------------------------------------------------------ */
 
-function V2Cta() {
+function Chapters() {
+  const { t } = useT();
+  const reduced = useReducedMotion();
+  const stage = t.ui.serviceStage;
+
+  return (
+    <div className="relative">
+      {CHAPTER_PLATES.map((plate, i) => {
+        const item = stage[i];
+        if (!item) return null;
+        return reduced ? (
+          <StaticChapter key={plate} plate={plate} index={i} title={item.title} tag={item.tag} />
+        ) : (
+          <Chapter key={plate} plate={plate} index={i} title={item.title} tag={item.tag} />
+        );
+      })}
+    </div>
+  );
+}
+
+interface ChapterProps {
+  plate: RefName;
+  index: number;
+  title: string;
+  tag: string;
+}
+
+/**
+ * One chapter = a 220vh scroll track whose inner layer is sticky, so the text
+ * stays put on screen while the plate below it keeps travelling and the frame
+ * scales/darkens on the way in and out — that is the "cut" between chapters.
+ */
+function Chapter({ plate, index, title, tag }: ChapterProps) {
+  const ref = useRef<HTMLElement | null>(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start end", "end start"],
+  });
+
+  // Frame: arrives pushed-in and bright, leaves pulled-back and dark — a cut.
+  const frameScale = useTransform(scrollYProgress, [0, 0.5, 1], [1.14, 1, 0.9]);
+  const frameDim = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [1, 0, 0, 1]);
+  // Plate travels inside the frame while the text above it is pinned.
+  const plateY = useTransform(scrollYProgress, [0, 1], ["-9%", "9%"]);
+  const plateScale = useTransform(scrollYProgress, [0, 1], [1.16, 1.02]);
+  const textOpacity = useTransform(scrollYProgress, [0.18, 0.34, 0.68, 0.84], [0, 1, 1, 0]);
+  const textY = useTransform(scrollYProgress, [0.18, 0.34, 0.68, 0.84], [28, 0, 0, -28]);
+
+  return (
+    <section ref={ref} className="relative h-[220vh]">
+      <div className="sticky top-0 h-screen overflow-hidden">
+        <motion.div className="absolute inset-0" style={{ scale: frameScale }}>
+          <motion.div className="absolute inset-[-10%]" style={{ y: plateY, scale: plateScale }}>
+            <ChapterPlate plate={plate} title={title} />
+          </motion.div>
+        </motion.div>
+        <ChapterScrim />
+        <motion.div
+          aria-hidden="true"
+          className="absolute inset-0 bg-black"
+          style={{ opacity: frameDim }}
+        />
+        <ChapterCaption
+          index={index}
+          title={title}
+          tag={tag}
+          opacity={textOpacity}
+          y={textY}
+        />
+      </div>
+    </section>
+  );
+}
+
+function StaticChapter({ plate, index, title, tag }: ChapterProps) {
+  return (
+    <section className="relative min-h-screen overflow-hidden">
+      <div className="absolute inset-0">
+        <ChapterPlate plate={plate} title={title} />
+      </div>
+      <ChapterScrim />
+      <ChapterCaption index={index} title={title} tag={tag} />
+    </section>
+  );
+}
+
+function ChapterPlate({ plate, title }: { plate: RefName; title: string }) {
+  return (
+    <RefImage
+      name={plate}
+      alt={title}
+      className="block h-full w-full"
+      imgClassName="h-full w-full object-cover object-[70%_center] md:object-[75%_center]"
+      sizes="100vw"
+    />
+  );
+}
+
+function ChapterScrim() {
+  return (
+    <div
+      aria-hidden="true"
+      className="absolute inset-0"
+      style={{
+        background:
+          "linear-gradient(90deg, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.82) 34%, rgba(0,0,0,0.28) 68%, rgba(0,0,0,0.55) 100%), linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 42%)",
+      }}
+    />
+  );
+}
+
+function ChapterCaption({
+  index,
+  title,
+  tag,
+  opacity,
+  y,
+}: {
+  index: number;
+  title: string;
+  tag: string;
+  opacity?: MotionValue<number>;
+  y?: MotionValue<number>;
+}) {
+  // One blue accent per chapter, and it is large: the leading clause of the
+  // title. Everything after the first comma stays quiet.
+  const [lead, ...rest] = title.split(",");
+  const tail = rest.join(",").trim();
+
+  return (
+    <motion.div
+      className="absolute inset-0 flex flex-col justify-center px-6 pt-24 md:px-14 md:pt-0"
+      style={{ opacity, y }}
+    >
+      <div className="max-w-2xl">
+        <span
+          className="block text-[0.62rem] uppercase tracking-[0.4em] text-white/40 md:text-xs"
+          style={{ fontFamily: MONO }}
+        >
+          {pad(index + 1)} / {pad(CHAPTER_PLATES.length)}
+        </span>
+        <h2
+          className="mt-5 text-[2.4rem] font-light leading-[1.02] tracking-[-0.02em] md:mt-7 md:text-[5rem]"
+          style={{ fontFamily: SERIF }}
+        >
+          <span className="text-primary">{lead}</span>
+          {tail ? (
+            <>
+              <span className="text-white/85">,</span>
+              <span className="block text-white/85">{tail}</span>
+            </>
+          ) : null}
+        </h2>
+        <p
+          className="mt-6 max-w-md text-[0.72rem] uppercase leading-relaxed tracking-[0.22em] text-white/55 md:mt-8 md:text-xs"
+          style={{ fontFamily: MONO }}
+        >
+          {tag}
+        </p>
+      </div>
+    </motion.div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Proof — typographic spread, no icons, no cards                      */
+/* ------------------------------------------------------------------ */
+
+function Proof() {
   const { t } = useT();
   return (
-    <section className="px-6 py-24 text-center md:py-32">
-      <h2
-        style={{ fontFamily: SERIF }}
-        className="mx-auto max-w-2xl text-[clamp(2rem,1.5rem+2.5vw,3.75rem)] leading-[1.12] text-foreground"
+    <section className="relative border-t border-white/10 bg-black px-6 py-28 md:px-14 md:py-44">
+      <div className="mx-auto max-w-5xl">
+        <span
+          className="block text-[0.62rem] uppercase tracking-[0.4em] text-white/40 md:text-xs"
+          style={{ fontFamily: MONO }}
+        >
+          {t.results.eyebrow}
+        </span>
+        <h2
+          className="mt-6 max-w-3xl text-[2.2rem] font-light leading-[1.05] tracking-[-0.02em] text-white md:text-[4.5rem]"
+          style={{ fontFamily: SERIF }}
+        >
+          {t.results.title}
+        </h2>
+        <dl className="mt-16 md:mt-24">
+          {t.results.items.map((item) => (
+            <div
+              key={item.l}
+              className="flex flex-col gap-2 border-t border-white/10 py-8 md:flex-row md:items-baseline md:justify-between md:gap-10 md:py-12"
+            >
+              <dt
+                className="text-[2rem] font-light leading-none tracking-[-0.02em] text-white md:text-[4rem]"
+                style={{ fontFamily: SERIF }}
+              >
+                {item.n}
+              </dt>
+              <dd
+                className="text-[0.7rem] uppercase tracking-[0.28em] text-white/50 md:text-right md:text-xs"
+                style={{ fontFamily: MONO }}
+              >
+                {item.l}
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </section>
+  );
+}
+
+/* ------------------------------------------------------------------ */
+/* Finale — last frame of the film                                     */
+/* ------------------------------------------------------------------ */
+
+function Finale() {
+  const { t } = useT();
+  const reduced = useReducedMotion();
+
+  return (
+    <section className="relative flex min-h-screen items-center overflow-hidden border-t border-white/10">
+      <motion.div
+        className="absolute inset-0"
+        initial={reduced ? false : { scale: 1.1 }}
+        whileInView={reduced ? undefined : { scale: 1 }}
+        viewport={{ once: true, amount: 0.4 }}
+        transition={reduced ? undefined : { duration: 2.4, ease: CUT }}
       >
-        {t.cta.title}
-      </h2>
-      <p className="mx-auto mt-5 max-w-lg text-base text-muted-foreground">{t.cta.subtitle}</p>
-      <Link
-        to="/contact"
-        className="mt-10 inline-flex items-center gap-2 border-b border-primary pb-1 text-lg font-medium text-primary transition-colors hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
-      >
-        {t.cta.btn}
-        <ArrowRight className="h-5 w-5" />
-      </Link>
-      <div className="mt-20 flex items-center justify-center opacity-70">
-        <Logo className="h-6 w-auto" />
+        <RefImage
+          name="hero-iphone"
+          alt={t.hero.tag}
+          className="block h-full w-full"
+          imgClassName="h-full w-full object-cover object-center opacity-70"
+          sizes="100vw"
+        />
+      </motion.div>
+      <div
+        aria-hidden="true"
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to right, rgba(0,0,0,0.94) 0%, rgba(0,0,0,0.7) 45%, rgba(0,0,0,0.35) 100%)",
+        }}
+      />
+      <div className="relative w-full px-6 py-28 md:px-14">
+        <div className="mx-auto max-w-4xl">
+          <h2
+            className="text-[2.6rem] font-light leading-[1.02] tracking-[-0.02em] text-white md:text-[5.5rem]"
+            style={{ fontFamily: SERIF }}
+          >
+            {t.cta.title}
+          </h2>
+          <p className="mt-6 max-w-lg text-sm leading-relaxed text-white/65 md:text-base">
+            {t.cta.subtitle}
+          </p>
+          <Link
+            to="/contact"
+            className="group mt-12 inline-flex items-center gap-4 border-b border-primary pb-3 text-sm uppercase tracking-[0.28em] text-white transition-colors hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary md:text-base"
+            style={{ fontFamily: MONO }}
+          >
+            {t.cta.btn}
+            <ArrowRight
+              className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1.5"
+              strokeWidth={1.5}
+            />
+          </Link>
+        </div>
       </div>
     </section>
   );
