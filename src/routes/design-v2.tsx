@@ -90,7 +90,7 @@ function Opening() {
           priority
           alt={t.hero.tag}
           className="block h-full w-full"
-          imgClassName="h-full w-full origin-center scale-[1.05] object-cover object-[50%_70%] md:scale-[1.05] md:object-[50%_100%]"
+          imgClassName="h-full w-full origin-center scale-[1.35] object-contain object-[50%_30%] md:scale-[1.05] md:object-cover md:object-[50%_100%]"
           sizes="100vw"
         />
       </motion.div>
@@ -118,7 +118,7 @@ function Opening() {
         <div className="flex items-center justify-between gap-4">
           <Logo className="h-6 w-auto md:h-7" />
           <p
-            className="text-right text-[0.6rem] uppercase leading-relaxed tracking-[0.3em] text-white/55 md:text-[0.7rem]"
+            className="hidden text-right text-[0.6rem] uppercase leading-relaxed tracking-[0.3em] text-white/55 sm:block md:text-[0.7rem]"
             style={{ fontFamily: MONO }}
           >
             {t.hero.tag}

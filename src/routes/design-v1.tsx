@@ -287,7 +287,7 @@ function HeroReference() {
                 "linear-gradient(0deg, var(--background) 0%, transparent 26%), linear-gradient(90deg, var(--background) 0%, transparent 12%), linear-gradient(270deg, var(--background) 0%, transparent 12%), linear-gradient(180deg, var(--background) 0%, transparent 10%)",
             }}
           />
-          <div className="mt-4 flex justify-center">
+          <div className="mt-4 hidden justify-center">
             <ScrollCue label="SCROLL" />
           </div>
         </div>
