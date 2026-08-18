@@ -109,6 +109,28 @@ Logo.tsx` — не менять сам файл логотипа.
 - Нет новых публичных сигнатур — только copy/CSS. `tsc --noEmit`, `vite build` — чисто; `eslint` — 149 prettier/prettier ошибок, все допредсуществующие (сверено `git stash diff`, те же строки падают до/после).
 - Визуальный/mobile QA — структурный (роуты, i18n-ключи, reduced-motion код-пути, реальность данных через чтение исходников), без браузерного рендера — инструмент браузера недоступен в этой песочнице (тот же лимит, что у тикетов 02/03).
 
+## Из тикета 08 — G4-репарация reduced-motion (готово, commit `f7b156b`)
+
+Не часть исходного плана из 7 тикетов — вырезан в Phase 8 после того, как
+независимая blind-проверка (G4) нашла реальный дрифт: манифест отмечал R88
+(«reduced-motion fallback») как `done`, но `Contact.tsx` (главная CTA-
+поверхность) не имел никакой обработки `prefers-reduced-motion` вовсе, в
+отличие от hero/ServiceStage. Один глобальный `@media (prefers-reduced-
+motion: reduce)` блок в `src/styles.css` (внутри `@layer base`) гасит все
+CSS keyframe-анимации/transitions сайтвайд через `!important` (обязателен —
+Tailwind-утилиты живут в более позднем cascade layer) — без изменений в
+компонентах. Дополняет, не конфликтует с JS-уровня `useReducedMotion()` в
+hero/ServiceStage (те управляют Framer Motion через inline-стили, эту
+CSS-правку не задевают).
+
+**Побочная находка (не пофикшена, вне рамок тикета)**: `animate-fade-in`/
+`animate-scale-in` (используются в `Contact.tsx`, `ContactWidget.tsx`,
+`__root.tsx`) сейчас компилируются в ноль CSS-правил — в `styles.css` есть
+голые `@keyframes fade-in`/`scale-in` без соответствующего `--animate-fade-in`/
+`--animate-scale-in` токена в Tailwind v4 theme, поэтому классы никогда не
+генерируются. Предсуществующий баг, не связан с reduced-motion и ни с одним
+тикетом редизайна — см. `state.js` → `debt.preExisting`.
+
 ## Новые i18n-ключи (владеет ticket 01)
 
 Ticket 01 добавляет в `src/lib/i18n.ts`/`src/lib/pages-i18n.ts` реальные

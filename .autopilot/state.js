@@ -10,17 +10,17 @@ window.STATE =
   "memoryFile": "CLAUDE.md",
   "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.claude/skills/autopilot",
   "startedAt": "2026-08-18T11:07:51+02:00",
-  "updatedAt": "2026-08-18T12:32:00+02:00",
-  "finishedAt": null,
+  "updatedAt": "2026-08-18T12:50:00+02:00",
+  "finishedAt": "2026-08-18T12:50:00+02:00",
   "stages": [
     { "id": "preflight", "status": "done", "startedAt": "2026-08-18T11:07:51+02:00", "finishedAt": "2026-08-18T11:09:30+02:00" },
     { "id": "manifest",  "status": "done", "startedAt": "2026-08-18T11:09:30+02:00", "finishedAt": "2026-08-18T11:31:02+02:00" },
     { "id": "briefing",  "status": "done", "startedAt": "2026-08-18T11:31:02+02:00", "finishedAt": "2026-08-18T11:31:02+02:00" },
     { "id": "spec",      "status": "done", "startedAt": "2026-08-18T11:31:02+02:00", "finishedAt": "2026-08-18T11:41:32+02:00" },
     { "id": "plan",      "status": "done", "startedAt": "2026-08-18T11:41:32+02:00", "finishedAt": "2026-08-18T11:50:30+02:00" },
-    { "id": "build",     "status": "done", "startedAt": "2026-08-18T11:50:30+02:00", "finishedAt": "2026-08-18T12:32:00+02:00", "note": "все 7 тасков готовы, все закоммичены" },
+    { "id": "build",     "status": "done", "startedAt": "2026-08-18T11:50:30+02:00", "finishedAt": "2026-08-18T12:48:00+02:00", "note": "8 тасков готовы и закоммичены (7 плановых + 1 G4-репарация)" },
     { "id": "review",    "status": "done", "startedAt": "2026-08-18T11:50:30+02:00", "finishedAt": "2026-08-18T12:32:00+02:00", "note": "ревью выполнено inline после каждого таска (Manifest/Spec/Craft), отдельные reviewer-субагенты не потребовались" },
-    { "id": "final",     "status": "active", "startedAt": "2026-08-18T12:32:00+02:00" }
+    { "id": "final",     "status": "done", "startedAt": "2026-08-18T12:32:00+02:00", "finishedAt": "2026-08-18T12:50:00+02:00", "note": "G4 blind acceptance пройдена, 1 дрифт найден и закрыт (R88 → тикет 08), memory + 6 ADR записаны" }
   ],
   "requirements": {
     "total": 146, "done": 144, "inTicket": 0, "inSpec": 0,
@@ -35,11 +35,14 @@ window.STATE =
     { "id": "05", "title": "CTA-анкета: новый шаг в Contact.tsx", "requirements": ["R63-R69","R66.1","R94","R96","R136i","R139"], "blockedBy": ["01"], "wave": 2, "zone": ["src/components/sections/Contact.tsx"], "status": "done", "startedAt": "2026-08-18T12:01:20+02:00", "finishedAt": "2026-08-18T12:07:01+02:00", "tests": "tsc clean; vite build OK", "commit": "78b7a33", "retries": 0, "repairs": 0, "handoffs": 0 },
     { "id": "06", "title": "Роллаут визуальной системы на остальные страницы", "requirements": ["R109","R118","R137-R140"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/about.tsx","src/routes/services*.tsx","src/routes/pricing*.tsx","src/routes/projects*.tsx","src/routes/audit.tsx","src/routes/insights*.tsx"], "status": "done", "startedAt": "2026-08-18T12:07:01+02:00", "finishedAt": "2026-08-18T12:14:38+02:00", "tests": "tsc clean; eslint clean (non-prettier); vite build OK", "commit": "612b443", "retries": 0, "repairs": 0, "handoffs": 0 },
     { "id": "04", "title": "Сборка homepage на новых компонентах", "requirements": ["R08","R09","R19","R42","R59-R62","R101","R102","R129","R135i"], "blockedBy": ["02","03"], "wave": 3, "zone": ["src/routes/index.tsx"], "status": "done", "startedAt": "2026-08-18T12:14:38+02:00", "finishedAt": "2026-08-18T12:19:42+02:00", "tests": "tsc clean; vite build OK (full SSR+client)", "commit": "f99e203", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "07", "title": "QA: сборка, регрессии, критерий премиальности", "requirements": ["R05-R125 (verification)"], "blockedBy": ["04","05","06"], "wave": 4, "zone": ["repo-wide verification"], "status": "done", "startedAt": "2026-08-18T12:19:42+02:00", "finishedAt": "2026-08-18T12:32:00+02:00", "tests": "tsc --noEmit clean; vite build OK (136 modules); eslint 149 pre-existing prettier errors (verified via git stash diff, zero net-new)", "commit": "5a59d0d", "retries": 0, "repairs": 0, "handoffs": 0 }
+    { "id": "07", "title": "QA: сборка, регрессии, критерий премиальности", "requirements": ["R05-R125 (verification)"], "blockedBy": ["04","05","06"], "wave": 4, "zone": ["repo-wide verification"], "status": "done", "startedAt": "2026-08-18T12:19:42+02:00", "finishedAt": "2026-08-18T12:32:00+02:00", "tests": "tsc --noEmit clean; vite build OK (136 modules); eslint 149 pre-existing prettier errors (verified via git stash diff, zero net-new)", "commit": "5a59d0d", "retries": 0, "repairs": 0, "handoffs": 0 },
+    { "id": "08", "title": "G4-репарация: global prefers-reduced-motion CSS fallback (R88)", "requirements": ["R88"], "blockedBy": ["07"], "wave": 5, "zone": ["src/styles.css"], "status": "done", "startedAt": "2026-08-18T12:40:00+02:00", "finishedAt": "2026-08-18T12:48:00+02:00", "tests": "tsc --noEmit clean; vite build OK; compiled CSS verified to contain the rule exactly once with !important intact", "commit": "f7b156b", "retries": 0, "repairs": 0, "handoffs": 0, "note": "not part of original 7-ticket plan — cut in Phase 8 to close a real drift the blind-acceptance check (G4) found: manifest said R88 done, but Contact.tsx had no reduced-motion handling at all" }
   ],
   "singlePass": null,
   "tests": null,
-  "debt": { "placeholders": [], "assumptions": [], "emptyEnv": [] },
+  "debt": { "placeholders": [], "assumptions": [], "emptyEnv": [], "preExisting": [
+    { "finding": "animate-fade-in/animate-scale-in utility classes (used in Contact.tsx, ContactWidget.tsx, __root.tsx) compile to zero CSS — Tailwind v4 never generates them because styles.css has bare @keyframes fade-in/scale-in with no matching --animate-fade-in/--animate-scale-in theme token. Pre-existing, unrelated to reduced-motion or any ticket's scope — discovered by ticket 08 while verifying its CSS fix, not fixed (out of scope).", "source": "ticket 08" }
+  ] },
   "additions": [],
   "concerns": [
     { "source": "impeccable design hook, resolved by ticket 07", "file": "src/styles.css (.grid-bg)", "finding": "Kept as-is by explicit ticket-07 judgment call: all ~20 usages are 20-30% opacity, radially masked, consistent sitewide — reads as restrained technical texture, not the loud unmasked-grid AI pattern the brief bans. Full removal judged disproportionate to a QA-fix ticket.", "blocking": false, "resolution": "kept, justified" },
@@ -47,5 +50,13 @@ window.STATE =
     { "source": "ticket 04 self-report, resolved by ticket 07", "file": "src/lib/i18n.ts (cta.subtitle, all 4 languages)", "finding": "Homepage CTA subtitle updated (commit 5a59d0d) to signal a short guided Q&A rather than a form, matching the actual /contact stepper UX. Title/btn left unchanged.", "blocking": false, "resolution": "fixed" }
   ],
   "reviewers": { "manifestSpec": null, "craft": null },
-  "blind": null
+  "blind": {
+    "checkedAt": "2026-08-18T12:45:00+02:00",
+    "verdict": "app builds, typechecks, serves; 10 of 12 brief-area checks реализовано, 2 частично",
+    "drift": [
+      { "manifest": "R88 done", "blind": "частично", "finding": "Hero and ServiceStage correctly gate motion via useReducedMotion(); Contact.tsx (the main CTA/conversion surface) had unconditional CSS keyframe animations with no prefers-reduced-motion handling at all.", "action": "fixed — ticket 08 (commit f7b156b) added a global prefers-reduced-motion CSS fallback in styles.css, site-wide, no component changes needed", "status": "resolved" },
+      { "manifest": "R17 done", "blind": "частично", "finding": "One backdrop-blur instance + animate-pulse glow on Contact.tsx's success state, flagged as light glassmorphism/decoration.", "action": "reviewed and accepted — a single instance on one success state is not \"excessive\" glassmorphism at the scale the brief bans; not fixed", "status": "accepted" }
+    ],
+    "alsoFound": "D01 recorded in manifest.md — spec.md said Aplikace routes to /services, shipped code (ticket 03) routes it to /contact instead (Design & Branding got /services). Both are real routes, no brief violation; corrected ADR 0006 to match shipped behavior."
+  }
 }
