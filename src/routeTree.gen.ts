@@ -14,6 +14,7 @@ import { Route as ServicesRouteImport } from './routes/services'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as InsightsRouteImport } from './routes/insights'
+import { Route as DesignRouteImport } from './routes/design'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as AboutRouteImport } from './routes/about'
@@ -51,6 +52,11 @@ const PricingRoute = PricingRouteImport.update({
 const InsightsRoute = InsightsRouteImport.update({
   id: '/insights',
   path: '/insights',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DesignRoute = DesignRouteImport.update({
+  id: '/design',
+  path: '/design',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/audit': typeof AuditRoute
   '/contact': typeof ContactRoute
+  '/design': typeof DesignRoute
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
@@ -144,6 +151,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/audit': typeof AuditRoute
   '/contact': typeof ContactRoute
+  '/design': typeof DesignRoute
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
@@ -165,6 +173,7 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/audit': typeof AuditRoute
   '/contact': typeof ContactRoute
+  '/design': typeof DesignRoute
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
@@ -187,6 +196,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/audit'
     | '/contact'
+    | '/design'
     | '/insights'
     | '/pricing'
     | '/projects'
@@ -207,6 +217,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/audit'
     | '/contact'
+    | '/design'
     | '/insights'
     | '/pricing'
     | '/projects'
@@ -227,6 +238,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/audit'
     | '/contact'
+    | '/design'
     | '/insights'
     | '/pricing'
     | '/projects'
@@ -248,6 +260,7 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AuditRoute: typeof AuditRoute
   ContactRoute: typeof ContactRoute
+  DesignRoute: typeof DesignRoute
   InsightsRoute: typeof InsightsRouteWithChildren
   PricingRoute: typeof PricingRouteWithChildren
   ProjectsRoute: typeof ProjectsRouteWithChildren
@@ -290,6 +303,13 @@ declare module '@tanstack/react-router' {
       path: '/insights'
       fullPath: '/insights'
       preLoaderRoute: typeof InsightsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/design': {
+      id: '/design'
+      path: '/design'
+      fullPath: '/design'
+      preLoaderRoute: typeof DesignRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -448,6 +468,7 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AuditRoute: AuditRoute,
   ContactRoute: ContactRoute,
+  DesignRoute: DesignRoute,
   InsightsRoute: InsightsRouteWithChildren,
   PricingRoute: PricingRouteWithChildren,
   ProjectsRoute: ProjectsRouteWithChildren,

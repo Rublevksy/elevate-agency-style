@@ -176,18 +176,22 @@ function SiteShell() {
     return () => document.removeEventListener("click", onClick, true);
   }, []);
 
+  // Isolated design-exploration routes (/design, /design-v1…/design-v4) render their own
+  // full-bleed shell — no production Nav/Footer/popups. Everything else is unaffected.
+  const isDesignExplore = pathname.startsWith("/design");
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <TopProgressBar />
-      <Nav />
+      {!isDesignExplore && <Nav />}
       <main key={pathname} className="flex-1 animate-fade-in pb-20 md:pb-0">
         <Outlet />
       </main>
-      <Footer />
-      {pathname !== "/contact" && <FloatingCta />}
-      <ContactWidget />
-      <ExitIntentModal />
-      <CookieBanner />
+      {!isDesignExplore && <Footer />}
+      {!isDesignExplore && pathname !== "/contact" && <FloatingCta />}
+      {!isDesignExplore && <ContactWidget />}
+      {!isDesignExplore && <ExitIntentModal />}
+      {!isDesignExplore && <CookieBanner />}
       <PageLoader />
     </div>
   );
