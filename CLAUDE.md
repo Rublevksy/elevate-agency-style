@@ -12,6 +12,7 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 | `bun run build` | Собрать продакшен-билд |
 | `bun run lint` | Прогнать eslint |
 | `bunx tsc --noEmit` | Проверить типы (отдельного typecheck-скрипта нет) |
+| `node scripts/extract-ref-assets.mjs` | Перегенерировать чистые референс-ассеты в `src/assets/refs/` (webp + jpg) |
 
 **Песочница без `bun`/`bunx`:** использовать бинарники напрямую — `node_modules/.bin/tsc`, `node_modules/.bin/eslint`, `node_modules/.bin/vite build`.
 
@@ -26,6 +27,8 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 - `src/lib/` — `i18n.ts` (переводы 4 языков), `pages-i18n.ts` (`usePages()`), `telegram.functions.ts`/`audit.functions.ts` (серверные функции), `projects.tsx`/`projects-i18n.ts`, `pricing.ts`.
 - `src/routes/` — файловый роутинг TanStack Start; `index.tsx` — собранная главная (`DeviceHero` → `ServiceStage` → trust-секции → портфолио → `InstagramStrip` → CTA); `design.tsx`/`design-v1..v4.tsx` — временная зона exploration (см. ниже).
 - `src/components/design-explore/` — **временная зона**, не часть постоянной архитектуры: витрина 4 визуальных направлений редизайна главной под `/design-v1`…`/design-v4`, удаляется целиком после того, как пользователь выберет направление. `concepts.ts` — единственный источник правды о 4 направлениях (`DESIGN_CONCEPTS`, slug/order/name/oneLiner), `ExploreSwitcher.tsx` — плавающий (fixed, не sticky) переключатель между направлениями + ссылка назад на прод-сайт, монтируется каждой `design-v*`-страницей самостоятельно (не глобально из `__root.tsx`).
+- `src/assets/refs/` — семь чистых кропов из `/references` **без вшитого текста**, каждый в `webp` + `jpg`: `hero-macbook`, `hero-iphone`, `svc-web`, `svc-eshop`, `svc-app`, `svc-seo`, `svc-branding`. Генерируются только скриптом `scripts/extract-ref-assets.mjs`, руками не правятся.
+- `scripts/extract-ref-assets.mjs` — пайплайн нарезки: фиксированные координаты кропа по каждому исходнику из `/references`, на выходе webp+jpg в `src/assets/refs/`.
 - `src/hooks/` — `use-reveal.ts`, `use-scroll-depth.ts`, `use-mobile.tsx`.
 - `src/styles.css` — дизайн-токены и utility-классы поверх Tailwind 4 `@theme inline`.
 
@@ -42,6 +45,8 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 - `src/routes/design.tsx` — страница-указатель `/design`, карточки-ссылки на все 4 направления, читает названия/описания из `DESIGN_CONCEPTS`.
 - `src/routes/design-v1.tsx` … `design-v4.tsx` — 4 самостоятельных маршрута-направления, каждый сам монтирует `ExploreSwitcher`, без прод-`Nav`/`Footer`. `design-v1.tsx` — «reference-led premium studio», единственное направление, которому по тикету разрешено переиспользовать прод `DeviceHero`/`useHeroScroll` как есть для hero-блока; остальные секции страницы — собственные, независимые от `ServiceStage`/`Contact`.
 
+- `src/components/design-explore/RefImage.tsx` — единственная точка подключения референс-графики: `<RefImage name={RefName} alt priority? className? imgClassName? sizes? />`, рендерит `<picture>` с webp+jpg и зашитыми натуральными `width`/`height` (нет CLS), `priority` переключает eager/lazy. **Потребитель обязан задать размерные классы** (`w-full h-auto` либо `h-full w-full object-cover`), иначе `img` займёт натуральные пиксели.
+
 ## Архитектура
 
 **Hero-сцена.** `DeviceHero` рендерит `<section>` высотой 220vh/170vh со `sticky top-0 h-screen` внутренней стадией. `useHeroScroll` берёт единственный `useScroll({ target: heroRef, offset: ["start start", "end start"] })` и через 5 стадийных точек (`STAGES = [0, 0.15, 0.55, 0.85, 1]`) маппит `scrollYProgress` в `HeroSceneStyle` (translate/rotate/scale устройства, opacity отражения/глоу/фоновых blob'ов, 4 `frameOpacities` контента экрана). `DeviceHero` сам строит массив из 4 кадров экрана: кадр 0 — лого ELEVATE, кадры 1–3 — первые 3 элемента `t.ui.serviceStage` из i18n (визуальный переход hero → услуги, не отдельный источник данных). Готовые стили просто передаются в `DeviceShellMacbook`/`DeviceShellIphone` — вся скролл-механика инкапсулирована в хуке, шелл её не знает. При `prefers-reduced-motion` хук возвращает статичный набор стилей (один кадр, без анимации).
@@ -52,7 +57,9 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 
 **i18n.** `src/lib/i18n.ts` — единственный источник переводов (`translations[Lang]`, читается через `useT()` из `LangProvider`); `pages-i18n.ts` — параллельный словарь только для сервисных/прочих подстраниц через `usePages(lang)`. Новые ключи добавляются сразу для всех 4 языков в `i18n.ts`; остальной код только читает.
 
-**`/design` exploration-зона (временная).** `SiteShell` в `src/routes/__root.tsx` проверяет `pathname.startsWith("/design")` и для всей зоны разом отключает прод-`Nav`/`Footer`/`FloatingCta` — тот же паттерн, что уже был для `/contact` (там отдельно скрывается только `FloatingCta`). Каждая `design-v*`-страница полностью самодостаточна: сама читает `useT()`, сама монтирует `ExploreSwitcher`, ничего не берёт из `Nav.tsx`. Это explore-инструмент для выбора направления редизайна главной, не кандидат в постоянную архитектуру — весь `src/components/design-explore/` и маршруты `design*.tsx` рассчитаны на полное удаление одним заходом после решения пользователя.
+**Референс-графика.** Исходники в `/references/` — готовые постеры с **вшитой чешской типографикой**; целиком в прод их ставить нельзя: растр захардкоживает язык (ломает i18n на 4 языка) и дублирует заголовок страницы. В продакшен-код попадают только кропы, нарезанные `scripts/extract-ref-assets.mjs` в `src/assets/refs/`, и подключаются только через `RefImage`. Имена файлов в `/references/` семантические и это их назначение: `01_HOME_DESKTOP_HERO`, `01_HOME_DESKTOP_SCROLL_SERVICES_SHOWCASE`, `05_HOME_MOBILE_HERO`, `10/20/30/40/50_SERVICE_{WEB,ESHOP,APP,SEO,BRANDING}_HERO`. Пять сервисных построены вокруг маскота (парень в худи ELEVATE); решением пользователя маскот используется на сайте **везде, включая главную**. Подача — гибрид: реальное фото устройства/сцены как растр, живой DOM-интерфейс и типографика из `useT()` поверх.
+
+**`/design` exploration-зона (временная).** `SiteShell` в `src/routes/__root.tsx` проверяет `pathname.startsWith("/design")` и для всей зоны разом отключает прод-`Nav`/`Footer`/`FloatingCta` — тот же паттерн, что уже был для `/contact` (там отдельно скрывается только `FloatingCta`). Каждая `design-v*`-страница полностью самодостаточна: сама читает `useT()`, сама монтирует `ExploreSwitcher`, ничего не берёт из `Nav.tsx`. Это explore-инструмент для выбора направления редизайна главной, не кандидат в постоянную архитектуру — весь `src/components/design-explore/` и маршруты `design*.tsx` рассчитаны на полное удаление одним заходом после решения пользователя. Четыре направления перестроены заново на реальной референс-графике: V1 «Референс оживший», V2 «Кинематографические главы», V3 «Стол студии», V4 «Аппаратная».
 
 ## Соглашения кода
 
@@ -60,6 +67,7 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 - Дизайн-токены/утилиты живут в `src/styles.css`, не как inline magic numbers: `.shadow-ambient` (плавающие элементы), `.shadow-contact` (элементы «на поверхности»), `.surface-glass` (только nav/оверлеи, не карточки), `.heading-display`/`.heading-display-sm` (fluid `clamp()`-заголовки, вес 800), `--primary-glow-strong`.
 - i18n-ключи одного назначения добавляются сразу для всех 4 языков разом в `i18n.ts`/`pages-i18n.ts` — остальной код только читает через `useT()`/`usePages()`, не заводит параллельных ключей.
 - 3D/визуальные эффекты — чистый CSS (`perspective`, `transform-style: preserve-3d`, слоистые `motion.div`), никакого Three.js/WebGL/canvas в проекте.
+- Референс-графика подключается только через `RefImage` из `src/assets/refs/` — не `<img src>` напрямую на файл из `/references/`, не целый постер, и не CSS-имитация фотографии там, где чистый ассет уже есть.
 - Секции без пропсов сами читают `useT()`/`usePages()` внутри себя (`ServiceStage`, `Contact`) — паттерн для новых секций такого рода.
 
 ## Подводные камни
@@ -69,9 +77,12 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 - `src/components/sections/Hero.tsx`, `Hero3D.tsx`, `Services.tsx`, `src/components/Hero3DCube.tsx` — мёртвый код, нигде не импортируется (проверено grep'ом по `src/`) — не строить на них, не удалять без отдельного запроса.
 - `.grid-bg` (~20 использований, 20–30% opacity, всегда с radial-mask) осознанно оставлен как есть, не запрещён брифом — не путать с `.text-gradient`, который был удалён (жил только на числах в `Results.tsx`, generic-SaaS приём под запретом брифа).
 - `src/routeTree.gen.ts`, `vite.config.ts`, всё под `src/integrations/supabase/`, `src/lib/*.functions.ts` (`telegram.functions.ts`/`audit.functions.ts`), SEO/structured data (`STRUCTURED_DATA` в `src/routes/__root.tsx`, `head()` в маршрутах, `src/routes/sitemap[.]xml.ts`) — не редактировать без прямой необходимости.
-- `/references/` (8 файлов) не импортируется в продакшен-код ни при каких обстоятельствах — не трогать.
+- `/references/` — исходные постеры, **целиком** в прод не попадают ни при каких обстоятельствах (вшитый чешский текст ломает четырёхъязычность и дублирует H1). Разрешён только путь «кроп через `scripts/extract-ref-assets.mjs` → `src/assets/refs/` → `RefImage`». Существовавший ранее `src/assets/hero/macbook-photo.jpg` содержал весь референс вместе с текстом — это был реальный баг, из-за него на `/design-v1` дублировался заголовок.
+- Внутри сервисных сцен на изображённых экранах вшиты **выдуманные метрики** (+220% / +180% / +150%, «+2 482 users», «2 499 Kč») и чужой товарный знак (Nike на витрине e-shop). `PRODUCT.md` принцип 5 запрещает выдуманные метрики. Кропы намеренно перекадрированы на маскота, в DOM эти цифры не выносятся — но **до продакшена рендеры надо перерисовать**.
 - Нет тестового раннера (`vitest`/`jest`) — «зелёный набор» это `tsc --noEmit` + `eslint` + `vite build` + ручной просмотр.
-- `google-chrome --headless=new --screenshot --window-size=W,H` на этой машине ненадёжен для узких (~390px, mobile) ширин — реально отдаёт то ~500px, то ~980px вместо запрошенной, PNG обрезается, а не масштабируется. Для мобильных скриншотов нужен CDP: `--remote-debugging-port` + `Emulation.setDeviceMetricsOverride` через WebSocket (`require('ws')` уже доступен как транзитивная зависимость в `node_modules`, ставить не нужно). Для десктопных ширин (≥1024px) `--window-size` работает точно — использовать его, не CDP: на десктопной ширине CDP-эмуляция специфически ломает scroll-driven макбук-сцену `DeviceHero`/`useHeroScroll` — зависает в промежуточном кадре анимации.
+- `google-chrome --headless=new --screenshot --window-size=W,H` на этой машине ненадёжен для узких (~390px, mobile) ширин — реально отдаёт то ~500px, то ~980px вместо запрошенной, PNG обрезается, а не масштабируется. Для мобильных скриншотов нужен CDP: `--remote-debugging-port` + `Emulation.setDeviceMetricsOverride` через WebSocket (`require('ws')` уже доступен как транзитивная зависимость в `node_modules`, ставить не нужно). Для десктопных ширин (≥1024px) `--window-size` работает точно — использовать его, не CDP: на десктопной ширине CDP-эмуляция специфически ломает scroll-driven макбук-сцену `DeviceHero`/`useHeroScroll` — зависает в промежуточном кадре анимации. Ещё два факта про headless-съёмку:
+  - `--force-prefers-reduced-motion` **обязателен**, иначе кадр снимается на загрузочном экране приложения и выходит пустым;
+  - полностраничный CDP-захват с `captureBeyondViewport: true` **не триггерит lazy-загрузку** картинок ниже сгиба — они выходят пустыми прямоугольниками и выглядят как баг вёрстки. Чтобы проверить такие секции, нужен реальный `window.scrollTo` + пауза, а не полностраничный кадр.
 
 ## Как здесь работает Autopilot
 
