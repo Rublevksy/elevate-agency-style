@@ -14,29 +14,29 @@ export const DESIGN_CONCEPTS: readonly DesignConcept[] = [
   {
     slug: "design-v1",
     order: 1,
-    name: "V1 — Reference-led premium studio",
+    name: "V1 — «Референс оживший» (Reference-led premium studio)",
     oneLiner:
-      "Скролл-driven device hero и дугообразный синий свет, доведённые до полной страницы — самое безопасное продолжение текущей прод-системы.",
+      "Композиция главного референса один в один: фото MacBook, живой текст слева, прочерчивающаяся SVG-дуга и каскад из 5 карточек с маскотами по нумерованному rail.",
   },
   {
     slug: "design-v2",
     order: 2,
-    name: "V2 — Editorial / cinematic digital studio",
+    name: "V2 — «Кинематографические главы» (Editorial / cinematic)",
     oneLiner:
-      "Журнальная подача: нумерованный rail слева, крупная сцена справа, каждая услуга — разворот, а не карточка.",
+      "Не страница с секциями, а фильм из глав: каждая услуга — полнокадровая сцена с закреплённым поверх текстом и монтажной склейкой вместо fade.",
   },
   {
     slug: "design-v3",
     order: 3,
-    name: "V3 — Interactive product showcase",
+    name: "V3 — «Стол студии» (Interactive product showcase)",
     oneLiner:
-      "Интерфейс — это и есть контент: живой, кликабельный device-мокап управляет всей информационной иерархией страницы.",
+      "Маскот — ведущий: переключение услуги одновременно меняет реальную фотосцену и живой DOM-интерфейс в browser-window рядом с ней.",
   },
   {
     slug: "design-v4",
     order: 4,
-    name: "V4 — Experimental premium technology studio",
+    name: "V4 — «Аппаратная» (Experimental premium technology studio)",
     oneLiner:
-      "Асимметричная техническая сетка и инженерная консоль-readout вместо ещё одной гладкой маркетинговой композиции.",
+      "Страница как приборная панель: настоящая фотография препарируется прочерчивающейся технической разметкой, а линия-сканер собирает композицию по модулям.",
   },
 ];
