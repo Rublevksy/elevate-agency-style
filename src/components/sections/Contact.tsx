@@ -21,7 +21,7 @@ const PROJECT_ICONS = [Globe, ShoppingBag, AppWindow, RefreshCw, HelpCircle];
 // Stable numeric budget values (CZK) per BUDGETS index — language-independent
 const BUDGET_VALUES = [20000, 50000, 100000, 150000, 0];
 
-type StepKey = 1 | 2 | 3;
+type StepKey = 1 | 2 | 3 | 4;
 
 export function Contact() {
   const { t } = useT();
@@ -29,6 +29,8 @@ export function Contact() {
 
   const [step, setStep] = useState<StepKey>(1);
   const [projectTypeIdx, setProjectTypeIdx] = useState<number | null>(null);
+  const [featureIdxs, setFeatureIdxs] = useState<number[]>([]);
+  const [goal, setGoal] = useState("");
   const [budgetIdx, setBudgetIdx] = useState<number | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -39,7 +41,10 @@ export function Contact() {
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const progress = useMemo(() => (submitted ? 100 : (step / 3) * 100), [step, submitted]);
+  const progress = useMemo(() => (submitted ? 100 : (step / 4) * 100), [step, submitted]);
+
+  const toggleFeature = (i: number) =>
+    setFeatureIdxs((cur) => (cur.includes(i) ? cur.filter((x) => x !== i) : [...cur, i]));
 
   const validateContactDetails = (): boolean => {
     const errs: Record<string, string> = {};
@@ -65,8 +70,13 @@ export function Contact() {
       return;
     }
     if (step === 2) {
-      if (!validateContactDetails()) return;
+      // Features/goal step is fully optional — no validation to pass.
       setStep(3);
+      return;
+    }
+    if (step === 3) {
+      if (!validateContactDetails()) return;
+      setStep(4);
       return;
     }
   };
@@ -85,7 +95,7 @@ export function Contact() {
       return;
     }
     if (!validateContactDetails()) {
-      setStep(2);
+      setStep(3);
       return;
     }
     setErrors({});
@@ -94,6 +104,12 @@ export function Contact() {
       const projectTypeLabel = f.projectTypes[projectTypeIdx];
       const budgetLabel = f.budgets[budgetIdx];
       const budgetNum = BUDGET_VALUES[budgetIdx] ?? 0;
+      const selectedFeatures = featureIdxs.map((i) => f.features[i]).filter(Boolean);
+      const extraLines: string[] = [];
+      if (selectedFeatures.length)
+        extraLines.push(`${f.featuresLabel} ${selectedFeatures.join(", ")}`);
+      if (goal.trim()) extraLines.push(`${f.goalLabel} ${goal.trim()}`);
+      const extra = extraLines.length ? `\n${extraLines.join("\n")}` : "";
       await sendContactToTelegram({
         data: {
           name,
@@ -101,7 +117,7 @@ export function Contact() {
           phone: phone || "",
           service: projectTypeLabel,
           budget: budgetNum,
-          message: `[${budgetLabel}]\n${message}`,
+          message: `[${budgetLabel}]${extra}\n${message}`,
         },
       });
       setSubmitted(true);
@@ -118,6 +134,8 @@ export function Contact() {
     setSubmitted(false);
     setStep(1);
     setProjectTypeIdx(null);
+    setFeatureIdxs([]);
+    setGoal("");
     setBudgetIdx(null);
     setName("");
     setEmail("");
@@ -127,7 +145,10 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-28 md:py-36 border-t border-border relative overflow-hidden">
+    <section
+      id="contact"
+      className="py-28 md:py-36 border-t border-border relative overflow-hidden"
+    >
       <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[28rem] w-[28rem] rounded-full bg-primary/10 blur-[140px] pointer-events-none" />
 
       <div className="container-luxe relative">
@@ -185,7 +206,8 @@ export function Contact() {
               <div className="mb-8">
                 <div className="flex items-center justify-between mb-3 text-[11px] uppercase tracking-[0.25em] text-muted-foreground gap-3">
                   <span>
-                    {f.stepLabel} <span className="text-primary font-semibold">{step}</span> {f.stepOf}
+                    {f.stepLabel} <span className="text-primary font-semibold">{step}</span>{" "}
+                    {f.stepOf}
                   </span>
                   <span className="text-foreground/70 text-right">{f.stepTitles[step - 1]}</span>
                 </div>
@@ -204,7 +226,9 @@ export function Contact() {
                     <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
                       1
                     </span>
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{f.stepTitles[0]}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                      {f.stepTitles[0]}
+                    </h3>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                     {f.projectTypes.map((label, i) => {
@@ -235,18 +259,77 @@ export function Contact() {
                       );
                     })}
                   </div>
-                  {errors.projectType && <p className="text-xs text-destructive">{errors.projectType}</p>}
+                  {errors.projectType && (
+                    <p className="text-xs text-destructive">{errors.projectType}</p>
+                  )}
                 </div>
               )}
 
-              {/* Step 2 — contact info */}
+              {/* Step 2 — features & goal (optional) */}
               {step === 2 && (
                 <div className="space-y-6 animate-fade-in" key="step-2">
                   <div className="flex items-center gap-3">
                     <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
                       2
                     </span>
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{f.stepTitles[1]}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                      {f.stepTitles[1]}
+                    </h3>
+                  </div>
+
+                  <div>
+                    <label className="text-xs uppercase tracking-widest text-muted-foreground mb-3 block">
+                      {f.featuresLabel}
+                    </label>
+                    <div className="flex flex-wrap gap-2.5">
+                      {f.features.map((label, i) => {
+                        const active = featureIdxs.includes(i);
+                        return (
+                          <button
+                            key={i}
+                            type="button"
+                            onClick={() => toggleFeature(i)}
+                            className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full border text-sm font-medium transition-all duration-300 ${
+                              active
+                                ? "border-primary bg-primary/10 text-foreground shadow-[0_10px_30px_-10px_oklch(0.72_0.18_250/0.6)]"
+                                : "border-border bg-background/40 text-muted-foreground hover:border-primary/50 hover:text-foreground hover:-translate-y-0.5"
+                            }`}
+                          >
+                            {active && (
+                              <Check className="h-3.5 w-3.5 text-primary" strokeWidth={3} />
+                            )}
+                            {label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
+                      {f.goalLabel}
+                    </label>
+                    <input
+                      value={goal}
+                      onChange={(e) => setGoal(e.target.value)}
+                      maxLength={200}
+                      placeholder={f.goalPlaceholder}
+                      className="field-input-pro"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Step 3 — contact info */}
+              {step === 3 && (
+                <div className="space-y-6 animate-fade-in" key="step-3">
+                  <div className="flex items-center gap-3">
+                    <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
+                      3
+                    </span>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                      {f.stepTitles[2]}
+                    </h3>
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -261,7 +344,9 @@ export function Contact() {
                         placeholder={f.namePlaceholder}
                         className={`field-input-pro ${errors.name ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                       />
-                      {errors.name && <p className="text-xs text-destructive mt-1">{errors.name}</p>}
+                      {errors.name && (
+                        <p className="text-xs text-destructive mt-1">{errors.name}</p>
+                      )}
                     </div>
                     <div>
                       <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
@@ -275,7 +360,9 @@ export function Contact() {
                         placeholder={f.emailPlaceholder}
                         className={`field-input-pro ${errors.email ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                       />
-                      {errors.email && <p className="text-xs text-destructive mt-1">{errors.email}</p>}
+                      {errors.email && (
+                        <p className="text-xs text-destructive mt-1">{errors.email}</p>
+                      )}
                     </div>
                     <div className="md:col-span-2">
                       <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
@@ -301,7 +388,9 @@ export function Contact() {
                         placeholder={f.messagePlaceholder}
                         className={`field-input-pro resize-none ${errors.message ? "border-destructive ring-1 ring-destructive/40" : ""}`}
                       />
-                      {errors.message && <p className="text-xs text-destructive mt-1">{errors.message}</p>}
+                      {errors.message && (
+                        <p className="text-xs text-destructive mt-1">{errors.message}</p>
+                      )}
                     </div>
                   </div>
 
@@ -328,14 +417,16 @@ export function Contact() {
                 </div>
               )}
 
-              {/* Step 3 — budget */}
-              {step === 3 && (
-                <div className="space-y-6 animate-fade-in" key="step-3">
+              {/* Step 4 — budget */}
+              {step === 4 && (
+                <div className="space-y-6 animate-fade-in" key="step-4">
                   <div className="flex items-center gap-3">
                     <span className="h-8 w-8 grid place-items-center rounded-full bg-primary/15 text-primary font-bold">
-                      3
+                      4
                     </span>
-                    <h3 className="text-xl md:text-2xl font-bold text-foreground">{f.stepTitles[2]}</h3>
+                    <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                      {f.stepTitles[3]}
+                    </h3>
                   </div>
                   <p className="text-sm text-muted-foreground -mt-2">{f.budgetHelp}</p>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -357,11 +448,16 @@ export function Contact() {
                           }`}
                         >
                           {isUnsure ? (
-                            <HelpCircle className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
+                            <HelpCircle
+                              className="h-5 w-5 shrink-0 text-primary"
+                              strokeWidth={1.6}
+                            />
                           ) : (
                             <Wallet className="h-5 w-5 shrink-0 text-primary" strokeWidth={1.6} />
                           )}
-                          <span className="font-semibold text-foreground tabular-nums">{label}</span>
+                          <span className="font-semibold text-foreground tabular-nums">
+                            {label}
+                          </span>
                           {active && (
                             <span className="absolute top-2 right-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground animate-scale-in">
                               <Check className="h-3 w-3" strokeWidth={3} />
@@ -408,7 +504,7 @@ export function Contact() {
                   <ArrowLeft className="h-4 w-4" />
                   {f.back}
                 </button>
-                {step < 3 ? (
+                {step < 4 ? (
                   <button
                     type="button"
                     onClick={goNext}
