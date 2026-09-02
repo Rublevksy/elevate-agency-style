@@ -1,5 +1,13 @@
-import { Outlet, Link, createRootRoute, HeadContent, Scripts, useRouterState } from "@tanstack/react-router";
+import {
+  Outlet,
+  Link,
+  createRootRoute,
+  HeadContent,
+  Scripts,
+  useRouterState,
+} from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { ArrowRight } from "lucide-react";
 
 import appCss from "../styles.css?url";
 import { LangProvider } from "@/components/LangProvider";
@@ -97,7 +105,10 @@ export const Route = createRootRoute({
       { property: "og:image:width", content: "1200" },
       { property: "og:image:height", content: "630" },
       { property: "og:image:type", content: "image/png" },
-      { property: "og:image:alt", content: "ElevateIT — Weby a digitální identita pro firmy, které chtějí růst" },
+      {
+        property: "og:image:alt",
+        content: "ElevateIT — Weby a digitální identita pro firmy, které chtějí růst",
+      },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: "https://elevateit.cz/og-image.png?v=2" },
       { name: "google-site-verification", content: "kzWWGfct_dpRjw9ivUmnzMG5nIGhvfp0OmnTb7wN1xM" },
@@ -106,7 +117,15 @@ export const Route = createRootRoute({
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" },
+      {
+        rel: "stylesheet",
+        // Inter carries body copy; Montserrat is the display voice — the
+        // reference headlines are a heavy geometric grotesk, which Inter at
+        // 800 does not give (its caps are too wide and too open). Both
+        // families are pulled with latin-ext + cyrillic so CZ diacritics and
+        // the RU/UA translations render in the same face.
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800;900&display=swap",
+      },
       { rel: "icon", type: "image/x-icon", href: "/favicon.ico?v=3" },
       { rel: "shortcut icon", type: "image/x-icon", href: "/favicon.ico?v=3" },
       { rel: "icon", type: "image/png", sizes: "16x16", href: "/favicon-16x16.png?v=3" },
@@ -220,7 +239,11 @@ function FloatingCta() {
         to="/contact"
         className="btn-primary w-full justify-center pointer-events-auto shadow-[0_10px_30px_-10px_oklch(0.65_0.18_255/0.6)]"
       >
-        🚀 <FloatingCtaLabel />
+        {/* A drawn icon, not an emoji: emoji render as a different picture in
+            every OS and font, and they are the one thing on a premium dark
+            surface that always looks pasted on. */}
+        <FloatingCtaLabel />
+        <ArrowRight className="size-4" aria-hidden />
       </Link>
     </div>
   );

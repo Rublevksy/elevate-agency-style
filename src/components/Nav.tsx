@@ -7,16 +7,31 @@ import { Logo } from "./Logo";
 const LANGS: Lang[] = ["CZ", "EN", "RU", "UA"];
 
 const SERVICE_LINKS = [
-  { to: "/services/web", labels: { CZ: "Webové stránky", EN: "Websites", RU: "Веб-сайты", UA: "Веб-сайти" } },
-  { to: "/services/eshop", labels: { CZ: "E-shopy", EN: "E-commerce", RU: "Интернет-магазины", UA: "Інтернет-магазини" } },
-  { to: "/services/branding", labels: { CZ: "Branding", EN: "Branding", RU: "Брендинг", UA: "Брендинг" } },
+  {
+    to: "/services/web",
+    labels: { CZ: "Webové stránky", EN: "Websites", RU: "Веб-сайты", UA: "Веб-сайти" },
+  },
+  {
+    to: "/services/eshop",
+    labels: { CZ: "E-shopy", EN: "E-commerce", RU: "Интернет-магазины", UA: "Інтернет-магазини" },
+  },
+  {
+    to: "/services/branding",
+    labels: { CZ: "Branding", EN: "Branding", RU: "Брендинг", UA: "Брендинг" },
+  },
   { to: "/services/design", labels: { CZ: "Grafika", EN: "Design", RU: "Дизайн", UA: "Дизайн" } },
 ] as const;
 
 const PRICING_LINKS = [
   { to: "/pricing/web", labels: { CZ: "Weby", EN: "Websites", RU: "Сайты", UA: "Сайти" } },
-  { to: "/pricing/eshop", labels: { CZ: "E-shopy", EN: "E-commerce", RU: "Магазины", UA: "Магазини" } },
-  { to: "/pricing/branding", labels: { CZ: "Branding", EN: "Branding", RU: "Брендинг", UA: "Брендинг" } },
+  {
+    to: "/pricing/eshop",
+    labels: { CZ: "E-shopy", EN: "E-commerce", RU: "Магазины", UA: "Магазини" },
+  },
+  {
+    to: "/pricing/branding",
+    labels: { CZ: "Branding", EN: "Branding", RU: "Брендинг", UA: "Брендинг" },
+  },
 ] as const;
 
 export function Nav() {
@@ -57,24 +72,29 @@ export function Nav() {
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b ${
         scrolled
           ? "backdrop-blur-2xl bg-background/85 border-border shadow-[0_8px_30px_-12px_oklch(0_0_0/0.6)]"
-          : "backdrop-blur-xl bg-background/60 border-transparent"
+          : "bg-transparent border-transparent"
       }`}
     >
-      <div className="container-luxe flex h-20 md:h-24 items-center justify-between py-3">
+      <div className="container-luxe flex h-20 md:h-24 items-center justify-between gap-3 py-3 lg:gap-8">
         <Link
           to="/"
-          className="flex items-center gap-2 transition-opacity hover:opacity-80"
+          className="flex shrink-0 items-center gap-2 transition-opacity hover:opacity-80"
           aria-label="ELEVATE — domů"
         >
           <Logo
             className={`w-auto transition-all duration-300 ${
-              scrolled ? "h-9 md:h-11" : "h-10 md:h-12"
+              scrolled ? "h-7 sm:h-9 md:h-11" : "h-8 sm:h-10 md:h-12"
             }`}
           />
         </Link>
 
-        <nav className="hidden md:flex items-center gap-9 text-sm">
-          <Link to="/" className={linkCls} activeProps={{ className: activeCls }} activeOptions={{ exact: true }}>
+        <nav className="hidden lg:flex items-center gap-5 whitespace-nowrap text-sm xl:gap-7">
+          <Link
+            to="/"
+            className={linkCls}
+            activeProps={{ className: activeCls }}
+            activeOptions={{ exact: true }}
+          >
             {t.nav.home}
           </Link>
 
@@ -87,7 +107,10 @@ export function Nav() {
             <div className="nav-dropdown absolute left-1/2 -translate-x-1/2 top-full pt-3">
               <div
                 className="min-w-[220px] rounded-xl border border-border bg-popover/95 backdrop-blur-xl p-2 shadow-2xl"
-                style={{ boxShadow: "0 30px 60px -20px oklch(0 0 0 / 0.6), 0 0 0 1px oklch(0.65 0.18 255 / 0.08) inset" }}
+                style={{
+                  boxShadow:
+                    "0 30px 60px -20px oklch(0 0 0 / 0.6), 0 0 0 1px oklch(0.65 0.18 255 / 0.08) inset",
+                }}
               >
                 {SERVICE_LINKS.map((s) => (
                   <Link
@@ -115,7 +138,10 @@ export function Nav() {
             <div className="nav-dropdown absolute left-1/2 -translate-x-1/2 top-full pt-3">
               <div
                 className="min-w-[200px] rounded-xl border border-border bg-popover/95 backdrop-blur-xl p-2 shadow-2xl"
-                style={{ boxShadow: "0 30px 60px -20px oklch(0 0 0 / 0.6), 0 0 0 1px oklch(0.65 0.18 255 / 0.08) inset" }}
+                style={{
+                  boxShadow:
+                    "0 30px 60px -20px oklch(0 0 0 / 0.6), 0 0 0 1px oklch(0.65 0.18 255 / 0.08) inset",
+                }}
               >
                 {PRICING_LINKS.map((p) => (
                   <Link
@@ -141,7 +167,10 @@ export function Nav() {
           </Link>
           <Link
             to="/audit"
-            className="ml-2 inline-flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
+            // Below xl the full nav, this button and the language switcher do not fit
+            // on one row and the switcher was clipped off the right edge. The
+            // audit CTA is the one item repeated elsewhere on the page.
+            className="ml-2 hidden xl:inline-flex items-center gap-1.5 rounded-md border border-primary/40 bg-primary/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-primary hover:bg-primary hover:text-primary-foreground transition-colors"
           >
             {t.audit.navLink}
           </Link>
@@ -171,7 +200,7 @@ export function Nav() {
             onClick={() => setMobileOpen((v) => !v)}
             aria-label={mobileOpen ? "Zavřít menu" : "Otevřít menu"}
             aria-expanded={mobileOpen}
-            className="md:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border/60 bg-background/40 backdrop-blur-md text-foreground hover:bg-accent/60 transition-colors"
+            className="lg:hidden inline-flex items-center justify-center h-10 w-10 rounded-lg border border-border/60 bg-background/40 backdrop-blur-md text-foreground hover:bg-accent/60 transition-colors"
           >
             {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -179,7 +208,7 @@ export function Nav() {
       </div>
 
       {/* Mobile dropdown menu — slides down from header */}
-      <div className="md:hidden" aria-hidden={!mobileOpen}>
+      <div className="lg:hidden" aria-hidden={!mobileOpen}>
         {/* Backdrop below the panel — dims hero but keeps content visible */}
         <div
           onClick={() => setMobileOpen(false)}

@@ -34,6 +34,10 @@ export interface HeroSceneStyle {
   backgroundBlobB: HeroLayerStyle | null;
   /** Opacity per on-screen content frame, length === HERO_SCREEN_FRAME_COUNT. */
   frameOpacities: Array<number | MotionValue<number>>;
+  /** The real reference photo (closed/branded device) — dominant at rest, dissolves early on scroll. */
+  photo: HeroLayerStyle;
+  /** The CSS-built open-screen shell carrying live content frames — takes over once scrolling starts. */
+  shell: HeroLayerStyle;
 }
 
 const STAGES: number[] = [0, 0.15, 0.55, 0.85, 1];
@@ -75,7 +79,7 @@ export function useHeroScroll(
     STAGES,
     isIphone ? [0.9, 0.96, 1, 1.02, 0.75] : [0.84, 0.94, 1, 1.05, 0.68],
   );
-  const deviceOpacity = useTransform(scrollYProgress, [0, 0.05, 0.9, 1], [0, 1, 1, 0]);
+  const deviceOpacity = useTransform(scrollYProgress, [0, 0.05, 0.9, 1], [1, 1, 1, 0]);
   const scrollTransform = useMotionTemplate`translateY(${translateY}px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(${scale})`;
 
   const reflectionOpacity = useTransform(
@@ -99,6 +103,12 @@ export function useHeroScroll(
   const frame2 = useTransform(scrollYProgress, [0.46, 0.58, 0.7, 0.82], [0, 1, 1, 0]);
   const frame3 = useTransform(scrollYProgress, [0.7, 0.82, 0.94], [0, 1, 1]);
 
+  // The real reference photo owns the resting moment; the CSS-built open shell (live content
+  // frames) takes over as the visitor starts scrolling. Same crossfade window both directions
+  // so exactly one is ever dominant, never a visible gap or double-exposure.
+  const photoOpacity = useTransform(scrollYProgress, [0, 0.12, 0.2], [1, 1, 0]);
+  const shellOpacity = useTransform(scrollYProgress, [0, 0.12, 0.2], [0, 0, 1]);
+
   if (prefersReducedMotion) {
     return {
       reducedMotion: true,
@@ -109,6 +119,8 @@ export function useHeroScroll(
       backgroundBlobA: { opacity: 0.4 },
       backgroundBlobB: isIphone ? null : { opacity: 0.28 },
       frameOpacities: [1, 0, 0, 0],
+      photo: { opacity: 1 },
+      shell: { opacity: 0 },
     };
   }
 
@@ -121,5 +133,7 @@ export function useHeroScroll(
     backgroundBlobA: { opacity: blobOpacity, transform: blobATransform },
     backgroundBlobB: isIphone ? null : { opacity: blobOpacity, transform: blobBTransform },
     frameOpacities: [frame0, frame1, frame2, frame3],
+    photo: { opacity: photoOpacity },
+    shell: { opacity: shellOpacity },
   };
 }

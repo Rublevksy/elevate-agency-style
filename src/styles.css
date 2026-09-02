@@ -7,6 +7,7 @@
 
 @theme inline {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Montserrat", "Inter", ui-sans-serif, system-ui, sans-serif;
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
@@ -89,8 +90,48 @@
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
   }
+  /*
+   * Browser surfaces. Selection, caret, focus ring and scrollbar ship with
+   * defaults that belong to no design system, and on a near-black page they
+   * are the parts that give away a template. They are themed from the palette
+   * here, once, rather than per component.
+   */
   ::selection {
-    background-color: oklch(0.65 0.18 255 / 0.3);
+    background-color: oklch(0.65 0.18 255 / 0.35);
+    color: oklch(0.99 0 0);
+  }
+  html {
+    caret-color: var(--color-primary);
+    scrollbar-color: oklch(0.65 0.18 255 / 0.35) transparent;
+    scrollbar-width: thin;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background-color: oklch(0.65 0.18 255 / 0.28);
+    border: 3px solid transparent;
+    border-radius: 999px;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: oklch(0.65 0.18 255 / 0.5);
+  }
+
+  /*
+   * One focus ring for the whole site. Keyboard users were previously getting
+   * the browser default, which on this background is close to invisible.
+   * Components that draw their own focus treatment opt out with
+   * `focus-visible:outline-none` and are responsible for replacing it.
+   */
+  :where(a, button, [role="button"], summary, [tabindex]):focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+    border-radius: 4px;
   }
 
   /*
@@ -195,16 +236,39 @@
   /* Fluid display headings — clamp()-sized, tight tracking at weight 800.
      For hero/ServiceStage headings (не менять существующие text-* классы). */
   .heading-display {
+    font-family: var(--font-display);
     font-size: clamp(2.75rem, 2rem + 3.5vw, 5.5rem);
     font-weight: 800;
     letter-spacing: -0.025em;
     line-height: 1.05;
   }
   .heading-display-sm {
+    font-family: var(--font-display);
     font-size: clamp(2.25rem, 1.85rem + 1.9vw, 3.5rem);
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.1;
+  }
+
+  /* The reference hero headline: all caps, near-solid leading, heavy weight.
+     Only the home hero and the services showcase heading use it — it is the
+     loudest voice in the system and it stops meaning anything if reused. */
+  .heading-scene {
+    font-family: var(--font-display);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 0.98;
+    text-wrap: balance;
+  }
+
+  /* Small letterspaced label from the reference (kicker, SCROLL, discipline
+     row). 11px caps with wide tracking; kept as one utility so the tracking
+     does not drift between the four places it appears. */
+  .label-micro {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
   }
 
   /* Buttons */

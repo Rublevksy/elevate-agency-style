@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import logoAsset from "@/assets/elevate-full-logo.png.asset.json";
+// Was a .asset.json pointing at an external /__l5e/ asset host that is not
+// served by this app — the very first frame every visitor sees rendered a
+// broken image. This is the bundled wordmark, so Vite fingerprints and
+// ships it with the build.
+import logoAsset from "@/assets/elevate-logo.png";
 
 const SESSION_KEY = "elevate_loader_shown";
 const TOTAL_MS = 3200;
@@ -86,9 +90,7 @@ export function PageLoader() {
                 style={{
                   background: `linear-gradient(${
                     100 + i * 25
-                  }deg, transparent 40%, rgba(96,165,250,${
-                    0.08 + i * 0.03
-                  }) 50%, transparent 60%)`,
+                  }deg, transparent 40%, rgba(96,165,250,${0.08 + i * 0.03}) 50%, transparent 60%)`,
                   filter: "blur(40px)",
                 }}
               />
@@ -132,8 +134,7 @@ export function PageLoader() {
               width: 280,
               height: 280,
               border: "1px solid rgba(96,165,250,0.7)",
-              boxShadow:
-                "0 0 60px rgba(59,130,246,0.45), inset 0 0 60px rgba(59,130,246,0.35)",
+              boxShadow: "0 0 60px rgba(59,130,246,0.45), inset 0 0 60px rgba(59,130,246,0.35)",
             }}
             initial={{ opacity: 0, scale: 0.2 }}
             animate={{
@@ -200,7 +201,9 @@ export function PageLoader() {
             />
 
             <img
-              src={logoAsset.url}
+              src={logoAsset}
+              width={929}
+              height={202}
               alt="ELEVATE"
               draggable={false}
               className="relative block w-[min(78vw,720px)] h-auto select-none"

@@ -1,7 +1,11 @@
 import { motion } from "framer-motion";
 import type { HeroSceneStyle } from "./useHeroScroll";
 import type { ScreenFrame } from "./DeviceHero";
-import macbookPhoto from "@/assets/hero/macbook-photo.jpg";
+// The former asset here was the whole reference poster, Czech headline baked
+// into the raster — one language hardcoded into an image on a four-language
+// site, and a second copy of the page's own H1. It also lived outside git.
+// This is the text-free plate cut by scripts/extract-ref-assets.mjs.
+import macbookPhoto from "@/assets/refs/hero-macbook.jpg";
 import { ScreenMockup } from "./ScreenMockup";
 
 interface DeviceShellProps {

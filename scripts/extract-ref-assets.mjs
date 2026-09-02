@@ -9,6 +9,23 @@
  * renders as live text. So each asset is cropped to the *pictorial* region
  * only, leaving all typography to the DOM.
  *
+ * Framing rules these regions follow — they are the design, not housekeeping:
+ *
+ * 1. The home hero is a SCENE, not a device cut-out. `hero-macbook` keeps the
+ *    full height of the source so the luminous arc, the stone plinth, the light
+ *    waves and the air above the device all survive. Cropping tighter turns the
+ *    reference into "a laptop in a box", which is the failure mode this file
+ *    exists to prevent.
+ * 2. The five service scenes are five takes of ONE room. They share a crop
+ *    width and height (594x886) so the desk, window, wall sign and chair land
+ *    in the same place on every frame; swapping between them then reads as a
+ *    camera cut, not as five unrelated pictures. Only `top` is tuned per frame,
+ *    to level the mascot's eye-line.
+ * 3. `svc-seo` starts below y=368 for a second reason: the source screen has
+ *    invented figures (+220% / +180% / +150%) painted onto the monitor, and
+ *    PRODUCT.md principle 5 forbids fabricated metrics. The crop keeps the
+ *    rising chart and excludes the numbers.
+ *
  * Run: node scripts/extract-ref-assets.mjs
  */
 import sharp from "sharp";
@@ -18,75 +35,122 @@ const REF = "references/";
 const OUT = "src/assets/refs/";
 mkdirSync(OUT, { recursive: true });
 
+/** Shared frame for the five service scenes — see rule 2 above. */
+const SVC = { left: 660, width: 594, height: 886 };
+
 /** Crop regions, in source pixels, chosen to exclude every baked-in glyph. */
 const ASSETS = [
-  // --- Home hero devices (text-free) ---
+  // --- Home hero scenes (text-free) ---
   {
     src: "01_HOME_DESKTOP_HERO.png",
     out: "hero-macbook",
-    // 1536x1024 — right-hand device on its stone plinth, past the copy column
-    region: { left: 660, top: 120, width: 876, height: 830 },
-    width: 1200,
+    // 1536x1024 — everything to the right of the copy column, full source
+    // height: arc, device, plinth and light waves intact.
+    region: { left: 690, top: 0, width: 846, height: 1024 },
+    width: 1400,
   },
   {
     src: "05_HOME_MOBILE_HERO.png",
     out: "hero-iphone",
-    // 1672x941 — the phone on stone. Starts below the copy block and stops
-    // short of the source's right-hand letterbox bar.
-    region: { left: 790, top: 458, width: 386, height: 483 },
-    width: 700,
+    // 1672x941 — the phone whole, on its stone, with the waves behind it.
+    // Starts below the copy block and stops short of the letterbox bar.
+    region: { left: 880, top: 410, width: 295, height: 531 },
+    width: 720,
   },
-  // --- Service mascot scenes ---
-  // Framed mascot-forward on purpose. The source comps put invented figures on
-  // the depicted screens (+220% / +2,482 users / "2 499 Kč"), and PRODUCT.md
-  // forbids fabricated metrics; keeping the character dominant stops those
-  // numbers from reading as claims the page is making. Any that survive at the
-  // edge of frame are flagged for replacement with real data before production.
-  {
-    src: "10_SERVICE_WEB_HERO.png",
-    out: "svc-web",
-    region: { left: 648, top: 130, width: 606, height: 1010 },
-    width: 820,
-  },
-  {
-    src: "20_SERVICE_ESHOP_HERO.png",
-    out: "svc-eshop",
-    region: { left: 606, top: 130, width: 648, height: 1010 },
-    width: 820,
-  },
-  {
-    src: "30_SERVICE_APP_HERO.png",
-    out: "svc-app",
-    region: { left: 610, top: 110, width: 644, height: 1010 },
-    width: 820,
-  },
-  {
-    src: "40_SERVICE_SEO_HERO.png",
-    out: "svc-seo",
-    region: { left: 600, top: 470, width: 654, height: 784 },
-    width: 820,
-  },
-  {
-    src: "50_SERVICE_BRANDING_HERO.png",
-    out: "svc-branding",
-    region: { left: 620, top: 130, width: 634, height: 1010 },
-    width: 820,
-  },
+  // --- Service scenes: five takes in one room, in showcase order ---
+  { src: "10_SERVICE_WEB_HERO.png", out: "svc-web", region: { ...SVC, top: 250 }, width: 900 },
+  { src: "40_SERVICE_SEO_HERO.png", out: "svc-seo", region: { ...SVC, top: 368 }, width: 900 },
+  { src: "20_SERVICE_ESHOP_HERO.png", out: "svc-eshop", region: { ...SVC, top: 180 }, width: 900 },
+  { src: "50_SERVICE_BRANDING_HERO.png", out: "svc-branding", region: { ...SVC, top: 170 }, width: 900 },
+  { src: "30_SERVICE_APP_HERO.png", out: "svc-app", region: { ...SVC, top: 200 }, width: 900 },
 ];
 
-for (const { src, out, region, width } of ASSETS) {
-  const meta = await sharp(REF + src).metadata();
-  // Clamp so a mis-measured region fails loudly rather than silently shifting.
-  if (
-    region.left + region.width > meta.width ||
-    region.top + region.height > meta.height
-  ) {
+/**
+ * Depth layers for the home hero, derived from the same source frame.
+ *
+ * 01_HOME_DESKTOP_HERO.png is one flat raster, but it is not one flat scene:
+ * measured over the crop, 57% of it is near-black void and the lit elements sit
+ * in separate bands — the arc across the top (luminance 25-53 against 1-5), the
+ * device mass in the middle (peaking at 171 on the lit lid edge), the light
+ * waves down both sides (51-112), the stone at the foot. Two of those planes
+ * can be pulled out honestly; one cannot.
+ *
+ * `hero-light` is a matte derived from the photograph's own luminance — no
+ * drawn shape, no geometric mask. It carries the arc, the lid rim, the ELEVATE
+ * engraving, the waves and the speckle on the stone, on soft alpha. It is
+ * pixel-registered with the base plate, which is the whole point: composited at
+ * zero offset it can be brightened and dimmed without any risk of ghosting.
+ *
+ * `hero-atmo` is the glow field with every recognisable edge blurred away. Its
+ * light distribution *is* the reference's light distribution, so it can never
+ * fight the composition, and because it holds no structure it can travel at its
+ * own parallax rate with no visible misregistration.
+ *
+ * What is deliberately NOT extracted: the device itself. Its lid reads cleanly
+ * against the background but the keyboard deck dissolves into the stone with no
+ * edge, so an automatic matte would chew or halo exactly where the eye rests. A
+ * cheap cut-out reads worse than none — so the device stays part of the base
+ * plate and gets its depth from perspective instead.
+ */
+const HERO_REGION = { left: 690, top: 0, width: 846, height: 1024 };
+
+async function buildHeroLayers() {
+  const src = sharp(REF + "01_HOME_DESKTOP_HERO.png").extract(HERO_REGION);
+
+  const { data, info } = await src.clone().raw().toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+  const rgba = Buffer.alloc(width * height * 4);
+  // Everything below FLOOR is void and gets no alpha at all; the curve above it
+  // is squared so only genuinely luminous pixels carry weight.
+  const FLOOR = 42;
+  const KNEE = 150;
+  for (let p = 0; p < width * height; p++) {
+    const i = p * channels;
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const lum = r * 0.299 + g * 0.587 + b * 0.114;
+    const a = Math.min(1, Math.max(0, (lum - FLOOR) / (KNEE - FLOOR)));
+    rgba[p * 4] = r;
+    rgba[p * 4 + 1] = g;
+    rgba[p * 4 + 2] = b;
+    rgba[p * 4 + 3] = Math.round(a * a * 255);
+  }
+  // webp only, no raster fallback. The layer is purely additive — if it never
+  // arrives the base plate still carries the light, because the light is in the
+  // photograph. A 450 kB PNG fallback would cost more than the layer is worth.
+  await sharp(rgba, { raw: { width, height, channels: 4 } })
+    .resize({ width: 900 })
+    .webp({ quality: 86, alphaQuality: 90 })
+    .toFile(`${OUT}hero-light.webp`);
+
+  // The atmosphere holds no detail, so it ships small on purpose.
+  const atmo = src.clone().blur(28).modulate({ brightness: 0.85 }).resize({ width: 420 });
+  await atmo.clone().webp({ quality: 82 }).toFile(`${OUT}hero-atmo.webp`);
+  await atmo.clone().jpeg({ quality: 82, mozjpeg: true }).toFile(`${OUT}hero-atmo.jpg`);
+
+  for (const name of ["hero-light.webp", "hero-atmo.jpg"]) {
+    const m = await sharp(OUT + name).metadata();
+    console.log(`${name}: ${m.width}x${m.height}`);
+  }
+}
+
+for (const asset of ASSETS) {
+  const input = REF + asset.src;
+  const meta = await sharp(input).metadata();
+  const { left, top, width, height } = asset.region;
+  if (left + width > meta.width || top + height > meta.height) {
     throw new Error(
-      `${src}: region ${JSON.stringify(region)} exceeds ${meta.width}x${meta.height}`
+      `${asset.src}: region ${left},${top} ${width}x${height} exceeds source ${meta.width}x${meta.height}`,
     );
   }
-  const base = sharp(REF + src).extract(region).resize({ width });
-  await base.clone().webp({ quality: 88 }).toFile(`${OUT}${out}.webp`);
-  await base.clone().jpeg({ quality: 88, mozjpeg: true }).toFile(`${OUT}${out}.jpg`);
-  console.log(`${out}: ${region.width}x${region.height} → ${width}w (webp + jpg)`);
+
+  const base = sharp(input).extract(asset.region).resize({ width: asset.width });
+  await base.clone().webp({ quality: 88 }).toFile(`${OUT}${asset.out}.webp`);
+  await base.clone().jpeg({ quality: 88, mozjpeg: true }).toFile(`${OUT}${asset.out}.jpg`);
+
+  const outMeta = await sharp(`${OUT}${asset.out}.jpg`).metadata();
+  console.log(`${asset.out}: ${outMeta.width}x${outMeta.height}`);
 }
+
+await buildHeroLayers();

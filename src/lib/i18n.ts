@@ -61,6 +61,14 @@ export const translations = {
       subtitle: "Strategie, UX a vývoj v jednom týmu. Pro firmy, které berou web jako investici, ne jako náklad.",
       cta1: "Domluvit konzultaci",
       cta2: "Vybrané projekty",
+      /* Scene hero — copy split exactly as 01_HOME_DESKTOP_HERO.png sets it:
+         two plain lines, one accent line, and the disciplines strip. */
+      sceneLine1: "Digitální řešení,",
+      sceneLine2: "která posouvají",
+      sceneAccent: "vaše podnikání.",
+      sceneSubtitle: "Tvoříme moderní weby, e-shopy a aplikace, které spojují design, výkon a výsledky.",
+      sceneDisciplines: ["Design", "Výkon", "Strategie", "Výsledky"],
+      sceneKicker: "Digitální studio z Prahy",
     },
     trust: { years: "4+ let zkušeností", projects: "50+ projektů", clients: "Klienti v EU", response: "Odpověď do 24 hodin" },
     about: {
@@ -231,6 +239,44 @@ export const translations = {
       homeServicesEyebrow: "Co děláme",
       homeServicesTitle: "Služby zaměřené na výsledky",
       homeServicesLearn: "Zjistit více",
+      /* Services showcase — copy split as 01_HOME_DESKTOP_SCROLL_SERVICES_SHOWCASE.png sets it. */
+      showcaseKicker: "Digitální studio",
+      showcaseTitle: "Kompletní řešení pro",
+      showcaseAccent: "váš růst",
+      showcaseSub: "Posouvejte se s námi na další úroveň.",
+      /* Studio philosophy — the quiet beat between the two photographic
+         sections. Copy carried over verbatim from the section it replaces. */
+      philosophyEyebrow: "Jak přemýšlíme",
+      philosophyTitle: "Studio, ne template továrna.",
+      philosophyLead:
+        "Pracujeme jako malý nezávislý tým. Každý projekt vede senior — od první konzultace až po spuštění. Žádní junioři na živých klientech, žádné šablony, žádné kompromisy v UX.",
+      philosophyPillars: [
+        {
+          t: "Byznys první, pixely druhé",
+          d: "Začínáme otázkou: co má web reálně vydělat? Design je důsledek strategie, ne dekorace.",
+        },
+        {
+          t: "UX postavené na rozhodnutích",
+          d: "Každý prvek má důvod existovat. Hierarchie, kontrast a flow řešíme dřív, než otevřeme Figmu.",
+        },
+        {
+          t: "Transparentní spolupráce",
+          d: "Pravidelné check-iny, jasné termíny, bez schovávání problémů. Klient vždy ví, na čem je.",
+        },
+      ],
+      /* Cases */
+      casesOpen: "Otevřít případovou studii",
+      casesLive: "Živý web",
+      /* Feature strip under each service panel, as the showcase reference
+         sets it. Descriptive capability labels only — no figures, no claims
+         about results (PRODUCT.md principle 5). */
+      showcaseBullets: [
+        ["Moderní design", "Rychlé načítání", "Více zákazníků"],
+        ["Vyšší návštěvnost", "Lepší pozice", "Více konverzí"],
+        ["Vyšší prodeje", "Moderní funkce", "Bezpečné platby"],
+        ["Unikátní design", "Na každém zařízení", "Rychle a efektivně"],
+        ["iOS & Android", "Optimalizace", "Stabilní a rychlé"],
+      ],
       homeWorkEyebrow: "Vybrané projekty",
       homeWorkTitle: "Práce, která přináší výsledky",
       homeWorkViewAll: "Zobrazit všechny projekty",
@@ -341,6 +387,12 @@ export const translations = {
       subtitle: "Strategy, UX and engineering in one team. For companies that treat a website as an investment, not a cost.",
       cta1: "Book a consultation",
       cta2: "Selected work",
+      sceneLine1: "Digital solutions",
+      sceneLine2: "that move",
+      sceneAccent: "your business forward.",
+      sceneSubtitle: "We build modern websites, e-shops and apps that bring design, performance and results together.",
+      sceneDisciplines: ["Design", "Performance", "Strategy", "Results"],
+      sceneKicker: "Digital studio from Prague",
     },
     trust: { years: "4+ years of experience", projects: "50+ projects", clients: "EU clients", response: "Reply within 24 hours" },
     about: {
@@ -493,6 +545,37 @@ export const translations = {
       homeServicesEyebrow: "What we do",
       homeServicesTitle: "Services focused on results",
       homeServicesLearn: "View service details",
+      showcaseKicker: "Digital studio",
+      showcaseTitle: "Complete solutions for",
+      showcaseAccent: "your growth",
+      showcaseSub: "Move up to the next level with us.",
+      philosophyEyebrow: "How we think",
+      philosophyTitle: "A studio, not a template factory.",
+      philosophyLead:
+        "We work as a small independent team. Every project is led by a senior — from the first call to launch. No juniors on live clients, no templates, no UX compromises.",
+      philosophyPillars: [
+        {
+          t: "Business first, pixels second",
+          d: "We start with the question: what should this site actually earn? Design is a consequence of strategy, not decoration.",
+        },
+        {
+          t: "UX built on decisions",
+          d: "Every element has a reason to exist. Hierarchy, contrast and flow are settled before Figma opens.",
+        },
+        {
+          t: "Transparent collaboration",
+          d: "Regular check-ins, clear deadlines, no hiding problems. The client always knows where we stand.",
+        },
+      ],
+      casesOpen: "Open case study",
+      casesLive: "Live site",
+      showcaseBullets: [
+        ["Modern design", "Fast loading", "More customers"],
+        ["More traffic", "Better rankings", "More conversions"],
+        ["Higher sales", "Modern features", "Secure payments"],
+        ["Distinctive design", "On every device", "Fast and effective"],
+        ["iOS & Android", "Optimisation", "Stable and fast"],
+      ],
       homeWorkEyebrow: "Selected projects",
       homeWorkTitle: "Work that delivers results",
       homeWorkViewAll: "View all projects",
@@ -603,6 +686,12 @@ export const translations = {
       subtitle: "Стратегия, UX и разработка в одной команде. Для компаний, для которых сайт — инвестиция, а не расход.",
       cta1: "Записаться на консультацию",
       cta2: "Избранные работы",
+      sceneLine1: "Цифровые решения,",
+      sceneLine2: "которые двигают",
+      sceneAccent: "ваш бизнес вперёд.",
+      sceneSubtitle: "Создаём современные сайты, интернет-магазины и приложения, в которых сходятся дизайн, скорость и результат.",
+      sceneDisciplines: ["Дизайн", "Скорость", "Стратегия", "Результат"],
+      sceneKicker: "Цифровая студия из Праги",
     },
     trust: { years: "4+ года опыта", projects: "50+ проектов", clients: "Клиенты в ЕС", response: "Ответ в течение 24 часов" },
     about: {
@@ -754,6 +843,37 @@ export const translations = {
       homeServicesEyebrow: "Что мы делаем",
       homeServicesTitle: "Услуги, нацеленные на результат",
       homeServicesLearn: "Узнать больше",
+      showcaseKicker: "Цифровая студия",
+      showcaseTitle: "Полное решение для",
+      showcaseAccent: "вашего роста",
+      showcaseSub: "Поднимитесь с нами на следующий уровень.",
+      philosophyEyebrow: "Как мы думаем",
+      philosophyTitle: "Студия, а не фабрика шаблонов.",
+      philosophyLead:
+        "Мы — небольшая независимая команда. Каждый проект ведёт сениор — от первой встречи до запуска. Никаких джунов на боевых клиентах, никаких шаблонов.",
+      philosophyPillars: [
+        {
+          t: "Сначала бизнес, потом пиксели",
+          d: "Начинаем с вопроса: что сайт должен зарабатывать? Дизайн — следствие стратегии, а не декор.",
+        },
+        {
+          t: "UX на решениях, не на трендах",
+          d: "У каждого элемента есть причина. Иерархию, контраст и поток решаем до того, как открыть Figma.",
+        },
+        {
+          t: "Прозрачная работа",
+          d: "Регулярные созвоны, чёткие сроки, без замалчивания проблем. Клиент всегда в курсе.",
+        },
+      ],
+      casesOpen: "Открыть кейс",
+      casesLive: "Живой сайт",
+      showcaseBullets: [
+        ["Современный дизайн", "Быстрая загрузка", "Больше клиентов"],
+        ["Больше трафика", "Лучше позиции", "Больше конверсий"],
+        ["Больше продаж", "Современные функции", "Безопасные платежи"],
+        ["Уникальный дизайн", "На любом устройстве", "Быстро и эффективно"],
+        ["iOS и Android", "Оптимизация", "Стабильно и быстро"],
+      ],
       homeWorkEyebrow: "Избранные проекты",
       homeWorkTitle: "Работа, приносящая результат",
       homeWorkViewAll: "Все проекты",
@@ -864,6 +984,12 @@ export const translations = {
       subtitle: "Стратегія, UX і розробка в одній команді. Для компаній, для яких сайт — інвестиція, а не витрата.",
       cta1: "Записатися на консультацію",
       cta2: "Вибрані роботи",
+      sceneLine1: "Цифрові рішення,",
+      sceneLine2: "що рухають",
+      sceneAccent: "ваш бізнес уперед.",
+      sceneSubtitle: "Створюємо сучасні сайти, інтернет-магазини та застосунки, у яких поєднані дизайн, швидкість і результат.",
+      sceneDisciplines: ["Дизайн", "Швидкість", "Стратегія", "Результат"],
+      sceneKicker: "Цифрова студія з Праги",
     },
     trust: { years: "4+ роки досвіду", projects: "50+ проєктів", clients: "Клієнти в ЄС", response: "Відповідь протягом 24 годин" },
     about: {
@@ -1015,6 +1141,37 @@ export const translations = {
       homeServicesEyebrow: "Що ми робимо",
       homeServicesTitle: "Послуги, орієнтовані на результат",
       homeServicesLearn: "Дізнатися більше",
+      showcaseKicker: "Цифрова студія",
+      showcaseTitle: "Повне рішення для",
+      showcaseAccent: "вашого зростання",
+      showcaseSub: "Підніміться з нами на наступний рівень.",
+      philosophyEyebrow: "Як ми думаємо",
+      philosophyTitle: "Студія, а не фабрика шаблонів.",
+      philosophyLead:
+        "Ми — невелика незалежна команда. Кожен проєкт веде сеньйор — від першої зустрічі до запуску. Жодних джунів на живих клієнтах, жодних шаблонів.",
+      philosophyPillars: [
+        {
+          t: "Спочатку бізнес, потім пікселі",
+          d: "Починаємо з питання: що сайт має заробляти? Дизайн — наслідок стратегії, а не декор.",
+        },
+        {
+          t: "UX на рішеннях, не на трендах",
+          d: "Кожен елемент має причину. Ієрархію, контраст і потік вирішуємо до того, як відкрити Figma.",
+        },
+        {
+          t: "Прозора співпраця",
+          d: "Регулярні зідзвони, чіткі дедлайни, без замовчування проблем. Клієнт завжди в курсі.",
+        },
+      ],
+      casesOpen: "Відкрити кейс",
+      casesLive: "Живий сайт",
+      showcaseBullets: [
+        ["Сучасний дизайн", "Швидке завантаження", "Більше клієнтів"],
+        ["Більше трафіку", "Кращі позиції", "Більше конверсій"],
+        ["Більші продажі", "Сучасні функції", "Безпечні платежі"],
+        ["Унікальний дизайн", "На будь-якому пристрої", "Швидко та ефективно"],
+        ["iOS і Android", "Оптимізація", "Стабільно і швидко"],
+      ],
       homeWorkEyebrow: "Обрані проєкти",
       homeWorkTitle: "Робота, що дає результат",
       homeWorkViewAll: "Усі проєкти",
