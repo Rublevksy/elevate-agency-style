@@ -19,17 +19,26 @@
 import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { EASE, useReducedScene } from "@/components/cinematic";
 import { ProjectVisual } from "@/lib/projects";
 import { useProjects } from "@/lib/projects-i18n";
 import { useT } from "@/lib/i18n";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+/**
+ * One gate and one curve for the whole page: `still` is the page's single
+ * reading of prefers-reduced-motion, and EASE is the page's single easing.
+ *
+ * The section keeps `whileInView` on purpose. It has no shot list and no pinned
+ * stage, so there is no timeline for it to be cut against — "arrive when the
+ * reader gets here" is exactly what an in-view trigger says. Putting it on an
+ * act would be the master timeline duplicated from the other side.
+ */
 
 export function CaseShowcase() {
   const { t } = useT();
   const projects = useProjects();
-  const reduced = useReducedMotion();
+  const reduced = useReducedScene();
   const [active, setActive] = useState(0);
 
   const current = projects[active];

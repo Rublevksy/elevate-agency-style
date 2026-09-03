@@ -57,6 +57,8 @@ import { SceneImage } from "@/components/media/SceneImage";
 import {
   BEAT,
   EASE,
+  HERO_TAIL_MASK_END,
+  HERO_TAIL_MASK_START,
   PERSPECTIVE,
   Z_ATMO,
   Z_LIGHT_BACK,
@@ -79,6 +81,17 @@ import { useT } from "@/lib/i18n";
  */
 const HERO_VIEWPORTS = 3;
 const HERO_PIN = 2 / 3;
+
+/**
+ * The tail mask, as two custom properties rather than two literals in the
+ * class. The percentages are not this file's to choose: the services room sizes
+ * its overlap against them, so they are read from the foundation — see
+ * HERO_TAIL_MASK_START. The `lg:` gate stays on the class, where it was.
+ */
+const HERO_TAIL_MASK_VARS = {
+  "--tail-start": `${(HERO_TAIL_MASK_START * 100).toFixed(2)}%`,
+  "--tail-end": `${(HERO_TAIL_MASK_END * 100).toFixed(2)}%`,
+} as React.CSSProperties;
 
 /** The plate box, sized to the plate's own aspect (1400x1738) and capped. */
 const PLATE_WIDTH = "min(62%, calc(100svh * 0.806))";
@@ -323,8 +336,8 @@ export function HeroScene() {
               planes  depth() puts each plane at its distance and pre-scales it,
                       so at rest the frame renders exactly as the approved one. */}
         <motion.div
-          style={{ opacity: sceneFade, filter: sceneBlur }}
-          className="pointer-events-none absolute inset-0 hidden lg:block lg:[mask-image:linear-gradient(to_bottom,#000_58%,transparent_88%)]"
+          style={{ opacity: sceneFade, filter: sceneBlur, ...HERO_TAIL_MASK_VARS }}
+          className="pointer-events-none absolute inset-0 hidden lg:block lg:[mask-image:linear-gradient(to_bottom,#000_var(--tail-start),transparent_var(--tail-end))]"
         >
           <div className="absolute inset-0" style={{ perspective: `${PERSPECTIVE}px` }}>
             <motion.div

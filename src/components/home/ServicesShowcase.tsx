@@ -18,21 +18,68 @@
  * 01 Web, 02 SEO, 03 E-shop, 04 Branding, 05 Apps. Changing one without the
  * other silently mislabels every panel.
  */
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, Check } from "lucide-react";
+import { motion, type MotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import {
-  motion,
-  type MotionValue,
-  useMotionValueEvent,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+  EASE,
+  HERO_TAIL_MASK_START,
+  useAct,
+  useMotionCapability,
+  useStageAct,
+} from "@/components/cinematic";
 import { SceneImage, type SceneName } from "@/components/media/SceneImage";
 import { useT } from "@/lib/i18n";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+/**
+ * The act. Four and a bit viewports of track, of which the pane is pinned for
+ * everything except its own last viewport — the pane is exactly one viewport
+ * tall, so it un-pins when the section's bottom reaches the viewport's bottom.
+ *
+ * Declaring the pin honestly matters beyond this file: the register exists so a
+ * neighbour can work out an overlap instead of being tuned against by hand, and
+ * a section that declares a pin it does not have is the same lie as the magic
+ * number this task removes. `act.progress` is then numerically the reading this
+ * section always used — the rail, the wipe and `jumpToBeat` all keep their
+ * meaning.
+ */
+const SERVICES_VIEWPORTS = 4.4;
+const SERVICES_PIN = (SERVICES_VIEWPORTS - 1) / SERVICES_VIEWPORTS;
+
+/**
+ * THE JOIN.
+ *
+ * A sticky act spends its last stretch of track physically travelling up out of
+ * frame — `viewports * (1 - pin)` of it — and that travel is the only length
+ * this section may hand itself to. The services room rises through the last
+ * fraction of the hero's departure, so the two are moving at once instead of
+ * queueing: that is what makes them one camera move.
+ *
+ * It is a FRACTION of a length the hero declares, never a number in `vh`. The
+ * old `-mt-[42vh]` was tuned against one screen height and against a mask in
+ * the hero it could not see; change the hero's track and it silently became
+ * wrong. This cannot: ask the register, and if the hero is not on this route
+ * (every other page) the answer is zero and the section is an ordinary one.
+ *
+ * The same length is the ramp of the section's ground, and that equality is the
+ * mechanism. The ground used to be an opaque fill starting at the section's
+ * edge, which cut the hero's still-lit set in a hard horizontal line — the seam.
+ * Ramped across exactly the overlap, the ground arrives at the rate the hero's
+ * own tail mask leaves, so the set fades out through the same band the room
+ * fades in. Nothing is hidden: the hero's tail is still played, still racked
+ * out of focus, and is now visible while it happens.
+ *
+ * Why this fraction and not another. Once the hero has un-pinned, the distance
+ * between its stage's top and this section's top is `(1 - join)` viewports, and
+ * HERO_TAIL_MASK_START is where the hero begins fading its set. Taking the join
+ * as the complement of it puts this section's edge exactly on the first pixel
+ * the hero gives away — no earlier, so nothing lit is ever covered, and no
+ * later, so no black band opens between them. It holds at every viewport height
+ * because both sides of it are fractions rather than pixels, and it cannot
+ * drift out of agreement with the hero because both read the same constant.
+ */
+const JOIN_OF_HERO_DEPARTURE = 1 - HERO_TAIL_MASK_START;
 
 /** Scene plate + destination per service, in showcase order. */
 const SERVICES: ReadonlyArray<{ scene: SceneName; route: string }> = [
@@ -45,47 +92,51 @@ const SERVICES: ReadonlyArray<{ scene: SceneName; route: string }> = [
 
 export function ServicesShowcase() {
   const { t } = useT();
-  const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
+  const capability = useMotionCapability();
+  const reduced = capability === "still";
   const [active, setActive] = useState(0);
 
   const items = t.ui.serviceStage.slice(0, SERVICES.length);
   const count = SERVICES.length;
 
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
+  const act = useAct("services", { viewports: SERVICES_VIEWPORTS, pin: SERVICES_PIN });
+  const { ref, progress, enter } = act;
 
-  // A second read of the same section, taken while it is still arriving. The
-  // hero hands over to this: as the hero's set loses focus and sinks, this one
-  // rises the last few pixels into place, so the two sections read as one
-  // camera move rather than as two pages meeting at a seam.
-  const { scrollYProgress: entry } = useScroll({
-    target: ref,
-    offset: ["start end", "start start"],
-  });
-  const introY = useTransform(entry, [0, 1], [reduced ? 0 : 54, 0]);
-  const introScale = useTransform(entry, [0, 1], [reduced ? 1 : 0.975, 1]);
-  const introFade = useTransform(entry, [0, 0.65], [reduced ? 1 : 0.35, 1]);
-  const handoffGlow = useTransform(entry, [0, 0.55, 1], [0, reduced ? 0 : 1, 0]);
+  // Ask the neighbour rather than being tuned against it. `undefined` here is
+  // not an error — it is every route that has no hero — and it resolves to no
+  // overlap and an ordinary opaque ground.
+  const hero = useStageAct("hero");
+  const heroDeparture = hero ? hero.viewports * (1 - hero.pin) : 0;
+  const join = `${(JOIN_OF_HERO_DEPARTURE * heroDeparture * 100).toFixed(2)}vh`;
+
+  // The arrival, read from the same clock as everything else. The hero hands
+  // over to this: as the hero's set loses focus and sinks, this one rises the
+  // last few pixels into place, so the two sections read as one camera move
+  // rather than as two pages meeting at a seam.
+  const introY = useTransform(enter, [0, 1], [reduced ? 0 : 54, 0]);
+  const introScale = useTransform(enter, [0, 1], [reduced ? 1 : 0.975, 1]);
+  const introFade = useTransform(enter, [0, 0.65], [reduced ? 1 : 0.35, 1]);
+  const handoffGlow = useTransform(enter, [0, 0.55, 1], [0, reduced ? 0 : 1, 0]);
 
   // The camera's own move through the room. It runs CONTINUOUSLY across the
   // whole section rather than resetting at each service, because the five
   // plates are one room: a drift that restarted on every cut would announce
   // the cut and turn the room back into five pictures. The wipe changes what
   // we are looking at; this keeps the camera moving while it happens.
-  const sceneDriftY = useTransform(scrollYProgress, [0, 1], [reduced ? 0 : 26, reduced ? 0 : -26]);
-  const sceneDriftX = useTransform(scrollYProgress, [0, 1], [reduced ? 0 : -14, reduced ? 0 : 14]);
+  const sceneDriftY = useTransform(progress, [0, 1], [reduced ? 0 : 26, reduced ? 0 : -26]);
+  const sceneDriftX = useTransform(progress, [0, 1], [reduced ? 0 : -14, reduced ? 0 : 14]);
 
   // One scroll position drives both the rail and the window. The rail reads the
   // continuous value; the window reads the stepped one, so the change of take is
   // decisive while the thread down the left stays smooth.
-  useMotionValueEvent(scrollYProgress, "change", (p) => {
+  useMotionValueEvent(progress, "change", (p) => {
     const next = Math.min(count - 1, Math.max(0, Math.floor(p * count * 0.999)));
     setActive((prev) => (prev === next ? prev : next));
   });
 
   // scaleY rather than an animated height: a transform is composited and does
   // not force layout on every scroll frame.
-  const railFill = useTransform(scrollYProgress, [0, 1], [0, 1]);
+  const railFill = useTransform(progress, [0, 1], [0, 1]);
 
   /**
    * The rail is a control, not an ornament: clicking a beat drives the page to
@@ -109,23 +160,38 @@ export function ServicesShowcase() {
     <section
       ref={ref}
       id="sluzby"
-      /* Pulled up into the tail of the hero on wide screens. The hero's set is
-         losing focus and sinking through exactly this band, so the services
-         room rises into the space it vacates instead of waiting for it to
-         finish — that overlap is what makes the two read as one camera move
-         rather than as two sections meeting at a seam. */
-      className="relative z-10 bg-[#0A0D13] lg:-mt-[14vh] lg:h-[440vh]"
+      /* Pulled up into the tail of the hero on wide screens by exactly the
+         computed join — see JOIN_OF_HERO_DEPARTURE. The custom property carries
+         the one length; the `lg:` prefixes keep the whole join off the stacked
+         mobile layout, where there is no pinned hero to hand anything over. */
+      style={{ "--join": join } as React.CSSProperties}
+      className="relative z-10 lg:h-[440vh] lg:[margin-top:calc(-1*var(--join))]"
       aria-label={t.ui.homeServicesTitle}
     >
+      {/* The room's own ground, and the reason there is no seam. It is a layer
+          rather than the section's `background` because a background cannot be
+          ramped: it would arrive all at once at the section's edge and cut the
+          hero's lit set in a hard line. Ramped across the join, it reaches full
+          strength exactly where the overlap ends — and below `lg`, where there
+          is no overlap, the ramp has zero length and it is simply opaque. */}
+      <div
+        aria-hidden
+        className="absolute inset-0 -z-10 bg-[#0A0D13] lg:[mask-image:linear-gradient(to_bottom,transparent_0,#000_var(--join))]"
+      />
       {/* Light carried across the cut. It exists only during the handoff and is
           gone by the time the section settles, so it can never read as a
           decorative gradient parked behind the content. */}
       <motion.div
         aria-hidden
         style={{ opacity: handoffGlow }}
-        className="pointer-events-none absolute inset-x-0 top-0 hidden h-[45vh] lg:block"
+        className="pointer-events-none absolute inset-x-0 top-0 hidden lg:block lg:[height:var(--join)]"
       >
-        <div className="h-full w-full bg-[radial-gradient(120%_100%_at_70%_0%,oklch(0.65_0.18_255/0.13),transparent_65%)]" />
+        {/* Masked top and bottom for the same reason the ground is ramped: a
+            radial gradient is brightest at its origin, so parked on the
+            section's own edge it draws that edge in light instead of hiding
+            it. Faded in and out across the join, the light has no edge at all
+            — it swells in the middle of the hand-over and is gone by the end. */}
+        <div className="h-full w-full bg-[radial-gradient(120%_100%_at_70%_10%,oklch(0.65_0.18_255/0.13),transparent_65%)] [mask-image:linear-gradient(to_bottom,transparent_0%,#000_50%,transparent_100%)]" />
       </motion.div>
 
       <div className="lg:sticky lg:top-0 lg:flex lg:h-screen lg:items-center lg:overflow-hidden">
@@ -246,7 +312,7 @@ export function ServicesShowcase() {
                       item={items[active]}
                       route={SERVICES[active].route}
                       learn={t.ui.homeServicesLearn}
-                      reduced={!!reduced}
+                      reduced={reduced}
                     />
                   </div>
 
@@ -261,11 +327,29 @@ export function ServicesShowcase() {
                         scene={service.scene}
                         index={i}
                         active={active}
-                        reduced={!!reduced}
+                        reduced={reduced}
                         driftY={sceneDriftY}
                         driftX={sceneDriftX}
                       />
                     ))}
+                    {/* The cut, made visible. A light edge rides the wipe
+                        boundary bottom-to-top, so the change of take reads as
+                        the same luminous arc that crossed the hero passing
+                        through this room — one film, not five pictures.
+                        Remounted on `active` so it replays per cut. */}
+                    {!reduced && (
+                      <motion.div
+                        key={`sweep-${active}`}
+                        aria-hidden
+                        initial={{ top: "100%", opacity: 0 }}
+                        animate={{ top: "-18%", opacity: [0, 1, 0.85, 0] }}
+                        transition={{ duration: 0.95, ease: EASE, times: [0, 0.22, 0.6, 1] }}
+                        className="pointer-events-none absolute inset-x-0 z-10 h-[18%]"
+                      >
+                        <div className="h-px w-full bg-[linear-gradient(to_right,transparent,oklch(0.95_0.05_240/0.9),oklch(0.78_0.19_253/0.7),transparent)]" />
+                        <div className="h-full w-full bg-[linear-gradient(to_top,oklch(0.78_0.19_253/0.22),transparent_75%)]" />
+                      </motion.div>
+                    )}
                   </div>
                 </div>
 
@@ -306,7 +390,7 @@ export function ServicesShowcase() {
                     bullets={t.ui.showcaseBullets[i]}
                     eager={false}
                     active
-                    reduced={!!reduced}
+                    reduced={reduced}
                   />
                 </motion.div>
               </li>
@@ -476,14 +560,36 @@ function SceneLayer({
       style={{ zIndex: index }}
     >
       <motion.div style={{ y: driftY, x: driftX }} className="absolute inset-0">
-        <SceneImage
-          name={scene}
-          alt=""
-          priority={index === 0}
-          sizes="(min-width: 1024px) 30vw, 45vw"
-          className="absolute inset-0 block h-full w-full"
-          imgClassName="h-full w-full scale-[1.12] object-cover object-[50%_20%]"
-        />
+        {/* The cut is a camera arriving, not a picture being swapped.
+            The take is revealed already pushed in, offset, and out of focus,
+            then settles: scale and position resolve while the lens finds it.
+            All three are one-shots tied to the change — nothing keeps moving
+            once the reader has stopped. Direction alternates with the index so
+            consecutive cuts do not feel like the same move repeated. */}
+        <motion.div
+          initial={false}
+          animate={{
+            scale: index === active ? 1.07 : 1.16,
+            x: index === active ? 0 : index % 2 === 0 ? 26 : -26,
+            y: index === active ? 0 : 20,
+            filter: index === active ? "blur(0px)" : "blur(7px)",
+          }}
+          transition={{
+            duration: reduced ? 0 : 1.15,
+            ease: EASE,
+            filter: { duration: reduced ? 0 : 0.8, ease: EASE },
+          }}
+          className="absolute inset-0 origin-[60%_40%]"
+        >
+          <SceneImage
+            name={scene}
+            alt=""
+            priority={index === 0}
+            sizes="(min-width: 1024px) 30vw, 45vw"
+            className="absolute inset-0 block h-full w-full"
+            imgClassName="h-full w-full object-cover object-[50%_20%]"
+          />
+        </motion.div>
       </motion.div>
     </motion.div>
   );

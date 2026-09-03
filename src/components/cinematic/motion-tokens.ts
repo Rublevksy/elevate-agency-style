@@ -47,6 +47,24 @@ export const Z_LIGHT_BACK = -560;
 export const Z_PLATE = -250;
 export const Z_LIGHT_FRONT = -60;
 
+/**
+ * WHERE THE HERO STARTS GIVING THE FRAME AWAY.
+ *
+ * Fractions of the height of the hero's pinned stage: from `_START` its set
+ * begins to be handed over, and by `_END` it has gone entirely. They live here,
+ * in the foundation, because TWO sections depend on them and neither owns them:
+ * the hero cuts its tail mask at exactly these two points, and the services
+ * room sizes the overlap it rises through as the complement of `_START`, so its
+ * top edge lands on the first pixel the hero begins to give away.
+ *
+ * Written down once in either file, they are the same number in two places and
+ * the join comes apart silently the moment one of them is nudged — no type
+ * error, no failed build, and nothing to see until somebody takes a screenshot.
+ * That is the whole class of defect this module exists to remove.
+ */
+export const HERO_TAIL_MASK_START = 0.58;
+export const HERO_TAIL_MASK_END = 0.88;
+
 export const depth = (z: number): CSSProperties => ({
   transform: `translateZ(${z}px) scale(${(PERSPECTIVE - z) / PERSPECTIVE})`,
 });

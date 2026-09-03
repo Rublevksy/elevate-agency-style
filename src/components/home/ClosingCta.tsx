@@ -16,15 +16,24 @@
 import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { motion, useReducedMotion } from "framer-motion";
+import { motion } from "framer-motion";
+import { EASE, useReducedScene } from "@/components/cinematic";
 import { useT } from "@/lib/i18n";
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+/**
+ * One gate and one curve for the whole page: `still` is the page's single
+ * reading of prefers-reduced-motion, and EASE is the page's single easing.
+ *
+ * The section keeps `whileInView` on purpose. It has no shot list and no pinned
+ * stage, so there is no timeline for it to be cut against — "arrive when the
+ * reader gets here" is exactly what an in-view trigger says. Putting it on an
+ * act would be the master timeline duplicated from the other side.
+ */
 
 export function ClosingCta() {
   const { t } = useT();
   const ref = useRef<HTMLElement>(null);
-  const reduced = useReducedMotion();
+  const reduced = useReducedScene();
 
   return (
     <section ref={ref} className="relative overflow-hidden bg-[#0A0D13] pb-28 pt-16 md:pb-40">

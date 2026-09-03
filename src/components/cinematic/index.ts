@@ -26,6 +26,8 @@ export {
   EASE,
   BEAT,
   depth,
+  HERO_TAIL_MASK_START,
+  HERO_TAIL_MASK_END,
   PERSPECTIVE,
   Z_ATMO,
   Z_LIGHT_BACK,
