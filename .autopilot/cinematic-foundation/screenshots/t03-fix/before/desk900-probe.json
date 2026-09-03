@@ -1,0 +1,590 @@
+[
+ {
+  "f": "0.18",
+  "file": ".autopilot/cinematic-foundation/screenshots/t03-fix/before/desk900-p18.png",
+  "vh": 900,
+  "scrollY": 1552,
+  "docH": 9522,
+  "svcTop": 770,
+  "svcH": 3960,
+  "heroTop": -1552,
+  "heroBottom": 1148,
+  "firstText": {
+   "y": 168,
+   "x": 160,
+   "s": "03"
+  },
+  "coveredPct": 23.8,
+  "maxGapPct": 44.1,
+  "gapAt": [
+   503,
+   900
+  ],
+  "lines": [
+   {
+    "y": 168,
+    "x": 160,
+    "s": "03"
+   },
+   {
+    "y": 176,
+    "x": 160,
+    "s": "01"
+   },
+   {
+    "y": 176,
+    "x": 160,
+    "s": "02"
+   },
+   {
+    "y": 190,
+    "x": 160,
+    "s": "E-shopy, které vydělávají"
+   },
+   {
+    "y": 190,
+    "x": 160,
+    "s": "04"
+   },
+   {
+    "y": 198,
+    "x": 160,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 198,
+    "x": 160,
+    "s": "SEO, které přináší výsledky"
+   },
+   {
+    "y": 212,
+    "x": 160,
+    "s": "Značka, která zaujme"
+   },
+   {
+    "y": 218,
+    "x": 160,
+    "s": "E-shopy, které vydělávají"
+   },
+   {
+    "y": 226,
+    "x": 160,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 226,
+    "x": 160,
+    "s": "SEO, které přináší výsledky"
+   },
+   {
+    "y": 255,
+    "x": 160,
+    "s": "Vizuální identita i grafika"
+   }
+  ]
+ },
+ {
+  "f": "0.20",
+  "file": ".autopilot/cinematic-foundation/screenshots/t03-fix/before/desk900-p20.png",
+  "vh": 900,
+  "scrollY": 1724,
+  "docH": 9522,
+  "svcTop": 598,
+  "svcH": 3960,
+  "heroTop": -1724,
+  "heroBottom": 976,
+  "firstText": {
+   "y": 168,
+   "x": 160,
+   "s": "03"
+  },
+  "coveredPct": 33,
+  "maxGapPct": 40.5,
+  "gapAt": [
+   446,
+   811
+  ],
+  "lines": [
+   {
+    "y": 168,
+    "x": 160,
+    "s": "03"
+   },
+   {
+    "y": 176,
+    "x": 160,
+    "s": "01"
+   },
+   {
+    "y": 176,
+    "x": 160,
+    "s": "02"
+   },
+   {
+    "y": 190,
+    "x": 160,
+    "s": "E-shopy, které vydělávají"
+   },
+   {
+    "y": 190,
+    "x": 160,
+    "s": "04"
+   },
+   {
+    "y": 198,
+    "x": 160,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 198,
+    "x": 160,
+    "s": "SEO, které přináší výsledky"
+   },
+   {
+    "y": 212,
+    "x": 160,
+    "s": "Značka, která zaujme"
+   },
+   {
+    "y": 218,
+    "x": 160,
+    "s": "E-shopy, které vydělávají"
+   },
+   {
+    "y": 226,
+    "x": 160,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 226,
+    "x": 160,
+    "s": "SEO, které přináší výsledky"
+   },
+   {
+    "y": 255,
+    "x": 160,
+    "s": "Vizuální identita i grafika"
+   }
+  ]
+ },
+ {
+  "f": "0.22",
+  "file": ".autopilot/cinematic-foundation/screenshots/t03-fix/before/desk900-p22.png",
+  "vh": 900,
+  "scrollY": 1897,
+  "docH": 9522,
+  "svcTop": 425,
+  "svcH": 3960,
+  "heroTop": -1897,
+  "heroBottom": 803,
+  "firstText": {
+   "y": 71,
+   "x": 160,
+   "s": "03"
+  },
+  "coveredPct": 41.7,
+  "maxGapPct": 48,
+  "gapAt": [
+   194,
+   626
+  ],
+  "lines": [
+   {
+    "y": 71,
+    "x": 160,
+    "s": "03"
+   },
+   {
+    "y": 79,
+    "x": 160,
+    "s": "01"
+   },
+   {
+    "y": 79,
+    "x": 160,
+    "s": "02"
+   },
+   {
+    "y": 79,
+    "x": 160,
+    "s": "05"
+   },
+   {
+    "y": 93,
+    "x": 160,
+    "s": "E-shopy, které vydělávají"
+   },
+   {
+    "y": 93,
+    "x": 160,
+    "s": "04"
+   },
+   {
+    "y": 101,
+    "x": 160,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 101,
+    "x": 160,
+    "s": "SEO, které přináší výsledky"
+   },
+   {
+    "y": 101,
+    "x": 160,
+    "s": "Aplikace, které lidé používají"
+   },
+   {
+    "y": 115,
+    "x": 160,
+    "s": "Značka, která zaujme"
+   },
+   {
+    "y": 121,
+    "x": 160,
+    "s": "E-shopy, které vydělávají"
+   },
+   {
+    "y": 129,
+    "x": 160,
+    "s": "Weby, které prodávají"
+   }
+  ]
+ },
+ {
+  "f": "0.24",
+  "file": ".autopilot/cinematic-foundation/screenshots/t03-fix/before/desk900-p24.png",
+  "vh": 900,
+  "scrollY": 2069,
+  "docH": 9522,
+  "svcTop": 253,
+  "svcH": 3960,
+  "heroTop": -2069,
+  "heroBottom": 631,
+  "firstText": {
+   "y": 0,
+   "x": 160,
+   "s": "Optimalizované na konverzi od první návš"
+  },
+  "coveredPct": 39.4,
+  "maxGapPct": 46.7,
+  "gapAt": [
+   22,
+   443
+  ],
+  "lines": [
+   {
+    "y": 0,
+    "x": 160,
+    "s": "Optimalizované na konverzi od první návš"
+   },
+   {
+    "y": 0,
+    "x": 160,
+    "s": "Vizuální identita i grafika"
+   },
+   {
+    "y": 0,
+    "x": 160,
+    "s": "Rychlé, konverzní, na míru"
+   },
+   {
+    "y": 0,
+    "x": 160,
+    "s": "Vyšší návštěvnost a pozice"
+   },
+   {
+    "y": 0,
+    "x": 160,
+    "s": "iOS, Android, na míru"
+   },
+   {
+    "y": 8,
+    "x": 160,
+    "s": "Optimalizované na konverzi od první návš"
+   },
+   {
+    "y": 443,
+    "x": 181,
+    "s": "Digitální studio"
+   },
+   {
+    "y": 449,
+    "x": 689,
+    "s": "— elevateit.cz"
+   },
+   {
+    "y": 452,
+    "x": 671,
+    "s": "01"
+   },
+   {
+    "y": 472,
+    "x": 164,
+    "s": "Kompletní řešení pro"
+   },
+   {
+    "y": 517,
+    "x": 164,
+    "s": "Kompletní řešení pro"
+   },
+   {
+    "y": 562,
+    "x": 164,
+    "s": "váš růst"
+   }
+  ]
+ },
+ {
+  "f": "0.26",
+  "file": ".autopilot/cinematic-foundation/screenshots/t03-fix/before/desk900-p26.png",
+  "vh": 900,
+  "scrollY": 2242,
+  "docH": 9522,
+  "svcTop": 80,
+  "svcH": 3960,
+  "heroTop": -2242,
+  "heroBottom": 458,
+  "firstText": {
+   "y": 258,
+   "x": 178,
+   "s": "Digitální studio"
+  },
+  "coveredPct": 42.2,
+  "maxGapPct": 28.7,
+  "gapAt": [
+   0,
+   258
+  ],
+  "lines": [
+   {
+    "y": 258,
+    "x": 178,
+    "s": "Digitální studio"
+   },
+   {
+    "y": 265,
+    "x": 689,
+    "s": "— elevateit.cz"
+   },
+   {
+    "y": 267,
+    "x": 671,
+    "s": "01"
+   },
+   {
+    "y": 287,
+    "x": 161,
+    "s": "Kompletní řešení pro"
+   },
+   {
+    "y": 333,
+    "x": 161,
+    "s": "Kompletní řešení pro"
+   },
+   {
+    "y": 378,
+    "x": 161,
+    "s": "váš růst"
+   },
+   {
+    "y": 443,
+    "x": 618,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 447,
+    "x": 161,
+    "s": "Posouvejte se s námi na další úroveň."
+   },
+   {
+    "y": 474,
+    "x": 618,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 520,
+    "x": 232,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 524,
+    "x": 193,
+    "s": "01"
+   },
+   {
+    "y": 526,
+    "x": 617,
+    "s": "Rychlé, konverzní, na míru"
+   }
+  ]
+ },
+ {
+  "f": "0.28",
+  "file": ".autopilot/cinematic-foundation/screenshots/t03-fix/before/desk900-p28.png",
+  "vh": 900,
+  "scrollY": 2414,
+  "docH": 9522,
+  "svcTop": -92,
+  "svcH": 3960,
+  "heroTop": -2414,
+  "heroBottom": 286,
+  "firstText": {
+   "y": 172,
+   "x": 177,
+   "s": "Digitální studio"
+  },
+  "coveredPct": 42.3,
+  "maxGapPct": 19.4,
+  "gapAt": [
+   726,
+   900
+  ],
+  "lines": [
+   {
+    "y": 172,
+    "x": 177,
+    "s": "Digitální studio"
+   },
+   {
+    "y": 179,
+    "x": 689,
+    "s": "— elevateit.cz"
+   },
+   {
+    "y": 182,
+    "x": 671,
+    "s": "01"
+   },
+   {
+    "y": 202,
+    "x": 160,
+    "s": "Kompletní řešení pro"
+   },
+   {
+    "y": 247,
+    "x": 160,
+    "s": "Kompletní řešení pro"
+   },
+   {
+    "y": 293,
+    "x": 160,
+    "s": "váš růst"
+   },
+   {
+    "y": 358,
+    "x": 618,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 362,
+    "x": 160,
+    "s": "Posouvejte se s námi na další úroveň."
+   },
+   {
+    "y": 389,
+    "x": 617,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 435,
+    "x": 231,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 439,
+    "x": 192,
+    "s": "01"
+   },
+   {
+    "y": 441,
+    "x": 617,
+    "s": "Rychlé, konverzní, na míru"
+   }
+  ]
+ },
+ {
+  "f": "0.30",
+  "file": ".autopilot/cinematic-foundation/screenshots/t03-fix/before/desk900-p30.png",
+  "vh": 900,
+  "scrollY": 2587,
+  "docH": 9522,
+  "svcTop": -265,
+  "svcH": 3960,
+  "heroTop": -2587,
+  "heroBottom": 113,
+  "firstText": {
+   "y": 172,
+   "x": 177,
+   "s": "Digitální studio"
+  },
+  "coveredPct": 42.3,
+  "maxGapPct": 19.4,
+  "gapAt": [
+   726,
+   900
+  ],
+  "lines": [
+   {
+    "y": 172,
+    "x": 177,
+    "s": "Digitální studio"
+   },
+   {
+    "y": 179,
+    "x": 689,
+    "s": "— elevateit.cz"
+   },
+   {
+    "y": 182,
+    "x": 671,
+    "s": "01"
+   },
+   {
+    "y": 202,
+    "x": 160,
+    "s": "Kompletní řešení pro"
+   },
+   {
+    "y": 247,
+    "x": 160,
+    "s": "Kompletní řešení pro"
+   },
+   {
+    "y": 293,
+    "x": 160,
+    "s": "váš růst"
+   },
+   {
+    "y": 358,
+    "x": 618,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 362,
+    "x": 160,
+    "s": "Posouvejte se s námi na další úroveň."
+   },
+   {
+    "y": 389,
+    "x": 617,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 435,
+    "x": 231,
+    "s": "Weby, které prodávají"
+   },
+   {
+    "y": 439,
+    "x": 192,
+    "s": "01"
+   },
+   {
+    "y": 441,
+    "x": 617,
+    "s": "Rychlé, konverzní, na míru"
+   }
+  ]
+ }
+]

@@ -10,7 +10,7 @@ window.STATE =
   "memoryFile": "CLAUDE.md",
   "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.agents/skills/autopilot",
   "startedAt": "2026-09-03T07:48:00+02:00",
-  "updatedAt": "2026-09-03T08:26:47+02:00",
+  "updatedAt": "2026-09-03T15:46:08+02:00",
   "finishedAt": null,
   "stages": [
     {
@@ -60,9 +60,9 @@ window.STATE =
   ],
   "requirements": {
     "total": 57,
-    "done": 23,
-    "inTicket": 6,
-    "inSpec": 28,
+    "done": 31,
+    "inTicket": 1,
+    "inSpec": 25,
     "placeholder": 0,
     "deferred": 0,
     "dropped": 0
@@ -146,11 +146,60 @@ window.STATE =
         "CaseShowcase.tsx",
         "ClosingCta.tsx"
       ],
-      "status": "in-progress",
+      "status": "done",
       "retries": 0,
+      "repairs": 1,
+      "handoffs": 0,
+      "startedAt": "2026-09-03T08:26:47+02:00",
+      "finishedAt": "2026-09-03T15:46:08+02:00",
+      "tests": "tsc чисто; eslint без новых ошибок; vite build OK; кадры 1440x900 и 1440x1080 сняты и просмотрены; попиксельная идентичность рефактора доказана (0 расходящихся субпикселей)",
+      "commit": "b1653a5",
+      "note": "1 круг: константа 0.58 жила в двух файлах — уехала в motion-tokens как HERO_TAIL_MASK_START"
+    },
+    {
+      "id": "04",
+      "title": "Ремонт по слепой приёмке: диакритика в титрах, кромки мобильной сцены",
+      "requirements": [
+        "R32",
+        "R33",
+        "R47"
+      ],
+      "blockedBy": [
+        "02"
+      ],
+      "wave": 4,
+      "zone": [
+        "src/components/home/HeroScene.tsx"
+      ],
+      "status": "done",
+      "startedAt": "2026-09-03T15:46:08+02:00",
+      "finishedAt": "2026-09-03T15:46:08+02:00",
+      "tests": "tsc чисто; vite build OK; кадры 1440x900 (титры 01 и 03) и 390x844 просмотрены оркестратором",
+      "commit": "28222b3",
+      "retries": 3,
       "repairs": 0,
       "handoffs": 0,
-      "startedAt": "2026-09-03T08:26:47+02:00"
+      "note": "исполнитель упал на лимите сессии, но правка была уже на диске и оказалась целой; корневая причина мобильного шва — Chrome трактует -webkit-mask-composite как алиас mask-composite, intersect затирался на source-in"
+    },
+    {
+      "id": "05",
+      "title": "Полоса передачи hero → услуги слишком длинная",
+      "requirements": [
+        "R24"
+      ],
+      "blockedBy": [
+        "03"
+      ],
+      "wave": 5,
+      "zone": [
+        "src/components/home/ServicesShowcase.tsx"
+      ],
+      "status": "in-progress",
+      "startedAt": "2026-09-03T15:46:08+02:00",
+      "retries": 4,
+      "repairs": 0,
+      "handoffs": 0,
+      "note": "четыре обрыва инфраструктуры подряд (лимит сессии, сон машины, два 529) — ни один не по вине исполнителя, на диск ничего не попадало; порядок работы изменён: правка пишется раньше измерений"
     }
   ],
   "singlePass": null,
@@ -175,7 +224,7 @@ window.STATE =
       "file": "src/components/home/ServicesShowcase.tsx",
       "finding": "стык hero → services виден: жёсткая горизонтальная кромка на ~47% высоты вьюпорта и ~425px пустоты над ней (кадр desk-p22). Перекрытие подобрано константой lg:-mt-[42vh] под одну высоту экрана.",
       "blocking": true,
-      "resolution": "таск 03"
+      "resolution": "исправлено таском 03, коммит b1653a5 — перекрытие вычисляется из реестра актов; остаток (длина полосы передачи) в таске 05"
     },
     {
       "source": "визуальный аудит (preflight)",
@@ -190,6 +239,27 @@ window.STATE =
       "finding": "два визуальных языка на одной странице: фотореалистичный кинематографический hero и Pixar-подобный маскот в услугах.",
       "blocking": false,
       "resolution": "закрыто решением пользователя — ADR 0011; не переоткрывается"
+    },
+    {
+      "source": "слепая приёмка (независимая, видела только prompt.md и рендер)",
+      "file": "src/lib/projects-i18n.ts",
+      "finding": "в кейсе Biodent на странице стоят метрики +180% online objednávek, +74% návštěvnost z Google, <1,8s rychlost načtení. В прежнем PRODUCT.md их не было в списке подтверждённых фактов. Проверено git: пришли первым коммитом существующей кодовой базы (bc49f57) — унаследованный прод-текст, ни один прогон автопилота их не сочинял.",
+      "blocking": false,
+      "resolution": "вопрос к владельцу: подтвердить и внести в PRODUCT.md либо убрать из копии"
+    },
+    {
+      "source": "наблюдение оркестратора",
+      "file": "PRODUCT.md",
+      "finding": "файл переписан во время прогона на мастер-бриф из 32 разделов. Пропали маркер <!-- impeccable:product-schema 1 --> (на нём завязан context.mjs навыка Impeccable) и раздел Evidence on Hand (перечень подтверждённых фактов о бизнесе — защита от выдуманных доказательств).",
+      "blocking": false,
+      "resolution": "не откатывается — файл пользователя, business-critical content; предложено восстановить оба фрагмента поверх нового текста, ждём решения"
+    },
+    {
+      "source": "слепая приёмка",
+      "file": "src/components/Nav.tsx, cookie-баннер, FloatingCta",
+      "finding": "хром перекрывает содержание почти на каждом кадре: на 1440x900 закрывает пункт «05 Aplikace» и заголовок панели услуг; на 390x844 срезает нижнюю треть телефона — ровно тот кадр, ради которого сделан мобильный hero.",
+      "blocking": false,
+      "resolution": "отдельная фаза карты сборки; в этом прогоне не трогается (R34)"
     }
   ],
   "reviewers": {
