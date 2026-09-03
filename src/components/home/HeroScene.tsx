@@ -141,7 +141,7 @@ const TITLE_SPAN = (TITLES_OUT - TITLES_IN) / 5;
  * cross-fade. Two names dissolving through each other on one origin is
  * unreadable mush; it was tried first and the frame proved it.
  */
-const TITLE_GATE = 180;
+const TITLE_GATE = 220;
 const TITLE_TRANSIT = 0.03;
 
 function HeroTitleCard({
@@ -178,7 +178,13 @@ function HeroTitleCard({
       {/* The only blue left in the shot once the headline has gone. One accent,
           never two — the same rule the headline follows. */}
       <span className="label-micro block text-primary">{String(index + 1).padStart(2, "0")}</span>
-      <span className="heading-scene mt-2.5 block text-[clamp(1.3rem,0.8rem+1.1vw,1.8rem)] text-white uppercase">
+      {/* `.heading-scene` sets `line-height: 0.98`, which is drawn for Latin
+          caps with nothing above them. At the h1's size the leftover absolute
+          pixels absorb Czech diacritics; at this size they do not, and Á / Ř /
+          Ž / Ě / Í land on the line above. The leading is loosened here, on the
+          title only — the utility is shared with the h1 and the services
+          heading and editing it would move type across the whole site. */}
+      <span className="heading-scene mt-2.5 block text-[clamp(1.3rem,0.8rem+1.1vw,1.8rem)] leading-[1.18] text-white uppercase">
         {title}
       </span>
       <span className="label-micro mt-2.5 block text-white/45">{tag}</span>
@@ -514,7 +520,7 @@ export function HeroScene() {
                   card arriving is already at full strength by the time it is
                   readable, and the eye follows the arriving one. */}
               <div
-                className="relative max-w-[24rem] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,#000_18%,#000_82%,transparent_100%)]"
+                className="relative max-w-[24rem] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,#000_14%,#000_86%,transparent_100%)]"
                 style={{ height: TITLE_GATE }}
               >
                 {credits.map((c, i) => (
@@ -547,11 +553,23 @@ export function HeroScene() {
               sizes="70vw"
               alt=""
               className="absolute inset-y-0 right-0 block aspect-[720/1290] h-full"
-              /* Two masks, intersected: the left edge blends the scene into the
-                 copy field, and the top edge stops the band starting on a hard
-                 horizontal seam under the CTA — on a narrow screen that seam is
-                 the whole width and reads as a cut-out pasted on the page. */
-              imgClassName="h-full w-full object-cover object-bottom [mask-image:linear-gradient(to_right,transparent_0%,#000_30%),linear-gradient(to_bottom,transparent_0%,#000_15%)] [mask-composite:intersect] [-webkit-mask-composite:source-in]"
+              /* One radial mask anchored on the stone the phone stands on, not
+                 two intersected linear ones.
+
+                 The two-mask version did not do what it read as doing: Chrome
+                 treats `-webkit-mask-composite` as an alias of `mask-composite`,
+                 so the second declaration overwrote `intersect` with `source-in`
+                 and the computed value came back `source-in, source-in`. The
+                 plate kept the straight left and top edges of its own box and
+                 sat on the page as a rectangle. Even composited correctly, two
+                 linear fades still meet at a corner and still bound the scene
+                 with straight lines.
+
+                 An ellipse centred on the bottom-right has no straight edge
+                 anywhere: the scene is solid where the device stands and
+                 dissolves outward in every direction into the section's own
+                 black, so there is nothing for the eye to read as a border. */
+              imgClassName="h-full w-full object-cover object-bottom [mask-image:radial-gradient(145%_120%_at_100%_100%,#000_0%,#000_52%,transparent_100%)]"
             />
           </motion.div>
           <div className="absolute inset-0">
