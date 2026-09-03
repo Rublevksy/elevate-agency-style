@@ -10,7 +10,7 @@ window.STATE =
   "memoryFile": "CLAUDE.md",
   "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.agents/skills/autopilot",
   "startedAt": "2026-09-03T07:48:00+02:00",
-  "updatedAt": "2026-09-03T08:07:19+02:00",
+  "updatedAt": "2026-09-03T08:26:47+02:00",
   "finishedAt": null,
   "stages": [
     {
@@ -60,9 +60,9 @@ window.STATE =
   ],
   "requirements": {
     "total": 57,
-    "done": 14,
-    "inTicket": 8,
-    "inSpec": 35,
+    "done": 23,
+    "inTicket": 6,
+    "inSpec": 28,
     "placeholder": 0,
     "deferred": 0,
     "dropped": 0
@@ -115,11 +115,15 @@ window.STATE =
         "HeroCameraPlate.tsx",
         "HeroLightField.tsx"
       ],
-      "status": "in-progress",
+      "status": "done",
       "retries": 0,
       "repairs": 0,
       "handoffs": 0,
-      "startedAt": "2026-09-03T08:07:19+02:00"
+      "startedAt": "2026-09-03T08:07:19+02:00",
+      "finishedAt": "2026-09-03T08:26:47+02:00",
+      "tests": "tsc чисто; eslint без новых ошибок; vite build OK; 15 CDP-кадров сняты и просмотрены (десктоп 6 позиций, reduced 4, мобильный, стыки титров)",
+      "commit": "7c7831e",
+      "note": "часть A (перевод) и часть B (титры) сделаны раздельно, идентичность кадра после A доказана скриншотами; кроссфейд титров отклонён по скриншоту в пользу прокрутки сквозь воротца"
     },
     {
       "id": "03",
@@ -142,10 +146,11 @@ window.STATE =
         "CaseShowcase.tsx",
         "ClosingCta.tsx"
       ],
-      "status": "pending",
+      "status": "in-progress",
       "retries": 0,
       "repairs": 0,
-      "handoffs": 0
+      "handoffs": 0,
+      "startedAt": "2026-09-03T08:26:47+02:00"
     }
   ],
   "singlePass": null,
@@ -163,7 +168,7 @@ window.STATE =
       "file": "src/components/home/HeroScene.tsx",
       "finding": "мёртвая полоса скролла: между ~5% и ~20% прокрутки страницы кадр не содержит ни одной строки текста (~2 вьюпорта). Измерено кадрами desk-p07 и desk-p14 на 1440x900.",
       "blocking": true,
-      "resolution": "таск 02"
+      "resolution": "исправлено таском 02, коммит 7c7831e — камеру теперь сопровождают титры пяти услуг"
     },
     {
       "source": "визуальный аудит (preflight)",
