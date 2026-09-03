@@ -1,53 +1,189 @@
 window.STATE =
 {
-  "slug": "reference-led-directions",
-  "title": "ELEVATE — перестройка V1–V4 на реальной референс-графике (маскот, scroll storytelling, WOW)",
+  "slug": "cinematic-foundation",
+  "title": "ELEVATE — единая кинематографическаяархитектура главной: мастер-таймлайн скролла, камера, токены движения",
   "mode": "semi",
-  "depth": "normal",
+  "depth": "deep",
   "polish": null,
   "tier": "T2",
-  "briefFile": "2026-08-18-brief.md",
+  "briefFile": "2026-09-03-brief.md",
   "memoryFile": "CLAUDE.md",
-  "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.claude/skills/autopilot",
-  "startedAt": "2026-08-18T20:54:44+02:00",
-  "updatedAt": "2026-08-18T20:54:44+02:00",
-  "finishedAt": "2026-08-18T21:45:00+02:00",
+  "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.agents/skills/autopilot",
+  "startedAt": "2026-09-03T07:48:00+02:00",
+  "updatedAt": "2026-09-03T07:59:27+02:00",
+  "finishedAt": null,
   "stages": [
-    { "id": "preflight", "status": "done", "startedAt": "2026-08-18T20:23:00+02:00", "finishedAt": "2026-08-18T20:40:00+02:00", "note": "аудит + карта референсов показаны пользователю" },
-    { "id": "manifest",  "status": "done", "startedAt": "2026-08-18T20:40:00+02:00", "finishedAt": "2026-08-18T20:54:00+02:00" },
-    { "id": "briefing",  "status": "done", "startedAt": "2026-08-18T20:44:00+02:00", "finishedAt": "2026-08-18T20:47:00+02:00", "note": "3 вопроса заданы и отвечены: маскот везде включая главную; гибрид фото+живой UI; перестроить все четыре заново" },
-    { "id": "spec",      "status": "done", "startedAt": "2026-08-18T20:54:44+02:00", "finishedAt": "2026-08-18T21:00:00+02:00" },
-    { "id": "plan",      "status": "done", "startedAt": "2026-08-18T21:00:00+02:00", "finishedAt": "2026-08-18T21:02:00+02:00", "note": "T2, 5 тасков, 2 волны (01 → 02+03+04+05)" },
-    { "id": "build",     "status": "done", "startedAt": "2026-08-18T21:02:00+02:00", "finishedAt": "2026-08-18T21:40:00+02:00" },
-    { "id": "review",    "status": "done", "startedAt": "2026-08-18T21:08:00+02:00", "finishedAt": "2026-08-18T21:40:00+02:00", "note": "визуальное ревью по реальным скриншотам каждого направления; 5 находок, все починены и переподтверждены" },
-    { "id": "final",     "status": "done", "startedAt": "2026-08-18T21:40:00+02:00", "finishedAt": "2026-08-18T21:45:00+02:00" }
+    {
+      "id": "preflight",
+      "status": "done",
+      "startedAt": "2026-09-03T07:48:00+02:00",
+      "note": "аудит: git, архитектура главной, PRODUCT.md, восемь референсов просмотрены, скриншоты десктоп+мобильный сняты",
+      "finishedAt": "2026-09-03T07:52:00+02:00"
+    },
+    {
+      "id": "manifest",
+      "status": "done",
+      "startedAt": "2026-09-03T07:52:00+02:00",
+      "finishedAt": "2026-09-03T07:58:00+02:00"
+    },
+    {
+      "id": "briefing",
+      "status": "skipped",
+      "note": "полуавтомат: развилок, требующих пользователя, нет — визуальное направление уже выбрано (ADR 0011/0012), генерация ассетов в этом прогоне не запускается"
+    },
+    {
+      "id": "spec",
+      "status": "done",
+      "startedAt": "2026-09-03T07:58:00+02:00",
+      "finishedAt": "2026-09-03T08:05:00+02:00"
+    },
+    {
+      "id": "plan",
+      "status": "done",
+      "startedAt": "2026-09-03T08:05:00+02:00",
+      "finishedAt": "2026-09-03T07:59:27+02:00",
+      "note": "T2, 3 таска, 3 волны по одному — каждый следующий действительно блокируется предыдущим"
+    },
+    {
+      "id": "build",
+      "status": "active",
+      "startedAt": "2026-09-03T07:59:27+02:00"
+    },
+    {
+      "id": "review",
+      "status": "pending"
+    },
+    {
+      "id": "final",
+      "status": "pending"
+    }
   ],
   "requirements": {
-    "total": 52, "done": 48, "inTicket": 0, "inSpec": 3,
-    "placeholder": 1, "deferred": 0, "dropped": 0
+    "total": 57,
+    "done": 8,
+    "inTicket": 14,
+    "inSpec": 35,
+    "placeholder": 0,
+    "deferred": 0,
+    "dropped": 0
   },
   "tickets": [
-    { "id": "01", "title": "RefImage: общий слой подачи референс-графики", "requirements": ["R23","R32","R47i","R48i","G02"], "blockedBy": [], "wave": 1, "zone": ["src/components/design-explore/RefImage.tsx","concepts.ts"], "status": "done", "startedAt": "2026-08-18T21:02:00+02:00", "finishedAt": "2026-08-18T21:04:00+02:00", "tests": "tsc clean", "commit": "eff0d9c", "retries": 0, "repairs": 0, "handoffs": 0 },
-    { "id": "02", "title": "/design-v1 — Референс оживший", "requirements": ["R19-R36","G01","G02"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/design-v1.tsx"], "status": "done", "startedAt": "2026-08-18T21:04:00+02:00", "finishedAt": "2026-08-18T21:14:00+02:00", "tests": "tsc clean; eslint clean; скриншоты десктоп+мобильный просмотрены", "commit": "a977823", "retries": 0, "repairs": 1, "handoffs": 0 },
-    { "id": "03", "title": "/design-v2 — Кинематографические главы", "requirements": ["R19-R36","G01","G02"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/design-v2.tsx"], "status": "done", "startedAt": "2026-08-18T21:04:00+02:00", "finishedAt": "2026-08-18T21:08:00+02:00", "tests": "tsc clean; vite build OK", "commit": "41305cf", "retries": 0, "repairs": 3, "handoffs": 0, "note": "3 круга правок: коллизия заголовка с гравировкой → перезум (регрессия) → найдена середина; отдельно мобильное кадрирование" },
-    { "id": "04", "title": "/design-v3 — Стол студии", "requirements": ["R19-R36","G01","G02"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/design-v3.tsx"], "status": "done", "startedAt": "2026-08-18T21:04:00+02:00", "finishedAt": "2026-08-18T21:08:00+02:00", "tests": "tsc clean; eslint clean", "commit": "41305cf", "retries": 0, "repairs": 1, "handoffs": 0 },
-    { "id": "05", "title": "/design-v4 — Аппаратная", "requirements": ["R19-R36","G01","G02"], "blockedBy": ["01"], "wave": 2, "zone": ["src/routes/design-v4.tsx"], "status": "done", "startedAt": "2026-08-18T21:06:00+02:00", "finishedAt": "2026-08-18T21:10:00+02:00", "tests": "tsc clean", "commit": "41305cf", "retries": 0, "repairs": 1, "handoffs": 0 }
+    {
+      "id": "01",
+      "title": "Кинематографический фундамент: один таймлайн, одна камера, один гейт",
+      "requirements": [
+        "R20",
+        "R21",
+        "R22",
+        "R20.1",
+        "R20.2",
+        "R22.1"
+      ],
+      "blockedBy": [],
+      "wave": 1,
+      "zone": [
+        "src/components/cinematic/",
+        "src/routes/__root.tsx"
+      ],
+      "status": "pending",
+      "retries": 0,
+      "repairs": 0,
+      "handoffs": 0
+    },
+    {
+      "id": "02",
+      "title": "Hero на мастер-таймлайне + мёртвая полоса скролла",
+      "requirements": [
+        "R11",
+        "R11.1",
+        "R15",
+        "R16",
+        "R16.1",
+        "R24"
+      ],
+      "blockedBy": [
+        "01"
+      ],
+      "wave": 2,
+      "zone": [
+        "src/components/home/HeroScene.tsx",
+        "HeroCameraPlate.tsx",
+        "HeroLightField.tsx"
+      ],
+      "status": "pending",
+      "retries": 0,
+      "repairs": 0,
+      "handoffs": 0
+    },
+    {
+      "id": "03",
+      "title": "Услуги на таймлайне, вычисленный стык, единый гейт секций",
+      "requirements": [
+        "R12",
+        "R13",
+        "R16.2",
+        "R20.1",
+        "R20.2",
+        "R22.1"
+      ],
+      "blockedBy": [
+        "02"
+      ],
+      "wave": 3,
+      "zone": [
+        "src/components/home/ServicesShowcase.tsx",
+        "StudioManifesto.tsx",
+        "CaseShowcase.tsx",
+        "ClosingCta.tsx"
+      ],
+      "status": "pending",
+      "retries": 0,
+      "repairs": 0,
+      "handoffs": 0
+    }
   ],
   "singlePass": null,
   "tests": null,
-  "debt": { "placeholders": [], "assumptions": [], "emptyEnv": [] },
+  "debt": {
+    "placeholders": [],
+    "assumptions": [],
+    "emptyEnv": []
+  },
   "additions": [],
   "coverage": null,
   "concerns": [
-    { "source": "аудит референсов (preflight)", "file": "src/assets/hero/macbook-photo.jpg", "finding": "предыдущий ассет содержал ВЕСЬ референс с вшитым чешским текстом — из-за этого на /design-v1 дублировался заголовок (page H1 + текст в растре). Ломает i18n (4 языка) и SEO. Заменён на чистые кропы без типографики в src/assets/refs/.", "blocking": true, "resolution": "fixed — новый пайплайн scripts/extract-ref-assets.mjs" },
-    { "source": "аудит референсов (preflight)", "file": "references/*_SERVICE_*_HERO.png", "finding": "на экранах устройств внутри сервисных сцен вшиты ВЫДУМАННЫЕ метрики: +220%/+180%/+150% (SEO), +2 482 users/+18,6% (App), «PREMIUM KOLEKCE 2 499 Kč» (E-shop). PRODUCT.md принцип 5 запрещает выдуманные метрики. Кропы перекадрированы на маскота, чтобы цифры не читались как заявления страницы.", "blocking": false, "resolution": "смягчено кадрированием; остаток — в отчёт как «заменить реальными данными перед продакшеном»" },
-    { "source": "аудит референсов (preflight)", "file": "src/assets/refs/svc-eshop.*", "finding": "в сцене e-shop виден логотип Nike (чужой товарный знак) и вымышленный магазин «ICONIC» на экране ноутбука.", "blocking": false, "resolution": "в отчёт — решение о правовой стороне за пользователем" }
+    {
+      "source": "визуальный аудит (preflight)",
+      "file": "src/components/home/HeroScene.tsx",
+      "finding": "мёртвая полоса скролла: между ~5% и ~20% прокрутки страницы кадр не содержит ни одной строки текста (~2 вьюпорта). Измерено кадрами desk-p07 и desk-p14 на 1440x900.",
+      "blocking": true,
+      "resolution": "таск 02"
+    },
+    {
+      "source": "визуальный аудит (preflight)",
+      "file": "src/components/home/ServicesShowcase.tsx",
+      "finding": "стык hero → services виден: жёсткая горизонтальная кромка на ~47% высоты вьюпорта и ~425px пустоты над ней (кадр desk-p22). Перекрытие подобрано константой lg:-mt-[42vh] под одну высоту экрана.",
+      "blocking": true,
+      "resolution": "таск 03"
+    },
+    {
+      "source": "визуальный аудит (preflight)",
+      "file": "src/components/Nav.tsx, cookie-баннер, плавающий CTA",
+      "finding": "хром страницы перекрывает композицию на каждой позиции скролла; на мобильном баннер срезает нижнюю треть телефона — ровно тот кадр, ради которого сделан мобильный hero. Nav при скролле становится непрозрачной полосой с жёстким швом.",
+      "blocking": false,
+      "resolution": "отдельная фаза карты сборки; в этом прогоне не трогается (R34)"
+    },
+    {
+      "source": "аудит референсов",
+      "file": "src/assets/refs/svc-*.jpg vs hero-macbook.jpg",
+      "finding": "два визуальных языка на одной странице: фотореалистичный кинематографический hero и Pixar-подобный маскот в услугах.",
+      "blocking": false,
+      "resolution": "закрыто решением пользователя — ADR 0011; не переоткрывается"
+    }
   ],
-  "qaFindings": [
-    { "route": "/design-v2", "finding": "заголовок наезжает на гравировку ELEVATE на крышке макбука; скрим под текстом слабоват — текст лежит прямо на светлой части фото", "severity": "composition", "status": "open" },
-    { "route": "/design-v3", "finding": "внутри живого browser-window пустые серые прямоугольники-плейсхолдеры (craft-floor: «soft-shadowed rounded rectangles standing in for content») и пустая нижняя половина окна", "severity": "craft", "status": "open" },
-    { "route": "/design-v4", "finding": "разметка села на кромки точно (проверено скриншотом), но подписи налезают: «MARK / OK» на гравировку ELEVATE, «HINGE 128°» на собственную выносную линию", "severity": "polish", "status": "open" }
-  ],
-  "reviewers": { "manifestSpec": null, "craft": null },
+  "reviewers": {
+    "manifestSpec": null,
+    "craft": null
+  },
   "blind": null
 }

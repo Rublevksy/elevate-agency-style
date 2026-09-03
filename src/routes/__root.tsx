@@ -22,6 +22,7 @@ import { TopProgressBar } from "@/components/TopProgressBar";
 import { useT } from "@/lib/i18n";
 import { initAnalytics, trackPageView } from "@/lib/analytics";
 import { useScrollDepth } from "@/hooks/use-scroll-depth";
+import { CinematicStage } from "@/components/cinematic";
 
 const STRUCTURED_DATA = JSON.stringify([
   {
@@ -204,7 +205,12 @@ function SiteShell() {
       <TopProgressBar />
       {!isDesignExplore && <Nav />}
       <main key={pathname} className="flex-1 animate-fade-in pb-20 md:pb-0">
-        <Outlet />
+        {/* The page's single scroll reading and its register of acts. It renders
+            no box (`display: contents`) and sets no heights, so a route without
+            acts is untouched: the register is simply empty there. */}
+        <CinematicStage>
+          <Outlet />
+        </CinematicStage>
       </main>
       {!isDesignExplore && <Footer />}
       {!isDesignExplore && pathname !== "/contact" && <FloatingCta />}
