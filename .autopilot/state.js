@@ -10,7 +10,7 @@ window.STATE =
   "memoryFile": "CLAUDE.md",
   "skillDir": "/Users/danastabilnost/Desktop/Elevate Digital Studio/.agents/skills/autopilot",
   "startedAt": "2026-09-03T07:48:00+02:00",
-  "updatedAt": "2026-09-03T07:59:27+02:00",
+  "updatedAt": "2026-09-03T08:07:19+02:00",
   "finishedAt": null,
   "stages": [
     {
@@ -60,8 +60,8 @@ window.STATE =
   ],
   "requirements": {
     "total": 57,
-    "done": 8,
-    "inTicket": 14,
+    "done": 14,
+    "inTicket": 8,
     "inSpec": 35,
     "placeholder": 0,
     "deferred": 0,
@@ -85,10 +85,15 @@ window.STATE =
         "src/components/cinematic/",
         "src/routes/__root.tsx"
       ],
-      "status": "pending",
+      "status": "done",
       "retries": 0,
-      "repairs": 0,
-      "handoffs": 0
+      "repairs": 1,
+      "handoffs": 0,
+      "startedAt": "2026-09-03T08:10:00+02:00",
+      "finishedAt": "2026-09-03T08:07:19+02:00",
+      "tests": "tsc чисто; eslint 0 errors; vite build OK; CDP-кадры p=0 и p=0.4 сверены с baseline — идентичны",
+      "commit": "633c9d4",
+      "note": "1 круг правок: семантика гейта — слабая машина не должна падать в still, только терять клип"
     },
     {
       "id": "02",
@@ -110,10 +115,11 @@ window.STATE =
         "HeroCameraPlate.tsx",
         "HeroLightField.tsx"
       ],
-      "status": "pending",
+      "status": "in-progress",
       "retries": 0,
       "repairs": 0,
-      "handoffs": 0
+      "handoffs": 0,
+      "startedAt": "2026-09-03T08:07:19+02:00"
     },
     {
       "id": "03",

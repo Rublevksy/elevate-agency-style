@@ -147,3 +147,50 @@ node .autopilot/cinematic-foundation/shot.mjs <url> <outdir> <label> <W> <H> <д
   секции — нужен реальный `window.scrollTo` + пауза;
 - `--virtual-time-budget` замораживает декодирование видео — кадр выходит пустым;
 - `ffmpeg`/`ffprobe` на машине нет.
+
+---
+
+## Из таска 01 — фундамент (построено, коммит `633c9d4`)
+
+Модуль `@/components/cinematic`. Сигнатуры — как обещано выше, с четырьмя
+уточнениями от реализации:
+
+```ts
+// ref типизирован под React 19: useRef<HTMLElement>(null) даёт именно этот тип
+interface Act { ref: React.RefObject<HTMLElement | null>; /* остальное как обещано */ }
+
+// реестр отдаёт порядок регистрации — таск 03 им не пользуется, но он есть
+interface ActRecord { viewports: number; pin: number; order: number }
+export function useStageAct(id: string): ActRecord | undefined;
+
+// доступ к самой стадии
+export function useStage(): CinematicStageValue;          // бросает вне провайдера
+export function useOptionalStage(): CinematicStageValue | null;
+export function useStageProgress(): MotionValue<number>;  // прогресс всей страницы
+export function useDetectedCapability(): MotionCapability; // измерение без контекста
+```
+
+**Семантика гейта — исправлена относительно текста таска 01:**
+
+| Уровень | Наступает | Что даёт |
+|---|---|---|
+| `still` | **только** `prefers-reduced-motion: reduce` | утверждённые статичные кадры |
+| `motion` | всё остальное, **включая** слабую машину и `saveData` | риг, параллакс, вайпы; без видео |
+| `cinematic` | не `still` И `isCapableDevice()` И `(min-width: 1024px) and (pointer: fine)` | плюс скраб двух клипов |
+
+Явный запрет в шапке файла: не «оптимизировать» device-тест обратно в `still`.
+Слабая машина теряет только съёмку — забирать у неё всю сцену значит забирать
+сайт ради экономии, о которой посетитель не просил.
+
+**Что нужно знать таскам 02 и 03:**
+
+- `CinematicStage` смонтирован в `__root.tsx` внутри `<main>`, рендерит
+  `display: contents` — бокса в вёрстке не появилось, ни один пиксель не сдвинут.
+- Реестр актов живёт в `useRef` + явные подписчики, не в `useState`: регистрация
+  из эффекта не перерисовывает страницу. Спрашивать соседа — через `useStageAct`.
+- `useStage()` **бросает** вне провайдера. Это не ошибка проектирования: акт вне
+  стадии — баг проводки, и сообщение говорит, где смонтирован провайдер.
+- `useAct` не содержит состояния — проверено. Не добавлять его и потребителям
+  внутрь самого прогресса; `useMotionValueEvent` у потребителя (как `active` в
+  `ServicesShowcase`) допустим: это состояние-зеркало позиции, а не память.
+- `useCinematicViewport.ts` на диске, не удалён, больше не нужен.
