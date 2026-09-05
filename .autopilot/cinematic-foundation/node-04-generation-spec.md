@@ -1,0 +1,214 @@
+# `hero-open.mp4` — FINAL GENERATION SPEC
+
+**Статус: ЖДЁТ ПОДТВЕРЖДЕНИЯ. Генерация не запускалась.**
+Направление — вариант X, утверждён владельцем 2026-09-05.
+Проверка проведена по живому CLI Higgsfield 1.1.24, не по памяти.
+
+---
+
+## PRE-GENERATION CHECK — результаты
+
+| # | Проверка | Результат |
+|---|---|---|
+| 1 | Подключение | **MCP-сервер Higgsfield не вернулся** — инструменты `mcp__higgsfield__*` из сессии исчезли и требуют повторной авторизации, которую неинтерактивная сессия провести не может. Но в системе стоит официальный CLI `higgsfield 1.1.24`, **и он авторизован**. Это тот же авторизованный канал, по которому в прошлом прогоне сверялись цены, а не обход ограничения. Читал им только баланс, модели и цены. |
+| 2 | Баланс | **39 кредитов**, план `plus` |
+| 3 | Стоимость | **22.5 кредита** — ровно утверждённый бюджет (см. таблицу ниже) |
+| 4 | Оптимальная модель | `seedance_2_0` |
+| 5 | Ограничения | проверены, см. ниже |
+| 6 | Цена ≤ 22.5? | **да, ровно 22.5** |
+| 7 | Обход ограничений | не делался; архитектура не менялась |
+
+### Что изменилось со времён прошлого прогона
+
+**`cinematic_studio_3_0`, на котором сняты оба существующих клипа (ADR 0012),
+из списка моделей исчез.** Переименован или снят с обслуживания. Поэтому модель
+для шота C выбирается заново, и полная идентичность рендера с шотами A и B
+не гарантирована — это риск, названный ниже.
+
+### Цены, снятые сейчас
+
+| Модель / режим | 5 с · 720p · 3:4 · без аудио | Вердикт |
+|---|---|---|
+| **`seedance_2_0` + `start_image`** | **22.5** | **выбрано** — ровно в бюджет |
+| `seedance_2_0_mini` + `start_image` | 12.5 | дешевле, но потолок 720p и меньшая модель; экономия 10 кредитов не стоит риска брака на единственной попытке |
+| `seedance_2_5` `omni_reference` + `start_image` | 32.5 | **выше утверждённого бюджета — не запускается** (п. 6) |
+| `seedance_2_0` 1080p | 45 | **выше баланса (39)** — недоступно физически |
+
+### Ограничения `seedance_2_0`, подтверждённые CLI
+
+- `aspect_ratio`: `auto,16:9,9:16,4:3,3:4,1:1,21:9` → **`3:4`** совпадает с
+  существующими клипами (834x1112 = 0.7500) точно.
+- `duration`: по умолчанию 5 → **5**.
+- `resolution`: `480p,720p,1080p,4k` → **`720p`**.
+- `start_image`: поддерживается.
+- `generate_audio`: по умолчанию **`true`** → принудительно **`false`**:
+  дорожка на странице всё равно `muted`, а лишний трек это лишние байты.
+- `mode`: `std,fast`; `fast` даёт только 480p/720p. Остаётся **`std`**.
+- До 9 изображений-референсов; используем одно.
+
+---
+
+## Стартовый кадр — извлечён локально, 0 кредитов
+
+`.autopilot/cinematic-foundation/keyframes/hero-open-start.png`
+**834x1112, соотношение ровно 0.7500.**
+
+Взят из `public/media/hero-camera.mp4` на **t = 1.916 с**.
+
+**Поправка к разведке.** В `node-04-camera-enters-screen.md` я назвал стартовым
+кадр на 5.04 с. Это ошибка, и вот почему важная: скролл останавливает шот A на
+`CLIP_RANGE = 0.38`, то есть ровно на 1.916 с. Начни шот C с кадра 5.04 с — и
+между тем, что видит посетитель в конце шота A, и первым кадром шота C будет
+скачок через три секунды несыгранного движения.
+
+`1.916 = CLIP_RANGE (0.38) × duration (5.042)` — тот же принцип, которым ADR 0012
+сделал невидимым стык A→B: **последний кадр предыдущего шота и первый кадр
+следующего это одна и та же фотография, растворять нечего.**
+
+Три следствия, каждое в плюс:
+
+1. `CLIP_RANGE` — несущая константа — **не трогается**.
+2. `hero-transition.mp4` **остаётся валидным**, а не превращается в мёртвый файл:
+   он сгенерирован из этого же кадра, поэтому шоты B и C взаимозаменяемы в одной
+   точке. Владелец сможет сравнить два финала, ничего не перегенерируя.
+3. Дуга камеры короче. От трёхчетвертного вида сзади до фронта ~135°, а от
+   почти фронтального вида сзади (кадр 5.04 с) было бы ~180°. На единственной
+   попытке в 5 секунд это заметная разница в шансах.
+
+---
+
+## D. Финальный промпт
+
+```
+Continuous single cinematic take, no cuts. A matte black premium laptop stands
+on a dark cracked stone plinth in a black studio void, lit by one luminous
+cyan-white arc behind it and thin light filaments crossing the haze.
+
+The shot continues from exactly where it is: the camera is behind and to the
+side of the device, three-quarter rear view, lid nearly closed.
+
+The lid rises smoothly on its hinge, opening at a natural constant speed like
+real hardware, while the camera arcs steadily around the device from the rear
+to the front. The camera never stops and never jumps; the arc and the push-in
+are one continuous physical move with slight motion blur and real inertia.
+
+As the camera comes to the front, the open display faces it directly and the
+camera pushes in until the screen fills the entire frame.
+
+The screen emits pure soft cyan-white light and nothing else: an even luminous
+panel, no picture on it, no interface, no content of any kind.
+
+The final second is locked and stable: the screen perfectly frontal, square to
+camera, filling the frame, motion settled, no drift, no wobble.
+
+Same device, same proportions, same matte anodised material, same stone, same
+dark environment, same key light direction, same colour temperature throughout.
+Photoreal, 85mm lens feel, shallow depth of field, cinematic product film.
+```
+
+### Негативный промпт
+
+Первый блок — дословно общий негативный промпт проекта из
+`docs/higgsfield-service-scenes-plan.md` §3. Второй — добавления, специфичные
+для открывающегося экрана.
+
+```
+cartoon, 3d render, pixar style, illustration, anime, stylised character,
+mascot, text, letters, words, logos, watermark, signature, ui mockup,
+fake charts, numbers, percentages, statistics, brand names, trademarks,
+purple, magenta, teal and orange grade, rainbow gradient, neon cyberpunk,
+lens flare, heavy bloom, glassmorphism, stock photo smiling people,
+cluttered desk, warped geometry, distorted hands, extra fingers,
+oversaturated, HDR halo, vignette burn,
+
+desktop interface, operating system, application icons, window chrome,
+menu bar, dock, wallpaper, photograph on screen, video on screen, code editor,
+dashboard, graphs, charts, keyboard backlight glyphs, engraved logo on lid,
+apple logo, second laptop, second device, phone, monitor, extra objects,
+hard cut, jump cut, camera shake, whip pan, morphing, shape shifting,
+changing laptop model, deforming chassis, bending screen, melting geometry,
+speed ramp, freeze frame, camera stopping and restarting
+```
+
+### Команда (НЕ ЗАПУСКАТЬ до подтверждения)
+
+```bash
+higgsfield generate create seedance_2_0 \
+  --prompt "<промпт выше>" \
+  --start-image .autopilot/cinematic-foundation/keyframes/hero-open-start.png \
+  --duration 5 --resolution 720p --aspect-ratio 3:4 \
+  --generate-audio=false --mode std --wait
+```
+
+---
+
+## E. Почему именно этот ассет решает узел 4
+
+Разведка установила фактом, а не предположением: **экран устройства не виден ни
+в одном кадре ни одного существующего ассета.** Камера обходит ноутбук сзади,
+крышка почти закрыта, дисплейная сторона к камере не поворачивается ни разу;
+`hero-transition.mp4` вообще уводит камеру мимо устройства в пустое пространство.
+
+Значит SHOT 04 (крышка открывается), SHOT 05 (подход к дисплею) и SHOT 06 (вход
+в дисплей) из имеющегося не собираются, а CSS-трансформ их не заменит по той же
+причине, по которой ADR 0012 отверг CSS-поворот: **этих данных в кадре нет.**
+Нельзя показать экран, которого никто не снимал.
+
+Один клип закрывает все три шота сразу, и его последний кадр — фронтальный
+неподвижный экран — служит **точкой входа DOM-портала**. Это и есть то, что
+делает узел 4 нехрупким: `CLAUDE.md` предупреждает, что DOM-слой поверх клипа
+обязан следовать за перспективой, иначе разваливается на повороте. Здесь
+следовать не за чем — в точке передачи движение уже кончилось, регистрация
+статична, портал просто растёт. **Покадрового трекинга не нужно.**
+
+Подключение — в существующий акт, без второй скролл-системы:
+`useAct("hero")` → `act.progress` → третья ветка в том же rAF-цикле
+`HeroCameraPlate` → портал как `useTransform` от того же `act.progress`
+(поэтому обратный скролл схлопывает его по построению).
+
+---
+
+## F. Критерии приёмки результата
+
+Проверяется покадрово тем же локальным драйвером
+(`.autopilot/cinematic-foundation/frames.mjs`), без единого дополнительного
+кредита. **Любой невыполненный пункт = брак**, и решение о пересъёмке принимает
+владелец, а не я.
+
+**Блокирующие — без них ассет не подключается:**
+
+1. **Первый кадр совпадает со стартовым.** Иначе стык с шотом A видим и весь
+   смысл выбора кадра 1.916 с потерян.
+2. **На экране нет ни одного глифа** — ни букв, ни цифр, ни иконок, ни графиков,
+   ни логотипа, ни намёка на интерфейс. Это `PRODUCT.md` принцип 5 и
+   четырёхъязычность одновременно.
+3. **Последний кадр: экран строго фронтально, заполняет кадр, движение
+   остановилось.** Портал входит именно здесь; дрожание или недоворот означают,
+   что портал придётся привязывать к движущемуся кадру, а это ровно та
+   хрупкость, которой вся конструкция избегает.
+4. **Устройство то же самое** на всём протяжении: те же пропорции, тот же
+   материал, та же модель. Никаких подмен, деформаций корпуса, гнущегося экрана.
+5. **Движение непрерывно**: ни склейки, ни скачка, ни остановки с рестартом, ни
+   morphing. Проверяется кадрами на 0 / 0.25 / 0.5 / 0.75 / 0.95 / 1.0.
+6. **Пропорция ровно 3:4**, иначе шот не ляжет в общий бокс `HeroCameraPlate`.
+
+**Существенные — брак, если нарушены грубо:**
+
+7. Крышка открывается с постоянной естественной скоростью, как настоящая петля.
+8. Свет и цветовая температура согласованы с шотами A и B: одна бирюзовая дуга,
+   филаменты, дымка, чёрный камень. Экран не перекрашивает сцену.
+9. Вес файла ≤ 3 МБ (текущий бюджет клипов 4.5 МБ, `public/`, вне бандла).
+
+---
+
+## Названный риск
+
+Модель почти наверняка захочет нарисовать на открывшемся экране интерфейс — с
+текстом и цифрами. Негативный промпт вероятность снижает, но не убирает.
+Критерий 2 — блокирующий, и брак по нему означает пересъёмку, то есть ещё
+22.5 кредита из оставшихся 16.5 **которых не хватит**. Поэтому второй попытки в
+этом бюджете нет: либо кадр принимается, либо владелец пополняет баланс.
+
+Второй риск: `cinematic_studio_3_0` недоступен, шот C снимается другой моделью.
+Полное совпадение зерна и микроконтраста с шотами A и B не гарантировано —
+критерий 8 проверяет это глазами.
