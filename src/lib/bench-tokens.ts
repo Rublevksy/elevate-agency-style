@@ -196,3 +196,16 @@ export const benchShadow = {
 export const benchSpacing = {
   containerMaxWidth: 1200,
 } as const;
+
+/**
+ * VISUAL_LANGUAGE §5 (T4) — the five state marks (`src/components/bench/
+ * marks.tsx`) are one geometric system, not five independent icons: same
+ * viewBox grid, same stroke weight, same corner logic. Codified here so a
+ * mark can't drift to its own stroke width the way five copies of `EASE`
+ * once did — see motion-tokens.ts's header for the precedent this follows.
+ */
+export const benchMark = {
+  viewBox: 16,
+  strokeWidth: 1.5,
+  renderSize: 14,
+} as const;

@@ -1,4 +1,5 @@
-import { benchColor } from "@/lib/bench-tokens";
+import { useReducedScene } from "@/components/cinematic";
+import { CrossMark, FlagMark, PinMark } from "./marks";
 
 export type BenchFrameState = "pending" | "active" | "completed";
 
@@ -13,11 +14,15 @@ export interface BenchMarkerProps {
 }
 
 /**
- * Four physical states, distinguished by shape and paint, not by four
- * unrelated colors (T3 §8). This is deliberately abstract geometry — the five
- * ornate marks (wax cross, ribbon, flag, pin, punched corner) are T4's job
- * per IMPLEMENTATION_PLAN; building them here would be scope creep into a
- * step that also has its own contrast/keyboard acceptance gate.
+ * T4: the four marker states read through marks.tsx's five-mark system, not
+ * ad-hoc shapes (T3's placeholder circles/checkmark are gone). Per that
+ * file's semantic mapping, `active` and `selected` share one mark family
+ * (FLAG) rather than each owning a separate glyph — `active` (the scroll-
+ * derived ground truth) takes priority and renders it filled; `selected`
+ * alone renders the outline variant. `completed`/`pending` render CROSS/PIN
+ * exactly as mapped. This priority rule means one glyph is ever shown at a
+ * time — the visible text caption is what carries the exact state name
+ * (SELECTED vs ACTIVE) when a frame happens to be both.
  *
  * The caption is real visible text at every width, not just on mobile
  * (VISUAL_LANGUAGE §5's rule is a floor, not a ceiling): a shape-only signal
@@ -26,34 +31,17 @@ export interface BenchMarkerProps {
  */
 export function BenchMarker({ state, selected, labels }: BenchMarkerProps) {
   const label = selected ? labels.selected : labels[state];
+  const reducedScene = useReducedScene();
 
   return (
     <span className="inline-flex items-center gap-1.5">
-      <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" className="shrink-0">
-        {state === "completed" && (
-          <path
-            d="M3 7.5L5.7 10.2L11 4"
-            fill="none"
-            stroke={benchColor.ink}
-            strokeWidth="1.6"
-            strokeLinecap="square"
-          />
-        )}
-        {state === "active" && <circle cx="7" cy="7" r="4.5" fill={benchColor.ink} />}
-        {state === "pending" && (
-          // stroke is white at 33% alpha, not `benchColor.edge` (14% —
-          // the shared hairline token used for borders/perforation): at
-          // 14% this ring measured 1.51:1 against `stockLift`, under the
-          // 3:1 WCAG 1.4.11 floor for a graphical state indicator. 33% is
-          // the measured minimum for 3:1; the shared `edge` token is left
-          // alone since its other uses (borders, perforation) are not text
-          // or state-carrying graphics.
-          <circle cx="7" cy="7" r="4.5" fill="none" stroke="oklch(1 0 0 / 33%)" strokeWidth="1.4" />
-        )}
-        {selected && (
-          <circle cx="7" cy="7" r="6.3" fill="none" stroke={benchColor.wax} strokeWidth="1" />
-        )}
-      </svg>
+      {state === "active" || selected ? (
+        <FlagMark filled={state === "active"} className="shrink-0" instant />
+      ) : state === "completed" ? (
+        <CrossMark className="shrink-0" instant={reducedScene} />
+      ) : (
+        <PinMark className="shrink-0" />
+      )}
       <span className="bench-tick" style={{ opacity: 0.7 }}>
         {label}
       </span>

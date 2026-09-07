@@ -1,6 +1,7 @@
 import { forwardRef } from "react";
 import { benchColor, benchType } from "@/lib/bench-tokens";
 import { BenchMarker, type BenchFrameState } from "./BenchMarker";
+import { PunchedCornerMark } from "./marks";
 import type { BenchFrameData } from "./frames-data";
 
 export interface BenchFrameLabels {
@@ -58,6 +59,26 @@ export const BenchFrame = forwardRef<HTMLButtonElement, BenchFrameProps>(functio
         boxShadow: "none",
       }}
     >
+      {/* Structural, not a state: every frame carries this identically —
+          "this box is where outside evidence is allowed to sit"
+          (VISUAL_LANGUAGE §1/§3.4's "window" material), not a per-frame
+          signal, which is why it's positioned once in a corner rather than
+          living in the marker row with the four that actually differ
+          between frames. Decorative for AA purposes (marks.tsx documents
+          why) — nothing here fails contrast because nothing here claims to
+          be read.
+
+          KNOWN TENSION, not a bug: VISUAL_LANGUAGE §5's original text
+          reserves the punched corner for "genuinely unavailable... never
+          decorative" — the opposite of "on every frame, always." T4's brief
+          explicitly redefined the mapping to "evidence / client artifact",
+          and Assessment A's critique correctly flagged that showing it
+          everywhere risks training a visitor to stop reading it as an
+          exception once it needs to mean "unavailable" again somewhere else.
+          Not resolved here — VISUAL_LANGUAGE.md itself still says the old
+          thing and needs an owner decision at some later step, not a T4
+          component quietly picking one meaning. */}
+      <PunchedCornerMark className="pointer-events-none absolute right-1 top-1 opacity-70" />
       {/* Frame index/title uses the `slate` role, not an invented heading
           size: L7 ("rank through cell count") reserves `frameTitle` for the
           scene's own headline — a placeholder frame is not one.

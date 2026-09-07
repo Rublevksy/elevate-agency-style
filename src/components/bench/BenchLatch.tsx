@@ -1,4 +1,5 @@
 import { benchColor } from "@/lib/bench-tokens";
+import { StripMark } from "./marks";
 
 export interface BenchLatchProps {
   orientation: "horizontal" | "vertical";
@@ -16,10 +17,16 @@ export interface BenchLatchProps {
  * move — the ribbon does." So this renders at the reading window (62%
  * desktop / 50% mobile — CAMERA_SYSTEM §5, `--bench-window-x-desktop` /
  * `--bench-window-y-mobile`) and never carries a transform of its own; the
- * ribbon travels past it. It is the one element in the whole prototype that
- * NEVER interpolates — it only toggles between two states (settled / not),
- * both instant, because a moving latch would mean two things are moving and
- * defeat the point of a fixed reading line.
+ * ribbon travels past it.
+ *
+ * It still gets exactly one motion: T4 item 8's "active: минимальное
+ * физическое подтверждение" — a one-shot, non-looping scale tick
+ * (`.bench-latch-confirm`) that fires the instant `settled` flips true onto
+ * a NEW frame, never while still easing and never on a re-render that lands
+ * on the same frame it was already on. That is not the flag glyph's own
+ * appearance (BenchMarker/marks.tsx — the flag stays instant, per
+ * VISUAL_LANGUAGE §5), it is the latch physically confirming arrival, which
+ * is the one honest place for a "click" in this mechanism.
  */
 export function BenchLatch({ orientation, activeIndex, frameCount, settled }: BenchLatchProps) {
   const horizontal = orientation === "horizontal";
@@ -54,7 +61,7 @@ export function BenchLatch({ orientation, activeIndex, frameCount, settled }: Be
         }}
       />
       <div
-        className="bench-tick absolute"
+        className="bench-tick absolute flex items-center gap-1.5"
         style={{
           ...(horizontal ? { top: 8, left: 8 } : { top: 8, right: 8 }),
           color: benchColor.wax,
@@ -62,9 +69,17 @@ export function BenchLatch({ orientation, activeIndex, frameCount, settled }: Be
           background: benchColor.stock,
           padding: "2px 6px",
         }}
-        aria-hidden="true"
       >
-        {String(activeIndex + 1).padStart(2, "0")} / {String(frameCount).padStart(2, "0")}
+        {/* Flow indicator, not a per-frame state — see marks.tsx's header.
+            Static: it never earns its own motion, only the ribbon's. */}
+        <StripMark className="shrink-0" />
+        <span
+          key={settled ? `settled-${activeIndex}` : "moving"}
+          className={settled ? "bench-latch-confirm inline-block" : "inline-block"}
+          aria-hidden="true"
+        >
+          {String(activeIndex + 1).padStart(2, "0")} / {String(frameCount).padStart(2, "0")}
+        </span>
       </div>
     </div>
   );

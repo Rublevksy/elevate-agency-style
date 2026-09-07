@@ -172,3 +172,65 @@
   outline: 2px solid var(--bench-ink);
   outline-offset: 2px;
 }
+
+/**
+ * .bench-mark-stroke — T4, marks.tsx's CrossMark. MOTION_SYSTEM §6's exact
+ * spec for this mark: "два штриха, clip-path слева направо, 180мс, с
+ * задержкой 40мс между штрихами" — `var(--bench-mark-ms)`/
+ * `var(--bench-mark-stagger-ms)` are the same custom properties T2 already
+ * declared for this, not new numbers invented here.
+ * `prefers-reduced-motion` disables the reveal outright (item 8: "no
+ * decorative animation") — CrossMark's own `instant` prop is the other half
+ * of that gate, for callers (the reduced-motion list) that never want it to
+ * begin with.
+ */
+@keyframes bench-mark-reveal {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+.bench-mark-stroke {
+  clip-path: inset(0 100% 0 0);
+  animation: bench-mark-reveal var(--bench-mark-ms) linear forwards;
+}
+.bench-mark-stroke-delay {
+  animation-delay: var(--bench-mark-stagger-ms);
+}
+@media (prefers-reduced-motion: reduce) {
+  .bench-mark-stroke {
+    animation: none;
+    clip-path: inset(0 0% 0 0);
+  }
+}
+
+/**
+ * .bench-latch-confirm — T4 item 8's "active: минимальное физическое
+ * подтверждение": a one-shot, non-looping scale tick fired only at the
+ * moment the desktop latch actually settles onto a new frame (Bench.tsx
+ * passes `settled` through as a key change, remounting this element so the
+ * animation replays). Not the flag glyph's own appearance, which stays
+ * instant per VISUAL_LANGUAGE §5 — this lives on the latch itself, the one
+ * place a physical "click" of arrival is honest.
+ */
+@keyframes bench-latch-confirm {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.18);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.bench-latch-confirm {
+  animation: bench-latch-confirm var(--bench-latch-settle-ms) ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .bench-latch-confirm {
+    animation: none;
+  }
+}
