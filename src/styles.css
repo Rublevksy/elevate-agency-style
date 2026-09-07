@@ -2,6 +2,10 @@
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
+/* THE PRODUCTION STRIP — self-hosted world, see docs/creative-rebuild/. Not
+   mounted on "/" until T17; coexists with the legacy tokens below. */
+@import "./styles/bench-fonts.css";
+@import "./styles/bench-foundation.css";
 
 @custom-variant dark (&:is(.dark *));
 

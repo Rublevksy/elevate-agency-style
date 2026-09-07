@@ -1,0 +1,160 @@
+/**
+ * Rail coordinate system for "THE PRODUCTION STRIP" — T2 foundation only.
+ * No scenes are built on this yet (T5+); this file exists so T3's BenchRail
+ * has a fixed vocabulary of custom properties to read instead of inventing
+ * pixel values component by component.
+ *
+ * Source of truth for every number here: docs/creative-rebuild/VISUAL_LANGUAGE.md
+ * §1/§3/§4/§6 and CAMERA_SYSTEM.md §3/§5. Nothing below is a new design
+ * decision — it is those two documents translated into custom properties.
+ */
+
+:root {
+  /* --- Paint (VISUAL_LANGUAGE §1) --- */
+  --bench-ink: oklch(0.65 0.18 255);
+  --bench-ink-deep: oklch(0.52 0.16 255);
+  --bench-stock: #07090d;
+  --bench-stock-lift: oklch(0.2 0.012 260);
+  --bench-window: oklch(0.97 0.004 260);
+  --bench-wax: oklch(0.96 0 0);
+  --bench-edge: oklch(1 0 0 / 14%);
+  --bench-on-ink: oklch(0.99 0 0);
+  --bench-destructive: oklch(0.62 0.22 27);
+
+  /* --- Rail (VISUAL_LANGUAGE §6, CAMERA_SYSTEM §3) ---
+   * --frame is the width of one 4:3 frame, derived from the rail's own
+   * height so the geometry stays internally consistent instead of being two
+   * numbers that can drift apart. --gap and --frame-aspect are the only
+   * literals; everything else is calc() from them, per CAMERA_SYSTEM §3:
+   * "границы шот-листа не вписаны руками" applies here too — a rail built
+   * from one clamp() and two ratios cannot desync the way two independently
+   * tuned pixel values can.
+   */
+  --bench-rail-height: clamp(88px, 9vh, 132px);
+  --bench-frame-aspect: 4 / 3;
+  --bench-frame: calc(var(--bench-rail-height) * 4 / 3);
+  --bench-gap: calc(var(--bench-frame) * 0.12);
+  --bench-pitch: calc(var(--bench-frame) + var(--bench-gap));
+
+  /* --- Perforation (VISUAL_LANGUAGE §3.2) ---
+   * Rectangular holes, 1px corner rounding, one hole per pitch step, sized as
+   * a fraction of the pitch so they scale with the rail instead of pinning an
+   * absolute px value that goes wrong at either end of --bench-rail-height's
+   * clamp().
+   */
+  --bench-perforation-width: calc(var(--bench-pitch) * 0.08);
+  --bench-perforation-height: calc(var(--bench-rail-height) * 0.14);
+  --bench-perforation-radius: 1px;
+  --bench-perforation-inset: calc(var(--bench-rail-height) * 0.1);
+
+  /* --- Reading window (CAMERA_SYSTEM §5) --- */
+  --bench-window-x-desktop: 62%;
+  --bench-window-y-mobile: 50%;
+
+  /* --- Motion (MOTION_SYSTEM §2, §6, CAMERA_SYSTEM §4) --- */
+  --bench-latch-smoothing: 0.18;
+  --bench-latch-settle-ms: 250ms;
+  --bench-mark-ms: 180ms;
+  --bench-mark-stagger-ms: 40ms;
+  --bench-lift-ms: 420ms;
+
+  /* --- Grain (VISUAL_LANGUAGE §3.1) --- */
+  --bench-grain-opacity: 0.1;
+
+  /* --- Type (TYPOGRAPHY.md §2/§7) — mirrors src/lib/bench-tokens.ts'
+   * benchFont exactly; the two live in different languages (CSS vs. TS), not
+   * as two decisions. --bench-font-display switches width at 700; everything
+   * else in this world reads --bench-font-text. */
+  --bench-font-display:
+    "Fira Sans Extra Condensed", "Fira Sans Extra Condensed Fallback", "Fira Sans Condensed",
+    "Arial Narrow", system-ui, sans-serif;
+  --bench-font-text:
+    "Fira Sans Condensed", "Fira Sans Condensed Fallback", "Arial Narrow", system-ui, sans-serif;
+}
+
+/**
+ * .bench-grain — the one film-grain layer, applied once per scene as an
+ * absolutely-positioned overlay, never as a page-wide fixed layer (a fixed
+ * background-attachment would repaint every frame on mobile Safari).
+ * `pointer-events: none` because it is texture, not content; text sits above
+ * it and grain never gets to compete with legibility (VISUAL_LANGUAGE §3.1:
+ * "видно при 100%, не при 400%" — it is a material cue, not a pattern).
+ *
+ * The url() is written directly on the selector, not routed through a custom
+ * property: lightningcss (Tailwind v4's CSS engine) refuses a relative
+ * url() inside a custom property outright — var() substitution happens at
+ * the point of *use* per spec, so a relative path authored where the
+ * property is *defined* would resolve wrong if that property were ever read
+ * from another file. Paths are relative to this file (src/styles/ ->
+ * src/assets/bench/) so Vite's CSS pipeline resolves, fingerprints and
+ * copies the asset the same way it does for every other src/assets/ file.
+ */
+.bench-grain {
+  position: absolute;
+  inset: 0;
+  background-image: url("../assets/bench/grain-g1.webp");
+  background-repeat: repeat;
+  opacity: var(--bench-grain-opacity);
+  pointer-events: none;
+}
+
+@media (min-resolution: 2dppx) {
+  .bench-grain {
+    background-image: url("../assets/bench/grain-g1@2x.webp");
+  }
+}
+
+/**
+ * .bench-slate — TYPOGRAPHY.md §4/§6. A tracking value that only exists as a
+ * literal in an inline style is untestable in a real browser: this class is
+ * what actually applies the `<480px` reduction the doc specifies, rather
+ * than leaving it as data (`benchType.slate.letterSpacingCompact` in
+ * bench-tokens.ts) that nothing reads. Found by render on the /bench QA page
+ * itself: without this rule, a `slate`-styled string wraps to two lines at
+ * 390px — the same failure TYPOGRAPHY.md §6 already documented for a
+ * different string during T1.
+ */
+.bench-slate {
+  font-family: var(--bench-font-text);
+  font-weight: 600;
+  font-size: 0.6875rem;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+@media (max-width: 479px) {
+  .bench-slate {
+    letter-spacing: 0.16em;
+  }
+}
+
+/** .bench-tick — TYPOGRAPHY.md §4: tabular, never caps-crushed; carries a
+ *  client's own domain, so it does not shrink or track down on mobile the
+ *  way `slate` does. */
+.bench-tick {
+  font-family: var(--bench-font-text);
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  line-height: 1;
+  text-transform: uppercase;
+  font-variant-numeric: tabular-nums;
+}
+
+/**
+ * Reduced motion (CAMERA_SYSTEM §7, MOTION_SYSTEM §8): the strip does not
+ * move, and grain is a texture, not motion, so it is unaffected by this rule
+ * on its own — but this project has a documented convention against dead
+ * `will-change`, so nothing above declares it globally. A future BenchRail
+ * sets `will-change: transform` on the strip only while it is actually being
+ * dragged by scroll, and removes it at rest (MOTION_SYSTEM §7).
+ */
+@media (prefers-reduced-motion: reduce) {
+  .bench-grain {
+    /* Grain stays — it carries no motion, only material (VISUAL_LANGUAGE §5:
+     * state marks "remain — they carry meaning, not motion"). Nothing to
+     * disable here; rule kept as the documented anchor point CAMERA_SYSTEM §7
+     * expects future rail code to hang reduced-motion layout rules from. */
+  }
+}

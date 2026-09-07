@@ -199,11 +199,17 @@ function SiteShell() {
   // Isolated design-exploration routes (/design, /design-v1…/design-v4) render their own
   // full-bleed shell — no production Nav/Footer/popups. Everything else is unaffected.
   const isDesignExplore = pathname.startsWith("/design");
+  // /bench — T2 foundation QA harness for "THE PRODUCTION STRIP" (see
+  // src/routes/bench.tsx). Same isolation as /design: it is not a homepage
+  // candidate and carries no production chrome to fight with the new world's
+  // tokens while T2-T16 build against it.
+  const isBench = pathname.startsWith("/bench");
+  const isIsolated = isDesignExplore || isBench;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <TopProgressBar />
-      {!isDesignExplore && <Nav />}
+      {!isIsolated && <Nav />}
       <main key={pathname} className="flex-1 animate-fade-in pb-20 md:pb-0">
         {/* The page's single scroll reading and its register of acts. It renders
             no box (`display: contents`) and sets no heights, so a route without
@@ -212,11 +218,11 @@ function SiteShell() {
           <Outlet />
         </CinematicStage>
       </main>
-      {!isDesignExplore && <Footer />}
-      {!isDesignExplore && pathname !== "/contact" && <FloatingCta />}
-      {!isDesignExplore && <ContactWidget />}
-      {!isDesignExplore && <ExitIntentModal />}
-      {!isDesignExplore && <CookieBanner />}
+      {!isIsolated && <Footer />}
+      {!isIsolated && pathname !== "/contact" && <FloatingCta />}
+      {!isIsolated && <ContactWidget />}
+      {!isIsolated && <ExitIntentModal />}
+      {!isIsolated && <CookieBanner />}
       <PageLoader />
     </div>
   );

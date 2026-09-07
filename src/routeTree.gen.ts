@@ -20,6 +20,7 @@ import { Route as DesignV2RouteImport } from './routes/design-v2'
 import { Route as DesignV1RouteImport } from './routes/design-v1'
 import { Route as DesignRouteImport } from './routes/design'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as BenchRouteImport } from './routes/bench'
 import { Route as AuditRouteImport } from './routes/audit'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -88,6 +89,11 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BenchRoute = BenchRouteImport.update({
+  id: '/bench',
+  path: '/bench',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuditRoute = AuditRouteImport.update({
   id: '/audit',
   path: '/audit',
@@ -153,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/audit': typeof AuditRoute
+  '/bench': typeof BenchRoute
   '/contact': typeof ContactRoute
   '/design': typeof DesignRoute
   '/design-v1': typeof DesignV1Route
@@ -178,6 +185,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/audit': typeof AuditRoute
+  '/bench': typeof BenchRoute
   '/contact': typeof ContactRoute
   '/design': typeof DesignRoute
   '/design-v1': typeof DesignV1Route
@@ -204,6 +212,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/audit': typeof AuditRoute
+  '/bench': typeof BenchRoute
   '/contact': typeof ContactRoute
   '/design': typeof DesignRoute
   '/design-v1': typeof DesignV1Route
@@ -231,6 +240,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/audit'
+    | '/bench'
     | '/contact'
     | '/design'
     | '/design-v1'
@@ -256,6 +266,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/audit'
+    | '/bench'
     | '/contact'
     | '/design'
     | '/design-v1'
@@ -281,6 +292,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/audit'
+    | '/bench'
     | '/contact'
     | '/design'
     | '/design-v1'
@@ -307,6 +319,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AuditRoute: typeof AuditRoute
+  BenchRoute: typeof BenchRoute
   ContactRoute: typeof ContactRoute
   DesignRoute: typeof DesignRoute
   DesignV1Route: typeof DesignV1Route
@@ -397,6 +410,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/bench': {
+      id: '/bench'
+      path: '/bench'
+      fullPath: '/bench'
+      preLoaderRoute: typeof BenchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/audit': {
@@ -547,6 +567,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AuditRoute: AuditRoute,
+  BenchRoute: BenchRoute,
   ContactRoute: ContactRoute,
   DesignRoute: DesignRoute,
   DesignV1Route: DesignV1Route,
