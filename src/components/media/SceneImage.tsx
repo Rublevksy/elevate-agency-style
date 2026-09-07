@@ -55,15 +55,15 @@ interface SceneAsset {
  * that is what makes switching between them read as a camera cut in one room.
  */
 const SCENES: Record<SceneName, SceneAsset> = {
-  "hero-macbook": { webp: heroMacbookWebp, jpg: heroMacbookJpg, width: 1400, height: 1695 },
-  "hero-iphone": { webp: heroIphoneWebp, jpg: heroIphoneJpg, width: 720, height: 1296 },
+  "hero-macbook": { webp: heroMacbookWebp, jpg: heroMacbookJpg, width: 1400, height: 1738 },
+  "hero-iphone": { webp: heroIphoneWebp, jpg: heroIphoneJpg, width: 720, height: 1290 },
   "svc-web": { webp: svcWebWebp, jpg: svcWebJpg, width: 900, height: 1342 },
   "svc-seo": { webp: svcSeoWebp, jpg: svcSeoJpg, width: 900, height: 1342 },
   "svc-eshop": { webp: svcEshopWebp, jpg: svcEshopJpg, width: 900, height: 1342 },
   "svc-branding": { webp: svcBrandingWebp, jpg: svcBrandingJpg, width: 900, height: 1342 },
   "svc-app": { webp: svcAppWebp, jpg: svcAppJpg, width: 900, height: 1342 },
-  "hero-light": { webp: heroLightWebp, width: 900, height: 1089 },
-  "hero-atmo": { webp: heroAtmoWebp, jpg: heroAtmoJpg, width: 420, height: 508 },
+  "hero-light": { webp: heroLightWebp, width: 900, height: 1117 },
+  "hero-atmo": { webp: heroAtmoWebp, jpg: heroAtmoJpg, width: 420, height: 521 },
 };
 
 export interface SceneImageProps {

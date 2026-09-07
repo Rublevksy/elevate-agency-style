@@ -25,17 +25,28 @@
  *   SHOT 01  rest          p 0.00      the still plate, lit; type uncovered
  *                                      line by line; light filaments drifting;
  *                                      the camera answering the pointer.
- *   SHOT 02  camera move   p 0.05-0.55 the match cut into the clip, then the
+ *   SHOT 02  the orbit     p 0.05-0.42 the match cut into the clip, then the
  *                                      dolly: the rig pushes in, the laptop
  *                                      turns (real footage, not a CSS fake),
  *                                      the copy recedes faster than the set —
  *                                      that difference IS the depth.
- *   SHOT 03  the cut       p 0.62-1.00 the light does not fade, it travels: one
- *                                      streak crosses the frame while the set
- *                                      racks out of focus and sinks, and the
- *                                      services room rises into the space it
- *                                      leaves (ServicesShowcase's own entry
- *                                      transform picks the move up from here).
+ *   SHOT 03  the opening   p 0.42-0.85 the lid rises and the camera comes round
+ *                                      from behind the device to square on,
+ *                                      pushing in until the lit screen fills
+ *                                      the frame. One take, no cut: its first
+ *                                      frame is the frame shot 02 stops on.
+ *   SHOT 04  the landing   p 0.85-1.00 the camera stops dead. The frame is a
+ *                                      held picture, the rig holds with it and
+ *                                      the captions have cleared, so the frame
+ *                                      is genuinely motionless. Only at the very
+ *                                      end does the lens rack out, as the stage
+ *                                      starts to travel and the services room
+ *                                      rises into the space it leaves
+ *                                      (ServicesShowcase's own entry transform
+ *                                      picks the move up from here).
+ *
+ * The boundaries above are printed for reading only. They are computed from the
+ * shot budget in HeroCameraPlate, never typed in twice.
  *
  * Nothing here animates because it can. Under prefers-reduced-motion the rig,
  * the clip and the drift are all skipped and the approved still frame is what
@@ -68,19 +79,44 @@ import {
   useAct,
   useMotionCapability,
 } from "@/components/cinematic";
-import { HeroCameraPlate } from "./HeroCameraPlate";
+import {
+  HeroCameraPlate,
+  HERO_DEPARTURE_VIEWPORTS,
+  HERO_OPEN_LOCK,
+  HERO_PINNED_VIEWPORTS,
+  HERO_SHOT_SPLIT,
+} from "./HeroCameraPlate";
 import { HeroLightField } from "./HeroLightField";
 import { useT } from "@/lib/i18n";
 
 /**
- * The act. Three viewports of track, the stage pinned for the first two — so
- * the pinned window is the first two thirds, and `act.progress` is the `p` the
- * whole shot list has always been cut against. The numbers live here rather
- * than in a local `useScroll` so the services room can ask how long the hero
- * runs instead of being tuned against it by hand.
+ * The act. Its length is the shot budget plus the departure, both declared by
+ * the plate that owns the shots — this file no longer picks either number.
+ *
+ * It used to read `3` and `2/3`, which was two viewports of pinned stage. Shot C
+ * is a second longer than the shot it replaced, so holding the old length would
+ * have quietly sped up every beat in the hero to make room. Summing the beats
+ * instead keeps each one at its own speed and lets the track grow by exactly the
+ * film that was added.
+ *
+ * The departure is untouched at one viewport, and that is the part the services
+ * room reads: its overlap is a fraction of `viewports * (1 - pin)`, so the join
+ * below is numerically the same as it was before this shot existed.
  */
-const HERO_VIEWPORTS = 3;
-const HERO_PIN = 2 / 3;
+const HERO_VIEWPORTS = HERO_PINNED_VIEWPORTS + HERO_DEPARTURE_VIEWPORTS;
+const HERO_PIN = HERO_PINNED_VIEWPORTS / HERO_VIEWPORTS;
+
+/**
+ * The rack-out, timed against the camera's own stop rather than against `p = 1`.
+ *
+ * The lens loses the subject at the end of a shot — that is the hero's existing
+ * language and it stays. What changed is that there is now something to hold
+ * still first: from `HERO_OPEN_LOCK` the frame is a motionless, square-on screen,
+ * and racking it out immediately would mean the visitor never actually sees the
+ * shot land. So the still beat is played clean and the rack takes the last
+ * sliver, starting as the stage begins to travel.
+ */
+const RACK_IN = HERO_OPEN_LOCK + (1 - HERO_OPEN_LOCK) * 0.62;
 
 /**
  * The tail mask, as two custom properties rather than two literals in the
@@ -121,12 +157,16 @@ const PLATE_WIDTH = "min(62%, calc(100svh * 0.806))";
  */
 const TITLES_IN = 0.27;
 /**
- * The last card clears exactly as the stage un-pins at `p = 1` and starts
- * travelling up, so the closing title leaves with the camera instead of
- * blinking out a viewport of scroll early. Both boundaries are measured, not
- * guessed: at 1440x900 the band that used to be wordless is `p 0.24 … 0.96`.
+ * The last card clears exactly as the camera stops.
+ *
+ * It used to run to `p = 0.98`, on the reasoning that the closing title should
+ * leave with the stage rather than a viewport early. That reasoning held while
+ * the shot was still moving at the end. It no longer does: the last stretch of
+ * the pinned window is now a held frame, and a title still rolling through it
+ * would be the only thing moving in a beat whose entire job is to be motionless
+ * before the hand-off. So the captions end where the camera lands.
  */
-const TITLES_OUT = 0.98;
+const TITLES_OUT = HERO_OPEN_LOCK;
 const TITLE_SPAN = (TITLES_OUT - TITLES_IN) / 5;
 
 /**
@@ -215,9 +255,25 @@ export function HeroScene() {
   // the value the rig alone wanted, the laptop stops being a laptop and becomes
   // a black wall. Once shot B takes over the move is entirely the camera's, so
   // the rig holds still and lets the footage carry it.
-  const rigY = useTransform(p, [0, 0.55, 1], [0, reduced ? 0 : 60, reduced ? 0 : 72]);
-  const rigZ = useTransform(p, [0, 0.55, 1], [0, reduced ? 0 : 90, reduced ? 0 : 104]);
-  const rigRotate = useTransform(p, [0, 0.55, 1], [0, reduced ? 0 : -3.4, reduced ? 0 : -4]);
+  // The rig's last stop is the camera's stop, not the end of the act. Past
+  // `HERO_OPEN_LOCK` the footage is a held frame, so any rig movement there
+  // would be the one thing still moving in a shot that is supposed to have
+  // landed — and the services hand-off would start from drift again.
+  const rigY = useTransform(
+    p,
+    [0, HERO_SHOT_SPLIT, HERO_OPEN_LOCK],
+    [0, reduced ? 0 : 60, reduced ? 0 : 72],
+  );
+  const rigZ = useTransform(
+    p,
+    [0, HERO_SHOT_SPLIT, HERO_OPEN_LOCK],
+    [0, reduced ? 0 : 90, reduced ? 0 : 104],
+  );
+  const rigRotate = useTransform(
+    p,
+    [0, HERO_SHOT_SPLIT, HERO_OPEN_LOCK],
+    [0, reduced ? 0 : -3.4, reduced ? 0 : -4],
+  );
   /**
    * The set dims at the end of the shot but never disappears.
    *
@@ -228,24 +284,24 @@ export function HeroScene() {
    * twice. The scroll already carries the set away; this only takes the light
    * off it.
    */
-  const sceneFade = useTransform(p, [0, 0.94, 1], [1, 1, reduced ? 1 : 0.72]);
+  const sceneFade = useTransform(p, [0, RACK_IN, 1], [1, 1, reduced ? 1 : 0.72]);
   // Rack focus. Blur is the one expensive property in this section; it is bound
   // to a single element and only ever runs while the hero is on screen. It
   // arrives late and stays shallow — this is a lens losing the subject at the
   // end of a shot, not a page being smeared.
-  const sceneBlurPx = useTransform(p, [0.9, 1], [0, reduced ? 0 : 3]);
+  const sceneBlurPx = useTransform(p, [RACK_IN, 1], [0, reduced ? 0 : 3]);
   const sceneBlur = useMotionTemplate`blur(${sceneBlurPx}px)`;
 
   // The caption leaves faster than the set behind it — that difference is the
   // depth cue, not a decorative parallax.
   // It is gone well before shot B: the move past the device is a camera beat,
   // and type riding through it would turn a shot back into a slide.
-  const copyY = useTransform(p, [0, 0.55], [0, reduced ? 0 : -128]);
-  const copyScale = useTransform(p, [0, 0.55], [1, reduced ? 1 : 0.962]);
+  const copyY = useTransform(p, [0, HERO_SHOT_SPLIT], [0, reduced ? 0 : -128]);
+  const copyScale = useTransform(p, [0, HERO_SHOT_SPLIT], [1, reduced ? 1 : 0.962]);
   const copyFade = useTransform(p, [0, 0.3], [1, reduced ? 1 : 0]);
   // The third depth: the small letterspaced elements leave faster than the
   // headline they surround, so the caption itself has front and back.
-  const microY = useTransform(p, [0, 0.55], [0, reduced ? 0 : -52]);
+  const microY = useTransform(p, [0, HERO_SHOT_SPLIT], [0, reduced ? 0 : -52]);
 
   // ---- Pointer depth. The set and the caption answer in opposite directions
   // and by different amounts; the difference is the volume of the room. Fine
@@ -321,10 +377,13 @@ export function HeroScene() {
   return (
     <section
       ref={act.ref}
-      /* Two viewports on wide screens: one for the shot list, one for the hand
-         off. No overflow-hidden here — it would make this element a scroll
-         container and the stage below would silently stop pinning. */
-      className="relative isolate w-full bg-[#0A0D13] lg:h-[300svh]"
+      /* The track, driven by the same number the act is registered with rather
+         than by a literal beside it — a hardcoded `300svh` here and a `3` there
+         are the same value written twice, and the pair comes apart silently the
+         moment one is changed. No overflow-hidden — it would make this element a
+         scroll container and the stage below would stop pinning. */
+      style={{ "--hero-track": `${(HERO_VIEWPORTS * 100).toFixed(2)}svh` } as React.CSSProperties}
+      className="relative isolate w-full bg-[#0A0D13] lg:h-[var(--hero-track)]"
     >
       <div className="relative flex min-h-[100svh] flex-col overflow-hidden lg:sticky lg:top-0 lg:block lg:h-[100svh]">
         {/* ---- The camera rig ----------------------------------------------

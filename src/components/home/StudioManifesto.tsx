@@ -65,8 +65,33 @@ export function StudioManifesto() {
   );
 
   return (
-    <section className="relative bg-[#0A0D13] py-28 md:py-40">
-      <div className="container-luxe">
+    <section className="relative isolate overflow-hidden bg-[#0A0D13] py-24 md:py-36">
+      {/* THE PAUSE IS LIT, NOT EMPTY.
+          This section carries no photograph and it should not — it sits between
+          two heavily photographic acts and a third picture here would make the
+          page one continuous loud stretch. But flat black between two lit rooms
+          is not a pause in a film, it is a gap in one: the projector reads as
+          switched off rather than as the lights being taken down.
+
+          So the section keeps its silence and gets the world's light instead of
+          the world's furniture — one very low bloom, off to one side, in the
+          same blue the hero's arc and the services room are lit by. Additive, so
+          its floor is exactly the section's own black and nothing is tinted;
+          masked at both ends so it has no edge to read as a panel. The section
+          before it hands over a lit room, this holds a trace of that light, and
+          the case reels pick it up again. */}
+      <motion.div
+        aria-hidden
+        initial={reduced ? undefined : { opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true, margin: "-5% 0px" }}
+        transition={{ duration: 1.8, ease: EASE }}
+        className="pointer-events-none absolute inset-0 mix-blend-screen [mask-image:linear-gradient(to_bottom,transparent_0%,#000_28%,#000_72%,transparent_100%)]"
+      >
+        <div className="h-full w-full bg-[radial-gradient(52%_48%_at_82%_38%,oklch(0.65_0.18_255/0.10),transparent_72%)]" />
+      </motion.div>
+
+      <div className="container-luxe relative">
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
           <div>
             <p className="label-micro flex items-center gap-3 text-white/55">

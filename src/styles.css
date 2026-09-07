@@ -573,3 +573,57 @@
     transition: transform 180ms ease;
   }
 }
+
+/* ---------------------------------------------------------------------------
+   Hero light field (src/components/home/HeroLightField.tsx)
+
+   The blur is declared once, on the layer, rather than as an SVG filter on
+   every stroke: a CSS filter on a promoted layer is rasterized once and then
+   only transformed, while an SVG <filter> re-runs on each animated frame.
+
+   The two loops below are the only perpetual motion on the page. They are slow
+   enough (26-44s, 17s) to read as a room breathing rather than as an effect,
+   and the global prefers-reduced-motion rule in @layer base neutralizes them.
+   --------------------------------------------------------------------------- */
+@layer utilities {
+  .hero-light-blur {
+    filter: blur(1.6px);
+    will-change: transform;
+  }
+
+  .hero-strand {
+    animation-name: heroStrandDrift;
+    animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1);
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
+  @keyframes heroStrandDrift {
+    0% {
+      transform: translate3d(-3.5%, 0.6%, 0);
+    }
+    50% {
+      transform: translate3d(3.5%, -0.6%, 0);
+    }
+    100% {
+      transform: translate3d(-3.5%, 0.6%, 0);
+    }
+  }
+
+  .hero-bloom {
+    animation: heroBloomBreathe 17s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    will-change: opacity, transform;
+  }
+
+  @keyframes heroBloomBreathe {
+    0%,
+    100% {
+      opacity: 0.62;
+      transform: translateY(-50%) scale(0.97);
+    }
+    50% {
+      opacity: 1;
+      transform: translateY(-50%) scale(1.05);
+    }
+  }
+}

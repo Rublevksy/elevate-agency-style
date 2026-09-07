@@ -35,3 +35,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# QA-артефакты автопилота: воспроизводятся драйверами в .autopilot/, в истории не нужны
+.autopilot/**/screenshots/
+.autopilot/**/frames/
