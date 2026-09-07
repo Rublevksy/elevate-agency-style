@@ -146,9 +146,10 @@
  * Reduced motion (CAMERA_SYSTEM §7, MOTION_SYSTEM §8): the strip does not
  * move, and grain is a texture, not motion, so it is unaffected by this rule
  * on its own — but this project has a documented convention against dead
- * `will-change`, so nothing above declares it globally. A future BenchRail
- * sets `will-change: transform` on the strip only while it is actually being
- * dragged by scroll, and removes it at rest (MOTION_SYSTEM §7).
+ * `will-change`, so nothing above declares it globally. BenchRail (T3) sets
+ * `will-change: transform` on the strip only while it is actually easing
+ * toward a target, and removes it at rest (MOTION_SYSTEM §7) — imperatively,
+ * from the rAF loop, not from CSS here.
  */
 @media (prefers-reduced-motion: reduce) {
   .bench-grain {
@@ -157,4 +158,17 @@
      * disable here; rule kept as the documented anchor point CAMERA_SYSTEM §7
      * expects future rail code to hang reduced-motion layout rules from. */
   }
+}
+
+/**
+ * .bench-focus-ring — T3 §8/§9: a frame is a real interactive `<button>`
+ * (BenchFrame.tsx), so it needs a visible keyboard-focus indicator distinct
+ * from the browser default, which the flat black stock would render nearly
+ * invisible on some platforms. `:focus-visible` only (not `:focus`) so a
+ * mouse click never shows the ring — matches the rest of the site's
+ * keyboard-only focus convention.
+ */
+.bench-focus-ring:focus-visible {
+  outline: 2px solid var(--bench-ink);
+  outline-offset: 2px;
 }
