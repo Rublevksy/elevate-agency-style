@@ -57,6 +57,20 @@ export const BenchFrame = forwardRef<HTMLButtonElement, BenchFrameProps>(functio
         padding: "0.5rem",
         borderRadius: 0,
         boxShadow: "none",
+        // Mobile only (`vertical`): critique-found (Assessment A, T5) — the
+        // latch line sits at the container's CENTER (T3's fix for the
+        // scroll-snap invariant needs the active frame's own center there
+        // too), so at rest it necessarily passes through the middle of the
+        // active frame's box, not a natural edge. Left alone it painted
+        // ABOVE the frame — a blue line slicing through "not A1"/"ACTIVE"
+        // that reads as a rendering glitch, not a reading mark. Frames now
+        // paint above the latch instead (z-index higher than BenchLatch's),
+        // so the opaque frame body covers the line wherever they overlap —
+        // it only remains visible in the gaps between frames, which is
+        // where a physical reading line crossing a strip actually would be.
+        // Horizontal (desktop) is untouched: its window sits at a frame's
+        // LEFT EDGE, not its center, so this was never a problem there.
+        zIndex: orientation === "vertical" ? 2 : undefined,
       }}
     >
       {/* Structural, not a state: every frame carries this identically —
@@ -104,6 +118,7 @@ export const BenchFrame = forwardRef<HTMLButtonElement, BenchFrameProps>(functio
           an afterthought — the button's `overflow-hidden` is the second half
           of the same fix. */}
       <span
+        className="bench-label-text"
         style={{
           fontFamily: benchType.frameBody.fontFamily,
           fontWeight: benchType.frameBody.fontWeight,

@@ -234,3 +234,27 @@
     animation: none;
   }
 }
+
+/**
+ * .bench-hide-labels — T5's TEST B, item 13: "hide text labels in a dev/QA
+ * mode only, check whether rail + frames + perforation + latch + marks +
+ * punched corner still read as one physical object without them." A real
+ * toggle a reviewer can flip on `/bench` itself (Bench.tsx renders the
+ * button), not a one-off screenshot hack — so the same check is repeatable
+ * after every future change to this world, not just proven once here.
+ *
+ * `visibility: hidden`, not `display: none`: every geometry number in this
+ * whole system (pitch, frame size, gap) is unaffected either way since none
+ * of it is driven by a text element's own box, but `visibility` guarantees
+ * that as a property of the technique rather than as a fact that happens to
+ * be true today — a hidden label can never quietly become a layout
+ * dependency later. Marks (CrossMark/FlagMark/PinMark/StripMark/
+ * PunchedCornerMark) are deliberately NOT covered by this selector: TEST B
+ * asks whether the shapes alone still carry the sequence, so the shapes are
+ * exactly what must stay.
+ */
+.bench-hide-labels .bench-tick,
+.bench-hide-labels .bench-slate,
+.bench-hide-labels .bench-label-text {
+  visibility: hidden;
+}
