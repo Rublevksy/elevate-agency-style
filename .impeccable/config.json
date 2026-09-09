@@ -1,7 +1,9 @@
 {
   "detector": {
     "ignoreRules": [],
-    "ignoreFiles": [],
+    "ignoreFiles": [
+      "src/components/proto/ProtoSiteMock.tsx"
+    ],
     "ignoreValues": [
       {
         "rule": "overused-font",

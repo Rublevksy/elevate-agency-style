@@ -25,7 +25,7 @@
 import { useEffect, useRef } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, type MotionValue } from "framer-motion";
 import {
   BEAT,
   EASE,
@@ -38,8 +38,8 @@ import {
   useMotionCapability,
 } from "@/components/cinematic";
 import { useT } from "@/lib/i18n";
-import { Logo } from "@/components/Logo";
 import { ProtoCandidate6Image } from "./ProtoImage";
+import { ProtoPhoneMock, ProtoSiteHome } from "./ProtoSiteMock";
 import {
   PROTO_HERO_PIN,
   PROTO_HERO_VIEWPORTS,
@@ -60,8 +60,15 @@ const TAIL_MASK_VARS = {
  * applies to drawn UI exactly as much as to a generated plate, and coloured
  * traffic lights would be a second and third hue for no reason. The address
  * bar reads the real domain — never invented copy, never a fake path.
+ *
+ * The dots are deliberately small, dim and `aria-hidden`, and the whole
+ * chrome row is `select-none` with no hover, focus or cursor affordance
+ * anywhere: the critique's sharpest point was that DOM chrome sets a
+ * stronger interactivity expectation than a picture of chrome does, so a
+ * stress-tester clicks a dot and gets silence. They now read as the texture
+ * that says "screen" rather than as controls that promise a state change.
  */
-function BrowserChrome({
+export function BrowserChrome({
   path,
   children,
   className,
@@ -74,10 +81,10 @@ function BrowserChrome({
     <div
       className={`overflow-hidden rounded-2xl border border-white/12 bg-white/[0.04] shadow-[0_40px_120px_-40px_oklch(0_0_0/0.8),0_0_0_1px_oklch(1_0_0/0.02)] backdrop-blur-2xl ${className ?? ""}`}
     >
-      <div className="flex items-center gap-2 border-b border-white/8 bg-white/[0.03] px-4 py-3">
-        <span className="size-2 rounded-full bg-white/25" />
-        <span className="size-2 rounded-full bg-white/25" />
-        <span className="size-2 rounded-full bg-white/25" />
+      <div className="flex items-center gap-2 border-b border-white/8 bg-white/[0.03] px-4 py-2.5 select-none">
+        <span aria-hidden className="size-1.5 rounded-full bg-white/18" />
+        <span aria-hidden className="size-1.5 rounded-full bg-white/18" />
+        <span aria-hidden className="size-1.5 rounded-full bg-white/18" />
         <div className="ml-3 flex h-6 flex-1 items-center rounded-full bg-black/30 px-3">
           {/* white/45 measured too low-contrast for the one string in the
               hero whose whole job is proving authenticity — Assessment A,
@@ -88,6 +95,49 @@ function BrowserChrome({
       </div>
       {children}
     </div>
+  );
+}
+
+/** The gate the service titles roll through, in pixels. Travel equals this
+ *  height exactly — that equality is the mechanism, not a coincidence. */
+const ROLL_GATE = 150;
+const ROLL_TRANSIT = 0.028;
+
+function RollCard({
+  progress,
+  index,
+  start,
+  span,
+  title,
+  tag,
+}: {
+  progress: MotionValue<number>;
+  index: number;
+  start: number;
+  span: number;
+  title: string;
+  tag: string;
+}) {
+  const end = start + span;
+  const y = useTransform(
+    progress,
+    [start - ROLL_TRANSIT, start, end - ROLL_TRANSIT, end],
+    [ROLL_GATE, 0, 0, -ROLL_GATE],
+  );
+
+  return (
+    <motion.div style={{ y }} className="absolute inset-0 flex flex-col justify-center">
+      <span className="label-micro block text-primary">{String(index + 1).padStart(2, "0")}</span>
+      {/* Sized to stay on ONE line at this column width in all four
+          languages: at 1.7rem the Czech "Značka, která zaujme" wrapped, and
+          a wrapped card is taller than the gate, so its first line was
+          clipped by the mask's own top fade mid-transit — a headline with
+          its top line missing, found by screenshot. */}
+      <span className="heading-scene mt-2 block text-[clamp(1rem,0.7rem+0.7vw,1.35rem)] leading-[1.2] text-white uppercase">
+        {title}
+      </span>
+      <span className="label-micro mt-2.5 block text-white/45">{tag}</span>
+    </motion.div>
   );
 }
 
@@ -102,12 +152,49 @@ export function ProtoHero() {
   // The panel closes the distance across the pinned window — the one thing
   // in this scene that moves toward the camera, so scrolling reads as
   // approaching the window rather than as the page merely advancing.
-  const panelScale = useTransform(p, [0, 1], [1, reduced ? 1 : 1.22]);
-  const panelZ = useTransform(p, [0, 1], [0, reduced ? 0 : 140]);
-  const panelY = useTransform(p, [0, 1], [0, reduced ? 0 : -36]);
+  // The approach is anchored to the window's RIGHT edge (see `origin-right`
+  // below), so the growth runs leftward into the space the copy has already
+  // vacated instead of off the right side of the screen. Scaled around its
+  // own centre it overflowed the viewport and clipped the service strip —
+  // found by screenshot at mid-scroll, not by reading the numbers.
+  const panelScale = useTransform(p, [0, 1], [1, reduced ? 1 : 1.16]);
+  const panelZ = useTransform(p, [0, 1], [0, reduced ? 0 : 90]);
+  const panelY = useTransform(p, [0, 1], [0, reduced ? 0 : -28]);
+  // The window squares up to camera as it approaches: it starts very
+  // slightly off-axis, which is what makes it read as an object standing in
+  // the scene rather than a rectangle pasted onto it, and resolves to flat
+  // exactly as it arrives. Small on purpose — past ~4deg the mock's own
+  // type starts to smear on the far edge.
+  const panelRotate = useTransform(p, [0, 1], [reduced ? 0 : -3.2, 0]);
+  // The satellite separates OUTWARD from the window, down and to the left.
+  // It first drove up and inward, which put the phone on top of the
+  // window's own headline and CTA at mid-scroll — the two layers collided
+  // instead of parting. Moving it the other way opens a real gap between
+  // the planes, which is what "layers begin separating" has to look like.
+  const phoneY = useTransform(p, [0, 1], [0, reduced ? 0 : 30]);
+  const phoneX = useTransform(p, [0, 1], [0, reduced ? 0 : -78]);
+  const phoneScale = useTransform(p, [0, 1], [1, reduced ? 1 : 1.06]);
 
-  const backdropScale = useTransform(p, [0, 1], [1, reduced ? 1 : 1.08]);
-  const sceneFade = useTransform(p, [0, PROTO_TAIL_MASK_START, 1], [1, 1, reduced ? 1 : 0.55]);
+  // THE TITLE ROLL — what fills the left column once the copy has gone.
+  //
+  // Without it the back half of the pinned window is ~45% empty backdrop:
+  // the brief's "density stays high" fails exactly where the scroll is
+  // longest. This is HeroScene's own title-gate mechanism (see its
+  // HeroTitleCard: travel equals gate height, so outgoing and incoming
+  // cards exactly complement and the gate is never empty and never
+  // doubled), against the same five real service names, in the column the
+  // headline just vacated. No new keys, no invented copy.
+  const rollIn = 0.34;
+  const rollOut = 0.86;
+  const rollSpan = (rollOut - rollIn) / 5;
+
+  // The backdrop recedes as the window advances. It used to brighten and
+  // grow alongside it, which put the plate's OWN drawn browser shape in
+  // direct competition with the real DOM window in front of it — two
+  // windows, one frame. A near plane that comes forward while the far one
+  // dims is the whole of depth; doing both at the same rate is a poster.
+  const backdropScale = useTransform(p, [0, 1], [1, reduced ? 1 : 1.03]);
+  const sceneFade = useTransform(p, [0, 0.45, 1], [1, reduced ? 1 : 0.82, reduced ? 1 : 0.38]);
   // The chrome panel needs its OWN fade, all the way to 0 across the same
   // tail-mask window the backdrop uses — found by Assessment A's browser
   // evidence, not by inspection: the panel is a sibling outside the
@@ -115,11 +202,14 @@ export function ProtoHero() {
   // gets a hard rectangular clip from the section's own `overflow-hidden`
   // boundary as it scrolls past, and a leftover shard is what was still
   // on screen at the same time as the next section's own panel.
-  const panelFade = useTransform(
-    p,
-    [PROTO_TAIL_MASK_START, PROTO_TAIL_MASK_END],
-    [1, reduced ? 1 : 0],
-  );
+  // Deliberately NOT the backdrop's tail-mask window. Tied to
+  // PROTO_TAIL_MASK_START the panel was down to ~59% opacity at p 0.74 —
+  // still the main event on screen, and semi-transparent enough that the
+  // plate's bright laptop bled through the mock's own headline. The
+  // backdrop may start receding early; the interface may not. It holds
+  // solid through the whole approach and dissolves only as the section
+  // physically leaves.
+  const panelFade = useTransform(p, [0.82, 1], [1, reduced ? 1 : 0]);
 
   const copyY = useTransform(p, [0, 0.5], [0, reduced ? 0 : -110]);
   const copyFade = useTransform(p, [0, 0.32], [1, reduced ? 1 : 0]);
@@ -146,6 +236,11 @@ export function ProtoHero() {
 
   const panelPX = useTransform(smoothX, [-1, 1], [22, -22]);
   const panelPY = useTransform(smoothY, [-1, 1], [14, -14]);
+  // The satellite answers the pointer harder than the window it overlaps —
+  // it is the nearer plane, and a nearer plane must displace further or the
+  // two read as one sticker. Same reasoning as HeroScene's light-front vs
+  // plate split.
+  const phonePX = useTransform(smoothX, [-1, 1], [40, -40]);
   const backdropPX = useTransform(smoothX, [-1, 1], [8, -8]);
   const backdropPY = useTransform(smoothY, [-1, 1], [5, -5]);
   const chipsPX = useTransform(smoothX, [-1, 1], [-10, 10]);
@@ -204,7 +299,13 @@ export function ProtoHero() {
                   <ProtoCandidate6Image
                     priority
                     className="absolute inset-0 block h-full w-full"
-                    imgClassName="h-full w-full object-cover [mask-image:radial-gradient(88%_78%_at_66%_46%,#000,transparent_92%)]"
+                    /* Anchored right of centre so the plate's bright laptop
+                       edge stays out of the left column: both the headline
+                       at rest and the title roll mid-scroll sit on it, and
+                       at 66% the bright edge ran straight under the type.
+                       Same reasoning as HeroScene confining its plate to
+                       the right 62% of the frame. */
+                    imgClassName="h-full w-full object-cover [mask-image:radial-gradient(76%_74%_at_73%_46%,#000,transparent_88%)]"
                   />
                 </motion.div>
               </div>
@@ -260,6 +361,39 @@ export function ProtoHero() {
           </div>
         </motion.div>
 
+        {/* ---- The title roll ---------------------------------------------
+            Desktop only, and absent entirely under `still`: five names
+            stacked motionless on a photograph is not the same thing as a
+            roll, and the static frame is already a complete hero.
+            `aria-hidden` because these five are the same five the service
+            section below names with a real link — this is the camera's
+            caption, not the page's content. */}
+        {!reduced && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-[5] hidden items-center lg:flex"
+          >
+            <div className="container-luxe w-full">
+              <div
+                className="relative max-w-[26rem] overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,#000_14%,#000_86%,transparent_100%)]"
+                style={{ height: ROLL_GATE }}
+              >
+                {t.ui.serviceStage.map((s, i) => (
+                  <RollCard
+                    key={s.title}
+                    progress={p}
+                    index={i}
+                    start={rollIn + i * rollSpan}
+                    span={rollSpan}
+                    title={s.title}
+                    tag={s.tag}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* ---- The browser-chrome panel -------------------------------
             The one new interface element: a real, DOM-drawn browser window,
             not a picture of one. It sits over the portal's own opening in
@@ -271,11 +405,11 @@ export function ProtoHero() {
           className="absolute inset-0 z-[6] hidden items-center justify-end pr-[6%] lg:flex"
         >
           <motion.div
-            style={{ scale: panelScale, z: panelZ, y: panelY }}
+            style={{ scale: panelScale, z: panelZ, y: panelY, rotateY: panelRotate }}
             initial={reduced ? undefined : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.15, ease: EASE }}
-            className="w-[30rem] xl:w-[34rem]"
+            className="relative w-[34rem] origin-right [transform-style:preserve-3d] xl:w-[38rem]"
           >
             {/* Pointer depth lives on its own nested layer — combining a
                 scroll-driven `y` and a pointer-driven `y` on one element
@@ -283,15 +417,32 @@ export function ProtoHero() {
                 motion value silently wins and the other stops applying. */}
             <motion.div style={{ x: panelPX, y: panelPY }}>
               <BrowserChrome path="elevateit.cz">
-                <div className="flex flex-col items-center gap-4 bg-gradient-to-b from-white/[0.06] to-transparent px-8 py-10">
-                  <Logo className="h-6 w-auto opacity-90" />
-                  <div
-                    aria-hidden
-                    className="h-px w-16 bg-gradient-to-r from-transparent via-primary to-transparent"
-                  />
-                  <span className="label-micro text-white/50">{t.hero.sceneKicker}</span>
+                {/* 16:10 — a real viewport proportion, so the thing behind
+                    the glass is a screen rather than a panel that happens
+                    to have a chrome bar on top of it. */}
+                <div className="aspect-[16/10]">
+                  <ProtoSiteHome />
                 </div>
               </BrowserChrome>
+            </motion.div>
+
+            {/* The satellite, on its own nearer plane and its own clock: two
+                viewports of the same site is the shortest way a web studio
+                says "responsive", and the rate difference between this and
+                the window behind it is what separates the layers on scroll
+                rather than moving the whole composition as one flat card. */}
+            <motion.div
+              style={{ x: phoneX, y: phoneY, scale: phoneScale }}
+              initial={reduced ? undefined : { opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: 0.4, ease: EASE }}
+              className="absolute -bottom-10 -left-14 w-[8.5rem] xl:w-[9.5rem]"
+            >
+              {/* Pointer depth on its own nested layer, same reason as the
+                  window above: one `x` per element, never two. */}
+              <motion.div style={{ x: phonePX }}>
+                <ProtoPhoneMock />
+              </motion.div>
             </motion.div>
           </motion.div>
         </motion.div>
@@ -318,11 +469,21 @@ export function ProtoHero() {
               className="absolute inset-0 block h-full w-full"
               imgClassName="h-full w-full rounded-3xl object-cover opacity-70 [mask-image:radial-gradient(120%_100%_at_50%_30%,#000,transparent_92%)]"
             />
+            {/* Mobile gets the same real interface, in its `compact` cut —
+                fewer nav items, no body paragraph — because at ~300px the
+                full desktop mock's supporting copy is below legible size.
+                Same site, composed for this screen: the brief's own rule
+                that mobile is its own composition, not a scaled desktop. */}
             <div className="relative">
-              <BrowserChrome path="elevateit.cz" className="mx-auto max-w-xs">
-                <div className="flex flex-col items-center gap-3 px-6 py-8">
-                  <Logo className="h-5 w-auto opacity-90" />
-                  <span className="label-micro text-white/50">{t.hero.sceneKicker}</span>
+              <BrowserChrome path="elevateit.cz" className="mx-auto max-w-[19rem]">
+                {/* 16:13, not 16:11: the Czech headline wraps to four lines
+                    at ~300px and pushed the five-service strip past the
+                    chrome's `overflow-hidden` edge, so the strip was being
+                    silently clipped rather than deliberately dropped. The
+                    taller box keeps the strip — it is real content and the
+                    density the brief asks for. */}
+                <div className="aspect-[16/12]">
+                  <ProtoSiteHome compact />
                 </div>
               </BrowserChrome>
             </div>

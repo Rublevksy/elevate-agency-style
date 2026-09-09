@@ -30,6 +30,7 @@ import { motion, useTransform } from "framer-motion";
 import { EASE, useAct, useMotionCapability, useStageAct } from "@/components/cinematic";
 import { useT } from "@/lib/i18n";
 import { usePages } from "@/lib/pages-i18n";
+import { ProtoSiteService } from "./ProtoSiteMock";
 import {
   PROTO_JOIN_OF_DEPARTURE,
   PROTO_SERVICE_PIN,
@@ -74,14 +75,24 @@ export function ProtoFirstService() {
       // hero's own CTA, on first paint, no scroll required: an interactive
       // element hidden behind another section is a P0, not a style nit.
       style={{ "--join": join } as React.CSSProperties}
-      className="relative z-10 overflow-hidden border-t border-white/8 bg-[#0A0D13] pt-24 pb-28 lg:pt-32 lg:pb-36 lg:[margin-top:calc(-1*var(--join))]"
+      className="relative z-10 overflow-hidden pt-24 pb-28 lg:pt-32 lg:pb-36 lg:[margin-top:calc(-1*var(--join))]"
     >
-      {/* The ground the window docks onto — ramped in across the same
-          length the hero's own tail fades over, so the handover reads as
-          one continuous surface rather than two flat colours meeting. */}
+      {/* THE GROUND, and why it is a separate masked layer rather than a
+          background colour on the section.
+
+          It was `bg-[#0A0D13]` on the section itself with a gradient drawn
+          on top — which ramps nothing: the section's own fill is already
+          opaque from its first pixel, so the hero's still-lit set was cut
+          by a hard horizontal line exactly at the section's top edge, and
+          the "gradient" was painting over ground that had already arrived.
+          Seen immediately in a screenshot of the seam; invisible in code.
+          Masked across the join instead, the ground fades in at the same
+          rate the hero's own tail fades out — the same construction
+          ServicesShowcase.tsx uses for the real hero, and the reason the
+          two sections read as one surface. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-0 top-0 h-[60vh] bg-gradient-to-b from-transparent via-[#0A0D13]/60 to-[#0A0D13]"
+        className="absolute inset-0 -z-10 bg-[#0A0D13] lg:[mask-image:linear-gradient(to_bottom,transparent_0,#000_var(--join))]"
       />
 
       <div className="container-luxe relative">
@@ -104,23 +115,18 @@ export function ProtoFirstService() {
                   </span>
                 </div>
               </div>
-              <div className="relative aspect-[4/3] bg-gradient-to-br from-[#0f1420] to-[#05070B] p-5">
-                {/* The window's own content: soft colour blocks, the same
-                    register as the hero's backdrop and as WEB_VISUAL_PROOF's
-                    candidates 1/2 — never a screenshot, never real copy set
-                    in miniature (T6/proof-A's own lesson: a model or a crop
-                    both risk carrying something this page didn't choose). */}
-                <div className="grid h-full grid-cols-3 grid-rows-3 gap-3">
-                  <div className="col-span-2 row-span-2 rounded-xl bg-[#141b2c]" />
-                  <div className="rounded-xl bg-primary" />
-                  <div className="rounded-xl bg-white/10" />
-                  <div className="col-span-2 rounded-xl bg-white/[0.07]" />
-                </div>
-                <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-[#05070B] via-[#05070B]/80 to-transparent p-6 pt-16">
-                  <span className="label-micro text-primary">01</span>
-                  <h3 className="heading-display-sm mt-1.5 text-white">{stage.title}</h3>
-                  <p className="mt-1 text-sm text-white/60">{stage.tag}</p>
-                </div>
+              {/* The real `/services/web` page, composed — the same site the
+                  hero's window was showing, one page further in. Colour
+                  blocks were what the first prototype put here, and the
+                  critique was right that chrome around blocks reads as
+                  unfinished: a studio that sells websites was showing an
+                  empty window. 16:10 is a real viewport proportion. */}
+              {/* Taller box on phones: a 16:10 viewport at ~340px wide is
+                  212px, which is less than this page composition needs even
+                  after its intro and footer are dropped. Desktop keeps the
+                  true 16:10 browser-viewport proportion. */}
+              <div className="aspect-[4/3] md:aspect-[16/10]">
+                <ProtoSiteService />
               </div>
             </div>
           </div>
@@ -128,30 +134,26 @@ export function ProtoFirstService() {
           {/* ---- Real copy, real price, real CTA — page content, not
               window content: the browser panel is the artefact, this is
               the studio's own page around it. */}
+          {/* The page around the artefact. Every string here is a DIFFERENT
+              real string from the ones inside the window — the window shows
+              the real `/services/web` page (eyebrow, h1, intro, items), this
+              column is the section's own framing (number, service name, tag,
+              price). Nothing is stated twice on one screen; the only repeat
+              is the CTA label, which is what a button is for. */}
           <div className="order-1 lg:order-2">
-            <span className="label-micro text-primary">{s.eyebrow}</span>
-            <h2 className="heading-display-sm mt-3 text-foreground">{s.h1}</h2>
-            <p className="mt-4 max-w-lg text-base leading-relaxed text-muted-foreground">
-              {s.intro}
+            <div className="flex items-baseline gap-3">
+              <span className="label-micro text-primary">01</span>
+              <span className="label-micro text-muted-foreground">{t.nav.services}</span>
+            </div>
+            <h2 className="heading-display-sm mt-3 text-foreground">{stage.title}</h2>
+            <p className="mt-4 max-w-md text-base leading-relaxed text-muted-foreground">
+              {stage.tag}
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3">
-              {s.items.map((item) => (
-                <span
-                  key={item}
-                  className="label-micro rounded-full border border-border px-3.5 py-1.5 text-muted-foreground"
-                >
-                  {item}
-                </span>
-              ))}
-            </div>
-
-            <div className="mt-8 flex flex-wrap items-center gap-6">
-              <div>
-                <span className="label-micro block text-muted-foreground">{s.eyebrow}</span>
-                <span className="heading-display-sm mt-1 block text-foreground">{price}</span>
-              </div>
-              <Link to="/services/web" className="btn-primary">
+            <div className="mt-8 border-t border-border pt-6">
+              <span className="label-micro block text-muted-foreground">{s.eyebrow}</span>
+              <span className="heading-display-sm mt-2 block text-foreground">{price}</span>
+              <Link to="/services/web" className="btn-primary mt-6">
                 {pages.common.getQuote}
                 <ArrowRight className="size-4" aria-hidden />
               </Link>
