@@ -204,7 +204,11 @@ function SiteShell() {
   // candidate and carries no production chrome to fight with the new world's
   // tokens while T2-T16 build against it.
   const isBench = pathname.startsWith("/bench");
-  const isIsolated = isDesignExplore || isBench;
+  // /proto — candidate 6 prototype (docs/creative-rebuild/WEB_VISUAL_PROOF.md).
+  // Same isolation as /design and /bench: not a homepage candidate, no
+  // production chrome to fight with while it's being judged on its own.
+  const isProto = pathname.startsWith("/proto");
+  const isIsolated = isDesignExplore || isBench || isProto;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">

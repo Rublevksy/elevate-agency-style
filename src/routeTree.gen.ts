@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as ProtoRouteImport } from './routes/proto'
 import { Route as ProjectsRouteImport } from './routes/projects'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as InsightsRouteImport } from './routes/insights'
@@ -42,6 +43,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProtoRoute = ProtoRouteImport.update({
+  id: '/proto',
+  path: '/proto',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProjectsRoute = ProjectsRouteImport.update({
@@ -169,6 +175,7 @@ export interface FileRoutesByFullPath {
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
+  '/proto': typeof ProtoRoute
   '/services': typeof ServicesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/insights/$slug': typeof InsightsSlugRoute
@@ -195,6 +202,7 @@ export interface FileRoutesByTo {
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
+  '/proto': typeof ProtoRoute
   '/services': typeof ServicesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/insights/$slug': typeof InsightsSlugRoute
@@ -222,6 +230,7 @@ export interface FileRoutesById {
   '/insights': typeof InsightsRouteWithChildren
   '/pricing': typeof PricingRouteWithChildren
   '/projects': typeof ProjectsRouteWithChildren
+  '/proto': typeof ProtoRoute
   '/services': typeof ServicesRouteWithChildren
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/insights/$slug': typeof InsightsSlugRoute
@@ -250,6 +259,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pricing'
     | '/projects'
+    | '/proto'
     | '/services'
     | '/sitemap.xml'
     | '/insights/$slug'
@@ -276,6 +286,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pricing'
     | '/projects'
+    | '/proto'
     | '/services'
     | '/sitemap.xml'
     | '/insights/$slug'
@@ -302,6 +313,7 @@ export interface FileRouteTypes {
     | '/insights'
     | '/pricing'
     | '/projects'
+    | '/proto'
     | '/services'
     | '/sitemap.xml'
     | '/insights/$slug'
@@ -329,6 +341,7 @@ export interface RootRouteChildren {
   InsightsRoute: typeof InsightsRouteWithChildren
   PricingRoute: typeof PricingRouteWithChildren
   ProjectsRoute: typeof ProjectsRouteWithChildren
+  ProtoRoute: typeof ProtoRoute
   ServicesRoute: typeof ServicesRouteWithChildren
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
 }
@@ -347,6 +360,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/proto': {
+      id: '/proto'
+      path: '/proto'
+      fullPath: '/proto'
+      preLoaderRoute: typeof ProtoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/projects': {
@@ -577,6 +597,7 @@ const rootRouteChildren: RootRouteChildren = {
   InsightsRoute: InsightsRouteWithChildren,
   PricingRoute: PricingRouteWithChildren,
   ProjectsRoute: ProjectsRouteWithChildren,
+  ProtoRoute: ProtoRoute,
   ServicesRoute: ServicesRouteWithChildren,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
