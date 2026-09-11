@@ -26,6 +26,10 @@ import svcBrandingJpg from "@/assets/refs/svc-branding.jpg";
 import heroLightWebp from "@/assets/refs/hero-light.webp";
 import heroAtmoWebp from "@/assets/refs/hero-atmo.webp";
 import heroAtmoJpg from "@/assets/refs/hero-atmo.jpg";
+import portalWebp from "@/assets/refs/portal.webp";
+import portalJpg from "@/assets/refs/portal.jpg";
+import portalSmWebp from "@/assets/refs/portal-sm.webp";
+import portalSmJpg from "@/assets/refs/portal-sm.jpg";
 
 export type SceneName =
   | "hero-macbook"
@@ -37,7 +41,9 @@ export type SceneName =
   | "svc-branding"
   /* Depth layers pulled from the hero frame — see scripts/extract-ref-assets.mjs. */
   | "hero-light"
-  | "hero-atmo";
+  | "hero-atmo"
+  /* The homepage's lit world — see the portal entry in scripts/extract-ref-assets.mjs. */
+  | "portal";
 
 interface SceneAsset {
   webp: string;
@@ -46,6 +52,9 @@ interface SceneAsset {
   /** Natural pixel size of the emitted file (crop aspect x output width). */
   width: number;
   height: number;
+  /** A half-width cut of the same frame, offered through `srcset` so a phone
+   *  never decodes the desktop plate. */
+  sm?: { webp: string; jpg: string; width: number };
 }
 
 /**
@@ -64,6 +73,13 @@ const SCENES: Record<SceneName, SceneAsset> = {
   "svc-app": { webp: svcAppWebp, jpg: svcAppJpg, width: 900, height: 1342 },
   "hero-light": { webp: heroLightWebp, width: 900, height: 1117 },
   "hero-atmo": { webp: heroAtmoWebp, jpg: heroAtmoJpg, width: 420, height: 521 },
+  portal: {
+    webp: portalWebp,
+    jpg: portalJpg,
+    width: 2400,
+    height: 1340,
+    sm: { webp: portalSmWebp, jpg: portalSmJpg, width: 1200 },
+  },
 };
 
 export interface SceneImageProps {
@@ -90,11 +106,16 @@ export function SceneImage({
   style,
 }: SceneImageProps) {
   const asset = SCENES[name];
+  const set = (full: string, sm?: string) =>
+    asset.sm && sm ? `${sm} ${asset.sm.width}w, ${full} ${asset.width}w` : full;
   return (
     <picture className={className} style={style}>
-      {asset.jpg ? <source type="image/webp" srcSet={asset.webp} sizes={sizes} /> : null}
+      {asset.jpg ? (
+        <source type="image/webp" srcSet={set(asset.webp, asset.sm?.webp)} sizes={sizes} />
+      ) : null}
       <img
         src={asset.jpg ?? asset.webp}
+        srcSet={asset.sm && asset.jpg ? set(asset.jpg, asset.sm.jpg) : undefined}
         alt={alt}
         width={asset.width}
         height={asset.height}

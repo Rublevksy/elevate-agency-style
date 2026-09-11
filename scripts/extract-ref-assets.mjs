@@ -52,6 +52,19 @@ mkdirSync(OUT, { recursive: true });
 const MASTERS = [
   { src: "generated/hero-macbook-master.png", out: "hero-macbook", width: 1400 },
   { src: "generated/hero-iphone-master.png", out: "hero-iphone", width: 720 },
+  /*
+   * The portal — the homepage's lit world (two cyan arcs over a wet stone floor,
+   * fog on the horizon). It is candidate 6 from docs/creative-rebuild/
+   * WEB_VISUAL_PROOF.md with its own drawn browser REMOVED by one targeted
+   * nano_banana_pro edit (job dc417349-58b3-4768-92fb-d2d6297bcef7, 2026-09-11):
+   * the real DOM window stands in the portal, so the plate must not carry a
+   * second, painted one. A pixel inpaint was tried first and rejected — it
+   * amputated the arcs and left the floor reflecting a window that was gone.
+   * Full-frame at 2400 for desktop, 1200 for phones; quality 80 because at this
+   * size the plate is the heaviest file on the first screen.
+   */
+  { src: "generated/portal-master.png", out: "portal", width: 2400, quality: 80 },
+  { src: "generated/portal-master.png", out: "portal-sm", width: 1200, quality: 80 },
 ];
 
 /** Shared frame for the five service scenes — see rule 2 below. */
@@ -160,8 +173,9 @@ async function buildHeroLayers() {
 
 for (const master of MASTERS) {
   const base = sharp(REF + master.src).resize({ width: master.width });
-  await base.clone().webp({ quality: 88 }).toFile(`${OUT}${master.out}.webp`);
-  await base.clone().jpeg({ quality: 88, mozjpeg: true }).toFile(`${OUT}${master.out}.jpg`);
+  const quality = master.quality ?? 88;
+  await base.clone().webp({ quality }).toFile(`${OUT}${master.out}.webp`);
+  await base.clone().jpeg({ quality, mozjpeg: true }).toFile(`${OUT}${master.out}.jpg`);
   const m = await sharp(`${OUT}${master.out}.jpg`).metadata();
   console.log(`${master.out}: ${m.width}x${m.height}`);
 }
