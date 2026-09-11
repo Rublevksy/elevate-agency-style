@@ -1,527 +1,397 @@
 /**
- * Client work — four projects, entered rather than listed.
+ * Cases — the proof. "This is what ELEVATE actually builds."
  *
- * THE REVERSE ANGLE. Services puts the scene on the right and the type on the
- * left. This section mirrors it: scene left, type right. That is not variety for
- * its own sake — it is the one move a camera makes when it stops describing a
- * space and starts looking back at what came out of it, and it is what stops two
- * consecutive pinned acts from reading as the same slide deck twice. For the
- * same reason the cut between projects is a horizontal push while the cut
- * between services is a vertical wipe: same world, different verb.
+ * One window, four real client sites. As the visitor scrolls, the window
+ * scrolls each real site from its first screen down through its content (the
+ * way you would look at a site you were considering), then navigates to the
+ * next client: the address changes to their real domain, the page blanks and
+ * the next site paints in. Beside it, the same site at phone width. On the
+ * left, the client's name, category and domain in real type, with the live
+ * site and the case study one click away.
  *
- * WHAT THIS REPLACED. A hover list beside a bordered, rounded pane containing
- * `ProjectVisual` — which draws its own browser chrome, traffic lights and a
- * fake URL bar. So the page's evidence was a picture of a website inside a
- * picture of a browser inside a card, at a size where none of it could be read,
- * and the story of each project was one sentence. The data was always richer
- * than the presentation.
+ * Images are static captures of the live sites (`scripts/capture-client-work.mjs`,
+ * via `client-work.tsx`). The runtime WordPress mshots dependency this section
+ * used to have is gone: no third-party request, no cookie banners, no empty
+ * captures, no failure mode.
  *
- * THE STORY IS THE DATA, NOT AN INVENTION. `src/lib/projects-i18n.ts` already
- * carries `problem`, `solution` and `work[]` for every project in all four
- * languages, and `t.ui.project*Eyebrow` already labels them — the project detail
- * route has been rendering exactly these fields all along. Nothing here is
- * written for the occasion and no i18n key was added: the section reveals, in
- * order, what the brief asks a case to communicate.
- *
- *   PROBLEM      what was wrong          project.problem
- *   INTERVENTION what ELEVATE changed    project.solution
- *   WORK         design / development    project.work[]
- *
- * NUMBERS ARE DELIBERATELY ABSENT. `results[]` and the headline `result` still
- * exist in the data and are still rendered on the project detail route; they are
- * not shown here. PRODUCT.md section 33 records that no source for those figures
- * exists anywhere in the repository — they arrived in a squash import — and the
- * owner ruled on 2026-09-05 that unverified figures must not be presented as
- * fact on the homepage. What remains is what is verified: real clients, real
- * domains, real live screenshots of the sites themselves.
+ * What is NOT on this page, deliberately: the descriptions, problem/solution
+ * copy, work lists and result figures in `projects-i18n.ts`. The figures have
+ * no source (PRODUCT.md §33); the descriptions, for two of four clients, name a
+ * different kind of business from the one the live site shows (see the header
+ * of `client-work.tsx`). The case-study route still renders them — that data is
+ * not this section's to rewrite, and the discrepancy is reported.
  */
-import { useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
-import { motion, useMotionValueEvent, useTransform } from "framer-motion";
-import { EASE, useAct, useMotionCapability } from "@/components/cinematic";
-import { screenshotUrl } from "@/lib/projects";
-import { useProjects, type LocalizedProject } from "@/lib/projects-i18n";
+import { motion, useMotionValueEvent, useTransform, type MotionValue } from "framer-motion";
+import { useState } from "react";
+import { EASE, PERSPECTIVE, useAct, useMotionCapability } from "@/components/cinematic";
 import { useT } from "@/lib/i18n";
+import { useProjects } from "@/lib/projects-i18n";
+import { BrowserWindow } from "./BrowserWindow";
+import { CLIENT_SITES, WorkImage, type ClientSite } from "./client-work";
+import { ClientFold, ScrollingSite } from "./window-pages";
+import { CutText, LoadBar, NavLayer, useLoadBar } from "./window-nav";
 
-/**
- * The act. Each project owns a little over a viewport of track — enough for its
- * three story beats to land one at a time rather than arriving as a block — and
- * the stage un-pins over the last one, which is the length the closing section
- * hands itself to.
- */
-const CASES_VIEWPORTS = 5.6;
-const CASES_PIN = (CASES_VIEWPORTS - 1) / CASES_VIEWPORTS;
-
-/**
- * The scene box: a wide projection standing off the left edge, at the aspect
- * the screenshot service actually returns.
- *
- * It was a full-height portrait box first, requesting a 1440x1800 capture. The
- * service does not honour a portrait request — it returns a landscape frame —
- * so `object-cover` into a 4:5 box scaled the site to roughly twice its size and
- * showed a fragment of one heading. A website shown as an unreadable fragment is
- * not evidence of anything. At 16:10 the capture lands unscaled and the whole
- * page reads, which is the only reason the plate is here.
- */
-const SCENE_SHOT: [number, number] = [1600, 1000];
-const SCENE_WIDTH = `min(56%, calc(78svh * ${SCENE_SHOT[0] / SCENE_SHOT[1]}))`;
-
-/** Where each story beat opens, in a project's own share of the track. */
-const BEATS: ReadonlyArray<[number, number]> = [
-  [0.12, 0.28],
-  [0.36, 0.52],
-  [0.6, 0.76],
-];
-
-/** The gate the project names roll through, in pixels. */
-const NAME_GATE = 108;
+/* The act's budget, in viewports — same construction as `home-tokens.ts`. */
+const INTRO_VP = 0.3;
+const CASE_VP = 0.95;
+const TAIL_VP = 0.2;
+const COUNT = CLIENT_SITES.length;
+const PINNED_VP = INTRO_VP + COUNT * CASE_VP + TAIL_VP;
+const VIEWPORTS = PINNED_VP + 1;
+const PIN = PINNED_VP / VIEWPORTS;
+const at = (vp: number) => vp / PINNED_VP;
+const caseStart = (i: number) => INTRO_VP + i * CASE_VP;
+const SWAP = 0.06;
+const PAINT = 0.16;
+const swapAt = (i: number) => (i < COUNT ? at(caseStart(i) - SWAP) : 2);
 
 export function CaseShowcase() {
   const { t } = useT();
   const projects = useProjects();
   const capability = useMotionCapability();
   const reduced = capability === "still";
+  const act = useAct("cases", { viewports: VIEWPORTS, pin: PIN });
+  const { progress: p, enter } = act;
+
   const [active, setActive] = useState(0);
-
-  const count = projects.length;
-  const act = useAct("cases", { viewports: CASES_VIEWPORTS, pin: CASES_PIN });
-  const { ref, progress, enter } = act;
-
-  const introY = useTransform(enter, [0, 1], [reduced ? 0 : 48, 0]);
-  const introFade = useTransform(enter, [0, 0.6], [reduced ? 1 : 0.3, 1]);
-
-  useMotionValueEvent(progress, "change", (p) => {
-    const next = Math.min(count - 1, Math.max(0, Math.floor(p * count * 0.999)));
-    setActive((prev) => (prev === next ? prev : next));
+  useMotionValueEvent(p, "change", (v) => {
+    let a = 0;
+    for (let i = 1; i < COUNT; i++) if (v >= swapAt(i)) a = i;
+    setActive(a);
   });
 
-  /**
-   * Position inside the current project, 0 → 1. Derived rather than stored: it
-   * is a pure function of the act's clock, so scrolling back plays the story
-   * backwards by construction and there is no state to desynchronise.
-   */
-  const sub = useTransform(progress, (v) => {
-    const s = Math.min(Math.max(v, 0), 0.99999) * count;
-    return s - Math.floor(s);
-  });
+  const category = (slug: ClientSite["slug"]) => projects.find((x) => x.slug === slug)?.category;
 
-  const beat0 = useTransform(sub, BEATS[0], [0, 1]);
-  const beat1 = useTransform(sub, BEATS[1], [0, 1]);
-  const beat2 = useTransform(sub, BEATS[2], [0, 1]);
-  const beat0Y = useTransform(beat0, [0, 1], [18, 0]);
-  const beat1Y = useTransform(beat1, [0, 1], [18, 0]);
-  const beat2Y = useTransform(beat2, [0, 1], [18, 0]);
-  const beats = [
-    { fade: beat0, y: beat0Y },
-    { fade: beat1, y: beat1Y },
-    { fade: beat2, y: beat2Y },
-  ];
-  /** The story's spine, drawn from the first beat opening to the last landing. */
-  const spine = useTransform(sub, [BEATS[0][0], BEATS[2][1]], [0, 1]);
+  // Arrival: the window comes up out of the page below and squares to camera.
+  const winY = useTransform(enter, [0, 1], [reduced ? 0 : 120, 0]);
+  const winRotateX = useTransform(enter, [0, 1], [reduced ? 0 : 12, 0]);
+  const winScale = useTransform(enter, [0, 1], [reduced ? 1 : 0.9, 1]);
+  const headFade = useTransform(enter, [0.3, 0.9], [reduced ? 1 : 0, 1]);
 
-  // The camera keeps moving through the whole act, so a project that is holding
-  // still on screen is never a frozen picture.
-  const sceneDriftY = useTransform(progress, [0, 1], [reduced ? 0 : -22, reduced ? 0 : 22]);
-  const railFill = useTransform(progress, [0, 1], [0, 1]);
+  const bar = useLoadBar(
+    p,
+    Array.from({ length: COUNT - 1 }, (_, k): [number, number] => [
+      at(caseStart(k + 1) - 0.1),
+      at(caseStart(k + 1) + PAINT),
+    ]),
+    reduced,
+  );
 
-  const jumpToBeat = (i: number) => {
-    const el = ref.current;
-    if (!el || typeof window === "undefined") return;
+  const jumpTo = (i: number) => {
+    const el = act.ref.current;
+    if (!el) return;
     const top = el.getBoundingClientRect().top + window.scrollY;
-    const travel = el.offsetHeight - window.innerHeight;
-    if (travel <= 0) return;
-    window.scrollTo({
-      top: top + ((i + 0.35) / count) * travel,
-      behavior: reduced ? "auto" : "smooth",
-    });
+    window.scrollTo({ top: top + (caseStart(i) + 0.25) * window.innerHeight, behavior: "smooth" });
   };
 
-  const current = projects[active];
-  if (!current) return null;
-
-  const labels = [t.ui.projectProblemEyebrow, t.ui.projectSolutionEyebrow, t.ui.projectWorkEyebrow];
+  const header = (
+    <div>
+      <p className="label-micro flex items-center gap-4 text-white/60">
+        <span aria-hidden className="h-px w-10 bg-white/30" />
+        {t.ui.homeWorkEyebrow}
+      </p>
+      <h2 className="heading-scene mt-5 max-w-[16ch] text-[clamp(1.6rem,1.1rem+1.5vw,2.4rem)] text-white">
+        {t.ui.homeWorkTitle}
+      </h2>
+    </div>
+  );
 
   return (
     <section
-      ref={ref}
-      className="relative z-10 bg-[#0A0D13] lg:h-[560vh]"
-      aria-label={t.ui.homeWorkTitle}
+      ref={act.ref}
+      id="work"
+      aria-label={t.ui.homeWorkEyebrow}
+      style={{ "--cases-track": `${(VIEWPORTS * 100).toFixed(2)}svh` } as React.CSSProperties}
+      className="relative isolate bg-[#0A0D13] lg:h-[var(--cases-track)] motion-reduce:lg:h-auto"
     >
-      {/* ---- Desktop stage ---------------------------------------------- */}
-      <div className="hidden lg:sticky lg:top-0 lg:block lg:h-svh lg:overflow-hidden">
-        <motion.div style={{ y: introY, opacity: introFade }} className="absolute inset-0">
-          {/* THE SCENE — the client's actual site, full height, no mockup and
-              no chrome around it. `ProjectVisual` is deliberately not used
-              here: it frames the screenshot in a drawn browser window, which
-              is a picture of a browser rather than the work. The domain is
-              stated in type on the other side of the frame, which is where a
-              film puts a caption. */}
-          <div
-            aria-hidden
-            style={{ width: SCENE_WIDTH }}
-            className="absolute inset-y-0 left-0 flex items-center"
-          >
-            <motion.div
-              style={{ y: sceneDriftY, aspectRatio: `${SCENE_SHOT[0]} / ${SCENE_SHOT[1]}` }}
-              className="relative w-full"
-            >
-              <div className="absolute inset-0 overflow-hidden [mask-image:radial-gradient(112%_98%_at_0%_50%,#000_0%,#000_22%,transparent_96%)]">
-                {projects.map((p, i) => (
-                  <SceneReel key={p.slug} project={p} index={i} active={active} reduced={reduced} />
-                ))}
-              </div>
-              {/* SEATING THE SITE IN THE ROOM.
-                Real client sites are not all dark, and two of these four are
-                mostly white. Dropped full-strength into a black film a white
-                page does not read as work being shown — it reads as a hole
-                punched in the frame, and everything around it loses its floor.
-                So the projection is dimmed a quarter and its top and bottom
-                dissolved: enough that the site still reads as itself and its
-                own colour survives, not so much that it is lit like a lightbox
-                in a dark room. The alternative — desaturating or heavily
-                tinting it — would be misrepresenting the work, which is the one
-                thing this section may never do. */}
-              <div aria-hidden className="pointer-events-none absolute inset-0 bg-[#0A0D13]/25" />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-x-0 top-0 h-[22%] bg-[linear-gradient(to_bottom,#0A0D13_0%,transparent_100%)]"
-              />
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-[34%] bg-[linear-gradient(to_top,#0A0D13_0%,transparent_100%)]"
-              />
-            </motion.div>
+      {/* ================= DESKTOP: pinned, one window ================= */}
+      <div className="hidden overflow-hidden lg:sticky lg:top-0 lg:block lg:h-[100svh] motion-reduce:lg:hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_60%_at_68%_52%,oklch(0.65_0.18_255/0.16),transparent_72%)]"
+        />
+        <div className="container-luxe relative grid h-full grid-cols-[0.78fr_1.22fr] items-center gap-12 pt-24 pb-24 xl:gap-16">
+          <div className="relative flex h-full flex-col justify-center">
+            <motion.div style={{ opacity: headFade }}>{header}</motion.div>
+            <div className="relative mt-12 h-[17rem]">
+              {CLIENT_SITES.map((site, i) => (
+                <CaseSlot key={site.slug} p={p} i={i} reduced={reduced}>
+                  <CaseCopy site={site} index={i} category={category(site.slug)} />
+                </CaseSlot>
+              ))}
+            </div>
           </div>
 
-          {/* ---- The story, on the right ------------------------------------ */}
-          <div className="container-luxe relative flex h-full flex-col items-end justify-between pt-[max(7.5rem,12svh)] pb-[8svh]">
-            <div className="flex w-full max-w-[32rem] items-baseline gap-4 xl:max-w-[36rem]">
-              <p className="label-micro flex items-center gap-3 text-white/55">
-                <span aria-hidden className="size-[5px] rounded-full bg-primary" />
-                {t.ui.homeWorkEyebrow}
-              </p>
-              <span className="label-micro tabular-nums text-white/25">
-                {String(active + 1).padStart(2, "0")} / {String(count).padStart(2, "0")}
-              </span>
-            </div>
-
-            <div className="w-full max-w-[32rem] xl:max-w-[36rem]">
-              {/* The client's name, rolling on the cut. Bottom-aligned inside
-                  the gate so a one-line name sits the same distance above the
-                  line under it as a two-line one. */}
-              <div
-                className="relative overflow-hidden [mask-image:linear-gradient(to_bottom,transparent_0%,transparent_3%,#000_12%,#000_100%)]"
-                style={{ height: NAME_GATE }}
+          <div className="relative" style={{ perspective: `${PERSPECTIVE}px` }}>
+            <motion.div
+              style={{ y: winY, rotateX: winRotateX, scale: winScale }}
+              className="relative origin-[50%_100%]"
+            >
+              <BrowserWindow
+                tab={CLIENT_SITES.map((site, i) => (
+                  <CutText
+                    key={site.slug}
+                    p={p}
+                    from={i === 0 ? -1 : swapAt(i)}
+                    to={swapAt(i + 1)}
+                    className="absolute inset-0 truncate"
+                  >
+                    {site.tabTitle}
+                  </CutText>
+                ))}
+                address={CLIENT_SITES.map((site, i) => (
+                  <CutText
+                    key={site.slug}
+                    p={p}
+                    from={i === 0 ? -1 : swapAt(i)}
+                    to={swapAt(i + 1)}
+                    className="absolute inset-0"
+                  >
+                    {site.domain}
+                  </CutText>
+                ))}
               >
-                {projects.map((p, i) => (
-                  <motion.div
-                    key={p.slug}
-                    aria-hidden={i !== active}
-                    initial={false}
-                    animate={{ y: (i - active) * NAME_GATE }}
-                    transition={reduced ? { duration: 0 } : { duration: 0.7, ease: EASE }}
-                    className="absolute inset-x-0 top-0 flex h-full flex-col justify-end"
-                  >
-                    <span className="label-micro block text-primary">{p.category}</span>
-                    <h3 className="heading-scene mt-2 text-[clamp(1.6rem,1.1rem+1.5vw,2.4rem)] text-white">
-                      {p.name}
-                    </h3>
-                  </motion.div>
-                ))}
-              </div>
-
-              <p className="mt-4 max-w-[46ch] text-[0.9375rem] leading-relaxed text-white/60">
-                {current.description}
-              </p>
-
-              {/* THE STORY. Three beats, opened one at a time by position
-                  inside this project's own stretch of track — the reader
-                  descends through the project rather than reading a block. */}
-              {/* The spine draws itself as the story opens, rather than
-                  standing full-length beside two beats that have not arrived —
-                  a rule running down past nothing reads as a layout that failed
-                  to fill. It is the same device as the rails: a line that
-                  reports where the reader is. */}
-              <ol className="relative mt-8 space-y-6 pl-6">
-                <span aria-hidden className="absolute inset-y-0 left-0 w-px bg-white/8" />
-                <motion.span
-                  aria-hidden
-                  style={{ scaleY: reduced ? 1 : spine }}
-                  className="absolute inset-y-0 left-0 w-px origin-top bg-white/20"
-                />
-                {[current.problem, current.solution, current.work.join(" · ")].map((body, i) => (
-                  <motion.li
-                    key={`${current.slug}-${i}`}
-                    style={{
-                      opacity: reduced ? 1 : beats[i].fade,
-                      y: reduced ? 0 : beats[i].y,
-                    }}
-                    className="relative"
-                  >
-                    <span
-                      aria-hidden
-                      className="absolute -left-[1.6rem] top-[0.45rem] size-1.5 rounded-full bg-primary"
-                    />
-                    <p className="label-micro text-white/40">
-                      {String(i + 1).padStart(2, "0")} — {labels[i]}
-                    </p>
-                    <p className="mt-2 max-w-[52ch] text-[0.9375rem] leading-relaxed text-white/70">
-                      {body}
-                    </p>
-                  </motion.li>
-                ))}
-              </ol>
-
-              <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-3">
-                <Link
-                  to="/projects/$slug"
-                  params={{ slug: current.slug }}
-                  className="btn-primary text-sm"
-                >
-                  {t.ui.casesOpen}
-                  <ArrowRight className="size-4" aria-hidden />
-                </Link>
-                <a
-                  href={`https://${current.domain}`}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="label-micro flex items-center gap-2 text-white/45 transition-colors hover:text-primary"
-                >
-                  {current.domain}
-                  <ArrowUpRight className="size-3.5" aria-hidden />
-                </a>
-              </div>
-            </div>
-
-            {/* The rail, along the floor — the reader's position in the body of
-                work, and a control that jumps to it. */}
-            <div className="w-full max-w-[32rem] xl:max-w-[36rem]">
-              <ol className="relative flex items-center">
-                <span
-                  aria-hidden
-                  className="absolute inset-x-0 top-1/2 h-px -translate-y-1/2 bg-white/10"
-                />
-                <motion.span
-                  aria-hidden
-                  style={{ scaleX: reduced ? (active + 1) / count : railFill }}
-                  className="absolute inset-x-0 top-1/2 h-px origin-left -translate-y-1/2 bg-primary shadow-[0_0_10px_oklch(0.65_0.18_255/0.6)]"
-                />
-                {projects.map((p, i) => {
-                  const on = i === active;
-                  return (
-                    <li key={p.slug} className="relative min-w-0 flex-1">
-                      <button
-                        type="button"
-                        onClick={() => jumpToBeat(i)}
-                        aria-current={on ? "true" : undefined}
-                        className="group flex w-full min-w-0 flex-col items-start gap-3 py-4 text-left focus-visible:outline-none"
+                <div className="relative aspect-[16/10] overflow-hidden bg-white">
+                  {CLIENT_SITES.map((site, i) =>
+                    i === 0 ? (
+                      <CasePage key={site.slug} p={p} i={i} site={site} reduced={reduced} />
+                    ) : (
+                      <NavLayer
+                        key={site.slug}
+                        p={p}
+                        swap={swapAt(i)}
+                        painted={at(caseStart(i) + PAINT)}
+                        blank="bg-white"
                       >
-                        <span className="sr-only">{p.name}</span>
-                        <span
-                          aria-hidden
-                          className={`block size-2.5 rounded-full border transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                            on
-                              ? "scale-125 border-primary bg-primary shadow-[0_0_0_5px_oklch(0.65_0.18_255/0.18)]"
-                              : "border-white/25 bg-[#0A0D13] group-hover:border-primary/70 group-focus-visible:border-primary"
-                          }`}
-                        />
-                        {/* `min-w-0` on both the item and the button, or the
-                            flex item refuses to shrink below its text and the
-                            four names run into one another instead of
-                            truncating — which is what they did. */}
-                        <span
-                          aria-hidden
-                          className={`label-micro block w-full truncate pr-3 transition-colors duration-500 ${
-                            on ? "text-primary" : "text-white/25 group-hover:text-white/55"
-                          }`}
-                        >
-                          {p.name}
-                        </span>
-                      </button>
-                    </li>
+                        <CasePage p={p} i={i} site={site} reduced={reduced} />
+                      </NavLayer>
+                    ),
+                  )}
+                  <LoadBar bar={bar} />
+                </div>
+              </BrowserWindow>
+
+              {/* The same site at phone width, on the nearer plane. */}
+              <div className="absolute -right-[5%] -bottom-[10%] aspect-[1/2] w-[20%] overflow-hidden rounded-[1.2rem] border-[5px] border-[#05070c] bg-white shadow-[0_40px_90px_-25px_oklch(0_0_0/0.95)]">
+                {CLIENT_SITES.map((site, i) => {
+                  const img = (
+                    <WorkImage
+                      site={site}
+                      kind="mobile"
+                      alt=""
+                      sizes="160px"
+                      className="absolute inset-0 block h-full w-full"
+                      imgClassName="h-full w-full object-cover object-top"
+                    />
+                  );
+                  return i === 0 ? (
+                    <div key={site.slug} className="absolute inset-0">
+                      {img}
+                    </div>
+                  ) : (
+                    <NavLayer
+                      key={site.slug}
+                      p={p}
+                      swap={swapAt(i) + at(0.03)}
+                      painted={at(caseStart(i) + PAINT + 0.05)}
+                      blank="bg-white"
+                    >
+                      {img}
+                    </NavLayer>
                   );
                 })}
-              </ol>
-              <Link
-                to="/projects"
-                className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-white/60 underline-offset-8 transition-colors hover:text-white hover:underline"
-              >
-                {t.ui.homeWorkViewAll}
-                <ArrowRight className="size-4" aria-hidden />
-              </Link>
-            </div>
+              </div>
+            </motion.div>
           </div>
-        </motion.div>
+        </div>
+
+        {/* The four clients as a rail: where you are, and a way to jump. */}
+        <nav aria-label={t.ui.homeWorkEyebrow} className="absolute inset-x-0 bottom-0 z-20">
+          <div className="container-luxe">
+            <ol className="flex border-t border-white/10">
+              {CLIENT_SITES.map((site, i) => (
+                <li key={site.slug} className="flex-1">
+                  <button
+                    type="button"
+                    onClick={() => jumpTo(i)}
+                    aria-current={active === i ? "step" : undefined}
+                    className={`group relative w-full py-4 pr-3 text-left transition-colors duration-300 ${
+                      active === i ? "text-white" : "text-white/45 hover:text-white/80"
+                    }`}
+                  >
+                    <RailFill p={p} i={i} />
+                    <span className="label-micro block tabular-nums text-primary/80">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="mt-1 block truncate text-sm">{site.name}</span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </nav>
       </div>
 
-      {/* ---- Mobile: the same story, scrolled ----------------------------- */}
-      <div className="lg:hidden">
-        <div className="container-luxe pt-24 pb-12">
-          <p className="label-micro flex items-center gap-3 text-white/55">
-            <span aria-hidden className="size-[5px] rounded-full bg-primary" />
-            {t.ui.homeWorkEyebrow}
-          </p>
-          <h2 className="heading-scene mt-5 text-[clamp(1.9rem,1.3rem+1.9vw,2.9rem)] text-white">
-            {t.ui.homeWorkTitle}
-          </h2>
-        </div>
-        <ol>
-          {projects.map((p, i) => (
-            <li key={p.slug}>
-              <MobileCase
-                project={p}
-                index={i}
-                labels={labels}
-                open={t.ui.casesOpen}
-                reduced={reduced}
-              />
-            </li>
+      {/* ================= STACKED: phones, and reduced motion ================= */}
+      <div className="container-luxe py-20 lg:hidden motion-reduce:lg:block motion-reduce:lg:py-32">
+        {header}
+        <ol className="mt-12 space-y-16 lg:mt-16 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:gap-y-20 lg:space-y-0">
+          {CLIENT_SITES.map((site, i) => (
+            <motion.li
+              key={site.slug}
+              initial={reduced ? undefined : { opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-10% 0px" }}
+              transition={{ duration: 0.7, ease: EASE }}
+            >
+              <div className="relative mr-6">
+                <BrowserWindow compact address={site.domain}>
+                  <div className="relative aspect-[16/10] overflow-hidden bg-white">
+                    <ClientFold site={site} />
+                  </div>
+                </BrowserWindow>
+                <div className="absolute -right-6 -bottom-8 aspect-[1/2] w-[22%] overflow-hidden rounded-[0.9rem] border-4 border-[#05070c] bg-white shadow-[0_24px_60px_-18px_oklch(0_0_0/0.95)]">
+                  <WorkImage
+                    site={site}
+                    kind="mobile"
+                    alt=""
+                    sizes="100px"
+                    className="absolute inset-0 block h-full w-full"
+                    imgClassName="h-full w-full object-cover object-top"
+                  />
+                </div>
+              </div>
+              <div className="mt-12">
+                <CaseCopy site={site} index={i} category={category(site.slug)} />
+              </div>
+            </motion.li>
           ))}
         </ol>
-        <div className="container-luxe pb-20">
-          <Link
-            to="/projects"
-            className="inline-flex items-center gap-2 text-sm font-medium text-white/60 underline-offset-8 transition-colors hover:text-white hover:underline"
-          >
-            {t.ui.homeWorkViewAll}
-            <ArrowRight className="size-4" aria-hidden />
-          </Link>
-        </div>
+      </div>
+
+      <div className="container-luxe pb-4 lg:hidden motion-reduce:lg:block motion-reduce:lg:pb-24">
+        <Link
+          to="/projects"
+          className="inline-flex items-center gap-2 text-sm font-medium text-white/75 underline-offset-8 hover:text-white hover:underline"
+        >
+          {t.ui.homeWorkViewAll}
+          <ArrowRight className="size-4" aria-hidden />
+        </Link>
       </div>
     </section>
   );
 }
 
-/** One reel: the project's live site, pushed in from the side on the cut. */
-function SceneReel({
-  project,
+/** One client's copy: real name, category, domain, and two real destinations. */
+function CaseCopy({
+  site,
   index,
-  active,
+  category,
+}: {
+  site: ClientSite;
+  index: number;
+  category?: string;
+}) {
+  const { t } = useT();
+  return (
+    <div>
+      <p className="label-micro flex items-baseline gap-3">
+        <span className="text-primary tabular-nums">{String(index + 1).padStart(2, "0")}</span>
+        <span className="text-white/45 tabular-nums">/ {String(COUNT).padStart(2, "0")}</span>
+        {category && (
+          <>
+            <span aria-hidden className="h-px w-8 self-center bg-white/20" />
+            <span className="text-white/65">{category}</span>
+          </>
+        )}
+      </p>
+      <h3 className="heading-scene mt-4 text-[clamp(1.9rem,1.2rem+2.4vw,3.25rem)] text-white">
+        {site.name}
+      </h3>
+      <p className="mt-3 font-mono text-[0.9375rem] tracking-wide text-white/60">{site.domain}</p>
+      <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-4">
+        <Link to="/projects/$slug" params={{ slug: site.slug }} className="btn-primary">
+          {t.ui.casesOpen}
+          <ArrowRight className="size-4" aria-hidden />
+        </Link>
+        <a
+          href={site.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
+        >
+          {t.ui.casesLive}
+          <ArrowUpRight className="size-4" aria-hidden />
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/** The client site in the window, scrolled across its stretch of the act. */
+function CasePage({
+  p,
+  i,
+  site,
   reduced,
 }: {
-  project: LocalizedProject;
-  index: number;
-  active: number;
+  p: MotionValue<number>;
+  i: number;
+  site: ClientSite;
   reduced: boolean;
 }) {
-  const on = index === active;
+  const scroll = useTransform(
+    p,
+    [at(caseStart(i) + 0.12), at(caseStart(i) + CASE_VP - 0.14)],
+    [0, reduced ? 0 : 1],
+  );
+  return <ScrollingSite site={site} scroll={scroll} />;
+}
+
+/** A client's copy, in the left column's slot: in after its page, out before the next. */
+function CaseSlot({
+  p,
+  i,
+  reduced,
+  children,
+}: {
+  p: MotionValue<number>;
+  i: number;
+  reduced: boolean;
+  children: React.ReactNode;
+}) {
+  const last = i === COUNT - 1;
+  const inA = i === 0 ? -1 : at(caseStart(i) + 0.02);
+  const inB = i === 0 ? -0.5 : at(caseStart(i) + 0.16);
+  const outA = last ? 2 : at(caseStart(i + 1) - 0.16);
+  const outB = last ? 2.1 : at(caseStart(i + 1) - SWAP - 0.01);
+  const y = useTransform(p, [inA, inB, outA, outB], [reduced ? 0 : 40, 0, 0, reduced ? 0 : -40]);
+  const opacity = useTransform(p, [inA, inB, outA, outB], [0, 1, 1, 0]);
+  const pointerEvents = useTransform(p, (v) => (v > inA && v < outB ? "auto" : "none"));
+  const visibility = useTransform(p, (v) => (v >= inA && v <= outB ? "visible" : "hidden"));
   return (
     <motion.div
-      aria-hidden={!on}
-      initial={false}
-      animate={{
-        x: `${(index - active) * 46}%`,
-        opacity: on ? 1 : 0,
-        scale: on ? 1 : 1.08,
-        filter: on ? "blur(0px)" : "blur(8px)",
-      }}
-      transition={{
-        duration: reduced ? 0 : 0.9,
-        ease: EASE,
-        opacity: { duration: reduced ? 0 : 0.45, ease: EASE },
-      }}
-      className="absolute inset-0"
-      style={{ zIndex: on ? 2 : 1 }}
+      style={{ y, opacity, pointerEvents, visibility }}
+      className="absolute inset-0 flex items-center"
     >
-      <img
-        src={screenshotUrl(`https://${project.domain}`, 1600, 1000)}
-        alt=""
-        loading={index === 0 ? "eager" : "lazy"}
-        decoding="async"
-        className="h-full w-full object-cover object-top"
-      />
+      <div className="w-full">{children}</div>
     </motion.div>
   );
 }
 
-/** Mobile: the picture is the frame, the story stands under it on black. */
-function MobileCase({
-  project,
-  index,
-  labels,
-  open,
-  reduced,
-}: {
-  project: LocalizedProject;
-  index: number;
-  labels: string[];
-  open: string;
-  reduced: boolean;
-}) {
-  const body = [project.problem, project.solution, project.work.join(" · ")];
+/** The rail's progress line for client `i`: fills across that client's stretch. */
+function RailFill({ p, i }: { p: MotionValue<number> & object; i: number }) {
+  const from = i === 0 ? 0 : swapAt(i);
+  const to = swapAt(i + 1) > 1 ? 1 : swapAt(i + 1);
+  const scaleX = useTransform(p, [from, to], [0, 1]);
   return (
-    <motion.article
-      initial={reduced ? false : { opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: "-10% 0px" }}
-      transition={{ duration: 0.7, ease: EASE }}
-      className="relative pb-16"
-    >
-      <div className="relative h-[52svh] overflow-hidden">
-        <img
-          src={screenshotUrl(`https://${project.domain}`, 1600, 1000)}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover object-top"
-        />
-        {/* Seated the same way the desktop projection is, and for the same
-            reason: two of these four sites are mostly white, and a white page at
-            full strength against this black reads as a hole rather than as work
-            being shown. Dimmed a quarter, dissolved at the top so it does not
-            butt into the case above in a hard line, and grounded at the bottom
-            so the type that follows stands on black. */}
-        <div aria-hidden className="absolute inset-0 bg-[#0A0D13]/25" />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(to_bottom,#0A0D13_0%,transparent_18%)]"
-        />
-        <div
-          aria-hidden
-          className="absolute inset-0 bg-[linear-gradient(to_top,#0A0D13_0%,transparent_55%)]"
-        />
-      </div>
-      <div className="container-luxe -mt-10 relative">
-        <span className="label-micro block text-primary">{project.category}</span>
-        <h3 className="heading-scene mt-2 text-[clamp(1.5rem,1.1rem+2.2vw,2rem)] text-white">
-          {project.name}
-        </h3>
-        <p className="mt-3 max-w-[44ch] text-[0.9375rem] leading-relaxed text-white/60">
-          {project.description}
-        </p>
-        <ol className="mt-6 space-y-5 border-l border-white/10 pl-5">
-          {body.map((b, i) => (
-            <li key={i}>
-              <p className="label-micro text-white/40">
-                {String(i + 1).padStart(2, "0")} — {labels[i]}
-              </p>
-              <p className="mt-1.5 text-[0.9375rem] leading-relaxed text-white/70">{b}</p>
-            </li>
-          ))}
-        </ol>
-        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
-          <Link
-            to="/projects/$slug"
-            params={{ slug: project.slug }}
-            className="btn-primary text-sm"
-          >
-            {open}
-            <ArrowRight className="size-4" aria-hidden />
-          </Link>
-          <a
-            href={`https://${project.domain}`}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="label-micro flex items-center gap-2 text-white/45"
-          >
-            {project.domain}
-            <ArrowUpRight className="size-3.5" aria-hidden />
-          </a>
-        </div>
-      </div>
-      <span className="sr-only">{index + 1}</span>
-    </motion.article>
+    <motion.span
+      aria-hidden
+      style={{ scaleX }}
+      className="absolute -top-px left-0 block h-[2px] w-full origin-left bg-primary"
+    />
   );
 }
 

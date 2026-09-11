@@ -2,7 +2,10 @@
   "detector": {
     "ignoreRules": [],
     "ignoreFiles": [
-      "src/components/proto/ProtoSiteMock.tsx"
+      "src/components/proto/ProtoSiteMock.tsx",
+      "src/components/home/BrowserWindow.tsx",
+      "src/components/home/window-pages.tsx",
+      "src/components/home/ProjectBlueprint.tsx"
     ],
     "ignoreValues": [
       {

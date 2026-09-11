@@ -1,133 +1,179 @@
 /**
- * Closing — the last frame, not a banner.
+ * Closing — the page resolves where it began.
  *
- * WHAT THIS REPLACED. A rounded rectangle with a blue border and a blue tint,
- * question on the left and button on the right. That shape came from the closing
- * bar in 01_HOME_DESKTOP_SCROLL_SERVICES_SHOWCASE.png and it was a fair reading
- * of the reference — but the reference is a poster of a page, and this is the
- * end of a film. Four viewports of camera work resolving into a bordered box is
- * the page announcing that the cinema is over and the website has resumed.
+ * The first screen was a window standing in the portal, showing the sites
+ * ELEVATE has built. The last screen is the same portal and the same window,
+ * now showing ELEVATE itself at elevateit.cz/contact — the page arrives back at
+ * the studio, and the next site in that window is the visitor's. The arcs power
+ * up as the section arrives (the one scroll-linked beat here), the window rises
+ * into the portal, and then everything holds still: the visitor has the ending.
  *
- * So the box is gone and what is left is the frame itself: the studio's line
- * arriving, one statement at display size, one action, and the light going down.
- * The section has no background of its own — it is the same black the hero
- * opened in, which is the point.
- *
- * THE LINE IS THE BOOKEND. The hero opens with a vertical rule under its SCROLL
- * label; that rule comes back here, descends, and stops in a lit dot. The page
- * opens with a line inviting a scroll and closes with the same line arriving
- * somewhere. It is the only reason this section animates at all, and it is why
- * the motion is a one-shot on arrival rather than anything scroll-driven: the
- * film has stopped moving by now.
- *
- * IT POINTS BACK AT THE BUILDER. PRODUCT.md section 17 asks the closing to
- * connect to the project builder rather than to be a second, lesser form. The
- * builder is the section immediately above, so the action here is an anchor to
- * it — a visitor who scrolled past it gets taken back to the one place on the
- * page where they can actually say what they want — with the /contact route
- * kept as the quieter second option for anyone who would rather write.
+ * Actions are the real ones: the builder above (the place to describe a
+ * project), the /contact route, and the studio's direct channels from
+ * `Socials.tsx` and the footer — phone, e-mail, Telegram, Instagram.
  */
-import { useRef } from "react";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUp } from "lucide-react";
-import { motion } from "framer-motion";
-import { EASE, useReducedScene } from "@/components/cinematic";
+import { ArrowRight, ArrowUp, Instagram, Mail, Phone, Send } from "lucide-react";
+import { motion, useTransform } from "framer-motion";
+import { EASE, PERSPECTIVE, useAct, useReducedScene } from "@/components/cinematic";
+import { Logo } from "@/components/Logo";
+import { SceneImage } from "@/components/media/SceneImage";
+import { CONTACT_PHONE, CONTACT_PHONE_HREF, SOCIAL_LINKS } from "@/components/Socials";
 import { useT } from "@/lib/i18n";
+import { BrowserWindow } from "./BrowserWindow";
+
+const CONTACT_EMAIL = "elevateitcz@gmail.com";
+
+/** The portal box, centred this time: the ending is composed on its own axis. */
+const BOX_W = "max(125vw, 179.1svh)";
 
 export function ClosingCta() {
   const { t } = useT();
-  const ref = useRef<HTMLElement>(null);
+  const f = t.contact.form;
   const reduced = useReducedScene();
+  const act = useAct("closing", { viewports: 1, pin: 0 });
+  const { enter } = act;
 
-  /** One arrival, in reading order. No section-wide stagger beyond this. */
+  const plateOn = useTransform(enter, [0.2, 0.95], [reduced ? 1 : 0.15, 1]);
+  const plateScale = useTransform(enter, [0, 1], [reduced ? 1 : 1.08, 1]);
+  const winY = useTransform(enter, [0.35, 1], [reduced ? 0 : 140, 0]);
+  const winRotateX = useTransform(enter, [0.35, 1], [reduced ? 0 : 18, 0]);
+
   const rise = (i: number) => ({
     initial: reduced ? undefined : { opacity: 0, y: 22 },
     whileInView: { opacity: 1, y: 0 },
-    viewport: { once: true, margin: "-15% 0px" },
-    transition: { duration: 0.7, delay: 0.15 + i * 0.1, ease: EASE },
+    viewport: { once: true, margin: "-12% 0px" },
+    transition: { duration: 0.7, delay: 0.1 + i * 0.09, ease: EASE },
   });
+
+  const channel =
+    "inline-flex items-center gap-2.5 text-[0.9375rem] text-white/75 transition-colors hover:text-white";
 
   return (
     <section
-      ref={ref}
-      className="relative isolate overflow-hidden bg-[#0A0D13] pb-32 pt-20 md:pb-44 md:pt-28"
+      ref={act.ref}
+      aria-labelledby="closing-title"
+      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-[#0A0D13]"
     >
-      {/* The light going down: one bloom low in the frame, additive, so its
-          floor is the section's own black rather than a grey wash. It is the
-          last thing the arc that crossed the hero does. */}
-      <motion.div
-        aria-hidden
-        initial={reduced ? undefined : { opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        viewport={{ once: true, margin: "-10% 0px" }}
-        transition={{ duration: 1.6, ease: EASE }}
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] mix-blend-screen"
-      >
-        <div className="h-full w-full bg-[radial-gradient(75%_65%_at_50%_78%,oklch(0.65_0.18_255/0.18),transparent_70%)]" />
-      </motion.div>
-
-      <div className="container-luxe relative">
-        {/* The line the hero opened, arriving. */}
-        <div className="relative mx-auto mb-16 flex h-24 w-px justify-center md:mb-24 md:h-32">
-          <motion.span
-            aria-hidden
-            initial={reduced ? undefined : { scaleY: 0 }}
-            whileInView={{ scaleY: 1 }}
-            viewport={{ once: true, margin: "-20% 0px" }}
-            transition={{ duration: 0.9, ease: EASE }}
-            className="block h-full w-px origin-top bg-gradient-to-b from-transparent to-white/25"
-          />
-          <motion.span
-            aria-hidden
-            initial={reduced ? undefined : { opacity: 0, scale: 0.4 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true, margin: "-20% 0px" }}
-            transition={{ duration: 0.5, delay: 0.75, ease: EASE }}
-            className="absolute -bottom-[3px] left-1/2 size-1.5 -translate-x-1/2 rounded-full bg-primary shadow-[0_0_12px_2px_oklch(0.65_0.18_255/0.55)]"
-          />
-        </div>
-
-        {/* Centred, because a last frame is composed on its own axis and there
-            is nothing left for it to be in dialogue with. */}
-        <div className="mx-auto max-w-[46rem] text-center">
-          <motion.h2
-            {...rise(0)}
-            className="heading-scene text-[clamp(2rem,1.2rem+3.4vw,4rem)] text-white"
-          >
-            {t.cta.title}
-          </motion.h2>
-          <motion.p
-            {...rise(1)}
-            className="mx-auto mt-6 max-w-[44ch] text-[0.9375rem] leading-relaxed text-white/60 sm:text-base"
-          >
-            {t.cta.subtitle}
-          </motion.p>
-
-          <motion.div
-            {...rise(2)}
-            className="mt-10 flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-8"
-          >
-            <a href="#builder" className="btn-primary">
-              {t.hero.cta1}
-              <ArrowUp className="size-4" aria-hidden />
-            </a>
-            <Link
-              to="/contact"
-              className="inline-flex items-center gap-2 text-sm font-medium text-white/60 underline-offset-8 transition-colors hover:text-white hover:underline"
-            >
-              {t.nav.contact}
-              <ArrowRight className="size-4" aria-hidden />
-            </Link>
+      {/* ---- The portal, powering up --------------------------------------- */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <motion.div
+          style={{ opacity: plateOn, width: BOX_W, left: `calc(50vw - 0.58 * ${BOX_W})` }}
+          className="absolute bottom-0 aspect-[2400/1340] [mask-image:radial-gradient(90%_100%_at_58%_65%,#000_55%,transparent_100%)]"
+        >
+          <motion.div style={{ scale: plateScale }} className="absolute inset-0 origin-[58%_75%]">
+            <SceneImage
+              name="portal"
+              alt=""
+              sizes="100vw"
+              className="absolute inset-0 block h-full w-full"
+              imgClassName="h-full w-full object-cover"
+            />
           </motion.div>
+        </motion.div>
+        <div className="absolute inset-0 bg-[linear-gradient(to_bottom,#0A0D13_0%,#0A0D13_30%,#0A0D1300_62%)]" />
+      </div>
 
-          <motion.p
-            {...rise(3)}
-            className="label-micro mt-8 flex items-center justify-center gap-3 text-white/40"
+      {/* ---- The words and the actions ------------------------------------- */}
+      <div className="container-luxe relative pt-32 text-center md:pt-40">
+        <motion.p
+          {...rise(0)}
+          className="label-micro flex items-center justify-center gap-3 text-white/60"
+        >
+          <span aria-hidden className="size-[5px] rounded-full bg-primary" />
+          {t.hero.tag}
+        </motion.p>
+        {/* The studio's own line — the page ends on what ELEVATE is, having
+            shown what it does. */}
+        <motion.h2
+          {...rise(1)}
+          id="closing-title"
+          className="heading-scene mx-auto mt-6 max-w-[18ch] text-[clamp(2.2rem,1.3rem+3.6vw,4.5rem)] text-white uppercase"
+        >
+          {t.hero.title1} <span className="text-primary">{t.hero.title2}</span>
+        </motion.h2>
+        <motion.p
+          {...rise(2)}
+          className="mx-auto mt-6 max-w-[44ch] text-base leading-relaxed text-white/70"
+        >
+          {t.hero.subtitle}
+        </motion.p>
+        <motion.div
+          {...rise(3)}
+          className="mt-10 flex flex-col items-center justify-center gap-5 sm:flex-row sm:gap-8"
+        >
+          <a href="#builder" className="btn-primary">
+            {t.hero.cta1}
+            <ArrowUp className="size-4" aria-hidden />
+          </a>
+          <Link
+            to="/contact"
+            className="inline-flex items-center gap-2 text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
           >
-            <span aria-hidden className="size-[5px] rounded-full bg-primary" />
-            {t.trust.response}
-          </motion.p>
-        </div>
+            {t.nav.contact}
+            <ArrowRight className="size-4" aria-hidden />
+          </Link>
+        </motion.div>
+      </div>
+
+      {/* ---- The window, back in the portal -------------------------------- */}
+      <div
+        className="relative mt-auto flex justify-center px-6 pt-16 pb-10 md:pb-14"
+        style={{ perspective: `${PERSPECTIVE}px` }}
+      >
+        <motion.div
+          style={{ y: winY, rotateX: winRotateX }}
+          className="w-full max-w-[34rem] origin-[50%_100%] lg:max-w-[38rem]"
+        >
+          <BrowserWindow address="elevateit.cz/contact" tab={t.nav.contact}>
+            <div className="relative flex aspect-[16/9] flex-col items-center justify-center gap-6 bg-[#0d1220] px-6">
+              <motion.span
+                aria-hidden
+                initial={reduced ? false : { scaleX: 0, opacity: 1 }}
+                whileInView={{ scaleX: 1, opacity: 0 }}
+                viewport={{ once: true }}
+                transition={{
+                  scaleX: { duration: 1.1, delay: 0.5, ease: EASE },
+                  opacity: { duration: 0.4, delay: 1.6 },
+                }}
+                className="absolute inset-x-0 top-0 block h-[2px] origin-left bg-primary"
+              />
+              <div className="absolute inset-0 bg-[radial-gradient(60%_70%_at_50%_45%,oklch(0.65_0.18_255/0.18),transparent_70%)]" />
+              <Logo className="relative h-7 w-auto md:h-9" />
+              <p className="label-micro relative text-center text-white/60">
+                {f.directEyebrow} · {t.trust.response}
+              </p>
+              <div className="relative flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
+                <a href={CONTACT_PHONE_HREF} className={channel}>
+                  <Phone className="size-4 text-primary" aria-hidden />
+                  <span className="tabular-nums">{CONTACT_PHONE}</span>
+                </a>
+                <a href={`mailto:${CONTACT_EMAIL}`} className={channel}>
+                  <Mail className="size-4 text-primary" aria-hidden />
+                  {CONTACT_EMAIL}
+                </a>
+                <a
+                  href={SOCIAL_LINKS.telegram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={channel}
+                >
+                  <Send className="size-4 text-primary" aria-hidden />
+                  Telegram
+                </a>
+                <a
+                  href={SOCIAL_LINKS.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={channel}
+                >
+                  <Instagram className="size-4 text-primary" aria-hidden />
+                  Instagram
+                </a>
+              </div>
+            </div>
+          </BrowserWindow>
+        </motion.div>
       </div>
     </section>
   );
