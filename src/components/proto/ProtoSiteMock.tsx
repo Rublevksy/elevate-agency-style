@@ -83,23 +83,30 @@ export function ProtoSiteHome({ compact = false }: { compact?: boolean }) {
       <MockNav compact={compact} />
 
       <div className="flex flex-1 items-stretch gap-4 px-4 py-4">
+        {/* ELEVATE's services landing, not its homepage. The homepage cut
+            put `t.hero.title1/2` ("Digitální produkty, které posouvají
+            byznys") beside the page's own H1 ("Digitální řešení, která
+            posouvají…") — two near-identical headlines on one screen, and in
+            RU almost word-for-word ("Цифровые продукты" / "Цифровые
+            решения"), stacked 60px apart on mobile. The services landing is
+            real, says something different, and is the page the five-service
+            strip below actually belongs to. Its buttons are the site's real
+            Pricing / Work labels, not the hero's CTA a third time. */}
         <div className="flex min-w-0 flex-[1.15] flex-col justify-center">
           <span className="text-[0.45rem] tracking-[0.2em] text-primary uppercase">
-            {t.hero.tag}
+            {t.ui.homeServicesEyebrow}
           </span>
           <h3 className="font-display mt-2 text-[0.95rem] leading-[1.12] font-extrabold tracking-tight text-white">
-            {t.hero.title1}
-            <br />
-            <span className="text-primary">{t.hero.title2}</span>
+            {t.ui.homeServicesTitle}
           </h3>
           {!compact && (
             <p className="mt-2 text-[0.5rem] leading-[1.6] text-white/55">{t.hero.subtitle}</p>
           )}
           <div className="mt-3 flex items-center gap-2">
             <span className="rounded-md bg-primary px-2.5 py-1 text-[0.5rem] font-semibold text-white">
-              {t.hero.cta1}
+              {t.nav.pricing}
             </span>
-            <span className="text-[0.5rem] text-white/45">{t.hero.cta2}</span>
+            <span className="text-[0.5rem] text-white/45">{t.nav.work}</span>
           </div>
         </div>
 
@@ -209,9 +216,14 @@ export function ProtoSiteService() {
         </div>
       </div>
 
-      {/* Footer strip: desktop only, same overflow reason as the intro. */}
+      {/* Footer strip: desktop only, same overflow reason as the intro. It
+          no longer repeats the service tag — the section around this window
+          states that tag at full size, so here it was the same words twice
+          on one screen. The site's real nav is what a footer carries. */}
       <div className="hidden items-center justify-between border-t border-white/8 px-4 py-2 md:flex">
-        <span className="text-[0.45rem] text-white/40">{t.ui.serviceStage[0].tag}</span>
+        <span className="text-[0.45rem] text-white/40">
+          {t.nav.about} · {t.nav.contact}
+        </span>
         <span className="text-[0.45rem] tracking-wide text-white/30">elevateit.cz</span>
       </div>
     </div>
@@ -256,14 +268,15 @@ export function ProtoPhoneMock() {
           />
         </div>
 
-        <div className="mt-2 space-y-1">
-          <div className="h-1 w-full rounded-full bg-white/12" />
-          <div className="h-1 w-3/4 rounded-full bg-white/8" />
-        </div>
-
-        <div className="mt-2 rounded-md bg-primary py-1 text-center text-[0.45rem] font-semibold text-white">
-          {t.hero.cta1}
-        </div>
+        {/* The service's real tag, not two grey skeleton bars and a third
+            copy of the hero's CTA. The bars were the last placeholder left
+            anywhere in the composition (independent critique), and a button
+            here made four blue buttons on one screen, one of them real. */}
+        <p className="mt-2 text-[0.45rem] leading-[1.5] text-white/55">
+          {t.ui.serviceStage[0].tag}
+        </p>
+        <div className="mt-2 h-px w-full bg-white/10" />
+        <p className="mt-1.5 text-[0.4rem] tracking-wide text-white/35">elevateit.cz</p>
       </div>
     </div>
   );

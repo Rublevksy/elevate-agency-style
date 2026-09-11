@@ -21,8 +21,9 @@
  * mascot, and landing on it one scroll after candidate 6's abstract,
  * mascot-free hero is exactly the "incompatible visual registers" defect
  * `DESIGN.md` names as the incumbent's central flaw, reintroduced in one
- * cut. Colour-block UI (same register as candidate 6 and candidates 1/2 of
- * `WEB_VISUAL_PROOF.md`) keeps the two sections one continuous world.
+ * cut. The window now carries the composed `/services/web` page from
+ * `ProtoSiteMock.tsx` — the same page the hero's window navigates to just
+ * before this section rises, so the two are one window, docked.
  */
 import { Link } from "@tanstack/react-router";
 import { ArrowRight } from "lucide-react";
@@ -31,6 +32,7 @@ import { EASE, useAct, useMotionCapability, useStageAct } from "@/components/cin
 import { useT } from "@/lib/i18n";
 import { usePages } from "@/lib/pages-i18n";
 import { ProtoSiteService } from "./ProtoSiteMock";
+import { BrowserChrome } from "./ProtoHero";
 import {
   PROTO_JOIN_OF_DEPARTURE,
   PROTO_SERVICE_PIN,
@@ -57,9 +59,16 @@ export function ProtoFirstService() {
   const heroDeparture = hero ? hero.viewports * (1 - hero.pin) : 0;
   const join = `${(PROTO_JOIN_OF_DEPARTURE * heroDeparture * 100).toFixed(2)}vh`;
 
-  const introY = useTransform(enter, [0, 1], [reduced ? 0 : 64, 0]);
-  const introScale = useTransform(enter, [0, 1], [reduced ? 1 : 0.96, 1]);
-  const introFade = useTransform(enter, [0, 0.7], [reduced ? 1 : 0.2, 1]);
+  // The arrival completes by half-way through `enter`, not at its end.
+  // `enter` reaches 1 only when this section's top meets the viewport's top,
+  // and as the last, short (~684px) section on the page it never gets there:
+  // measured, it topped out at 0.76 at 900 and 0.634 at 1080, so the service
+  // content was still 15-24px low, at 0.99 scale and 92% opacity when the
+  // page ended — an arrival that never lands. Finishing at 0.5 lands it while
+  // the section is still rising, on every viewport height.
+  const introY = useTransform(enter, [0, 0.5], [reduced ? 0 : 64, 0]);
+  const introScale = useTransform(enter, [0, 0.5], [reduced ? 1 : 0.96, 1]);
+  const introFade = useTransform(enter, [0, 0.4], [reduced ? 1 : 0.2, 1]);
 
   return (
     <section
@@ -75,7 +84,9 @@ export function ProtoFirstService() {
       // hero's own CTA, on first paint, no scroll required: an interactive
       // element hidden behind another section is a P0, not a style nit.
       style={{ "--join": join } as React.CSSProperties}
-      className="relative z-10 overflow-hidden pt-24 pb-28 lg:pt-32 lg:pb-36 lg:[margin-top:calc(-1*var(--join))]"
+      // `motion-reduce:` removes the join along with the hero's track: with no
+      // pinned stage there is no departure to rise through.
+      className="relative z-10 overflow-hidden pt-24 pb-28 lg:pt-32 lg:pb-36 lg:[margin-top:calc(-1*var(--join))] motion-reduce:lg:mt-0"
     >
       {/* THE GROUND, and why it is a separate masked layer rather than a
           background colour on the section.
@@ -92,7 +103,7 @@ export function ProtoFirstService() {
           two sections read as one surface. */}
       <div
         aria-hidden
-        className="absolute inset-0 -z-10 bg-[#0A0D13] lg:[mask-image:linear-gradient(to_bottom,transparent_0,#000_var(--join))]"
+        className="absolute inset-0 -z-10 bg-[#0A0D13] lg:[mask-image:linear-gradient(to_bottom,transparent_0,#000_var(--join))] motion-reduce:lg:[mask-image:none]"
       />
 
       <div className="container-luxe relative">
@@ -103,37 +114,22 @@ export function ProtoFirstService() {
           {/* ---- The docked window: same chrome language as the hero's
               panel, now large and holding real service content. */}
           <div className="order-2 lg:order-1">
-            <div className="overflow-hidden rounded-2xl border border-white/12 bg-white/[0.04] shadow-[0_60px_140px_-50px_oklch(0_0_0/0.85)] backdrop-blur-2xl">
-              <div className="flex items-center gap-2 border-b border-white/8 bg-white/[0.03] px-4 py-3">
-                <span className="size-2 rounded-full bg-white/25" />
-                <span className="size-2 rounded-full bg-white/25" />
-                <span className="size-2 rounded-full bg-white/25" />
-                <div className="ml-3 flex h-6 flex-1 items-center rounded-full bg-black/30 px-3">
-                  {/* Same contrast fix as the hero's chrome bar — Assessment A, P2. */}
-                  <span className="truncate font-mono text-[11px] tracking-wide text-white/70">
-                    elevateit.cz/services/web
-                  </span>
-                </div>
-              </div>
-              {/* The real `/services/web` page, composed — the same site the
-                  hero's window was showing, one page further in. Colour
-                  blocks were what the first prototype put here, and the
-                  critique was right that chrome around blocks reads as
-                  unfinished: a studio that sells websites was showing an
-                  empty window. 16:10 is a real viewport proportion. */}
-              {/* Taller box on phones: a 16:10 viewport at ~340px wide is
-                  212px, which is less than this page composition needs even
-                  after its intro and footer are dropped. Desktop keeps the
-                  true 16:10 browser-viewport proportion. */}
+            {/* The hero's own `BrowserChrome`, not a hand-copied twin: the
+                copy had drifted (size-2 white/25 dots here against size-1.5
+                white/18 in the hero) — two windows meant to be the same one
+                were visibly two different components. */}
+            <BrowserChrome path="elevateit.cz/services/web">
+              {/* The real `/services/web` page, composed — the same page the
+                  hero's window has just navigated to. 16:10 on desktop (a
+                  real viewport proportion); taller on phones, where 16:10 at
+                  ~340px is 212px, less than this page needs even with its
+                  intro and footer dropped. */}
               <div className="aspect-[4/3] md:aspect-[16/10]">
                 <ProtoSiteService />
               </div>
-            </div>
+            </BrowserChrome>
           </div>
 
-          {/* ---- Real copy, real price, real CTA — page content, not
-              window content: the browser panel is the artefact, this is
-              the studio's own page around it. */}
           {/* The page around the artefact. Every string here is a DIFFERENT
               real string from the ones inside the window — the window shows
               the real `/services/web` page (eyebrow, h1, intro, items), this
@@ -151,7 +147,10 @@ export function ProtoFirstService() {
             </p>
 
             <div className="mt-8 border-t border-border pt-6">
-              <span className="label-micro block text-muted-foreground">{s.eyebrow}</span>
+              {/* "Ceník", not `s.eyebrow` again: the eyebrow is already inside
+                  the window above, so this label was "WEB DESIGN & SEO" twice
+                  on one screen. */}
+              <span className="label-micro block text-muted-foreground">{t.nav.pricing}</span>
               <span className="heading-display-sm mt-2 block text-foreground">{price}</span>
               <Link to="/services/web" className="btn-primary mt-6">
                 {pages.common.getQuote}
