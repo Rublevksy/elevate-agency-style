@@ -13,16 +13,13 @@
  * `Socials.tsx` and the footer — phone, e-mail, Telegram, Instagram.
  */
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ArrowUp, Instagram, Mail, Phone, Send } from "lucide-react";
+import { ArrowRight, ArrowUp } from "lucide-react";
 import { motion, useTransform } from "framer-motion";
 import { EASE, PERSPECTIVE, useAct, useReducedScene } from "@/components/cinematic";
 import { Logo } from "@/components/Logo";
 import { SceneImage } from "@/components/media/SceneImage";
-import { CONTACT_PHONE, CONTACT_PHONE_HREF, SOCIAL_LINKS } from "@/components/Socials";
 import { useT } from "@/lib/i18n";
 import { BrowserWindow } from "./BrowserWindow";
-
-const CONTACT_EMAIL = "elevateitcz@gmail.com";
 
 /** The portal box, centred this time: the ending is composed on its own axis. */
 const BOX_W = "max(125vw, 179.1svh)";
@@ -45,9 +42,6 @@ export function ClosingCta() {
     viewport: { once: true, margin: "-12% 0px" },
     transition: { duration: 0.7, delay: 0.1 + i * 0.09, ease: EASE },
   });
-
-  const channel =
-    "inline-flex items-center gap-2.5 text-[0.9375rem] text-white/75 transition-colors hover:text-white";
 
   return (
     <section
@@ -83,20 +77,22 @@ export function ClosingCta() {
           <span aria-hidden className="size-[5px] rounded-full bg-primary" />
           {t.hero.tag}
         </motion.p>
-        {/* The studio's own line — the page ends on what ELEVATE is, having
-            shown what it does. */}
+        {/* NOT `t.hero.title1/2`: that restates the hero's sentence with the
+            same verb and the same accent break, so the page ended by repeating
+            its opening instead of arriving somewhere. This is the studio's own
+            statement about how it works. */}
         <motion.h2
           {...rise(1)}
           id="closing-title"
           className="heading-scene mx-auto mt-6 max-w-[18ch] text-[clamp(2.2rem,1.3rem+3.6vw,4.5rem)] text-white uppercase"
         >
-          {t.hero.title1} <span className="text-primary">{t.hero.title2}</span>
+          {t.about.title}
         </motion.h2>
         <motion.p
           {...rise(2)}
-          className="mx-auto mt-6 max-w-[44ch] text-base leading-relaxed text-white/70"
+          className="mx-auto mt-6 max-w-[52ch] text-base leading-relaxed text-white/70"
         >
-          {t.hero.subtitle}
+          {t.about.body}
         </motion.p>
         <motion.div
           {...rise(3)}
@@ -108,7 +104,7 @@ export function ClosingCta() {
           </a>
           <Link
             to="/contact"
-            className="inline-flex items-center gap-2 text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
+            className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
           >
             {t.nav.contact}
             <ArrowRight className="size-4" aria-hidden />
@@ -126,7 +122,10 @@ export function ClosingCta() {
           className="w-full max-w-[34rem] origin-[50%_100%] lg:max-w-[38rem]"
         >
           <BrowserWindow address="elevateit.cz/contact" tab={t.nav.contact}>
-            <div className="relative flex aspect-[16/9] flex-col items-center justify-center gap-6 bg-[#0d1220] px-6">
+            <div
+              aria-hidden
+              className="relative flex aspect-[16/9] flex-col items-center justify-center gap-5 bg-[#0d1220] px-6 [container-type:inline-size]"
+            >
               <motion.span
                 aria-hidden
                 initial={reduced ? false : { scaleX: 0, opacity: 1 }}
@@ -139,37 +138,22 @@ export function ClosingCta() {
                 className="absolute inset-x-0 top-0 block h-[2px] origin-left bg-primary"
               />
               <div className="absolute inset-0 bg-[radial-gradient(60%_70%_at_50%_45%,oklch(0.65_0.18_255/0.18),transparent_70%)]" />
-              <Logo className="relative h-7 w-auto md:h-9" />
-              <p className="label-micro relative text-center text-white/60">
-                {f.directEyebrow} · {t.trust.response}
-              </p>
-              <div className="relative flex flex-wrap items-center justify-center gap-x-6 gap-y-3">
-                <a href={CONTACT_PHONE_HREF} className={channel}>
-                  <Phone className="size-4 text-primary" aria-hidden />
-                  <span className="tabular-nums">{CONTACT_PHONE}</span>
-                </a>
-                <a href={`mailto:${CONTACT_EMAIL}`} className={channel}>
-                  <Mail className="size-4 text-primary" aria-hidden />
-                  {CONTACT_EMAIL}
-                </a>
-                <a
-                  href={SOCIAL_LINKS.telegram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={channel}
-                >
-                  <Send className="size-4 text-primary" aria-hidden />
-                  Telegram
-                </a>
-                <a
-                  href={SOCIAL_LINKS.instagram}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={channel}
-                >
-                  <Instagram className="size-4 text-primary" aria-hidden />
-                  Instagram
-                </a>
+              {/* ELEVATE's own contact page, depicted — the last page the
+                  window loads. The real, clickable channels live in the site
+                  footer directly below; repeating them inside here made the
+                  final frame a duplicate of the frame under it. */}
+              <Logo className="relative h-[7cqw] w-auto" />
+              <p className="relative text-[2.6cqw] text-white/70">{t.contact.subtitle}</p>
+              <div className="relative flex w-[62%] flex-col gap-[1.6cqw]">
+                {[0, 1, 2].map((i) => (
+                  <span
+                    key={i}
+                    className="block h-[3.2cqw] rounded-full border border-white/12 bg-white/[0.04]"
+                  />
+                ))}
+                <span className="mt-[0.8cqw] block rounded-[1cqw] bg-primary py-[1.5cqw] text-center text-[2.4cqw] font-semibold text-white">
+                  {t.contact.form.submit}
+                </span>
               </div>
             </div>
           </BrowserWindow>

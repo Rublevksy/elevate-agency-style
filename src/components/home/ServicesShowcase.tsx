@@ -27,7 +27,7 @@ const ADDRESS = [
   clientSite("biodent-clinic").domain,
   clientSite("exclusive-beauty").domain,
   "elevateit.cz/services/branding",
-  "elevateit.cz/contact",
+  "elevateit.cz/services",
 ];
 
 export function ServicesShowcase() {
@@ -50,7 +50,7 @@ export function ServicesShowcase() {
     <section
       id="services"
       aria-label={t.nav.services}
-      className="relative bg-[#0A0D13] py-20 lg:hidden lg:py-32 motion-reduce:lg:block"
+      className="relative bg-[#0A0D13] py-20 xl:hidden xl:py-32 motion-reduce:xl:block"
     >
       <div className="container-luxe">
         <p className="label-micro flex items-center gap-4 text-white/60">

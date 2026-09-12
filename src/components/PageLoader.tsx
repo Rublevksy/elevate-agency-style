@@ -4,7 +4,9 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 // served by this app — the very first frame every visitor sees rendered a
 // broken image. This is the bundled wordmark, so Vite fingerprints and
 // ships it with the build.
-import logoAsset from "@/assets/elevate-logo.png";
+// webp, not the 262 KB png: this is the first asset the site fetches, on
+// every route, and it renders at ~200px wide.
+import logoAsset from "@/assets/elevate-logo.webp";
 
 const SESSION_KEY = "elevate_loader_shown";
 const TOTAL_MS = 3200;

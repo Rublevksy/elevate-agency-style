@@ -4,6 +4,14 @@ import { LangContext, translations, type Lang, type Dict } from "@/lib/i18n";
 const STORAGE_KEY = "elevate-lang";
 const VALID: Lang[] = ["CZ", "EN", "RU", "UA"];
 
+/**
+ * BCP 47 tags for `<html lang>`. NOT `lang.toLowerCase()`: that produced
+ * `lang="cz"` (a country code, not a language) and `lang="ua"` (Ukraine, not
+ * Ukrainian), which mis-declares the page to screen readers and search
+ * engines. Czech is `cs`, Ukrainian is `uk`.
+ */
+const HTML_LANG: Record<Lang, string> = { CZ: "cs", EN: "en", RU: "ru", UA: "uk" };
+
 function readInitial(): Lang {
   if (typeof window === "undefined") return "CZ";
   try {
@@ -24,7 +32,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
     const initial = readInitial();
     if (initial !== lang) setLangState(initial);
     if (typeof document !== "undefined") {
-      document.documentElement.lang = initial.toLowerCase();
+      document.documentElement.lang = HTML_LANG[initial];
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -37,7 +45,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
       // ignore
     }
     if (typeof document !== "undefined") {
-      document.documentElement.lang = l.toLowerCase();
+      document.documentElement.lang = HTML_LANG[l];
     }
   };
 

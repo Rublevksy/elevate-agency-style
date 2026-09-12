@@ -24,24 +24,32 @@
 import { PROJECTS_BASE, type ProjectSlug } from "@/lib/projects";
 
 import biodentDesktopWebp from "@/assets/work/biodent-clinic-desktop.webp";
+import biodentDesktopSmWebp from "@/assets/work/biodent-clinic-desktop-sm.webp";
+import biodentDesktopSmJpg from "@/assets/work/biodent-clinic-desktop-sm.jpg";
 import biodentDesktopJpg from "@/assets/work/biodent-clinic-desktop.jpg";
 import biodentPageWebp from "@/assets/work/biodent-clinic-page.webp";
 import biodentPageJpg from "@/assets/work/biodent-clinic-page.jpg";
 import biodentMobileWebp from "@/assets/work/biodent-clinic-mobile.webp";
 import biodentMobileJpg from "@/assets/work/biodent-clinic-mobile.jpg";
 import beautyDesktopWebp from "@/assets/work/exclusive-beauty-desktop.webp";
+import beautyDesktopSmWebp from "@/assets/work/exclusive-beauty-desktop-sm.webp";
+import beautyDesktopSmJpg from "@/assets/work/exclusive-beauty-desktop-sm.jpg";
 import beautyDesktopJpg from "@/assets/work/exclusive-beauty-desktop.jpg";
 import beautyPageWebp from "@/assets/work/exclusive-beauty-page.webp";
 import beautyPageJpg from "@/assets/work/exclusive-beauty-page.jpg";
 import beautyMobileWebp from "@/assets/work/exclusive-beauty-mobile.webp";
 import beautyMobileJpg from "@/assets/work/exclusive-beauty-mobile.jpg";
 import nhomeDesktopWebp from "@/assets/work/nhome-praha-desktop.webp";
+import nhomeDesktopSmWebp from "@/assets/work/nhome-praha-desktop-sm.webp";
+import nhomeDesktopSmJpg from "@/assets/work/nhome-praha-desktop-sm.jpg";
 import nhomeDesktopJpg from "@/assets/work/nhome-praha-desktop.jpg";
 import nhomePageWebp from "@/assets/work/nhome-praha-page.webp";
 import nhomePageJpg from "@/assets/work/nhome-praha-page.jpg";
 import nhomeMobileWebp from "@/assets/work/nhome-praha-mobile.webp";
 import nhomeMobileJpg from "@/assets/work/nhome-praha-mobile.jpg";
 import euroDesktopWebp from "@/assets/work/euromotors-desktop.webp";
+import euroDesktopSmWebp from "@/assets/work/euromotors-desktop-sm.webp";
+import euroDesktopSmJpg from "@/assets/work/euromotors-desktop-sm.jpg";
 import euroDesktopJpg from "@/assets/work/euromotors-desktop.jpg";
 import euroPageWebp from "@/assets/work/euromotors-page.webp";
 import euroPageJpg from "@/assets/work/euromotors-page.jpg";
@@ -50,7 +58,15 @@ import euroMobileJpg from "@/assets/work/euromotors-mobile.jpg";
 
 export type WorkKind = "desktop" | "page" | "mobile";
 
-type Shot = { webp: string; jpg: string; width: number; height: number };
+type Shot = {
+  webp: string;
+  jpg: string;
+  width: number;
+  height: number;
+  /** Half-width cut, offered through `srcset` so a phone showing this capture
+   *  in a ~290px window does not fetch the 1600px plate. */
+  sm?: { webp: string; jpg: string; width: number };
+};
 
 export interface ClientSite {
   slug: ProjectSlug;
@@ -66,7 +82,13 @@ export interface ClientSite {
 }
 
 /** Natural sizes stamped by `scripts/capture-client-work.mjs`. */
-const desktop = (webp: string, jpg: string): Shot => ({ webp, jpg, width: 1600, height: 1000 });
+const desktop = (webp: string, jpg: string, smWebp: string, smJpg: string): Shot => ({
+  webp,
+  jpg,
+  width: 1600,
+  height: 1000,
+  sm: { webp: smWebp, jpg: smJpg, width: 800 },
+});
 const page = (webp: string, jpg: string): Shot => ({ webp, jpg, width: 1200, height: 1875 });
 const mobile = (webp: string, jpg: string, height = 960): Shot => ({
   webp,
@@ -82,7 +104,12 @@ const EXTRA: Record<ProjectSlug, Omit<ClientSite, "slug" | "name" | "domain" | "
       "Moderní stomatologie s 15 lety zkušeností. 3D diagnostika, kvalitní materiály a citlivý přístup. Pracujeme i v sobotu. Objednejte se online.",
     h1: "Stomatologická ordinace BioDent v Praze",
     shots: {
-      desktop: desktop(biodentDesktopWebp, biodentDesktopJpg),
+      desktop: desktop(
+        biodentDesktopWebp,
+        biodentDesktopJpg,
+        biodentDesktopSmWebp,
+        biodentDesktopSmJpg,
+      ),
       page: page(biodentPageWebp, biodentPageJpg),
       mobile: mobile(biodentMobileWebp, biodentMobileJpg, 950),
     },
@@ -92,7 +119,12 @@ const EXTRA: Record<ProjectSlug, Omit<ClientSite, "slug" | "name" | "domain" | "
     metaDescription:
       "Kosmetický salon Exclusive Beauty nabízí širokou škálu kosmetických služeb. Naší specialitou jsou depilace cukrovou vatou a ošetření ultrazvukovou špachtlí.",
     shots: {
-      desktop: desktop(beautyDesktopWebp, beautyDesktopJpg),
+      desktop: desktop(
+        beautyDesktopWebp,
+        beautyDesktopJpg,
+        beautyDesktopSmWebp,
+        beautyDesktopSmJpg,
+      ),
       page: page(beautyPageWebp, beautyPageJpg),
       mobile: mobile(beautyMobileWebp, beautyMobileJpg),
     },
@@ -100,7 +132,7 @@ const EXTRA: Record<ProjectSlug, Omit<ClientSite, "slug" | "name" | "domain" | "
   "nhome-praha": {
     tabTitle: "Úklidové služby, chemické čištění nábytku, stěhování a hodinový manžel - INHOME",
     shots: {
-      desktop: desktop(nhomeDesktopWebp, nhomeDesktopJpg),
+      desktop: desktop(nhomeDesktopWebp, nhomeDesktopJpg, nhomeDesktopSmWebp, nhomeDesktopSmJpg),
       page: page(nhomePageWebp, nhomePageJpg),
       mobile: mobile(nhomeMobileWebp, nhomeMobileJpg),
     },
@@ -111,7 +143,7 @@ const EXTRA: Record<ProjectSlug, Omit<ClientSite, "slug" | "name" | "domain" | "
       "V Praze 10 provádíme kompletní opravy a údržbu osobních i užitkových vozů všech značek. Zaručujeme vysokou kvalitu práce! Obraťte se na náš autoservis ještě dnes!",
     h1: "Důvěryhodný a spolehlivý autoservis pro vaše auto v Praze",
     shots: {
-      desktop: desktop(euroDesktopWebp, euroDesktopJpg),
+      desktop: desktop(euroDesktopWebp, euroDesktopJpg, euroDesktopSmWebp, euroDesktopSmJpg),
       page: page(euroPageWebp, euroPageJpg),
       mobile: mobile(euroMobileWebp, euroMobileJpg),
     },
@@ -155,11 +187,14 @@ export function WorkImage({
   style?: React.CSSProperties;
 }) {
   const shot = site.shots[kind];
+  const set = (full: string, small?: string) =>
+    shot.sm && small ? `${small} ${shot.sm.width}w, ${full} ${shot.width}w` : full;
   return (
     <picture className={className} style={style}>
-      <source type="image/webp" srcSet={shot.webp} sizes={sizes} />
+      <source type="image/webp" srcSet={set(shot.webp, shot.sm?.webp)} sizes={sizes} />
       <img
         src={shot.jpg}
+        srcSet={shot.sm ? set(shot.jpg, shot.sm.jpg) : undefined}
         alt={alt}
         width={shot.width}
         height={shot.height}

@@ -46,7 +46,7 @@ export function ProjectBlueprint({
     transition: { duration: reduced ? 0 : 0.55, delay: reduced ? 0 : delay, ease: EASE },
   });
   const tag = (label: string) => (
-    <span className="absolute -top-[1.5cqw] left-[1cqw] z-10 rounded-[0.4cqw] bg-primary px-[1cqw] py-[0.45cqw] text-[1.7cqw] leading-none font-medium whitespace-nowrap text-white shadow-[0_0.6cqw_1.6cqw_-0.6cqw_oklch(0.65_0.18_255/0.9)]">
+    <span className="absolute -top-[1.5cqw] left-[1cqw] z-10 max-w-[calc(100%-2cqw)] truncate rounded-[0.4cqw] bg-primary px-[1cqw] py-[0.45cqw] text-[1.7cqw] leading-none font-medium text-white shadow-[0_0.6cqw_1.6cqw_-0.6cqw_oklch(0.65_0.18_255/0.9)]">
       {label}
     </span>
   );

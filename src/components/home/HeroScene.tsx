@@ -80,7 +80,7 @@ const STOP_ADDRESS = [
   clientSite("biodent-clinic").domain,
   clientSite("exclusive-beauty").domain,
   "elevateit.cz/services/branding",
-  "elevateit.cz/contact",
+  "elevateit.cz/services",
 ];
 
 export function HeroScene() {
@@ -151,12 +151,13 @@ export function HeroScene() {
 
   // ---- Scroll: the hero beat ---------------------------------------------
   const R = (v: number, rest: number) => (reduced ? rest : v);
-  // The headline holds while the window starts to move and leaves as the
-  // window navigates — so the column is never empty for long before the first
-  // service's copy arrives on the other side of the page load.
-  const copyY = useTransform(p, [at(0.12), at(0.8)], [0, R(-120, 0)]);
-  const copyFade = useTransform(p, [at(0.3), at(0.78)], [1, R(0, 1)]);
-  const copyScale = useTransform(p, [at(0.12), at(0.8)], [1, R(0.97, 1)]);
+  // The headline holds until the window actually navigates (its address
+  // changes at 0.93 viewports) and hands straight over to the first service's
+  // copy. Leaving earlier emptied the left half of the frame for ~150px of
+  // scroll — the "is it still loading?" frame the independent review landed on.
+  const copyY = useTransform(p, [at(0.2), at(0.95)], [0, R(-120, 0)]);
+  const copyFade = useTransform(p, [at(0.55), at(0.92)], [1, R(0, 1)]);
+  const copyScale = useTransform(p, [at(0.2), at(0.95)], [1, R(0.97, 1)]);
 
   // The window squares up and comes forward across the intro. It grows from
   // its LEFT edge, into the free margin on the right: growing leftward ran it
@@ -225,7 +226,7 @@ export function HeroScene() {
     clientSite("biodent-clinic").tabTitle,
     clientSite("exclusive-beauty").tabTitle,
     t.ui.serviceStage[3].title,
-    t.ui.serviceStage[4].title,
+    t.nav.services,
   ];
 
   const jumpTo = (i: number) => {
@@ -261,7 +262,7 @@ export function HeroScene() {
             onClick={() => go(i)}
             aria-label={c.name}
             aria-pressed={i === site}
-            className="group relative flex h-6 items-center"
+            className="group relative flex h-11 min-w-11 items-center justify-center"
           >
             <span
               className={`block h-[3px] rounded-full transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] ${
@@ -301,11 +302,11 @@ export function HeroScene() {
       ref={act.ref}
       aria-label={t.hero.sceneKicker}
       style={{ "--hero-track": `${(HERO_VIEWPORTS * 100).toFixed(2)}svh` } as React.CSSProperties}
-      className="relative isolate w-full bg-[#0A0D13] lg:h-[var(--hero-track)] motion-reduce:lg:h-auto"
+      className="relative isolate w-full bg-[#0A0D13] xl:h-[var(--hero-track)] motion-reduce:xl:h-auto"
     >
-      <div className="relative overflow-hidden lg:sticky lg:top-0 lg:h-[100svh] motion-reduce:lg:relative">
+      <div className="relative overflow-hidden xl:sticky xl:top-0 xl:h-[100svh] motion-reduce:xl:relative">
         {/* ================= DESKTOP STAGE (lg+) ================= */}
-        <div className="relative hidden h-full lg:block">
+        <div className="relative hidden h-full xl:block">
           {/* ---- The portal plate, and the window standing in it ---------- */}
           <div className="pointer-events-none absolute inset-0">
             <div className="absolute aspect-[2400/1340]" style={BOX_STYLE}>
@@ -518,7 +519,7 @@ export function HeroScene() {
                 </Link>
                 <a
                   href="#work"
-                  className="text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
+                  className="inline-flex min-h-11 items-center text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
                 >
                   {t.hero.cta2}
                 </a>
@@ -573,11 +574,10 @@ export function HeroScene() {
                   <li key={s.title} className="flex-1">
                     <button
                       type="button"
-                      tabIndex={activeStop < 0 ? -1 : 0}
                       onClick={() => jumpTo(i)}
                       aria-current={activeStop === i ? "step" : undefined}
                       className={`group relative w-full py-4 pr-3 text-left transition-colors duration-300 ${
-                        activeStop === i ? "text-white" : "text-white/45 hover:text-white/80"
+                        activeStop === i ? "text-white" : "text-white/70 hover:text-white"
                       }`}
                     >
                       <span
@@ -586,7 +586,7 @@ export function HeroScene() {
                           activeStop === i ? "w-full" : "w-0"
                         }`}
                       />
-                      <span className="label-micro block tabular-nums text-primary/80">
+                      <span className="label-micro block tabular-nums text-primary">
                         {String(i + 1).padStart(2, "0")}
                       </span>
                       <span className="mt-1 block truncate text-sm">{s.title}</span>
@@ -601,69 +601,76 @@ export function HeroScene() {
         {/* ================= MOBILE (below lg) =================
             Its own composition: the portal and the window first, standing
             still, then the copy. No pinned track exists below lg. */}
-        <div className="relative flex min-h-[100svh] flex-col pt-20 pb-12 lg:hidden">
-          {/* The portal frames the window here too: the plate is cropped to
-              the arch (wider than the phone, centred on it) and the window
-              stands inside it at three-quarter width, so the arcs read around
-              it instead of disappearing behind it. */}
-          <div className="relative aspect-[10/9] w-full overflow-hidden sm:aspect-[16/10]">
-            <SceneImage
-              name="portal"
-              alt=""
-              priority
-              sizes="100vw"
-              className="absolute inset-y-0 left-1/2 block h-full w-[178%] -translate-x-[57%] sm:w-full sm:-translate-x-1/2"
-              imgClassName="h-full w-full object-cover"
-            />
-            <div
-              aria-hidden
-              className="absolute inset-0 bg-[linear-gradient(to_bottom,#0A0D13_0%,#0A0D1300_28%,#0A0D1300_70%,#0A0D13_100%)]"
-            />
-            <div className="absolute inset-x-0 bottom-[17%] flex justify-center px-6">
-              <div className="relative w-[74%] max-w-[22rem]">
-                <BrowserWindow compact address={current.domain}>
-                  <div className="relative aspect-[16/10] overflow-hidden bg-white">
-                    <div className="absolute inset-0 isolate">{cycleLayers}</div>
+        <div className="relative flex min-h-[100svh] flex-col justify-center pt-20 pb-12 xl:hidden">
+          {/* Stacked on phones; TWO COLUMNS from `md`. Stacked, a 1024x768
+              laptop got the portal and the window in its first screen and the
+              studio's own headline and CTA below the fold. */}
+          <div className="container-luxe grid grid-cols-1 items-center gap-8 md:grid-cols-[1fr_1.05fr] md:gap-10 lg:gap-14">
+            {/* The portal frames the window here too: the plate is cropped to
+                the arch (wider than the phone, centred on it) and the window
+                stands inside it at three-quarter width, so the arcs read around
+                it instead of disappearing behind it. */}
+            <div className="relative order-1 -mx-6 aspect-[10/9] overflow-hidden sm:aspect-[16/10] md:order-2 md:mx-0 md:aspect-[4/3.2]">
+              <SceneImage
+                name="portal"
+                alt=""
+                priority
+                sizes="100vw"
+                className="absolute inset-y-0 left-1/2 block h-full w-[178%] -translate-x-[57%] sm:w-full sm:-translate-x-1/2"
+                imgClassName="h-full w-full object-cover"
+              />
+              <div
+                aria-hidden
+                className="absolute inset-0 bg-[linear-gradient(to_bottom,#0A0D13_0%,#0A0D1300_28%,#0A0D1300_70%,#0A0D13_100%)]"
+              />
+              <div className="absolute inset-x-0 bottom-[17%] flex justify-center px-6">
+                <div className="relative w-[74%] max-w-[22rem]">
+                  <BrowserWindow compact address={current.domain}>
+                    <div className="relative aspect-[16/10] overflow-hidden bg-white">
+                      <div className="absolute inset-0 isolate">{cycleLayers}</div>
+                    </div>
+                  </BrowserWindow>
+                  <div className="absolute -right-3 -bottom-7 aspect-[1/2] w-[24%] overflow-hidden rounded-[0.8rem] border-4 border-[#05070c] bg-white shadow-[0_20px_50px_-15px_oklch(0_0_0/0.95)]">
+                    <WorkImage
+                      site={current}
+                      kind="mobile"
+                      alt=""
+                      sizes="90px"
+                      className="absolute inset-0 block h-full w-full"
+                      imgClassName="h-full w-full object-cover object-top"
+                    />
                   </div>
-                </BrowserWindow>
-                <div className="absolute -right-3 -bottom-7 aspect-[1/2] w-[24%] overflow-hidden rounded-[0.8rem] border-4 border-[#05070c] bg-white shadow-[0_20px_50px_-15px_oklch(0_0_0/0.95)]">
-                  <WorkImage
-                    site={current}
-                    kind="mobile"
-                    alt=""
-                    sizes="90px"
-                    className="absolute inset-0 block h-full w-full"
-                    imgClassName="h-full w-full object-cover object-top"
-                  />
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="container-luxe mt-2">
-            <div className="mb-6">{workCaption}</div>
-            <p className="label-micro text-white/70">{t.hero.sceneKicker}</p>
-            <h1 className="heading-scene mt-3 text-[clamp(1.9rem,1.2rem+2.4vw,3.25rem)] text-white uppercase">
-              {t.hero.sceneLine1}
-              <br />
-              {t.hero.sceneLine2}
-              <br />
-              <span className="text-primary">{t.hero.sceneAccent}</span>
-            </h1>
-            <p className="mt-4 text-[0.9375rem] leading-relaxed text-white/70">
-              {t.hero.sceneSubtitle}
-            </p>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
-              <Link to="/contact" className="btn-primary">
-                {t.hero.cta1}
-                <ArrowRight className="size-4" aria-hidden />
-              </Link>
-              <a
-                href="#work"
-                className="text-sm font-medium text-white/75 underline-offset-8 hover:underline"
-              >
-                {t.hero.cta2}
-              </a>
+            <div className="order-2 mt-2 md:order-1 md:mt-0">
+              <p className="label-micro text-white/70">{t.hero.sceneKicker}</p>
+              <h1 className="heading-scene mt-3 text-[clamp(1.9rem,1.2rem+2.4vw,3.25rem)] text-white uppercase">
+                {t.hero.sceneLine1}
+                <br />
+                {t.hero.sceneLine2}
+                <br />
+                <span className="text-primary">{t.hero.sceneAccent}</span>
+              </h1>
+              <p className="mt-4 text-[0.9375rem] leading-relaxed text-white/70">
+                {t.hero.sceneSubtitle}
+              </p>
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
+                <Link to="/contact" className="btn-primary">
+                  {t.hero.cta1}
+                  <ArrowRight className="size-4" aria-hidden />
+                </Link>
+                <a
+                  href="#work"
+                  className="text-sm font-medium text-white/75 underline-offset-8 hover:underline"
+                >
+                  {t.hero.cta2}
+                </a>
+              </div>
+              {/* The client caption sits AFTER the studio's own headline here:
+                stacked, it was naming a client before ELEVATE. */}
+              <div className="mt-8">{workCaption}</div>
             </div>
           </div>
         </div>
@@ -690,10 +697,10 @@ function ServiceSlot({
 }) {
   const s = stopStart(i);
   const last = i === SERVICE_COUNT - 1;
-  const inA = at(s + 0.02);
-  const inB = at(s + 0.16);
-  const outA = last ? 2 : at(stopStart(i + 1) - 0.14);
-  const outB = last ? 2.1 : at(stopStart(i + 1) - NAV.swap - 0.01);
+  const inA = at(s - 0.02);
+  const inB = at(s + 0.06);
+  const outA = last ? 2 : at(stopStart(i + 1) - 0.1);
+  const outB = last ? 2.1 : at(stopStart(i + 1) - 0.04);
   const y = useTransform(p, [inA, inB, outA, outB], [reduced ? 0 : 48, 0, 0, reduced ? 0 : -48]);
   const opacity = useTransform(p, [inA, inB, outA, outB], [0, 1, 1, 0]);
   const events = useTransform(p, (v) => (v > inA && v < outB ? "auto" : "none"));

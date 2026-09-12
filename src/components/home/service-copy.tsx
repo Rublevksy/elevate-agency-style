@@ -92,7 +92,7 @@ export function ServiceCopy({ index, size = "stage" }: { index: number; size?: "
       >
         {s.title}
       </h2>
-      <p className="label-micro mt-4 text-[oklch(0.78_0.19_253)]">{s.tag}</p>
+      <p className="mt-4 text-[0.9375rem] font-medium text-[oklch(0.78_0.19_253)]">{s.tag}</p>
       {s.intro && (
         <p
           className={`mt-4 max-w-[30rem] text-[0.9375rem] leading-relaxed text-white/65 ${
@@ -129,7 +129,7 @@ export function ServiceCopy({ index, size = "stage" }: { index: number; size?: "
           {s.pricingPath && (
             <Link
               to={s.pricingPath}
-              className="text-sm font-medium text-white/70 underline-offset-8 transition-colors hover:text-white hover:underline"
+              className="inline-flex min-h-11 items-center text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
             >
               {s.viewPricing}
             </Link>

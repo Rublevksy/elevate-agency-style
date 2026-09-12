@@ -16,7 +16,6 @@
  */
 import { motion, useTransform, type MotionValue } from "framer-motion";
 import { Logo } from "@/components/Logo";
-import { SceneImage } from "@/components/media/SceneImage";
 import { useT } from "@/lib/i18n";
 import { usePages } from "@/lib/pages-i18n";
 import { CLIENT_SITES, WorkImage, clientSite, type ClientSite } from "./client-work";
@@ -125,9 +124,9 @@ export function WebServicePage({ open }: { open: MotionValue<number> }) {
       <div className="relative flex flex-1 items-center gap-[3cqw] overflow-hidden px-[3cqw]">
         <div className="relative z-10 w-[40%] shrink-0">
           <span className="text-[1.2cqw] tracking-[0.2em] text-primary uppercase">{s.eyebrow}</span>
-          <h3 className="font-display mt-[1.2cqw] text-[3.6cqw] leading-[1.08] font-extrabold tracking-tight text-white">
+          <p className="font-display mt-[1.2cqw] text-[3.6cqw] leading-[1.08] font-extrabold tracking-tight text-white">
             {s.h1}
-          </h3>
+          </p>
           <p className="mt-[1.4cqw] line-clamp-3 text-[1.35cqw] leading-[1.55] text-white/60">
             {s.intro}
           </p>
@@ -188,7 +187,7 @@ export function WebServicePage({ open }: { open: MotionValue<number> }) {
           </div>
           <motion.div
             style={{ y: phoneY, opacity: phoneO }}
-            className="absolute -bottom-[4%] -left-[4%] aspect-[1/2] w-[21%] overflow-hidden rounded-[1.6cqw] border-[0.5cqw] border-[#05070c] bg-white shadow-[0_3cqw_6cqw_-2cqw_oklch(0_0_0/0.9)]"
+            className="absolute -bottom-[5%] right-[-3%] aspect-[1/2] w-[19%] overflow-hidden rounded-[1.6cqw] border-[0.5cqw] border-[#05070c] bg-white shadow-[0_3cqw_6cqw_-2cqw_oklch(0_0_0/0.9)]"
           >
             <WorkImage
               site={front}
@@ -364,21 +363,102 @@ export function BrandBoard({ open }: { open: MotionValue<number> }) {
   );
 }
 
-/** Apps — the approved device plate from the same lit world as the portal. */
+/**
+ * Apps — elevateit.cz/services, showing the app the studio would build.
+ *
+ * It used to be the approved `hero-iphone` photograph: beautiful, but the one
+ * chapter of five containing no interface at all, which read as decoration
+ * next to four chapters of real web material. It is now drawn in the same
+ * schematic register as the builder's blueprint — explicitly a design, not a
+ * claim that some shipped app exists — with the service's own real name, tags
+ * and CTA label. The address bar says `/services`, which is the page this is,
+ * so the window never contradicts itself.
+ */
 export function AppStage({ open }: { open: MotionValue<number> }) {
-  const scale = useTransform(open, [0, 1], [1.12, 1]);
+  const { t, lang } = useT();
+  const stage = t.ui.serviceStage[4];
+  const bullets = t.ui.showcaseBullets[4] ?? [];
+  const common = usePages(lang).common;
+  const phoneY = useTransform(open, [0, 1], ["10%", "0%"]);
+  const phoneO = useTransform(open, [0, 0.55], [0, 1]);
+  const line = "border border-dashed border-[oklch(0.72_0.16_250/0.6)]";
+
   return (
-    <div aria-hidden className="absolute inset-0 overflow-hidden bg-[#07090e]">
-      <motion.div style={{ scale }} className="absolute inset-0">
-        <SceneImage
-          name="hero-iphone"
-          alt=""
-          sizes="(min-width: 1024px) 40vw, 80vw"
-          className="absolute inset-0 block h-full w-full"
-          imgClassName="h-full w-full object-cover object-[50%_58%]"
-        />
-      </motion.div>
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,#07090e_0%,transparent_30%,transparent_70%,#07090e_100%)]" />
+    <div
+      aria-hidden
+      className={`${SCREEN} absolute inset-0 flex flex-col [container-type:inline-size]`}
+    >
+      <MockNav />
+      <div className="relative flex flex-1 items-center gap-[3cqw] overflow-hidden px-[3cqw]">
+        <div className="absolute inset-0 bg-[radial-gradient(55%_65%_at_72%_55%,oklch(0.65_0.18_255/0.18),transparent_70%)]" />
+        <div className="relative z-10 w-[46%] shrink-0">
+          <span className="text-[1.2cqw] tracking-[0.2em] text-primary uppercase">
+            {t.ui.homeServicesEyebrow}
+          </span>
+          <p className="font-display mt-[1.2cqw] text-[3.4cqw] leading-[1.08] font-extrabold tracking-tight text-white">
+            {stage.title}
+          </p>
+          <div className="mt-[1.8cqw] flex flex-wrap gap-[0.8cqw]">
+            {bullets.map((b) => (
+              <span
+                key={b}
+                className="rounded-full border border-white/15 px-[1.2cqw] py-[0.45cqw] text-[1.15cqw] text-white/65"
+              >
+                {b}
+              </span>
+            ))}
+          </div>
+          <span className="mt-[2cqw] inline-block rounded-[0.6cqw] bg-primary px-[1.8cqw] py-[0.8cqw] text-[1.25cqw] font-semibold text-white">
+            {common.getQuote}
+          </span>
+        </div>
+
+        {/* The app itself, as a drawing on the device. */}
+        <div className="relative z-10 flex flex-1 justify-center">
+          <motion.div
+            style={{ y: phoneY, opacity: phoneO }}
+            className="relative aspect-[1/1.9] w-[46%] overflow-hidden rounded-[3cqw] border-[0.6cqw] border-[#05070c] bg-[#0a1020] shadow-[0_3cqw_7cqw_-2cqw_oklch(0_0_0/0.9)]"
+          >
+            <div className="flex h-full flex-col p-[1.6cqw]">
+              <div className="flex items-center justify-between px-[0.6cqw] pb-[1.2cqw]">
+                <Logo className="h-[1.5cqw] w-auto" />
+                <span className={`block size-[1.6cqw] rounded-full ${line}`} />
+              </div>
+              <div
+                className={`mb-[1.2cqw] h-[9cqw] shrink-0 rounded-[1.2cqw] ${line} bg-[oklch(0.72_0.16_250/0.14)]`}
+              />
+              <div className="flex flex-1 flex-col gap-[1cqw]">
+                {[0, 1, 2].map((i) => (
+                  <div
+                    key={i}
+                    className={`flex items-center gap-[1cqw] rounded-[1cqw] p-[1cqw] ${line}`}
+                  >
+                    <span className="block size-[3cqw] shrink-0 rounded-[0.6cqw] bg-[oklch(0.72_0.16_250/0.22)]" />
+                    <span className="flex-1 space-y-[0.6cqw]">
+                      <span className="block h-[0.7cqw] w-[72%] rounded-full bg-white/45" />
+                      <span className="block h-[0.7cqw] w-[48%] rounded-full bg-white/25" />
+                    </span>
+                  </div>
+                ))}
+              </div>
+              <span className="mt-[1.2cqw] block rounded-[1cqw] bg-primary py-[1.2cqw] text-center text-[1.3cqw] font-semibold text-white">
+                {common.getQuote}
+              </span>
+              {/* tab bar */}
+              <div
+                className={`mt-[1.2cqw] flex items-center justify-around rounded-[1cqw] px-[1cqw] py-[1cqw] ${line}`}
+              >
+                {[0, 1, 2, 3].map((i) => (
+                  <span
+                    key={i}
+                    className={`block size-[1.6cqw] rounded-[0.4cqw] ${i === 0 ? "bg-primary" : "bg-white/25"}`}
+                  />
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
     </div>
   );
 }

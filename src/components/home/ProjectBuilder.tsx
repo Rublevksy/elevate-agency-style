@@ -260,7 +260,7 @@ export function ProjectBuilder() {
                   setStep(0);
                   setSent(false);
                 }}
-                className="mt-8 text-sm font-medium text-white/65 underline-offset-8 transition-colors hover:text-white hover:underline"
+                className="mt-8 inline-flex min-h-11 items-center text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
               >
                 {f.sendAgain}
               </button>
@@ -380,7 +380,7 @@ export function ProjectBuilder() {
                   <button
                     type="button"
                     onClick={() => setStep((s) => Math.max(0, s - 1))}
-                    className="inline-flex items-center gap-2 text-sm font-medium text-white/65 underline-offset-8 transition-colors hover:text-white hover:underline"
+                    className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
                   >
                     <ArrowLeft className="size-4" aria-hidden />
                     {f.back}
@@ -391,7 +391,11 @@ export function ProjectBuilder() {
                     type="button"
                     disabled={!canAdvance}
                     onClick={() => setStep((s) => Math.min(last, s + 1))}
-                    className="btn-primary text-sm disabled:cursor-not-allowed disabled:opacity-40"
+                    className={
+                      canAdvance
+                        ? "btn-primary text-sm"
+                        : "inline-flex cursor-not-allowed items-center gap-2 rounded-[0.625rem] border border-white/12 bg-white/[0.07] px-[1.6rem] py-[0.95rem] text-sm font-medium text-white/65"
+                    }
                   >
                     {f.next}
                     <ArrowRight className="size-4" aria-hidden />
@@ -401,7 +405,11 @@ export function ProjectBuilder() {
                     type="button"
                     disabled={!canSubmit || sending}
                     onClick={onSubmit}
-                    className="btn-primary text-sm disabled:cursor-not-allowed disabled:opacity-40"
+                    className={
+                      canSubmit && !sending
+                        ? "btn-primary text-sm"
+                        : "inline-flex cursor-not-allowed items-center gap-2 rounded-[0.625rem] border border-white/12 bg-white/[0.07] px-[1.6rem] py-[0.95rem] text-sm font-medium text-white/65"
+                    }
                   >
                     {sending ? f.sending : f.submit}
                     {sending ? (
@@ -411,7 +419,7 @@ export function ProjectBuilder() {
                     )}
                   </button>
                 )}
-                <span className="label-micro text-white/40">{f.noSpam}</span>
+                <span className="label-micro text-white/65">{f.noSpam}</span>
               </div>
             </>
           )}
@@ -440,17 +448,17 @@ function OptionList({
   multi?: boolean;
 }) {
   return (
-    <ul role={multi ? "group" : "radiogroup"}>
+    <div role={multi ? "group" : "radiogroup"}>
       {options.map((label, i) => {
         const on = selected.includes(i);
         return (
-          <li key={label} className="border-t border-white/10 last:border-b">
+          <div key={label} className="border-t border-white/10 last:border-b">
             <button
               type="button"
               role={multi ? "checkbox" : "radio"}
               aria-checked={on}
               onClick={() => onPick(i)}
-              className="group flex w-full items-center gap-4 py-3.5 text-left focus-visible:outline-none"
+              className="group flex w-full items-center gap-4 rounded-sm py-3.5 text-left focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-[#0A0D13] focus-visible:outline-none"
             >
               <span
                 aria-hidden
@@ -473,10 +481,10 @@ function OptionList({
                 {label}
               </motion.span>
             </button>
-          </li>
+          </div>
         );
       })}
-    </ul>
+    </div>
   );
 }
 

@@ -23,6 +23,7 @@
   --color-popover: var(--popover);
   --color-popover-foreground: var(--popover-foreground);
   --color-primary: var(--primary);
+  --color-primary-strong: var(--primary-strong);
   --color-primary-foreground: var(--primary-foreground);
   --color-primary-glow: var(--primary-glow);
   --color-secondary: var(--secondary);
@@ -55,6 +56,7 @@
   --popover-foreground: oklch(0.985 0 0);
 
   --primary: oklch(0.65 0.18 255);             /* #3B82F6 */
+  --primary-strong: oklch(0.55 0.17 258);      /* CTA surface: white on it passes AA */
   --primary-foreground: oklch(0.985 0 0);
   --primary-glow: oklch(0.72 0.16 250);
   --primary-glow-strong: oklch(0.78 0.19 253); /* brighter/more saturated accent — hero arc only */
@@ -280,7 +282,12 @@
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    background-color: var(--color-primary);
+    /* NOT `--color-primary`: white on the brand blue measures 2.98:1 from
+       rendered pixels (independent review, 2026-09-12) and this is 14px/500
+       body text, so it needs 4.5:1. The brand blue is unchanged everywhere it
+       is a light, an accent or a rule; only the surface that carries white
+       label text is darkened, to the same hue. */
+    background-color: var(--color-primary-strong);
     color: var(--color-primary-foreground);
     padding: 0.95rem 1.6rem;
     border-radius: 0.625rem;
@@ -292,7 +299,7 @@
   }
   .btn-primary:hover {
     transform: translateY(-2px);
-    background-color: oklch(0.7 0.18 255);
+    background-color: oklch(0.6 0.18 258);
     box-shadow: 0 0 0 1px oklch(0.72 0.16 250 / 0.5) inset,
                 0 16px 50px -10px oklch(0.65 0.18 255 / 0.75);
   }

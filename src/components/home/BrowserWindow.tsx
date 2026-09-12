@@ -49,7 +49,7 @@ export function BrowserWindow({
             </span>
             <span className="relative flex h-full w-[58%] min-w-0 items-center gap-2 rounded-t-lg bg-[#161c2b] px-3">
               <span className="size-2 shrink-0 rounded-[3px] bg-primary/80" />
-              <span className="relative block h-3.5 min-w-0 flex-1 truncate text-[10.5px] leading-3.5 text-white/70">
+              <span className="relative block h-3.5 min-w-0 flex-1 truncate text-[0.6875rem] leading-3.5 text-white/70">
                 {tab}
               </span>
             </span>
@@ -73,11 +73,7 @@ export function BrowserWindow({
             }`}
           >
             <Lock className="size-3 shrink-0 text-white/40" strokeWidth={2.2} />
-            <span
-              className={`relative block h-4 w-full truncate font-mono leading-4 tracking-wide text-white/80 ${
-                compact ? "text-[10px]" : "text-[11.5px]"
-              }`}
-            >
+            <span className="relative block h-4 w-full truncate font-mono text-[0.6875rem] leading-4 tracking-wide text-white/80">
               {address}
             </span>
           </div>

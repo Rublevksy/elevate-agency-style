@@ -41,5 +41,11 @@ export const stopStart = (i: number) => INTRO_VP + i * STOP_VP;
  * One navigation of the window, in viewports relative to the moment the new
  * page begins: the address changes (hard cut, the way a real bar does), the load
  * bar runs, the old page blanks, the new one paints top-down.
+ *
+ * Deliberately SHORT. At paint 0.14 / swap 0.05 the independent review landed
+ * on a half-painted window at three sampled positions and read it as a page
+ * that had failed to load — 26% of every stop. A real browser's blank is
+ * ~80ms; reproducing its duration faithfully is the one piece of fidelity
+ * worth dropping. The paint is now ~63px of scroll at 900px tall.
  */
-export const NAV = { lead: 0.08, swap: 0.05, paint: 0.14 } as const;
+export const NAV = { lead: 0.06, swap: 0.02, paint: 0.07 } as const;

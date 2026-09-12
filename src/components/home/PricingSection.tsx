@@ -21,7 +21,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { EASE, useReducedScene } from "@/components/cinematic";
 import { useT } from "@/lib/i18n";
 import { usePages, type PricingSlug } from "@/lib/pages-i18n";
-import { BrowserWindow } from "./BrowserWindow";
 
 const PLANS: PricingSlug[] = ["web", "eshop", "branding"];
 
@@ -30,6 +29,22 @@ export function PricingSection() {
   const pages = usePages(lang);
   const reduced = useReducedScene();
   const [active, setActive] = useState<PricingSlug>("web");
+
+  /** `role="tablist"` promises arrow-key movement; without this the pattern
+   *  announces behaviour the implementation does not have. */
+  const onTabKey = (e: React.KeyboardEvent) => {
+    const i = PLANS.indexOf(active);
+    const next =
+      e.key === "ArrowRight"
+        ? (i + 1) % PLANS.length
+        : e.key === "ArrowLeft"
+          ? (i + PLANS.length - 1) % PLANS.length
+          : -1;
+    if (next < 0) return;
+    e.preventDefault();
+    setActive(PLANS[next]);
+    document.getElementById(`plan-tab-${PLANS[next]}`)?.focus();
+  };
   const plan = pages.pricingPages[active];
 
   const rise = (i: number) => ({
@@ -43,7 +58,7 @@ export function PricingSection() {
     <section
       id="pricing"
       aria-labelledby="pricing-title"
-      className="relative isolate overflow-hidden bg-[#0A0D13] py-24 lg:py-36"
+      className="relative isolate overflow-hidden bg-[#0A0D13] py-20 lg:py-28"
     >
       {/* The portal's light, carried down the page as a glow rather than a
           second picture: the same blue, low and wide behind the window. */}
@@ -87,6 +102,8 @@ export function PricingSection() {
                 id={`plan-tab-${slug}`}
                 aria-selected={on}
                 aria-controls="plan-panel"
+                tabIndex={on ? 0 : -1}
+                onKeyDown={onTabKey}
                 onClick={() => setActive(slug)}
                 className={`group relative border-b border-white/10 py-6 text-left transition-colors duration-300 sm:border-b-0 sm:pr-6 ${
                   on ? "" : "hover:bg-white/[0.02]"
@@ -118,14 +135,20 @@ export function PricingSection() {
           })}
         </motion.div>
 
-        {/* ---- The selected plan, loaded into the window ------------------ */}
+        {/* ---- The selected plan ------------------------------------------
+            Deliberately NOT inside a BrowserWindow. Everywhere else on this
+            page the window DEPICTS a website; here it would have been chrome
+            wrapped around ELEVATE's own real, readable, interactive copy —
+            a card with a title bar, which is the one shape DESIGN.md bans and
+            which made the object mean two different things on one page. It
+            also put a second window on screen at the pricing seams. */}
         <motion.div {...rise(2)} className="mt-10 lg:mt-12">
-          <BrowserWindow address={`elevateit.cz${plan.path}`} tab={plan.title}>
+          <div>
             <div
               id="plan-panel"
               role="tabpanel"
               aria-labelledby={`plan-tab-${active}`}
-              className="relative overflow-hidden bg-[#0d1220]"
+              className="relative overflow-hidden border-t border-white/10"
             >
               <motion.span
                 key={`bar-${active}`}
@@ -145,7 +168,7 @@ export function PricingSection() {
                   animate={{ clipPath: "inset(0 0 0% 0)" }}
                   exit={reduced ? undefined : { opacity: 0, transition: { duration: 0.12 } }}
                   transition={{ duration: 0.6, ease: EASE }}
-                  className="grid grid-cols-1 gap-10 p-6 sm:p-10 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:p-14"
+                  className="grid grid-cols-1 gap-10 py-10 sm:py-12 lg:grid-cols-[1.05fr_1fr] lg:gap-16 lg:py-14"
                 >
                   <div>
                     <p className="label-micro text-primary">{plan.eyebrow}</p>
@@ -178,7 +201,7 @@ export function PricingSection() {
                         </Link>
                         <a
                           href="#builder"
-                          className="text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
+                          className="inline-flex min-h-11 items-center text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
                         >
                           {pages.pricingDetail.finalCtaBtn}
                         </a>
@@ -213,7 +236,7 @@ export function PricingSection() {
                 </motion.div>
               </AnimatePresence>
             </div>
-          </BrowserWindow>
+          </div>
         </motion.div>
 
         {/* ---- Everything else is priced on request — said once, plainly --- */}
@@ -224,7 +247,7 @@ export function PricingSection() {
           <p className="text-[0.9375rem] text-white/70">
             <Link
               to="/services/design"
-              className="font-medium text-white underline-offset-8 transition-colors hover:text-primary hover:underline"
+              className="font-medium text-white underline-offset-8 transition-colors hover:text-[oklch(0.78_0.19_253)] hover:underline"
             >
               {t.services.items[3].title}
             </Link>
@@ -240,7 +263,7 @@ export function PricingSection() {
             </span>
             <a
               href="#builder"
-              className="inline-flex items-center gap-2 font-medium text-primary underline-offset-8 hover:underline"
+              className="inline-flex min-h-11 items-center gap-2 font-medium text-[oklch(0.78_0.19_253)] underline-offset-8 hover:underline"
             >
               {pages.pricingIndex.notSureCta}
               <ArrowRight className="size-4" aria-hidden />

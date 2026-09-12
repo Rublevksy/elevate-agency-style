@@ -146,8 +146,12 @@ async function processAll() {
       await img.clone().webp({ quality: 78, effort: 6 }).toFile(`${OUT}/${site.slug}-${name}.webp`);
       await img.clone().jpeg({ quality: 80, mozjpeg: true }).toFile(`${OUT}/${site.slug}-${name}.jpg`);
     };
-    // Fold: 2880x1800 -> 1600x1000.
+    // Fold: 2880x1800 -> 1600x1000, plus an 800px cut. A phone shows this
+    // capture in a ~290px window; without the small cut the hero pulled four
+    // 1600px desktop plates on mobile (measured: 287 KB of the 709 KB first
+    // load, more than desktop fetched).
     await out(sharp(src("desktop-fold")).resize(1600, 1000), "desktop");
+    await out(sharp(src("desktop-fold")).resize(800, 500), "desktop-sm");
     // Page: the first ~2.5 viewports, 1200 wide.
     const full = await sharp(src("desktop-full")).metadata();
     const pageH = Math.min(full.height, Math.round(full.width * 1.5625));

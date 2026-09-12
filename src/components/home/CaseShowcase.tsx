@@ -53,7 +53,7 @@ export function CaseShowcase() {
   const capability = useMotionCapability();
   const reduced = capability === "still";
   const act = useAct("cases", { viewports: VIEWPORTS, pin: PIN });
-  const { progress: p, enter } = act;
+  const { progress: p, enter, exit } = act;
 
   const [active, setActive] = useState(0);
   useMotionValueEvent(p, "change", (v) => {
@@ -69,6 +69,10 @@ export function CaseShowcase() {
   const winRotateX = useTransform(enter, [0, 1], [reduced ? 0 : 12, 0]);
   const winScale = useTransform(enter, [0, 1], [reduced ? 1 : 0.9, 1]);
   const headFade = useTransform(enter, [0.3, 0.9], [reduced ? 1 : 0, 1]);
+  // The window leaves with its own act. Without this, the builder's window
+  // rose into frame while this one was still 48% visible — two windows in one
+  // frame at the seam (independent review measured 5-7 such frames here).
+  const winFade = useTransform(exit, [0, 0.4], [1, reduced ? 1 : 0]);
 
   const bar = useLoadBar(
     p,
@@ -90,10 +94,14 @@ export function CaseShowcase() {
     <div>
       <p className="label-micro flex items-center gap-4 text-white/60">
         <span aria-hidden className="h-px w-10 bg-white/30" />
-        {t.ui.homeWorkEyebrow}
+        {t.nav.work}
       </p>
+      {/* Not `homeWorkTitle` ("Práce, která přináší výsledky"): this section
+          shows the work, not figures for it, and the page states no metric
+          anywhere (PRODUCT.md §33). A heading that promises results over four
+          screenshots is the one place the page would over-claim. */}
       <h2 className="heading-scene mt-5 max-w-[16ch] text-[clamp(1.6rem,1.1rem+1.5vw,2.4rem)] text-white">
-        {t.ui.homeWorkTitle}
+        {t.ui.homeWorkEyebrow}
       </h2>
     </div>
   );
@@ -104,10 +112,10 @@ export function CaseShowcase() {
       id="work"
       aria-label={t.ui.homeWorkEyebrow}
       style={{ "--cases-track": `${(VIEWPORTS * 100).toFixed(2)}svh` } as React.CSSProperties}
-      className="relative isolate bg-[#0A0D13] lg:h-[var(--cases-track)] motion-reduce:lg:h-auto"
+      className="relative isolate bg-[#0A0D13] xl:h-[var(--cases-track)] motion-reduce:xl:h-auto"
     >
       {/* ================= DESKTOP: pinned, one window ================= */}
-      <div className="hidden overflow-hidden lg:sticky lg:top-0 lg:block lg:h-[100svh] motion-reduce:lg:hidden">
+      <div className="hidden overflow-hidden xl:sticky xl:top-0 xl:block xl:h-[100svh] motion-reduce:xl:hidden">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(55%_60%_at_68%_52%,oklch(0.65_0.18_255/0.16),transparent_72%)]"
@@ -126,7 +134,7 @@ export function CaseShowcase() {
 
           <div className="relative" style={{ perspective: `${PERSPECTIVE}px` }}>
             <motion.div
-              style={{ y: winY, rotateX: winRotateX, scale: winScale }}
+              style={{ y: winY, rotateX: winRotateX, scale: winScale, opacity: winFade }}
               className="relative origin-[50%_100%]"
             >
               <BrowserWindow
@@ -218,11 +226,11 @@ export function CaseShowcase() {
                     onClick={() => jumpTo(i)}
                     aria-current={active === i ? "step" : undefined}
                     className={`group relative w-full py-4 pr-3 text-left transition-colors duration-300 ${
-                      active === i ? "text-white" : "text-white/45 hover:text-white/80"
+                      active === i ? "text-white" : "text-white/70 hover:text-white"
                     }`}
                   >
                     <RailFill p={p} i={i} />
-                    <span className="label-micro block tabular-nums text-primary/80">
+                    <span className="label-micro block tabular-nums text-primary">
                       {String(i + 1).padStart(2, "0")}
                     </span>
                     <span className="mt-1 block truncate text-sm">{site.name}</span>
@@ -235,7 +243,7 @@ export function CaseShowcase() {
       </div>
 
       {/* ================= STACKED: phones, and reduced motion ================= */}
-      <div className="container-luxe py-20 lg:hidden motion-reduce:lg:block motion-reduce:lg:py-32">
+      <div className="container-luxe py-20 xl:hidden motion-reduce:xl:block motion-reduce:xl:py-32">
         {header}
         <ol className="mt-12 space-y-16 lg:mt-16 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:gap-y-20 lg:space-y-0">
           {CLIENT_SITES.map((site, i) => (
@@ -271,10 +279,10 @@ export function CaseShowcase() {
         </ol>
       </div>
 
-      <div className="container-luxe pb-4 lg:hidden motion-reduce:lg:block motion-reduce:lg:pb-24">
+      <div className="container-luxe pb-4 xl:hidden motion-reduce:xl:block motion-reduce:xl:pb-24">
         <Link
           to="/projects"
-          className="inline-flex items-center gap-2 text-sm font-medium text-white/75 underline-offset-8 hover:text-white hover:underline"
+          className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-white/75 underline-offset-8 hover:text-white hover:underline"
         >
           {t.ui.homeWorkViewAll}
           <ArrowRight className="size-4" aria-hidden />
@@ -299,11 +307,10 @@ function CaseCopy({
     <div>
       <p className="label-micro flex items-baseline gap-3">
         <span className="text-primary tabular-nums">{String(index + 1).padStart(2, "0")}</span>
-        <span className="text-white/45 tabular-nums">/ {String(COUNT).padStart(2, "0")}</span>
         {category && (
           <>
             <span aria-hidden className="h-px w-8 self-center bg-white/20" />
-            <span className="text-white/65">{category}</span>
+            <span className="text-white/70">{category}</span>
           </>
         )}
       </p>
@@ -320,7 +327,7 @@ function CaseCopy({
           href={site.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
+          className="inline-flex min-h-11 items-center gap-1.5 text-sm font-medium text-white/75 underline-offset-8 transition-colors hover:text-white hover:underline"
         >
           {t.ui.casesLive}
           <ArrowUpRight className="size-4" aria-hidden />
