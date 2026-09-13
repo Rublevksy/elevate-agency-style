@@ -225,22 +225,63 @@ export function Visual({
           </>
         )}
 
-        {spec.imagery.style === "type-only" && (
-          <>
-            <div className="absolute inset-0" style={{ background: "var(--c-surface)" }} />
-            <span
-              className="absolute right-[-4%] bottom-[-18%] leading-none select-none"
-              style={{
-                ...theme.display,
-                fontSize: "min(150cqi, 22em)",
-                color: "var(--c-accent)",
-                opacity: 0.9,
-              }}
-            >
-              {brand.trim().charAt(0) || "·"}
-            </span>
-          </>
-        )}
+        {spec.imagery.style === "type-only" &&
+          (() => {
+            // Three compositions of the brand's initial, chosen per slot, so a
+            // row of type-only tiles is a set and not one letter repeated.
+            const variant = Math.floor(r() * 3);
+            const letter = brand.trim().charAt(0) || "·";
+            return (
+              <>
+                <div className="absolute inset-0" style={{ background: "var(--c-surface)" }} />
+                {variant === 0 && (
+                  <span
+                    className="absolute right-[-4%] bottom-[-18%] leading-none select-none"
+                    style={{
+                      ...theme.display,
+                      fontSize: "min(150cqi, 22em)",
+                      color: "var(--c-accent)",
+                      opacity: 0.9,
+                    }}
+                  >
+                    {letter}
+                  </span>
+                )}
+                {variant === 1 && (
+                  <span
+                    className="absolute inset-0 grid place-items-center leading-none select-none"
+                    style={{
+                      ...theme.display,
+                      fontSize: "min(90cqi, 14em)",
+                      color: "transparent",
+                      WebkitTextStroke: `1.5px ${spec.palette.accent}`,
+                    }}
+                  >
+                    {letter}
+                  </span>
+                )}
+                {variant === 2 && (
+                  <>
+                    <span
+                      className="absolute top-[8%] left-[8%] leading-none select-none"
+                      style={{
+                        ...theme.display,
+                        fontSize: "min(60cqi, 9em)",
+                        color: "var(--c-text)",
+                        opacity: 0.85,
+                      }}
+                    >
+                      {letter}
+                    </span>
+                    <span
+                      className="absolute right-[8%] bottom-[10%] left-[8%] h-px"
+                      style={{ background: "var(--c-accent)" }}
+                    />
+                  </>
+                )}
+              </>
+            );
+          })()}
       </div>
 
       {spec.imagery.treatment === "duotone" && (

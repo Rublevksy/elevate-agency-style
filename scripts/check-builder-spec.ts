@@ -22,7 +22,7 @@ import {
   type DesignSpecDraft,
 } from "../src/lib/builder/spec.ts";
 import { toJsonSchema } from "../src/lib/builder/tool-schema.ts";
-import { FIXTURE_DRAFTS } from "../src/lib/builder/fixtures.dev.ts";
+import { FIXTURE_DRAFTS, FIXTURE_DRAFTS_B } from "../src/lib/builder/fixtures.dev.ts";
 
 let passed = 0;
 const test = (name: string, fn: () => void) => {
@@ -39,13 +39,15 @@ const test = (name: string, fn: () => void) => {
 const clone = <T>(x: T): T => JSON.parse(JSON.stringify(x));
 const base = FIXTURE_DRAFTS[0];
 
-test("fixtures parse and pass the distinctness gate", () => {
-  const drafts = FIXTURE_DRAFTS.map((f) => {
-    const r = parseDraft(f);
-    assert.ok(r.ok, JSON.stringify(!r.ok && r.issues));
-    return r.draft;
-  });
-  assert.deepEqual(assessDistinctness(drafts), []);
+test("both fixture sets parse, state no figures, and pass the distinctness gate", () => {
+  for (const set of [FIXTURE_DRAFTS, FIXTURE_DRAFTS_B]) {
+    const drafts = set.map((f) => {
+      const r = parseDraft(f, { rejectClaims: true });
+      assert.ok(r.ok, JSON.stringify(!r.ok && r.issues));
+      return r.draft;
+    });
+    assert.deepEqual(assessDistinctness(drafts), []);
+  }
 });
 
 test("rejects unknown enum values (the model cannot invent a layout)", () => {

@@ -49,7 +49,7 @@ export function ConceptViewer({
   onClose: () => void;
   onSelect: () => void;
   /** Resolves when the revised spec is in place; rejects with a user-facing message. */
-  onRefine: (feedback: string) => Promise<void>;
+  onRefine: (feedback: string) => Promise<number>;
   onRestore: (version: DesignSpec) => void;
   /** Where focus goes back to when the dialog closes (the control that opened it). */
   returnFocus?: HTMLElement | null;
@@ -72,9 +72,9 @@ export function ConceptViewer({
     setError(null);
     setRefining(true);
     try {
-      await onRefine(text);
+      const revision = await onRefine(text);
       setFeedback("");
-      setAnnounce(v.revision(spec.revision + 1));
+      setAnnounce(v.revision(revision));
     } catch (err) {
       setError({ kind: "failed", message: (err as Error).message });
     } finally {
@@ -146,8 +146,7 @@ export function ConceptViewer({
                   ) : (
                     <Smartphone className="size-4" aria-hidden />
                   )}
-                  <span className="hidden sm:inline">{d === "desktop" ? v.desktop : v.mobile}</span>
-                  <span className="sr-only sm:hidden">
+                  <span className="sr-only sm:not-sr-only">
                     {d === "desktop" ? v.desktop : v.mobile}
                   </span>
                 </button>
@@ -163,7 +162,13 @@ export function ConceptViewer({
 
           <div className="min-h-0 flex-1 overflow-y-auto lg:grid lg:grid-cols-[minmax(0,1fr)_26rem] lg:overflow-hidden">
             {/* Preview */}
-            <div className="bg-[#070a10] px-4 py-6 md:px-8 md:py-8 lg:overflow-y-auto">
+            {/* Scrollable on its own at lg, so it is a keyboard stop — named, not anonymous. */}
+            <div
+              role="region"
+              aria-label={`${spec.name} — ${v.placeholderNote}`}
+              tabIndex={0}
+              className="bg-[#070a10] px-4 py-6 outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-inset md:px-8 md:py-8 lg:overflow-y-auto"
+            >
               {device === "desktop" ? (
                 <BrowserWindow address="elevateit.cz/builder">
                   <ScaledPreview

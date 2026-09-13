@@ -386,3 +386,346 @@ export const FIXTURE_DRAFTS: DesignSpecDraft[] = [
     ],
   }),
 ];
+
+/**
+ * Set B (`/builder?fixture=b`) — a second fictional brief, in Ukrainian, built
+ * to reach every renderer path set A does not: the split-media hero (twice,
+ * structured and centered grids), mono display and body faces, the restrained
+ * scale, abstract-shapes and type-only imagery. It also carries the edge cases
+ * a model will produce: a headline near its 90-character limit, sections with
+ * no items, products without items, four-column features, five nav items, a
+ * split-cta navigation without a secondary CTA, and Cyrillic in every face.
+ */
+export const FIXTURE_BRIEF_B: Brief = {
+  projectType: "web",
+  project: {
+    company: "Студія Шари",
+    industry: "Архітектурне бюро",
+    offering:
+      "Невелике архітектурне бюро, яке проєктує приватні будинки та інтер'єри і супроводжує будівництво від ескізу до здачі.",
+    audience: "Родини, які планують будувати власний дім",
+    goal: "Запити на консультацію щодо проєкту",
+  },
+  visual: { style: "Точний, спокійний", mood: "Впевнений", colors: "", typography: "", notes: "" },
+  references: { urls: [], notes: "" },
+};
+
+export const FIXTURE_DRAFTS_B: DesignSpecDraft[] = [
+  d({
+    name: "Креслення",
+    archetype: "technical-precise",
+    positioning: "Бюро як точний інструмент — кожне рішення видно, як на кресленні.",
+    rationale:
+      "Родини, які будують дім, шукають передбачуваність. Моноширинна типографіка і сувора сітка передають точність і контроль над процесом.",
+    keywords: ["точність", "сітка", "процес"],
+    palette: {
+      background: "#f5f5f2",
+      surface: "#eaeae5",
+      text: "#111111",
+      muted: "#55554f",
+      accent: "#2f5bea",
+      onAccent: "#ffffff",
+    },
+    typography: {
+      display: "mono",
+      body: "mono",
+      scale: "restrained",
+      displayWeight: "semibold",
+      displayCase: "sentence",
+      tracking: "tight",
+    },
+    layout: {
+      navigation: "split-cta",
+      hero: "split-media",
+      grid: "structured",
+      density: "compact",
+      width: "wide",
+    },
+    surface: { radius: "none", borders: "hairline", depth: "flat" },
+    imagery: {
+      style: "abstract-shapes",
+      treatment: "monochrome",
+      subject: "Аксонометрія будинку, лінії та площини",
+    },
+    motion: { level: "calm", signature: "slide-reveal" },
+    copy: {
+      headline:
+        "Дім, спроєктований так само точно, як його креслення від першої лінії до останньої деталі",
+      subheadline: "Проєктуємо приватні будинки та інтер'єри і супроводжуємо будівництво до здачі.",
+      primaryCta: "Замовити консультацію",
+      nav: ["Проєкти", "Процес", "Бюро", "Контакт"],
+    },
+    sections: [
+      {
+        kind: "features",
+        eyebrow: "Підхід",
+        title: "Що отримує замовник",
+        items: [
+          { title: "Ескіз", text: "Перші варіанти планування." },
+          { title: "Проєкт", text: "Повна документація для будівництва." },
+          { title: "Інтер'єр", text: "Матеріали, світло, меблі." },
+          { title: "Нагляд", text: "Супровід на будмайданчику." },
+        ],
+      },
+      {
+        kind: "process",
+        title: "Як ми працюємо",
+        items: [
+          { title: "Знайомство", text: "Розмова про ваш спосіб життя." },
+          { title: "Концепція", text: "Об'єм, світло, орієнтація." },
+          { title: "Документація", text: "Креслення для підрядника." },
+          { title: "Будівництво", text: "Авторський нагляд." },
+        ],
+      },
+      { kind: "cta", title: "Почнімо з розмови" },
+    ],
+  }),
+  d({
+    name: "Світло і маса",
+    archetype: "immersive-visual",
+    positioning: "Архітектура, яку спершу відчувають, а вже потім читають.",
+    rationale:
+      "Великі зображення і темна сцена занурюють у простір. Напрям підходить, якщо бюро хоче, щоб роботи говорили самі за себе.",
+    keywords: ["простір", "світло", "тиша"],
+    palette: {
+      background: "#0d1411",
+      surface: "#16201b",
+      text: "#eef4f0",
+      muted: "#9fb3a8",
+      accent: "#7fd4a8",
+      onAccent: "#0d1411",
+    },
+    typography: {
+      display: "geometric",
+      body: "sans",
+      scale: "confident",
+      displayWeight: "black",
+      displayCase: "uppercase",
+      tracking: "wide",
+    },
+    layout: {
+      navigation: "minimal-menu",
+      hero: "split-media",
+      grid: "centered",
+      density: "airy",
+      width: "contained",
+    },
+    surface: { radius: "rounded", borders: "none", depth: "layered" },
+    imagery: {
+      style: "photography",
+      treatment: "duotone",
+      subject: "Вітальня з великим вікном на світанку",
+    },
+    motion: { level: "expressive", signature: "parallax-layers" },
+    copy: {
+      headline: "Простір, у якому хочеться жити",
+      subheadline: "Будинки та інтер'єри, спроєктовані навколо світла і ваших звичок.",
+      primaryCta: "Переглянути проєкти",
+      secondaryCta: "Написати нам",
+      nav: ["Проєкти", "Бюро", "Контакт"],
+    },
+    sections: [
+      {
+        kind: "showcase",
+        title: "Будинок, що відкривається до саду",
+        items: [
+          { title: "Світло", text: "Орієнтація кімнат за сонцем." },
+          { title: "Матеріал", text: "Дерево, камінь, вапно." },
+        ],
+      },
+      { kind: "gallery", title: "Деталі наших проєктів" },
+      {
+        kind: "story",
+        title: "Бюро, яке слухає",
+        body: "Кожен проєкт починаємо з того, як ви живете, а не з того, як виглядає фасад.",
+      },
+      { kind: "cta", title: "Розкажіть про свій дім" },
+    ],
+  }),
+  d({
+    name: "Тиша матеріалу",
+    archetype: "luxury-minimal",
+    positioning: "Мінімум слів, максимум уваги до матеріалу і пропорцій.",
+    rationale:
+      "Стримана типографіка з антиквою і майже порожня сторінка підкреслюють якість. Напрям для клієнтів, які цінують спокій більше за ефекти.",
+    keywords: ["пропорція", "матеріал", "спокій"],
+    palette: {
+      background: "#ece7df",
+      surface: "#e2dbd0",
+      text: "#1f1b16",
+      muted: "#5f574d",
+      accent: "#6b4f3a",
+      onAccent: "#ffffff",
+    },
+    typography: {
+      display: "editorial-serif",
+      body: "serif",
+      scale: "confident",
+      displayWeight: "light",
+      displayCase: "sentence",
+      tracking: "normal",
+    },
+    layout: {
+      navigation: "centered-logo",
+      hero: "centered-statement",
+      grid: "centered",
+      density: "airy",
+      width: "contained",
+    },
+    surface: { radius: "none", borders: "none", depth: "flat" },
+    imagery: {
+      style: "type-only",
+      treatment: "natural",
+      subject: "Типографічна композиція з ініціалом бюро",
+    },
+    motion: { level: "calm", signature: "fade-rise" },
+    copy: {
+      headline: "Архітектура тиші",
+      subheadline: "Приватні будинки та інтер'єри з увагою до матеріалу.",
+      primaryCta: "Домовитися про зустріч",
+      nav: ["Бюро", "Проєкти", "Контакт"],
+    },
+    sections: [
+      {
+        kind: "services",
+        title: "Що ми робимо",
+        body: "Проєктування будинків, інтер'єрів і супровід будівництва.",
+      },
+      { kind: "products", title: "Вибрані роботи" },
+      { kind: "cta", title: "Зустріньмося" },
+    ],
+  }),
+  d({
+    name: "Відкрита студія",
+    archetype: "playful-vivid",
+    positioning: "Бюро, з яким будувати дім весело, а не страшно.",
+    rationale:
+      "Яскравий колір і округлі форми знімають напругу, яку викликає будівництво. Напрям для молодих родин, які будують вперше.",
+    keywords: ["легкість", "колір", "відкритість"],
+    palette: {
+      background: "#ffe14d",
+      surface: "#fff0a6",
+      text: "#1a1400",
+      muted: "#4a3f00",
+      accent: "#1a1400",
+      onAccent: "#ffe14d",
+    },
+    typography: {
+      display: "rounded-humanist",
+      body: "sans",
+      scale: "monumental",
+      displayWeight: "black",
+      displayCase: "sentence",
+      tracking: "tight",
+    },
+    layout: {
+      navigation: "bar",
+      hero: "typographic",
+      grid: "asymmetric",
+      density: "compact",
+      width: "wide",
+    },
+    surface: { radius: "pill", borders: "strong", depth: "flat" },
+    imagery: {
+      style: "illustration",
+      treatment: "high-contrast",
+      subject: "Ілюстрація будинку з садом і родиною",
+    },
+    motion: { level: "expressive", signature: "scale-in" },
+    copy: {
+      headline: "Будуємо ваш перший дім разом",
+      subheadline: "Пояснюємо кожен крок простими словами і малюємо, поки не стане зрозуміло.",
+      primaryCta: "Почати",
+      secondaryCta: "Як це працює",
+      nav: ["Проєкти", "Процес", "Бюро", "Питання", "Контакт"],
+    },
+    sections: [
+      {
+        kind: "features",
+        title: "Чому з нами простіше",
+        items: [
+          { title: "Зрозуміло", text: "Без складних термінів." },
+          { title: "Наочно", text: "Малюємо кожне рішення." },
+          { title: "Поруч", text: "На зв'язку весь час." },
+        ],
+      },
+      { kind: "gallery", title: "Будинки, які ми намалювали" },
+      {
+        kind: "process",
+        title: "Два кроки до початку",
+        items: [
+          { title: "Зустріч", text: "Розкажіть, як живете." },
+          { title: "Ескіз", text: "Показуємо перші ідеї." },
+        ],
+      },
+      { kind: "cta", title: "Намалюймо ваш дім" },
+    ],
+  }),
+  d({
+    name: "Чиста заявка",
+    archetype: "conversion",
+    positioning: "Найкоротший шлях від першого враження до запиту на консультацію.",
+    rationale:
+      "Мета — запити, тому напрям одразу показує послуги й заклик до дії та прибирає все, що відволікає від форми.",
+    keywords: ["ясність", "дія", "довіра"],
+    palette: {
+      background: "#ffffff",
+      surface: "#f3f5f7",
+      text: "#0b1b2b",
+      muted: "#4c5a68",
+      accent: "#e4572e",
+      onAccent: "#ffffff",
+    },
+    typography: {
+      display: "modern-grotesk",
+      body: "sans",
+      scale: "confident",
+      displayWeight: "semibold",
+      displayCase: "sentence",
+      tracking: "normal",
+    },
+    layout: {
+      navigation: "split-cta",
+      hero: "full-bleed-media",
+      grid: "structured",
+      density: "balanced",
+      width: "wide",
+    },
+    surface: { radius: "subtle", borders: "hairline", depth: "soft-shadow" },
+    imagery: {
+      style: "product-cutout",
+      treatment: "monochrome",
+      subject: "Макет будинку на світлому столі",
+    },
+    motion: { level: "moderate", signature: "fade-rise" },
+    copy: {
+      headline: "Проєкт вашого будинку — від першої консультації до ключів",
+      subheadline:
+        "Залиште запит, і архітектор зв'яжеться з вами, щоб обговорити ділянку та побажання.",
+      primaryCta: "Залишити запит",
+      secondaryCta: "Послуги",
+      nav: ["Послуги", "Проєкти", "Бюро", "Контакт"],
+    },
+    sections: [
+      {
+        kind: "products",
+        title: "Типи проєктів",
+        items: [
+          { title: "Приватний будинок", text: "Від ескізу до документації" },
+          { title: "Реконструкція", text: "Нове життя старого дому" },
+          { title: "Інтер'єр", text: "Повний дизайн-проєкт" },
+          { title: "Нагляд", text: "Супровід будівництва" },
+        ],
+      },
+      {
+        kind: "features",
+        title: "Що входить у консультацію",
+        items: [
+          { title: "Огляд ділянки", text: "Обмеження та можливості." },
+          { title: "Ваші побажання", text: "Склад родини, спосіб життя." },
+        ],
+      },
+      { kind: "cta", title: "Обговорімо ваш будинок" },
+    ],
+  }),
+];

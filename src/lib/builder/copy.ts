@@ -23,6 +23,9 @@ export type BuilderCopy = {
   next: string;
   startOver: string;
   startOverConfirm: string;
+  cancel: string;
+  /** Explains why concept copy is in another language than the interface. */
+  languageNote: (generatedIn: "CZ" | "EN" | "RU" | "UA") => string;
   restored: string;
   type: {
     title: string;
@@ -171,6 +174,9 @@ const CZ: BuilderCopy = {
   next: "Pokračovat",
   startOver: "Začít znovu",
   startOverConfirm: "Opravdu začít znovu? Zadání i koncepty se smažou.",
+  cancel: "Zrušit",
+  languageNote: (lang) =>
+    `Texty konceptů jsou v ${{ CZ: "češtině", EN: "angličtině", RU: "ruštině", UA: "ukrajinštině" }[lang]}, ve které vznikly. Pro texty v češtině vytvořte nové koncepty.`,
   restored: "Pokračujete v rozpracovaném zadání uloženém v tomto prohlížeči.",
   type: {
     title: "Co potřebujete vytvořit?",
@@ -364,6 +370,9 @@ const EN: BuilderCopy = {
   next: "Continue",
   startOver: "Start over",
   startOverConfirm: "Start over? Your brief and concepts will be deleted.",
+  cancel: "Cancel",
+  languageNote: (lang) =>
+    `The concepts were written in ${{ CZ: "Czech", EN: "English", RU: "Russian", UA: "Ukrainian" }[lang]}, the language they were created in. Create new concepts for English copy.`,
   restored: "You are continuing a brief saved in this browser.",
   type: {
     title: "What do you need to create?",
@@ -552,6 +561,9 @@ const RU: BuilderCopy = {
   next: "Продолжить",
   startOver: "Начать заново",
   startOverConfirm: "Начать заново? Бриф и концепции будут удалены.",
+  cancel: "Отмена",
+  languageNote: (lang) =>
+    `Тексты концепций написаны на ${{ CZ: "чешском", EN: "английском", RU: "русском", UA: "украинском" }[lang]} — языке, на котором они созданы. Для текстов на русском создайте новые концепции.`,
   restored: "Вы продолжаете бриф, сохранённый в этом браузере.",
   type: {
     title: "Что нужно создать?",
@@ -751,6 +763,9 @@ const UA: BuilderCopy = {
   next: "Продовжити",
   startOver: "Почати знову",
   startOverConfirm: "Почати знову? Бриф і концепції буде видалено.",
+  cancel: "Скасувати",
+  languageNote: (lang) =>
+    `Тексти концепцій написані ${{ CZ: "чеською", EN: "англійською", RU: "російською", UA: "українською" }[lang]} — мовою, якою їх створено. Для текстів українською створіть нові концепції.`,
   restored: "Ви продовжуєте бриф, збережений у цьому браузері.",
   type: {
     title: "Що потрібно створити?",

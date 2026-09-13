@@ -28,6 +28,7 @@ export function ConceptGallery({
   onOpen,
   onSelect,
   onRegenerate,
+  languageNote,
 }: {
   concepts: DesignSpec[];
   brief: BriefDraft;
@@ -38,6 +39,8 @@ export function ConceptGallery({
   onOpen: (id: string, focusRefine?: boolean) => void;
   onSelect: (id: string) => void;
   onRegenerate: () => void;
+  /** Set when the concepts were generated in another language than the current UI. */
+  languageNote?: string | null;
 }) {
   const c = copy.concepts;
   return (
@@ -58,6 +61,21 @@ export function ConceptGallery({
         </div>
         <div className="lg:pb-2">
           <p className="max-w-[52ch] text-[0.9375rem] leading-relaxed text-white/65">{c.lead}</p>
+          {languageNote && (
+            <p
+              role="note"
+              className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-white/70"
+            >
+              {languageNote}
+              <button
+                type="button"
+                onClick={onRegenerate}
+                className="inline-flex min-h-11 items-center text-sm font-medium text-white underline underline-offset-8 focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              >
+                {c.regenerate}
+              </button>
+            </p>
+          )}
           {fixture && (
             <p className="mt-3 inline-block rounded-md border border-amber-300/40 bg-amber-300/10 px-3 py-1.5 text-xs text-amber-100">
               Development fixture — hand-written sample concepts, not AI output.

@@ -57,6 +57,7 @@ src/components/builder/
   AnalysisStage.tsx                        working / failure state
   ConceptGallery.tsx                       five directions
   ConceptViewer.tsx                        Radix dialog: preview, system, refine, revisions, select
+  ConfirmDialog.tsx                        Radix alert dialog for start over / replace concepts
   ContactStep.tsx                          contact after selection
   SpecSummary.tsx                          swatches, type sample, hero schematic
   renderer/theme.ts                        DesignSpec enums → tokens (fonts, clamps, spacing, radii…)
@@ -73,7 +74,8 @@ src/lib/builder/
   storage.ts                               localStorage persistence with re-validation
   submission.ts                            Lead → existing contact pipeline payload
   copy.ts                                  UI copy CZ/EN/RU/UA
-  fixtures.dev.ts                          DEV ONLY sample concepts (/builder?fixture=1), absent from prod bundles
+  fixtures.dev.ts                          DEV ONLY sample concepts: set A (/builder?fixture=1, Czech) and
+                                           set B (/builder?fixture=b, Ukrainian); absent from prod bundles
 scripts/check-builder-spec.ts              trust-boundary checks (node scripts/check-builder-spec.ts)
 ```
 
@@ -128,3 +130,27 @@ level/signature and is off in thumbnails and under reduced motion.
 | Key leakage | Key read server-side at call time; client bundle scanned: no key name, URL, tool or prompt |
 | Cost abuse | Input limits, per-IP throttle (best effort) |
 | Fake success | Concepts shown only after server + client validation; success only after the send resolves |
+
+## 7. Verification pass (Phase 1.1)
+
+The foundation commit had only ever rendered the variants its one fixture used. A second
+fixture set (B) now covers every renderer path, and both sets pass the same pipeline as model
+output (`scripts/check-builder-spec.ts`). Rendering all ten concepts full-page at desktop
+(1280 layout) and phone (390 layout) found and fixed:
+
+| Defect (never rendered before) | Fix |
+|---|---|
+| A near-limit headline in a `split-media` hero set 7 lines deep in a 15ch column | headline size and measure adapt to length (>44 / >64 characters) in every hero |
+| `story` without items left the image alone beside an empty column | title/body and image form a two-column split |
+| `full-bleed-media` put the placeholder's subject behind the headline | media owns the right 66% on wide containers with a left scrim; phones keep the bottom scrim |
+| `type-only` repeated one identical letter per tile | three seeded compositions per slot |
+| phone galleries stacked five large squares | three tiles below 720px container width |
+
+Flow changes in the same pass: native `window.confirm` replaced by `ConfirmDialog`; the
+refinement live region announces the actual new revision; when the interface language differs
+from the language the concepts were generated in, the gallery says so and offers regeneration;
+the viewer's scrollable preview is a named, focusable region; phone header no longer wraps.
+
+Mock-API regression (local stand-in for the Messages API): rejected first set → repair turn →
+five concepts; regenerate through the dialog; refinement rejected by schema → honest error with
+the concept unchanged; valid refinement → revision 1 persisted and announced.

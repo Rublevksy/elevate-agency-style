@@ -45,6 +45,7 @@ import { BriefSheet } from "./BriefSheet";
 import { BriefSteps, validateBriefStep, type FieldRefs } from "./BriefSteps";
 import { ConceptGallery } from "./ConceptGallery";
 import { ConceptViewer } from "./ConceptViewer";
+import { ConfirmDialog } from "./ConfirmDialog";
 import { ContactStep, type ContactDraft } from "./ContactStep";
 import { ScaledPreview } from "./renderer/ScaledPreview";
 import { StepRail } from "./StepRail";
@@ -109,7 +110,7 @@ function errorMessage(err: unknown, copy: BuilderCopy): string {
 }
 
 export function BuilderApp() {
-  const { lang } = useT();
+  const { lang, t } = useT();
   const copy = BUILDER_COPY[lang];
   const reduced = useReducedScene();
 
@@ -127,6 +128,7 @@ export function BuilderApp() {
   } | null>(null);
   const [restored, setRestored] = useState(false);
   const [fixture, setFixture] = useState(false);
+  const [confirm, setConfirm] = useState<"regenerate" | "startOver" | null>(null);
   const refs = useRef<FieldRefs>({});
   const request = useRef(0);
   const firstRender = useRef(true);
@@ -136,12 +138,15 @@ export function BuilderApp() {
     let cancelled = false;
     (async () => {
       if (import.meta.env.DEV && new URLSearchParams(window.location.search).has("fixture")) {
-        const { FIXTURE_BRIEF, FIXTURE_DRAFTS } = await import("@/lib/builder/fixtures.dev");
+        const fx = await import("@/lib/builder/fixtures.dev");
         const { parseDraft, toSpec } = await import("@/lib/builder/spec");
+        const setB = new URLSearchParams(window.location.search).get("fixture") === "b";
+        const FIXTURE_BRIEF = setB ? fx.FIXTURE_BRIEF_B : fx.FIXTURE_BRIEF;
+        const FIXTURE_DRAFTS = setB ? fx.FIXTURE_DRAFTS_B : fx.FIXTURE_DRAFTS;
         const concepts = FIXTURE_DRAFTS.map((d, i) => {
           const r = parseDraft(d);
           if (!r.ok) throw new Error(`fixture ${i} invalid`);
-          return toSpec(r.draft, `c-fixture-0${i + 1}`);
+          return toSpec(r.draft, `c-fixture-${setB ? "b" : "a"}${i + 1}`);
         });
         if (cancelled) return;
         setLead((l) => ({ ...l, brief: FIXTURE_BRIEF, concepts, status: "concepts_ready" }));
@@ -269,8 +274,8 @@ export function BuilderApp() {
       return;
     }
     if (step === 3) {
-      if (lead.concepts.length > 0 && !window.confirm(copy.concepts.regenerateConfirm)) return;
-      void generate();
+      if (lead.concepts.length > 0) setConfirm("regenerate");
+      else void generate();
       return;
     }
     setStep((s) => s + 1);
@@ -324,6 +329,7 @@ export function BuilderApp() {
       concepts: l.concepts.map((c) => (c.id === id ? after : c)),
       revisions: [...l.revisions, revision].slice(-60),
     }));
+    return after.revision;
   };
 
   const restore = (id: string, version: DesignSpec) =>
@@ -345,10 +351,7 @@ export function BuilderApp() {
       };
     });
 
-  const regenerate = () => {
-    if (!window.confirm(copy.concepts.regenerateConfirm)) return;
-    void generate();
-  };
+  const regenerate = () => setConfirm("regenerate");
 
   const toContact = () => {
     if (!selected) return;
@@ -357,7 +360,6 @@ export function BuilderApp() {
   };
 
   /* ---- submit --------------------------------------------------------------- */
-  const { t } = useT();
   const submit = async (c: Contact) => {
     if (!selected) throw new Error("NO_SELECTION");
     const payload = toContactPayload(
@@ -373,7 +375,6 @@ export function BuilderApp() {
   };
 
   const startOver = () => {
-    if (!window.confirm(copy.startOverConfirm)) return;
     request.current++;
     clearBuilder();
     setLead(newLead(lang));
@@ -402,14 +403,14 @@ export function BuilderApp() {
       <div className="container-luxe relative pt-28 pb-24 md:pt-36">
         <div className="flex items-center justify-between gap-6">
           <p className="label-micro flex items-center gap-3 text-white/60">
-            <span aria-hidden className="h-px w-8 bg-white/30" />
+            <span aria-hidden className="hidden h-px w-8 bg-white/30 sm:inline-block" />
             {copy.intro.eyebrow}
           </p>
           {dirty && step !== STEP_DONE && (
             <button
               type="button"
-              onClick={startOver}
-              className="inline-flex min-h-11 items-center gap-2 text-sm text-white/55 underline-offset-8 hover:text-white hover:underline focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
+              onClick={() => setConfirm("startOver")}
+              className="inline-flex min-h-11 shrink-0 items-center gap-2 text-sm whitespace-nowrap text-white/55 underline-offset-8 hover:text-white hover:underline focus-visible:ring-2 focus-visible:ring-primary focus-visible:outline-none"
             >
               <RotateCcw className="size-3.5" aria-hidden />
               {copy.startOver}
@@ -508,6 +509,7 @@ export function BuilderApp() {
               />
             ) : (
               <ConceptGallery
+                languageNote={lead.lang !== lang ? copy.languageNote(lead.lang) : null}
                 concepts={lead.concepts}
                 brief={lead.brief}
                 copy={copy}
@@ -588,6 +590,22 @@ export function BuilderApp() {
           returnFocus={viewer.opener}
         />
       )}
+      <ConfirmDialog
+        open={confirm !== null}
+        title={confirm === "startOver" ? copy.startOver : copy.concepts.regenerate}
+        description={
+          confirm === "startOver" ? copy.startOverConfirm : copy.concepts.regenerateConfirm
+        }
+        confirmLabel={confirm === "startOver" ? copy.startOver : copy.concepts.regenerate}
+        cancelLabel={copy.cancel}
+        onCancel={() => setConfirm(null)}
+        onConfirm={() => {
+          const action = confirm;
+          setConfirm(null);
+          if (action === "startOver") startOver();
+          if (action === "regenerate") void generate();
+        }}
+      />
     </section>
   );
 }

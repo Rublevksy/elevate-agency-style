@@ -381,8 +381,20 @@ function Hero({ ctx }: { ctx: Ctx }) {
   const { hero, grid } = t.spec.layout;
   const c = t.spec.copy;
   const pad = { paddingBlock: t.space.section };
+  // A headline near its 90-character limit set at display size in a 15ch
+  // column ran to seven lines. Long headlines get a smaller size and a wider
+  // measure instead; short ones keep the direction's full scale.
+  const length = c.headline.length;
+  const fit = length > 64 ? 0.72 : length > 44 ? 0.86 : 1;
+  const measure = (ch: number) =>
+    `${Math.round(ch * (length > 64 ? 1.7 : length > 44 ? 1.35 : 1))}ch`;
   const headline = (style?: CSSProperties) => (
-    <Heading ctx={ctx} as="h1" size={t.size.headline} style={style}>
+    <Heading
+      ctx={ctx}
+      as="h1"
+      size={fit === 1 ? t.size.headline : `calc(${t.size.headline} * ${fit})`}
+      style={style}
+    >
       {c.headline}
     </Heading>
   );
@@ -409,12 +421,28 @@ function Hero({ ctx }: { ctx: Ctx }) {
   if (hero === "full-bleed-media") {
     return (
       <section className="relative" style={{ minHeight: "clamp(440px, 58cqi, 820px)" }}>
-        {visual("hero", { position: "absolute", inset: 0, borderRadius: 0 }, false)}
+        {/* The media owns the right of the frame on a wide screen, so the
+            headline never sits on the placeholder's subject. */}
+        <Visual
+          theme={t}
+          slot="hero"
+          brand={ctx.brand}
+          label={ctx.copy.imagePlaceholder}
+          className="left-0 @min-[720px]:left-[34%]"
+          style={{ position: "absolute", top: 0, right: 0, bottom: 0, borderRadius: 0 }}
+        />
         <div
           aria-hidden
-          className="absolute inset-0"
+          className="absolute inset-0 @min-[720px]:hidden"
           style={{
             background: `linear-gradient(to top, ${t.alpha(t.spec.palette.background, 0.96)} 0%, ${t.alpha(t.spec.palette.background, 0.8)} 38%, ${t.alpha(t.spec.palette.background, 0.1)} 80%)`,
+          }}
+        />
+        <div
+          aria-hidden
+          className="absolute inset-0 hidden @min-[720px]:block"
+          style={{
+            background: `linear-gradient(to right, ${t.spec.palette.background} 0%, ${t.spec.palette.background} 30%, ${t.alpha(t.spec.palette.background, 0.7)} 44%, ${t.alpha(t.spec.palette.background, 0)} 66%)`,
           }}
         />
         <Frame
@@ -423,7 +451,7 @@ function Hero({ ctx }: { ctx: Ctx }) {
         >
           <Reveal ctx={ctx} className="flex flex-col gap-[clamp(14px,2cqi,28px)]">
             <Eyebrow ctx={ctx}>{ctx.tagline}</Eyebrow>
-            {headline({ maxWidth: "18ch" })}
+            {headline({ maxWidth: measure(18) })}
             {sub()}
             <Ctas ctx={ctx} />
           </Reveal>
@@ -440,7 +468,7 @@ function Hero({ ctx }: { ctx: Ctx }) {
             <Eyebrow ctx={ctx} style={{ marginBottom: "clamp(16px, 2.4cqi, 36px)" }}>
               {ctx.tagline}
             </Eyebrow>
-            {headline({ fontSize: `calc(${t.size.headline} * 1.12)` })}
+            {headline({ fontSize: `calc(${t.size.headline} * ${(1.12 * fit).toFixed(3)})` })}
           </Reveal>
           <Reveal
             ctx={ctx}
@@ -470,7 +498,7 @@ function Hero({ ctx }: { ctx: Ctx }) {
             className="mx-auto flex flex-col items-center gap-[clamp(14px,2cqi,28px)] text-center"
           >
             <Eyebrow ctx={ctx}>{ctx.tagline}</Eyebrow>
-            {headline({ maxWidth: "20ch" })}
+            {headline({ maxWidth: measure(20) })}
             {sub({ textAlign: "center" })}
             <Ctas ctx={ctx} center />
           </Reveal>
@@ -489,7 +517,7 @@ function Hero({ ctx }: { ctx: Ctx }) {
           <div className="grid items-center gap-[clamp(28px,5cqi,72px)] @min-[720px]:grid-cols-2">
             <Reveal ctx={ctx} className="flex flex-col gap-[clamp(14px,2cqi,28px)]">
               <Eyebrow ctx={ctx}>{ctx.tagline}</Eyebrow>
-              {headline({ maxWidth: "14ch" })}
+              {headline({ maxWidth: measure(14) })}
               {sub()}
               <Ctas ctx={ctx} />
             </Reveal>
@@ -543,7 +571,7 @@ function Hero({ ctx }: { ctx: Ctx }) {
           >
             <div className="flex flex-col gap-[clamp(14px,2cqi,24px)]">
               <Eyebrow ctx={ctx}>{ctx.tagline}</Eyebrow>
-              {headline({ maxWidth: "13ch" })}
+              {headline({ maxWidth: measure(13) })}
             </div>
             <div className="flex flex-col gap-5 @min-[720px]:pb-2">
               {sub()}
@@ -581,7 +609,7 @@ function Hero({ ctx }: { ctx: Ctx }) {
         <div className={`grid items-center gap-[clamp(28px,5cqi,72px)] ${cols}`}>
           <Reveal ctx={ctx} className="flex flex-col gap-[clamp(14px,2cqi,28px)]">
             <Eyebrow ctx={ctx}>{ctx.tagline}</Eyebrow>
-            {headline({ maxWidth: "15ch" })}
+            {headline({ maxWidth: measure(15) })}
             {sub()}
             <Ctas ctx={ctx} />
           </Reveal>
@@ -810,9 +838,32 @@ function Section({ ctx, section, index }: { ctx: Ctx; section: DesignSection; in
               </p>
             ))}
           </div>
-          {visual("portrait", { aspectRatio: "4 / 5", boxShadow: t.shadow }, true)}
+          <Visual
+            theme={t}
+            slot={`story-${index}-portrait`}
+            brand={ctx.brand}
+            label={ctx.copy.imagePlaceholder}
+            caption
+            className="aspect-[4/3] @min-[720px]:aspect-[4/5]"
+            style={{ boxShadow: t.shadow }}
+          />
         </div>
       );
+      if (items.length === 0) {
+        // No items: the image stands beside the title and body instead of
+        // alone under them with an empty column.
+        body = (
+          <Visual
+            theme={t}
+            slot={`story-${index}-portrait`}
+            brand={ctx.brand}
+            label={ctx.copy.imagePlaceholder}
+            caption
+            className="aspect-[4/3] @min-[720px]:aspect-[4/5]"
+            style={{ boxShadow: t.shadow }}
+          />
+        );
+      }
       break;
     case "products": {
       const cards =
@@ -856,8 +907,23 @@ function Section({ ctx, section, index }: { ctx: Ctx; section: DesignSection; in
           {visual("g0", { aspectRatio: "1", gridColumn: "span 2", gridRow: "span 2" }, true)}
           {visual("g1", { aspectRatio: "1" })}
           {visual("g2", { aspectRatio: "1" })}
-          {visual("g3", { aspectRatio: "1" })}
-          {visual("g4", { aspectRatio: "1" })}
+          {/* Two fewer tiles on a phone: five stacked squares are a scroll, not a gallery. */}
+          <Visual
+            theme={t}
+            slot={`gallery-${index}-g3`}
+            brand={ctx.brand}
+            label={ctx.copy.imagePlaceholder}
+            className="hidden @min-[720px]:block"
+            style={{ aspectRatio: "1" }}
+          />
+          <Visual
+            theme={t}
+            slot={`gallery-${index}-g4`}
+            brand={ctx.brand}
+            label={ctx.copy.imagePlaceholder}
+            className="hidden @min-[720px]:block"
+            style={{ aspectRatio: "1" }}
+          />
         </div>
       );
       break;
@@ -873,6 +939,7 @@ function Section({ ctx, section, index }: { ctx: Ctx; section: DesignSection; in
   }
 
   const inverted = section.kind === "cta";
+  const storySplit = section.kind === "story" && items.length === 0;
   return (
     <section
       style={{
@@ -885,9 +952,11 @@ function Section({ ctx, section, index }: { ctx: Ctx; section: DesignSection; in
         <Reveal
           ctx={ctx}
           className={
-            asym
-              ? "grid gap-[clamp(20px,4cqi,56px)] @min-[960px]:grid-cols-[1fr_2fr]"
-              : `flex flex-col gap-[clamp(24px,4cqi,56px)] ${inverted && t.spec.layout.grid === "centered" ? "items-center" : ""}`
+            storySplit
+              ? "grid items-center gap-[clamp(24px,4cqi,56px)] @min-[720px]:grid-cols-[1fr_0.85fr]"
+              : asym
+                ? "grid gap-[clamp(20px,4cqi,56px)] @min-[960px]:grid-cols-[1fr_2fr]"
+                : `flex flex-col gap-[clamp(24px,4cqi,56px)] ${inverted && t.spec.layout.grid === "centered" ? "items-center" : ""}`
           }
         >
           <SectionHeader ctx={ctx} section={section} inverted={inverted} />

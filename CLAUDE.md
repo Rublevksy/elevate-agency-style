@@ -91,7 +91,8 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 > Ключ `ANTHROPIC_API_KEY` только на сервере (в репо его нет → генерация честно падает с
 > `AI_UNAVAILABLE`); `ELEVATE_AI_MODEL`, `ANTHROPIC_BASE_URL` — опционально. Хранение в этой фазе —
 > `localStorage` (Supabase без таблиц), отправка — через существующий `sendContactToTelegram`.
-> `/builder?fixture=1` — только в DEV (`fixtures.dev.ts` вырезается из прод-сборки). Проверки
+> `/builder?fixture=1` (набор A, CZ) и `?fixture=b` (набор B, UA — покрывает все варианты
+> рендерера) — только в DEV (`fixtures.dev.ts` вырезается из прод-сборки). Проверки
 > границы доверия: `node scripts/check-builder-spec.ts`. Admin не построен — контракт в
 > `docs/builder/DATA_CONTRACT.md`.
 
