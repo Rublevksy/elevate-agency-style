@@ -637,4 +637,70 @@
       transform: translateY(-50%) scale(1.05);
     }
   }
+
+  /* The portal's living light (src/components/home/PortalLight.tsx). Same
+     contract as the hero light above: transform and opacity only, long cycles
+     so it reads as the room breathing, neutralised by prefers-reduced-motion. */
+  .portal-breathe {
+    animation: portalBreathe 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    will-change: opacity;
+  }
+  .portal-breathe-slow {
+    animation: portalBreathe 13s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    will-change: opacity;
+  }
+  @keyframes portalBreathe {
+    0%,
+    100% {
+      opacity: 0.38;
+    }
+    50% {
+      opacity: 0.92;
+    }
+  }
+
+  /* A current travelling along the neon: crosses in ~5s, then the frame rests. */
+  .portal-sweep {
+    animation: portalSweep 9s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    will-change: transform;
+  }
+  @keyframes portalSweep {
+    0% {
+      transform: translate3d(-110%, 0, 0);
+    }
+    58%,
+    100% {
+      transform: translate3d(250%, 0, 0);
+    }
+  }
+
+  .portal-atmo-drift {
+    animation: portalAtmoDrift 38s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    will-change: transform;
+  }
+  @keyframes portalAtmoDrift {
+    0%,
+    100% {
+      transform: translate3d(-1.5%, 0.6%, 0) scale(1.06);
+    }
+    50% {
+      transform: translate3d(1.5%, -0.6%, 0) scale(1.1);
+    }
+  }
+
+  .portal-bloom {
+    animation: portalBloom 15s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+    will-change: opacity, transform;
+  }
+  @keyframes portalBloom {
+    0%,
+    100% {
+      opacity: 0.6;
+      transform: scale(0.95);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1.06);
+    }
+  }
 }

@@ -44,12 +44,13 @@ import { BrowserWindow } from "./BrowserWindow";
 import { CLIENT_SITES, WorkImage, clientSite } from "./client-work";
 import { SERVICE_COUNT, ServiceCopy } from "./service-copy";
 import { CutText, LoadBar, NavLayer, useLoadBar } from "./window-nav";
+import { PortalAir, PortalAtmosphere, PortalGlow, WindowHalo } from "./PortalLight";
 import {
   AppStage,
   BrandBoard,
   ClientFold,
-  ScrollingSite,
   SeoInspector,
+  ShopScene,
   WebServicePage,
 } from "./window-pages";
 import { HERO_PIN, HERO_VIEWPORTS, INTRO_VP, NAV, STOP_VP, at, stopStart } from "./home-tokens";
@@ -154,6 +155,13 @@ export function HeroScene() {
   const platePX = useTransform(smoothX, [-1, 1], [9, -9]);
   const platePY = useTransform(smoothY, [-1, 1], [5, -5]);
   const phonePX = useTransform(smoothX, [-1, 1], [30, -30]);
+  // Depth, by rate: the far glow field barely answers the pointer, the plate a
+  // little, the air in front of it more, the window most. The difference in
+  // rates between planes is what reads as space rather than as a flat poster.
+  const atmoPX = useTransform(smoothX, [-1, 1], [4, -4]);
+  const atmoPY = useTransform(smoothY, [-1, 1], [2, -2]);
+  const airPX = useTransform(smoothX, [-1, 1], [20, -20]);
+  const airPY = useTransform(smoothY, [-1, 1], [9, -9]);
 
   // ---- Scroll: the hero beat ---------------------------------------------
   const R = (v: number, rest: number) => (reduced ? rest : v);
@@ -177,6 +185,20 @@ export function HeroScene() {
   // the subject — one lit world under every service, never switched off.
   const plateScale = useTransform(p, [0, 1], [1, R(1.12, 1)]);
   const plateDim = useTransform(p, [0, at(1.0), 1], [1, R(0.55, 1), R(0.45, 1)]);
+
+  // THE LIGHT TRANSFER — hero → services as one transformation, not a jump.
+  // As the window squares up the portal charges (its own light brightens);
+  // as the window navigates to the first service the portal dims while a halo
+  // behind the window carries its light through all five services. One light
+  // source, handed from the world to the website. (A glint across the glass
+  // was tried and removed: on dark UI it read as a pale slab, not light.)
+  const glowGain = useTransform(
+    p,
+    [0, at(0.75), at(1.05), 1],
+    [0.72, R(1, 0.72), R(0.32, 0.72), R(0.26, 0.72)],
+  );
+  const bloomGain = useTransform(p, [0, at(0.7), at(1.0)], [1, 1, R(0.2, 1)]);
+  const haloOn = useTransform(p, [at(0.72), at(1.02)], [0, R(1, 0)]);
 
   const phoneFade = useTransform(p, [at(0.25), at(0.6)], [1, R(0, 1)]);
   const phoneY = useTransform(p, [0, at(0.6)], [0, R(40, 0)]);
@@ -202,11 +224,13 @@ export function HeroScene() {
   const railFade = useTransform(p, [at(INTRO_VP - 0.05), at(INTRO_VP + 0.1)], [0, 1]);
 
   // Where each page's own internal motion runs (0..1 within the stop).
-  const webOpen = useWithin(p, 0, 0.08, 0.42, reduced);
-  const seoOpen = useWithin(p, 1, 0.1, 0.38, reduced);
-  const shopScroll = useWithin(p, 2, 0.14, STOP_VP - 0.04, reduced);
-  const brandOpen = useWithin(p, 3, 0.08, 0.46, reduced);
-  const appOpen = useWithin(p, 4, 0.02, 0.6, reduced);
+  // Each scene plays across most of its stop, so its build → reveal → resolve
+  // beats are paced by the visitor's scroll rather than finished in a flick.
+  const webOpen = useWithin(p, 0, 0.06, STOP_VP - 0.08, reduced);
+  const seoOpen = useWithin(p, 1, 0.06, STOP_VP - 0.08, reduced);
+  const shopOpen = useWithin(p, 2, 0.06, STOP_VP - 0.06, reduced);
+  const brandOpen = useWithin(p, 3, 0.06, STOP_VP - 0.08, reduced);
+  const appOpen = useWithin(p, 4, 0.04, STOP_VP - 0.04, reduced);
 
   // The five service pages are not needed for the first screen: they mount on
   // the first scroll or once the browser is idle, so the hero's first paint
@@ -223,7 +247,7 @@ export function HeroScene() {
   const pages: React.ReactNode[] = [
     <WebServicePage key="web" open={webOpen} />,
     <SeoInspector key="seo" site={clientSite("biodent-clinic")} open={seoOpen} />,
-    <ScrollingSite key="shop" site={clientSite("exclusive-beauty")} scroll={shopScroll} />,
+    <ShopScene key="shop" site={clientSite("exclusive-beauty")} open={shopOpen} />,
     <BrandBoard key="brand" open={brandOpen} />,
     <AppStage key="app" open={appOpen} />,
   ];
@@ -323,6 +347,7 @@ export function HeroScene() {
                 style={{ opacity: plateDim }}
                 className="absolute inset-0 [mask-image:radial-gradient(95%_105%_at_60%_62%,#000_58%,transparent_100%)]"
               >
+                <PortalAtmosphere reduced={reduced} x={atmoPX} y={atmoPY} />
                 <motion.div
                   initial={reduced ? undefined : { opacity: 0, scale: 1.06 }}
                   animate={{ opacity: 1, scale: 1 }}
@@ -341,8 +366,12 @@ export function HeroScene() {
                       className="absolute inset-0 block h-full w-full"
                       imgClassName="h-full w-full object-cover"
                     />
+                    {/* Same transform group as the plate: the light is the
+                        photograph's own, so it must never drift off it. */}
+                    <PortalGlow reduced={reduced} intensity={glowGain} />
                   </motion.div>
                 </motion.div>
+                <PortalAir reduced={reduced} x={airPX} y={airPY} bloom={bloomGain} />
               </motion.div>
             </div>
           </div>
@@ -361,6 +390,7 @@ export function HeroScene() {
               style={{ perspective: `${PERSPECTIVE}px` }}
               className="absolute bottom-[23%] left-[40.5%] w-[37%] xl:left-[38.5%] xl:w-[39.5%]"
             >
+              <WindowHalo reduced={reduced} opacity={haloOn} />
               <motion.div
                 initial={reduced ? undefined : { opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -632,14 +662,26 @@ export function HeroScene() {
                 stands inside it at three-quarter width, so the arcs read around
                 it instead of disappearing behind it. */}
             <div className="relative order-1 -mx-6 aspect-[10/9] overflow-hidden sm:aspect-[16/10] md:order-2 md:mx-0 md:aspect-[4/3.2]">
-              <SceneImage
-                name="portal"
-                alt=""
-                priority
-                sizes="100vw"
-                className="absolute inset-y-0 left-1/2 block h-full w-[178%] -translate-x-[57%] sm:w-full sm:-translate-x-1/2 md:[mask-image:radial-gradient(closest-side_at_50%_55%,#000_62%,transparent_100%)]"
-                imgClassName="h-full w-full object-cover"
-              />
+              {/* One wrapper carries the crop, the translate and the mask, and
+                  both the plate and its light fill it — so the breathing light
+                  stays registered to the photographed arcs at every width. */}
+              <div className="absolute inset-y-0 left-1/2 w-[178%] -translate-x-[57%] sm:w-full sm:-translate-x-1/2 md:[mask-image:radial-gradient(closest-side_at_50%_55%,#000_62%,transparent_100%)]">
+                <SceneImage
+                  name="portal"
+                  alt=""
+                  priority
+                  sizes="100vw"
+                  className="absolute inset-0 block h-full w-full"
+                  imgClassName="h-full w-full object-cover"
+                />
+                {/* Breathing only below xl — the travelling current is a
+                    masked, animated layer, kept for capable desktops. */}
+                <PortalGlow
+                  reduced={reduced}
+                  intensity={0.8}
+                  current={capability === "cinematic"}
+                />
+              </div>
               <div
                 aria-hidden
                 className="absolute inset-0 bg-[linear-gradient(to_bottom,#0A0D13_0%,#0A0D1300_28%,#0A0D1300_70%,#0A0D13_100%)]"

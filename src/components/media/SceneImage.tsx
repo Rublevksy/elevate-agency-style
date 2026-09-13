@@ -30,6 +30,9 @@ import portalWebp from "@/assets/refs/portal.webp";
 import portalJpg from "@/assets/refs/portal.jpg";
 import portalSmWebp from "@/assets/refs/portal-sm.webp";
 import portalSmJpg from "@/assets/refs/portal-sm.jpg";
+import portalLightWebp from "@/assets/refs/portal-light.webp";
+import portalAtmoWebp from "@/assets/refs/portal-atmo.webp";
+import portalAtmoJpg from "@/assets/refs/portal-atmo.jpg";
 
 export type SceneName =
   | "hero-macbook"
@@ -43,7 +46,11 @@ export type SceneName =
   | "hero-light"
   | "hero-atmo"
   /* The homepage's lit world — see the portal entry in scripts/extract-ref-assets.mjs. */
-  | "portal";
+  | "portal"
+  /* The portal's own light (luminance matte) and its blurred glow field — depth
+     layers derived by scripts/extract-ref-assets.mjs, no generation. */
+  | "portal-light"
+  | "portal-atmo";
 
 interface SceneAsset {
   webp: string;
@@ -80,6 +87,8 @@ const SCENES: Record<SceneName, SceneAsset> = {
     height: 1340,
     sm: { webp: portalSmWebp, jpg: portalSmJpg, width: 1200 },
   },
+  "portal-light": { webp: portalLightWebp, width: 1200, height: 670 },
+  "portal-atmo": { webp: portalAtmoWebp, jpg: portalAtmoJpg, width: 480, height: 268 },
 };
 
 export interface SceneImageProps {

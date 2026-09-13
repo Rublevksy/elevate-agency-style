@@ -7,20 +7,21 @@
  * is `display: none`. Below `lg` there is no pinned stage to navigate in, and
  * under reduced motion the stage's services phase is dropped in CSS, so the
  * same five pages are shown here instead: each service's real copy beside the
- * same window page, settled in its final state. Same content, same words, same
+ * same window scene, which plays its beats once when it scrolls into view. Same content, same words, same
  * links — nothing is lost for a visitor who cannot or will not have the motion.
  *
  * The CSS switch (`lg:hidden motion-reduce:lg:block`) is the same media query
  * the hero's own `motion-reduce:` variants read, so the two can never both be
  * showing or both be hidden.
  */
-import { motion, useMotionValue } from "framer-motion";
+import { useEffect, useRef } from "react";
+import { animate, motion, useInView, useMotionValue } from "framer-motion";
 import { EASE, useReducedScene } from "@/components/cinematic";
 import { useT } from "@/lib/i18n";
 import { BrowserWindow } from "./BrowserWindow";
 import { clientSite } from "./client-work";
 import { SERVICE_COUNT, ServiceCopy } from "./service-copy";
-import { AppStage, BrandBoard, ScrollingSite, SeoInspector, WebServicePage } from "./window-pages";
+import { AppStage, BrandBoard, SeoInspector, ShopScene, WebServicePage } from "./window-pages";
 
 const ADDRESS = [
   "elevateit.cz/services/web",
@@ -30,21 +31,52 @@ const ADDRESS = [
   "elevateit.cz/services",
 ];
 
+/** How long a scene takes to play through its beats once it is in view. */
+const SCENE_SECONDS = 3.4;
+
+/**
+ * One service scene with its own clock. There is no pinned stage here, so the
+ * scene's `open` is not a stretch of scroll: it plays once, when the window is
+ * mostly on screen, over a few seconds — the same build → reveal → resolve
+ * beats the pinned stage scrubs. Never scroll-driven (no `useScroll` in home
+ * sections, ADR 0013), so it cannot hijack a phone's scroll. Under reduced
+ * motion the scene is set straight to its resolved state.
+ */
+function ServiceScene({ index, reduced }: { index: number; reduced: boolean }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, amount: 0.5 });
+  const open = useMotionValue(0);
+
+  useEffect(() => {
+    if (reduced) {
+      open.set(1);
+      return;
+    }
+    if (!inView) return;
+    const controls = animate(open, 1, { duration: SCENE_SECONDS, ease: EASE });
+    return () => controls.stop();
+  }, [inView, reduced, open]);
+
+  const scene = [
+    <WebServicePage key="web" open={open} />,
+    <SeoInspector key="seo" site={clientSite("biodent-clinic")} open={open} />,
+    <ShopScene key="shop" site={clientSite("exclusive-beauty")} open={open} />,
+    <BrandBoard key="brand" open={open} />,
+    <AppStage key="app" open={open} />,
+  ][index];
+
+  return (
+    <div ref={ref}>
+      <BrowserWindow compact address={ADDRESS[index]}>
+        <div className="relative aspect-[16/10] overflow-hidden">{scene}</div>
+      </BrowserWindow>
+    </div>
+  );
+}
+
 export function ServicesShowcase() {
   const { t } = useT();
   const reduced = useReducedScene();
-  // Every page in its settled state: fans open, inspector docked, the e-shop
-  // scrolled to its products.
-  const settled = useMotionValue(1);
-  const shopScroll = useMotionValue(0.34);
-
-  const pages = [
-    <WebServicePage key="web" open={settled} />,
-    <SeoInspector key="seo" site={clientSite("biodent-clinic")} open={settled} />,
-    <ScrollingSite key="shop" site={clientSite("exclusive-beauty")} scroll={shopScroll} />,
-    <BrandBoard key="brand" open={settled} />,
-    <AppStage key="app" open={settled} />,
-  ];
 
   return (
     <section
@@ -72,9 +104,7 @@ export function ServicesShowcase() {
               className="grid grid-cols-1 items-center gap-8 lg:grid-cols-2 lg:gap-16"
             >
               <div className={i % 2 ? "lg:order-2" : undefined}>
-                <BrowserWindow compact address={ADDRESS[i]}>
-                  <div className="relative aspect-[16/10] overflow-hidden">{pages[i]}</div>
-                </BrowserWindow>
+                <ServiceScene index={i} reduced={reduced} />
               </div>
               <div className={i % 2 ? "lg:order-1" : undefined}>
                 <ServiceCopy index={i} size="list" />

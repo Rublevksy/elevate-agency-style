@@ -171,6 +171,53 @@ async function buildHeroLayers() {
   }
 }
 
+/*
+ * The portal's depth layers — the same derivation as the hero's above, for the
+ * homepage's current plate. `portal-light` is the plate's own luminance as
+ * alpha (the arcs, their reflections on the wet floor and the lit fog), so the
+ * light can breathe and parallax on its own plane while staying pixel-registered
+ * to the photograph: it IS the photograph's light, never a second, drawn arc.
+ * `portal-atmo` is the glow field with every edge blurred away, for the far
+ * plane. Both are free derivations of the approved master — no generation.
+ */
+async function buildPortalLayers() {
+  const src = sharp(REF + "generated/portal-master.png");
+  const { data, info } = await src.clone().raw().toBuffer({ resolveWithObject: true });
+  const { width, height, channels } = info;
+  const rgba = Buffer.alloc(width * height * 4);
+  // Higher floor than the hero's: the portal's navy sky sits around 25-40 and
+  // must carry no alpha, or the whole frame would pulse instead of the light.
+  const FLOOR = 70;
+  const KNEE = 205;
+  for (let p = 0; p < width * height; p++) {
+    const i = p * channels;
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const lum = r * 0.299 + g * 0.587 + b * 0.114;
+    const a = Math.min(1, Math.max(0, (lum - FLOOR) / (KNEE - FLOOR)));
+    rgba[p * 4] = r;
+    rgba[p * 4 + 1] = g;
+    rgba[p * 4 + 2] = b;
+    rgba[p * 4 + 3] = Math.round(a * a * 255);
+  }
+  await sharp(rgba, { raw: { width, height, channels: 4 } })
+    // 1200 wide at modest quality: the layer is additive and slightly blurred
+    // on screen, so it hides compression — 1600/q82 was 225 kB for no visible gain.
+    .resize({ width: 1200 })
+    .webp({ quality: 70, alphaQuality: 70 })
+    .toFile(`${OUT}portal-light.webp`);
+
+  const atmo = src.clone().blur(36).modulate({ brightness: 0.9 }).resize({ width: 480 });
+  await atmo.clone().webp({ quality: 80 }).toFile(`${OUT}portal-atmo.webp`);
+  await atmo.clone().jpeg({ quality: 80, mozjpeg: true }).toFile(`${OUT}portal-atmo.jpg`);
+
+  for (const name of ["portal-light.webp", "portal-atmo.jpg"]) {
+    const m = await sharp(OUT + name).metadata();
+    console.log(`${name}: ${m.width}x${m.height}`);
+  }
+}
+
 for (const master of MASTERS) {
   const base = sharp(REF + master.src).resize({ width: master.width });
   const quality = master.quality ?? 88;
@@ -199,3 +246,4 @@ for (const asset of ASSETS) {
 }
 
 await buildHeroLayers();
+await buildPortalLayers();

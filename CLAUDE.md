@@ -54,6 +54,30 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 
 ## Архитектура
 
+> **Актуальная главная (ребилд 2026-09, коммиты 332c04d → текущий HEAD).** Разделы ниже про
+> `HeroCameraPlate`/`HeroLightField`/камеру в экран описывают **прежний** hero — эти файлы
+> размонтированы и сохранены (ADR 0003). Сейчас главная построена вокруг одного объекта —
+> настоящего DOM-окна браузера (`src/components/home/BrowserWindow.tsx`):
+>
+> - `HeroScene.tsx` — **один** закреплённый акт `hero` (≥1280px): hero + пять услуг, одно окно
+>   навигирует (адрес → load bar → paint) по пяти страницам. Бюджет скролла — `home-tokens.ts`
+>   (`pin = (V−1)/V`). Ниже 1280px и при reduced motion — стек: hero из `HeroScene` + `ServicesShowcase`.
+> - `PortalLight.tsx` — живой свет портала: `PortalAtmosphere` (дальний план), `PortalGlow`
+>   (светящаяся матта `portal-light` на самом кадре — дышит и несёт «ток» по дугам, всегда
+>   в регистре с фото), `PortalAir` (филаменты + блум), `WindowHalo` (свет портала переходит
+>   в окно на handoff). Только CSS-keyframes `portal-*` (transform/opacity) + MotionValue акта;
+>   без rAF. Слои `portal-light`/`portal-atmo` выводятся скриптом `extract-ref-assets.mjs`.
+> - `window-pages.tsx` — пять сцен услуг, каждая читает один `open` (0..1): в закреплённом акте
+>   это отрезок прогресса скролла, в стеке — in-view часы (`useInView` + `animate`, не `useScroll`).
+>   Web: blueprint → реальный сайт → адаптив; SEO: реальные title/meta/h1 клиента и счётчики
+>   символов; E-shop (`ShopScene`): витрина + корзина из кропов реальных фото; Branding: сборка
+>   айдентики ELEVATE; Apps: поток трёх экранов.
+> - `window-nav.tsx` — навигация окна (`NavLayer`, `CutText`, `useLoadBar`); `client-work.tsx` —
+>   статичные захваты четырёх реальных клиентских сайтов (`scripts/capture-client-work.mjs`).
+> - Далее по странице: `PricingSection`, `CaseShowcase` (второй акт `cases`), `ProjectBuilder`,
+>   `ClosingCta`. История решений и гейты: `docs/creative-rebuild/HOMEPAGE_BUILD.md`, `FINAL_GATE.md`.
+
+
 **Мастер-таймлайн — один на страницу (ADR 0013).** Позицию скролла читает
 **только** `CinematicStage`, смонтированный в `__root.tsx` внутри `<main>`
 (`display: contents`, бокса в вёрстке не создаёт). Секция не вызывает `useScroll`
