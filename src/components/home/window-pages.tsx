@@ -314,36 +314,47 @@ export function WebServicePage({ open }: { open: MotionValue<number> }) {
 /**
  * The client's real page on the left, scanned; on the right, the search side
  * of it. The client's own domain types into a search field, their own
- * `<title>` and description come up as a result, and the meters measure those
- * same strings — character counts against the width a results page shows.
- * Every number is a count of a real served string. No rank, score or traffic.
+ * `<title>` and description come up as a result, and as the scan line reads
+ * down the page the document outline it finds builds beside it — the served
+ * `<h1>` and `<h2>`s verbatim, in document order — followed by what the page
+ * declares to a crawler: `lang`, canonical, JSON-LD types. The meters measure
+ * the title and description strings against the width a results page shows.
+ * Every value is a real served string or a count of one (`client-work.tsx`).
+ * No rank, score or traffic.
  */
 export function SeoInspector({ site, open }: { site: ClientSite; open: MotionValue<number> }) {
-  const typed = useTransform(open, [0.02, 0.26], [100, 0]);
+  const typed = useTransform(open, [0.02, 0.2], [100, 0]);
   const typedClip = useMotionTemplate`inset(0 ${typed}% 0 0)`;
-  const caretO = useTransform(open, [0, 0.26, 0.3], [1, 1, 0]);
+  const caretO = useTransform(open, [0, 0.2, 0.24], [1, 1, 0]);
   const scanY = useTransform(open, [0.12, 0.62], ["-10%", "110%"]);
   const scanO = useTransform(open, [0.12, 0.18, 0.56, 0.62], [0, 1, 1, 0]);
-  const markO = useTransform(open, [0.3, 0.46], [0, 1]);
-  const serpY = useTransform(open, [0.26, 0.46], ["18%", "0%"]);
-  const serpO = useTransform(open, [0.26, 0.42], [0, 1]);
+  const markO = useTransform(open, [0.18, 0.3], [0, 1]);
+  const serpY = useTransform(open, [0.2, 0.36], ["18%", "0%"]);
+  const serpO = useTransform(open, [0.2, 0.32], [0, 1]);
   const titleLen = site.tabTitle.length;
   const descLen = site.metaDescription?.length ?? 0;
-  const tBar = useTransform(open, [0.5, 0.78], [0, Math.min(1, titleLen / 60)]);
-  const dBar = useTransform(open, [0.56, 0.86], [0, Math.min(1, descLen / 160)]);
-  const meterO = useTransform(open, [0.46, 0.56], [0, 1]);
-  const h1O = useTransform(open, [0.8, 0.9], [0, 1]);
+  const tBar = useTransform(open, [0.62, 0.8], [0, Math.min(1, titleLen / 60)]);
+  const dBar = useTransform(open, [0.66, 0.86], [0, Math.min(1, descLen / 160)]);
+  const meterO = useTransform(open, [0.6, 0.68], [0, 1]);
+  const declO = useTransform(open, [0.82, 0.94], [0, 1]);
+  const declY = useTransform(open, [0.82, 0.94], ["40%", "0%"]);
+
+  const st = site.structure;
+  const h2 = st?.h2 ?? [];
+  // Rows land as the scan line passes (0.2 → 0.6 of the beat).
+  const rowAt = (k: number, n: number) => 0.24 + (k / Math.max(1, n)) * 0.36;
+  const rows = 1 + h2.length + (st && st.h2Total > h2.length ? 1 : 0);
 
   const meter = (tag: string, count: number, bar: MotionValue<number>) => (
-    <div className="grid grid-cols-[auto_1fr_auto] items-center gap-[1cqw]">
-      <span className="font-mono text-[1.15cqw] text-primary">{tag}</span>
-      <span className="relative h-[0.7cqw] overflow-hidden rounded-full bg-white/10">
+    <div className="grid grid-cols-[4.6cqw_1fr_auto] items-center gap-[1cqw]">
+      <span className="font-mono text-[1.1cqw] text-primary">{tag}</span>
+      <span className="relative h-[0.6cqw] overflow-hidden rounded-full bg-white/10">
         <motion.span
           style={{ scaleX: bar }}
           className="absolute inset-0 block origin-left rounded-full bg-[linear-gradient(90deg,oklch(0.65_0.18_255),oklch(0.78_0.19_253))]"
         />
       </span>
-      <span className="font-mono text-[1.15cqw] tabular-nums text-white/80">{count}</span>
+      <span className="font-mono text-[1.1cqw] tabular-nums text-white/80">{count}</span>
     </div>
   );
 
@@ -378,48 +389,126 @@ export function SeoInspector({ site, open }: { site: ClientSite; open: MotionVal
       </div>
 
       {/* The search side. */}
-      <div className="relative flex flex-1 flex-col gap-[1.8cqw] p-[2.4cqw]">
-        <div className="flex items-center gap-[0.9cqw] rounded-full border border-white/12 bg-white/[0.05] px-[1.4cqw] py-[1cqw]">
-          <Search className="size-[1.6cqw] shrink-0 text-white/60" strokeWidth={2.2} />
-          <span className="relative font-mono text-[1.3cqw] text-white/90">
+      <div className="relative flex min-w-0 flex-1 flex-col gap-[1.4cqw] p-[2.2cqw]">
+        <div className="flex items-center gap-[0.9cqw] rounded-full border border-white/12 bg-white/[0.05] px-[1.4cqw] py-[0.9cqw]">
+          <Search className="size-[1.5cqw] shrink-0 text-white/60" strokeWidth={2.2} />
+          <span className="relative font-mono text-[1.25cqw] text-white/90">
             <motion.span style={{ clipPath: typedClip }} className="block">
               {site.domain}
             </motion.span>
           </span>
-          <motion.span style={{ opacity: caretO }} className="h-[1.6cqw] w-px bg-white/80" />
+          <motion.span style={{ opacity: caretO }} className="h-[1.5cqw] w-px bg-white/80" />
         </div>
 
         <motion.div
           style={{ y: serpY, opacity: serpO }}
-          className="rounded-[0.8cqw] border border-white/10 bg-white/[0.03] p-[1.6cqw]"
+          className="rounded-[0.8cqw] border border-white/10 bg-white/[0.03] p-[1.4cqw]"
         >
-          <p className="flex items-center gap-[0.8cqw] text-[1.1cqw] text-white/55">
-            <span className="size-[1.3cqw] rounded-full bg-white/80" />
-            {site.domain}
+          <p className="flex items-center gap-[0.8cqw] text-[1.05cqw] text-white/55">
+            <span className="size-[1.2cqw] rounded-full bg-white/80" />
+            {st?.canonical ?? site.domain}
           </p>
-          <p className="mt-[0.7cqw] line-clamp-2 text-[1.6cqw] leading-[1.25] text-[oklch(0.78_0.19_253)]">
+          <p className="mt-[0.6cqw] line-clamp-2 text-[1.5cqw] leading-[1.25] text-[oklch(0.78_0.19_253)]">
             {site.tabTitle}
           </p>
-          <p className="mt-[0.7cqw] line-clamp-3 text-[1.1cqw] leading-[1.5] text-white/60">
+          <p className="mt-[0.6cqw] line-clamp-2 text-[1.05cqw] leading-[1.5] text-white/60">
             {site.metaDescription}
           </p>
         </motion.div>
 
-        <motion.div style={{ opacity: meterO }} className="mt-auto space-y-[1.2cqw]">
+        {/* The outline the scan reads off the page. */}
+        {st && site.h1 ? (
+          <div className="relative min-h-0 flex-1 overflow-hidden">
+            <OutlineRow open={open} at={rowAt(0, rows)} tag="h1" text={site.h1} />
+            <div className="relative ml-[1.1cqw] border-l border-white/12 pl-[1.4cqw]">
+              {h2.map((text, k) => (
+                <OutlineRow key={text} open={open} at={rowAt(k + 1, rows)} tag="h2" text={text} />
+              ))}
+              {st.h2Total > h2.length && (
+                <OutlineRow
+                  open={open}
+                  at={rowAt(rows - 1, rows)}
+                  tag="h2"
+                  text={`+ ${st.h2Total - h2.length}`}
+                  muted
+                />
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1" />
+        )}
+
+        <motion.div style={{ opacity: meterO }} className="space-y-[0.9cqw]">
           {meter("<title>", titleLen, tBar)}
           {site.metaDescription && meter("<meta>", descLen, dBar)}
-          {site.h1 && (
-            <motion.p
-              style={{ opacity: h1O }}
-              className="flex items-center gap-[0.8cqw] font-mono text-[1.15cqw] text-white/80"
-            >
-              <span className="text-primary">&lt;h1&gt;</span>
-              <Check className="size-[1.4cqw] text-[oklch(0.78_0.19_253)]" strokeWidth={3} />
-            </motion.p>
-          )}
         </motion.div>
+
+        {st && (
+          <motion.div
+            style={{ opacity: declO, y: declY }}
+            className="flex flex-wrap gap-[0.6cqw] border-t border-white/8 pt-[1.2cqw] font-mono text-[1cqw]"
+          >
+            <span className="rounded-[0.3cqw] bg-white/[0.06] px-[0.7cqw] py-[0.3cqw] text-white/70">
+              lang=<span className="text-white">{st.lang}</span>
+            </span>
+            <span className="flex items-center gap-[0.4cqw] rounded-[0.3cqw] bg-white/[0.06] px-[0.7cqw] py-[0.3cqw] text-white/70">
+              canonical
+              <Check className="size-[1.1cqw] text-[oklch(0.78_0.19_253)]" strokeWidth={3} />
+            </span>
+            {st.schema.map((type) => (
+              <span
+                key={type}
+                className="rounded-[0.3cqw] border border-primary/40 px-[0.7cqw] py-[0.3cqw] text-[oklch(0.82_0.12_250)]"
+              >
+                {type}
+              </span>
+            ))}
+          </motion.div>
+        )}
       </div>
     </div>
+  );
+}
+
+/** One heading of the outline, landing as the scan line reaches it. */
+function OutlineRow({
+  open,
+  at,
+  tag,
+  text,
+  muted = false,
+}: {
+  open: MotionValue<number>;
+  at: number;
+  tag: "h1" | "h2";
+  text: string;
+  muted?: boolean;
+}) {
+  const o = useTransform(open, [at, at + 0.05], [0, 1]);
+  const x = useTransform(open, [at, at + 0.05], ["-1.2cqw", "0cqw"]);
+  return (
+    <motion.p
+      style={{ opacity: o, x }}
+      className="flex items-baseline gap-[0.8cqw] py-[0.32cqw] whitespace-nowrap"
+    >
+      <span
+        className={`w-[2.2cqw] shrink-0 font-mono text-[1cqw] ${tag === "h1" ? "text-primary" : "text-white/40"}`}
+      >
+        {tag}
+      </span>
+      <span
+        className={`truncate ${
+          tag === "h1"
+            ? "text-[1.2cqw] font-semibold text-white"
+            : muted
+              ? "font-mono text-[1.05cqw] text-white/40"
+              : "text-[1.1cqw] text-white/75"
+        }`}
+      >
+        {text}
+      </span>
+    </motion.p>
   );
 }
 

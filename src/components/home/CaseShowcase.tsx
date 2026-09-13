@@ -4,8 +4,8 @@
  * One window, four real client sites. As the visitor scrolls, the window
  * scrolls each real site from its first screen down through its content (the
  * way you would look at a site you were considering), then navigates to the
- * next client: the address changes to their real domain, the page blanks and
- * the next site paints in. Beside it, the same site at phone width. On the
+ * next client: the address changes to their real domain and the next site
+ * rises over the last. Beside it, the same site at phone width. On the
  * left, the client's name, category and domain in real type, with the live
  * site and the case study one click away.
  *
@@ -14,24 +14,26 @@
  * used to have is gone: no third-party request, no cookie banners, no empty
  * captures, no failure mode.
  *
+ * Below xl and under reduced motion the same story runs in one sticky window
+ * (`WindowStory`) instead of four stacked ones.
+ *
  * What is NOT on this page, deliberately: the descriptions, problem/solution
  * copy, work lists and result figures in `projects-i18n.ts`. The figures have
- * no source (PRODUCT.md §33); the descriptions, for two of four clients, name a
- * different kind of business from the one the live site shows (see the header
- * of `client-work.tsx`). The case-study route still renders them — that data is
- * not this section's to rewrite, and the discrepancy is reported.
+ * no source (PRODUCT.md §33); the page shows the work, and the case-study
+ * route carries the words.
  */
 import { Link } from "@tanstack/react-router";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { motion, useMotionValueEvent, useTransform, type MotionValue } from "framer-motion";
 import { useState } from "react";
-import { EASE, PERSPECTIVE, useAct, useMotionCapability } from "@/components/cinematic";
+import { PERSPECTIVE, useAct, useMotionCapability } from "@/components/cinematic";
 import { useT } from "@/lib/i18n";
 import { useProjects } from "@/lib/projects-i18n";
 import { BrowserWindow } from "./BrowserWindow";
 import { CLIENT_SITES, WorkImage, type ClientSite } from "./client-work";
 import { ClientFold, ScrollingSite } from "./window-pages";
 import { CutText, LoadBar, NavLayer, useLoadBar } from "./window-nav";
+import { WindowStory } from "./WindowStory";
 
 /* The act's budget, in viewports — same construction as `home-tokens.ts`. */
 const INTRO_VP = 0.3;
@@ -43,10 +45,10 @@ const VIEWPORTS = PINNED_VP + 1;
 const PIN = PINNED_VP / VIEWPORTS;
 const at = (vp: number) => vp / PINNED_VP;
 const caseStart = (i: number) => INTRO_VP + i * CASE_VP;
-// Same short navigation as the hero (home-tokens NAV): at 0.06 / 0.16 each
-// client change left a blank white window and an empty column for ~0.3 viewport.
+// Same navigation as the hero (home-tokens NAV): the next client's page rises
+// over the previous one, so no position of the scroll shows a blank window.
 const SWAP = 0.02;
-const PAINT = 0.08;
+const PAINT = 0.12;
 const swapAt = (i: number) => (i < COUNT ? at(caseStart(i) - SWAP) : 2);
 
 export function CaseShowcase() {
@@ -173,7 +175,6 @@ export function CaseShowcase() {
                         p={p}
                         swap={swapAt(i)}
                         painted={at(caseStart(i) + PAINT)}
-                        blank="bg-white"
                       >
                         <CasePage p={p} i={i} site={site} reduced={reduced} />
                       </NavLayer>
@@ -206,7 +207,6 @@ export function CaseShowcase() {
                       p={p}
                       swap={swapAt(i)}
                       painted={at(caseStart(i) + PAINT)}
-                      blank="bg-white"
                     >
                       {img}
                     </NavLayer>
@@ -247,38 +247,38 @@ export function CaseShowcase() {
       {/* ================= STACKED: phones, and reduced motion ================= */}
       <div className="container-luxe py-20 xl:hidden motion-reduce:xl:block motion-reduce:xl:py-32">
         {header}
-        <ol className="mt-12 space-y-16 lg:mt-16 lg:grid lg:grid-cols-2 lg:gap-x-12 lg:gap-y-20 lg:space-y-0">
-          {CLIENT_SITES.map((site, i) => (
-            <motion.li
-              key={site.slug}
-              initial={reduced ? undefined : { opacity: 0, y: 28 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-10% 0px" }}
-              transition={{ duration: 0.7, ease: EASE }}
-            >
-              <div className="relative mr-6">
-                <BrowserWindow compact address={site.domain}>
-                  <div className="relative aspect-[16/10] overflow-hidden bg-white">
-                    <ClientFold site={site} />
-                  </div>
-                </BrowserWindow>
-                <div className="absolute -right-6 -bottom-8 aspect-[1/2] w-[22%] overflow-hidden rounded-[0.9rem] border-4 border-[#05070c] bg-white shadow-[0_24px_60px_-18px_oklch(0_0_0/0.95)]">
-                  <WorkImage
-                    site={site}
-                    kind="mobile"
-                    alt=""
-                    sizes="100px"
-                    className="absolute inset-0 block h-full w-full"
-                    imgClassName="h-full w-full object-cover object-top"
-                  />
-                </div>
-              </div>
-              <div className="mt-12">
-                <CaseCopy site={site} index={i} category={category(site.slug)} />
-              </div>
-            </motion.li>
-          ))}
-        </ol>
+        <div className="mt-6 md:mt-2">
+          <WindowStory
+            count={CLIENT_SITES.length}
+            label={t.nav.work}
+            screenClass="bg-white"
+            address={(i) => CLIENT_SITES[i].domain}
+            page={(i, open) =>
+              reduced ? (
+                <ClientFold site={CLIENT_SITES[i]} />
+              ) : (
+                <StoryCasePage site={CLIENT_SITES[i]} open={open} />
+              )
+            }
+            companion={(i) => (
+              <WorkImage
+                site={CLIENT_SITES[i]}
+                kind="mobile"
+                alt=""
+                sizes="120px"
+                className="absolute inset-0 block h-full w-full bg-white"
+                imgClassName="h-full w-full object-cover object-top"
+              />
+            )}
+            copy={(i) => (
+              <CaseCopy
+                site={CLIENT_SITES[i]}
+                index={i}
+                category={category(CLIENT_SITES[i].slug)}
+              />
+            )}
+          />
+        </div>
       </div>
 
       <div className="container-luxe pb-4 xl:hidden motion-reduce:xl:block motion-reduce:xl:pb-24">
@@ -356,6 +356,12 @@ function CasePage({
     [at(caseStart(i) + 0.12), at(caseStart(i) + CASE_VP - 0.14)],
     [0, reduced ? 0 : 1],
   );
+  return <ScrollingSite site={site} scroll={scroll} />;
+}
+
+/** The client site in the stacked story's window: it scrolls once, on its own clock. */
+function StoryCasePage({ site, open }: { site: ClientSite; open: MotionValue<number> }) {
+  const scroll = useTransform(open, [0.25, 1], [0, 0.32]);
   return <ScrollingSite site={site} scroll={scroll} />;
 }
 

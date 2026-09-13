@@ -4,18 +4,18 @@ import { PROJECTS_BASE, type ProjectBase, type ProjectSlug, type ProjectCategory
 export type LocalizedProject = Omit<ProjectBase, "category"> & {
   category: string;
   description: string;
-  result: string;
-  problem: string;
-  solution: string;
+  result?: string;
+  problem?: string;
+  solution?: string;
   work: string[];
   results: { value: string; label: string }[];
 };
 
 type Content = {
   description: string;
-  result: string;
-  problem: string;
-  solution: string;
+  result?: string;
+  problem?: string;
+  solution?: string;
   work: string[];
   results: { value: string; label: string }[];
 };
@@ -42,16 +42,11 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
       ],
     },
     "nhome-praha": {
-      description: "Realitní web prémiového segmentu Prahy s katalogem nemovitostí, kvalitní vizuální galerií a kontaktem na makléře.",
-      result: "+95% poptávek na nemovitosti",
-      problem: "Stránka neodpovídala kvalitě portfolia a poptávky chodily převážně z externích portálů, nikoli přímo.",
-      solution: "Vytvořili jsme webové prostředí s prémiovou typografií, detaily nemovitostí, mapou a CTA, které vede přímo k osobní schůzce.",
-      work: ["Web design pro luxury reality", "Detail nemovitosti", "Filtry a vyhledávání", "Lead management"],
-      results: [
-        { value: "+95%", label: "přímých poptávek" },
-        { value: "+62%", label: "zobrazení detailů" },
-        { value: "+38%", label: "čas na webu" },
-      ],
+      // Verified against the live site (2026-09); no problem/solution/result
+      // copy or figures, because the repository has no source for them.
+      description: "Web pražské společnosti INHOME, která nabízí úklidové služby, chemické čištění nábytku, stěhování po ČR i EU a hodinového manžela — v češtině, angličtině a ruštině, s formulářem pro zpětné volání.",
+      work: ["Prezentace čtyř služeb", "Jazykové verze CZ · EN · RU", "Formulář pro zpětné volání", "Sekce „Proč INHOME?“"],
+      results: [],
     },
     "exclusive-beauty": {
       description: "E-shop prémiové beauty značky — od produktové karty po checkout, optimalizovaný pro mobilní nákup a opakované objednávky.",
@@ -66,16 +61,11 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
       ],
     },
     euromotors: {
-      description: "Web pro autorizovaného dealera prémiových vozů s katalogem aut, financováním a online rezervací zkušební jízdy.",
-      result: "+120% rezervací test drive",
-      problem: "Web nepůsobil jako prémiová značka a klienti dělali první kontakt telefonem až po několika návštěvách webu.",
-      solution: "Postavili jsme cinematický web s detailem vozů, kalkulačkou financování a jednoduchou rezervací zkušební jízdy přímo z karty vozu.",
-      work: ["Vizuální koncept", "Katalog a detail vozu", "Kalkulačka financování", "Rezervace test drive"],
-      results: [
-        { value: "+120%", label: "test drive rezervací" },
-        { value: "+58%", label: "leadů z webu" },
-        { value: "+34%", label: "vrácení návštěvníků" },
-      ],
+      // Verified against the live site (2026-09); no problem/solution/result
+      // copy or figures, because the repository has no source for them.
+      description: "Web autoservisu EURO-MOTORS v Praze 10 — kompletní opravy a údržba osobních i užitkových vozů všech značek, přehled služeb, časté dotazy a nezávazná poptávka, v češtině a ruštině.",
+      work: ["Přehled služeb autoservisu", "Formulář nezávazné poptávky", "Časté dotazy (FAQ)", "Jazykové verze CZ · RU"],
+      results: [],
     },
   },
   EN: {
@@ -92,16 +82,11 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
       ],
     },
     "nhome-praha": {
-      description: "Real-estate website for Prague's premium segment with a property catalogue, rich galleries and direct broker contact.",
-      result: "+95% direct inquiries",
-      problem: "The site didn't match the quality of the portfolio and most inquiries came from external portals, not directly.",
-      solution: "We created a premium typographic environment with property detail pages, map and CTAs that lead straight to a personal meeting.",
-      work: ["Luxury real-estate web design", "Property detail page", "Filters & search", "Lead management"],
-      results: [
-        { value: "+95%", label: "direct inquiries" },
-        { value: "+62%", label: "detail page views" },
-        { value: "+38%", label: "time on site" },
-      ],
+      // Verified against the live site (2026-09); no problem/solution/result
+      // copy or figures, because the repository has no source for them.
+      description: "Website for INHOME, a Prague company offering cleaning services, upholstery cleaning, moves across the Czech Republic and the EU, and handyman help — in Czech, English and Russian, with a call-back request form.",
+      work: ["Four service lines", "CZ · EN · RU language versions", "Call-back request form", "“Why INHOME?” section"],
+      results: [],
     },
     "exclusive-beauty": {
       description: "Premium beauty brand e-shop — from product page to checkout, optimised for mobile purchases and repeat orders.",
@@ -116,16 +101,11 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
       ],
     },
     euromotors: {
-      description: "Website for an authorised premium car dealer with vehicle catalogue, financing calculator and online test-drive booking.",
-      result: "+120% test-drive bookings",
-      problem: "The site didn't feel like a premium brand and first contact was usually a phone call after several site visits.",
-      solution: "We built a cinematic site with rich vehicle detail pages, a financing calculator and a one-click test-drive booking from the car page.",
-      work: ["Visual concept", "Catalogue & car detail", "Financing calculator", "Test-drive booking"],
-      results: [
-        { value: "+120%", label: "test-drive bookings" },
-        { value: "+58%", label: "leads from website" },
-        { value: "+34%", label: "returning visitors" },
-      ],
+      // Verified against the live site (2026-09); no problem/solution/result
+      // copy or figures, because the repository has no source for them.
+      description: "Website for EURO-MOTORS, a car service in Prague 10 — full repairs and maintenance of passenger and commercial vehicles of all makes, a service overview, FAQ and a free-quote request, in Czech and Russian.",
+      work: ["Service overview", "Free-quote request form", "FAQ section", "CZ · RU language versions"],
+      results: [],
     },
   },
   RU: {
@@ -142,16 +122,11 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
       ],
     },
     "nhome-praha": {
-      description: "Сайт по недвижимости премиум-сегмента Праги с каталогом, галереями и контактом с брокером.",
-      result: "+95% прямых заявок",
-      problem: "Сайт не соответствовал качеству портфолио, и заявки приходили в основном с внешних порталов.",
-      solution: "Мы создали премиальную типографическую среду с детальными страницами объектов, картой и CTA на встречу.",
-      work: ["Дизайн для luxury-недвижимости", "Страница объекта", "Фильтры и поиск", "Управление лидами"],
-      results: [
-        { value: "+95%", label: "прямых заявок" },
-        { value: "+62%", label: "просмотров деталей" },
-        { value: "+38%", label: "время на сайте" },
-      ],
+      // Verified against the live site (2026-09); no problem/solution/result
+      // copy or figures, because the repository has no source for them.
+      description: "Сайт пражской компании INHOME: клининг, химчистка мебели и ковров, переезды по Чехии и ЕС и муж на час — на чешском, английском и русском, с формой обратного звонка.",
+      work: ["Презентация четырёх услуг", "Языковые версии CZ · EN · RU", "Форма обратного звонка", "Раздел «Почему INHOME?»"],
+      results: [],
     },
     "exclusive-beauty": {
       description: "Интернет-магазин премиального beauty-бренда — от карточки до checkout, оптимизирован под мобильные покупки.",
@@ -166,16 +141,11 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
       ],
     },
     euromotors: {
-      description: "Сайт официального дилера премиальных авто с каталогом, кредитным калькулятором и записью на тест-драйв.",
-      result: "+120% тест-драйвов",
-      problem: "Сайт не выглядел как премиальный бренд, и первый контакт обычно был по телефону после нескольких визитов.",
-      solution: "Мы построили кинематографичный сайт с детальной страницей авто, калькулятором и быстрым бронированием тест-драйва.",
-      work: ["Визуальная концепция", "Каталог и детали авто", "Калькулятор", "Бронирование тест-драйва"],
-      results: [
-        { value: "+120%", label: "тест-драйвов" },
-        { value: "+58%", label: "лидов" },
-        { value: "+34%", label: "возврат пользователей" },
-      ],
+      // Verified against the live site (2026-09); no problem/solution/result
+      // copy or figures, because the repository has no source for them.
+      description: "Сайт автосервиса EURO-MOTORS в Праге 10 — полный ремонт и обслуживание легковых и коммерческих автомобилей всех марок, обзор услуг, частые вопросы и заявка без обязательств, на чешском и русском.",
+      work: ["Обзор услуг автосервиса", "Форма заявки без обязательств", "Частые вопросы (FAQ)", "Языковые версии CZ · RU"],
+      results: [],
     },
   },
   UA: {
@@ -192,16 +162,11 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
       ],
     },
     "nhome-praha": {
-      description: "Сайт нерухомості преміум-сегменту Праги з каталогом, галереями та контактом з брокером.",
-      result: "+95% прямих заявок",
-      problem: "Сайт не відповідав якості портфоліо, заявки приходили переважно з зовнішніх порталів.",
-      solution: "Ми створили преміальне типографічне середовище з детальними сторінками об'єктів, мапою та CTA на зустріч.",
-      work: ["Дизайн для luxury-нерухомості", "Сторінка об'єкта", "Фільтри та пошук", "Управління лідами"],
-      results: [
-        { value: "+95%", label: "прямих заявок" },
-        { value: "+62%", label: "перегляди деталей" },
-        { value: "+38%", label: "час на сайті" },
-      ],
+      // Verified against the live site (2026-09); no problem/solution/result
+      // copy or figures, because the repository has no source for them.
+      description: "Сайт празької компанії INHOME: клінінг, хімчистка меблів і килимів, переїзди по Чехії та ЄС і чоловік на годину — чеською, англійською та російською, з формою зворотного дзвінка.",
+      work: ["Презентація чотирьох послуг", "Мовні версії CZ · EN · RU", "Форма зворотного дзвінка", "Розділ «Чому INHOME?»"],
+      results: [],
     },
     "exclusive-beauty": {
       description: "Інтернет-магазин преміального beauty-бренду — від картки до checkout, оптимізований під мобільні покупки.",
@@ -216,16 +181,11 @@ const CONTENT: Record<Lang, Record<ProjectSlug, Content>> = {
       ],
     },
     euromotors: {
-      description: "Сайт офіційного дилера преміальних авто з каталогом, кредитним калькулятором і записом на тест-драйв.",
-      result: "+120% тест-драйвів",
-      problem: "Сайт не виглядав як преміальний бренд, перший контакт зазвичай був по телефону після кількох візитів.",
-      solution: "Ми побудували кінематографічний сайт з детальною сторінкою авто, калькулятором і швидким бронюванням тест-драйву.",
-      work: ["Візуальна концепція", "Каталог і деталі авто", "Калькулятор", "Бронювання тест-драйву"],
-      results: [
-        { value: "+120%", label: "тест-драйвів" },
-        { value: "+58%", label: "лідів" },
-        { value: "+34%", label: "повернення відвідувачів" },
-      ],
+      // Verified against the live site (2026-09); no problem/solution/result
+      // copy or figures, because the repository has no source for them.
+      description: "Сайт автосервісу EURO-MOTORS у Празі 10 — повний ремонт і обслуговування легкових та комерційних автомобілів усіх марок, огляд послуг, часті запитання та заявка без зобов'язань, чеською та російською.",
+      work: ["Огляд послуг автосервісу", "Форма заявки без зобов'язань", "Часті запитання (FAQ)", "Мовні версії CZ · RU"],
+      results: [],
     },
   },
 };

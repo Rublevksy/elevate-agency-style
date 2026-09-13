@@ -245,3 +245,32 @@ no console errors and no horizontal overflow at 1440×900, 1280×800, 1024×768,
 820×900, 390×844 or under reduced motion; reverse scroll worst case **0.020%**
 of bytes; two-window frames **0**; first-load image weight 315 KB mobile /
 339 KB desktop.
+
+---
+
+## Production polish — 2026-09-13
+
+1. **Navigation blank frame.** `NavLayer` no longer blanks the window and paints
+   top-down. The new page rises from under the fold over the old one, which
+   falls back into shadow (`window-nav.tsx`); both layers are always whole pages,
+   so no scroll position shows a blank or half-painted window. `NAV.paint` /
+   cases `PAINT` 0.07/0.08 → 0.12 so the rise reads as movement.
+2. **Stacked windows.** Below xl and under reduced motion, services and cases run
+   in one sticky window (`WindowStory.tsx`) instead of one window per item; the
+   window is shown only while its story is on screen.
+3. **SEO scene.** The right panel now carries biodentclinic.cz's served outline
+   (h1 + first six h2 verbatim, "+17" for the rest), `lang`, canonical and
+   JSON-LD `@type`s, checked against the live HTML (`client-work.tsx`
+   `structure`). No rank, score or traffic figure.
+4. **Exit-intent.** Real submission through `sendContactToTelegram` (name, e-mail,
+   message); success only after the call resolves, an error with a link to
+   /contact otherwise.
+5. **Client data (§3.1 resolved).** `N Home Praha` → `INHOME Praha` (the site's own
+   title reads "INHOME Прага"; slug kept). INHOME and EURO-MOTORS descriptions and
+   work lists rewritten in four languages from what the live sites serve; their
+   unsourced problem / solution / result copy and figures removed, and the
+   project route and portfolio hide those sections when absent. Portfolio
+   industry labels corrected. Biodent and Exclusive Beauty copy untouched — their
+   figures are still unsourced (see §3).
+6. **Hero at md/lg.** The portal plate bleeds past its column so the arcs frame
+   the window; inside the column the window covered the arch.

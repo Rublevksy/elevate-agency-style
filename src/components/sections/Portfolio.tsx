@@ -21,9 +21,9 @@ const FILTER_LABELS: Record<Lang, Record<FilterId, string>> = {
 
 const INDUSTRY_BY_SLUG: Record<string, Record<Lang, string>> = {
   "biodent-clinic":   { CZ: "Zdravotnictví · Stomatologie", EN: "Healthcare · Dental",  RU: "Медицина · Стоматология", UA: "Медицина · Стоматологія" },
-  "nhome-praha":      { CZ: "Reality · Praha",              EN: "Real estate · Prague", RU: "Недвижимость · Прага",   UA: "Нерухомість · Прага" },
+  "nhome-praha":      { CZ: "Služby pro domácnost · Praha", EN: "Home services · Prague", RU: "Бытовые услуги · Прага", UA: "Побутові послуги · Прага" },
   "exclusive-beauty": { CZ: "Beauty · Premium",             EN: "Beauty · Premium",     RU: "Beauty · Премиум",       UA: "Beauty · Преміум" },
-  "euromotors":       { CZ: "Automotive · Dealer",          EN: "Automotive · Dealer",  RU: "Авто · Дилер",           UA: "Авто · Дилер" },
+  "euromotors":       { CZ: "Autoservis · Praha",           EN: "Car service · Prague", RU: "Автосервис · Прага",     UA: "Автосервіс · Прага" },
 };
 
 const FILTERS: FilterId[] = ["all", "corporate", "ecommerce"];
@@ -210,7 +210,8 @@ function CaseStudyRow({
           {project.description}
         </p>
 
-        {/* Result strip */}
+        {/* Result strip — only for projects that carry a result */}
+        {project.result && (
         <div className="rounded-2xl border border-border/70 bg-background/60 backdrop-blur-sm p-6 mb-7">
           <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-3">{copy.result}</p>
           <div className="text-3xl md:text-[2.1rem] font-semibold text-foreground tabular-nums tracking-tight mb-5 leading-none">
@@ -225,6 +226,7 @@ function CaseStudyRow({
             ))}
           </div>
         </div>
+        )}
 
         {/* Services */}
         <div className="mb-8">

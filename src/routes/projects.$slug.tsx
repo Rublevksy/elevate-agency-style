@@ -5,6 +5,8 @@ import { PROJECTS_BASE, PROJECT_SLUGS, ProjectVisual, type ProjectSlug } from "@
 import { getProjects, useProject } from "@/lib/projects-i18n";
 import { useT } from "@/lib/i18n";
 
+const pad = (n: number) => String(n).padStart(2, "0");
+
 function ProjectNotFound() {
   const { t } = useT();
   return (
@@ -47,6 +49,17 @@ function ProjectDetail() {
   const { slug } = Route.useLoaderData();
   const project = useProject(slug)!;
   const { t } = useT();
+  // Only the parts of the story the project actually has. Two projects carry
+  // just a verified description and work list; they get no empty headings.
+  const story: { eyebrow: string; title: string; text?: string; list?: string[] }[] = [
+    ...(project.problem
+      ? [{ eyebrow: t.ui.projectProblemEyebrow, title: t.ui.projectChallengeTitle, text: project.problem }]
+      : []),
+    ...(project.solution
+      ? [{ eyebrow: t.ui.projectSolutionEyebrow, title: t.ui.projectSolutionTitle, text: project.solution }]
+      : []),
+    { eyebrow: t.ui.projectWorkEyebrow, title: t.ui.projectWorkTitle, list: project.work },
+  ];
 
   return (
     <>
@@ -73,14 +86,16 @@ function ProjectDetail() {
                 {project.description}
               </p>
             </div>
-            <div className="lg:col-span-4 rounded-2xl border border-border bg-surface/60 p-7">
-              <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-3 font-medium">
-                {t.ui.projectMainResult}
-              </p>
-              <div className="text-4xl md:text-5xl font-semibold text-foreground tracking-tight tabular-nums">
-                {project.result}
+            {project.result && (
+              <div className="lg:col-span-4 rounded-2xl border border-border bg-surface/60 p-7">
+                <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-3 font-medium">
+                  {t.ui.projectMainResult}
+                </p>
+                <div className="text-4xl md:text-5xl font-semibold text-foreground tracking-tight tabular-nums">
+                  {project.result}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -94,62 +109,47 @@ function ProjectDetail() {
 
           <div className="grid lg:grid-cols-12 gap-10 md:gap-16">
             <div className="lg:col-span-7 space-y-12 md:space-y-14">
-              <article>
-                <p className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-4 font-medium">
-                  01 — {t.ui.projectProblemEyebrow}
-                </p>
-                <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-5 leading-tight">
-                  {t.ui.projectChallengeTitle}
-                </h2>
-                <p className="text-[15.5px] md:text-base text-foreground/75 leading-relaxed max-w-2xl">
-                  {project.problem}
-                </p>
-              </article>
-
-              <div className="h-px bg-border/70" />
-
-              <article>
-                <p className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-4 font-medium">
-                  02 — {t.ui.projectSolutionEyebrow}
-                </p>
-                <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-5 leading-tight">
-                  {t.ui.projectSolutionTitle}
-                </h2>
-                <p className="text-[15.5px] md:text-base text-foreground/75 leading-relaxed max-w-2xl">
-                  {project.solution}
-                </p>
-              </article>
-
-              <div className="h-px bg-border/70" />
-
-              <article>
-                <p className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-4 font-medium">
-                  03 — {t.ui.projectWorkEyebrow}
-                </p>
-                <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-7 leading-tight">
-                  {t.ui.projectWorkTitle}
-                </h2>
-                <ul className="grid sm:grid-cols-2 gap-2.5">
-                  {project.work.map((item) => (
-                    <li
-                      key={item}
-                      className="flex items-start gap-3 rounded-lg border border-border/80 bg-surface/40 p-4"
-                    >
-                      <Check className="h-4 w-4 text-foreground/70 mt-0.5 shrink-0" />
-                      <span className="text-[13.5px] text-foreground/85 leading-snug">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </article>
+              {story.map((item, i) => (
+                <div key={item.eyebrow} className="space-y-12 md:space-y-14">
+                  {i > 0 && <div className="h-px bg-border/70" />}
+                  <article>
+                    <p className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground mb-4 font-medium">
+                      {pad(i + 1)} — {item.eyebrow}
+                    </p>
+                    <h2 className="text-3xl md:text-4xl font-semibold text-foreground tracking-tight mb-5 leading-tight">
+                      {item.title}
+                    </h2>
+                    {item.text && (
+                      <p className="text-[15.5px] md:text-base text-foreground/75 leading-relaxed max-w-2xl">
+                        {item.text}
+                      </p>
+                    )}
+                    {item.list && (
+                      <ul className="mt-2 grid sm:grid-cols-2 gap-2.5">
+                        {item.list.map((entry) => (
+                          <li
+                            key={entry}
+                            className="flex items-start gap-3 rounded-lg border border-border/80 bg-surface/40 p-4"
+                          >
+                            <Check className="h-4 w-4 text-foreground/70 mt-0.5 shrink-0" />
+                            <span className="text-[13.5px] text-foreground/85 leading-snug">{entry}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </article>
+                </div>
+              ))}
             </div>
 
             <aside className="lg:col-span-5">
               <div className="sticky top-28 space-y-6">
+                {project.results.length > 0 && (
                 <div className="rounded-2xl border border-border bg-surface/40 p-8">
                   <div className="flex items-center gap-2.5 mb-7">
                     <TrendingUp className="h-4 w-4 text-foreground/80" />
                     <p className="text-[10px] uppercase tracking-[0.28em] text-muted-foreground font-medium">
-                      04 — {t.ui.projectResultsEyebrow}
+                      {pad(story.length + 1)} — {t.ui.projectResultsEyebrow}
                     </p>
                   </div>
                   <div className="divide-y divide-border/70">
@@ -168,6 +168,7 @@ function ProjectDetail() {
                     ))}
                   </div>
                 </div>
+                )}
 
                 <div className="rounded-2xl border border-border bg-background p-8">
                   <Target className="h-5 w-5 text-foreground/80 mb-5" />

@@ -12,14 +12,11 @@
  * `<h1>` as served on 2026-09-11. Those are the client's words, shown the way
  * a browser tab and a search result show them — not claims written here.
  *
- * NOT used on the homepage, on purpose: the `description` / `problem` /
- * `solution` / `work` copy in `projects-i18n.ts`. For two of the four sites it
- * describes a different business from the one the live site is (N Home Praha
- * is written up as luxury real estate; inhomepraha.cz is a cleaning and moving
- * company. EuroMotors is written up as a premium car dealer with test-drive
- * booking; euromotors.cz is a repair shop). Putting that copy next to the real
- * screenshot would state something the screenshot visibly contradicts. The
- * data is not this file's to change — it is reported, not rewritten.
+ * The `description` / `work` copy in `projects-i18n.ts` is not shown on the
+ * homepage either way. It used to describe two of these sites as different
+ * businesses (luxury real estate, a premium car dealer); on 2026-09-13 both
+ * entries were rewritten from what inhomepraha.cz and euromotors.cz actually
+ * serve, and their unsourced problem/solution/result copy was removed.
  */
 import { PROJECTS_BASE, type ProjectSlug } from "@/lib/projects";
 
@@ -78,6 +75,17 @@ export interface ClientSite {
   /** The site's own meta description and h1, where it serves them. */
   metaDescription?: string;
   h1?: string;
+  /** What a crawler reads off the served HTML, where it was checked against
+   *  the live page: `<html lang>`, the canonical link, the heading outline in
+   *  document order and the JSON-LD `@type`s. Structure only — no scores. */
+  structure?: {
+    lang: string;
+    canonical: string;
+    h2: string[];
+    /** Total `<h2>` count on the page; `h2` above may list only the first few. */
+    h2Total: number;
+    schema: string[];
+  };
   shots: Record<WorkKind, Shot>;
 }
 
@@ -103,6 +111,22 @@ const EXTRA: Record<ProjectSlug, Omit<ClientSite, "slug" | "name" | "domain" | "
     metaDescription:
       "Moderní stomatologie s 15 lety zkušeností. 3D diagnostika, kvalitní materiály a citlivý přístup. Pracujeme i v sobotu. Objednejte se online.",
     h1: "Stomatologická ordinace BioDent v Praze",
+    // Served HTML of biodentclinic.cz, checked 2026-09-13; h2s verbatim, in
+    // document order.
+    structure: {
+      lang: "cs-CZ",
+      canonical: "https://biodentclinic.cz/",
+      h2: [
+        "Uruguayská 344/13, 12000 , Praha 2",
+        "Naše služby",
+        "Zubní fazety",
+        "Zubní korunky a můstky",
+        "Léčba zubů",
+        "Bělení zubů",
+      ],
+      h2Total: 23,
+      schema: ["Dentist", "MedicalOrganization", "LocalBusiness", "WebSite"],
+    },
     shots: {
       desktop: desktop(
         biodentDesktopWebp,

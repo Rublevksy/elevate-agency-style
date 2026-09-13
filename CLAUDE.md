@@ -60,17 +60,22 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 > настоящего DOM-окна браузера (`src/components/home/BrowserWindow.tsx`):
 >
 > - `HeroScene.tsx` — **один** закреплённый акт `hero` (≥1280px): hero + пять услуг, одно окно
->   навигирует (адрес → load bar → paint) по пяти страницам. Бюджет скролла — `home-tokens.ts`
+>   навигирует (адрес → load bar → новая страница поднимается поверх старой, `window-nav.tsx`;
+>   пустого/недорисованного кадра нет по построению) по пяти страницам. Бюджет скролла — `home-tokens.ts`
 >   (`pin = (V−1)/V`). Ниже 1280px и при reduced motion — стек: hero из `HeroScene` + `ServicesShowcase`.
+> - `WindowStory.tsx` — стековый рендер услуг и кейсов: **одно** sticky-окно (CSS sticky, без
+>   скролл-слушателей), копия скроллится мимо, окно навигирует, когда пункт пересекает линию чтения
+>   (IntersectionObserver). Окно видно только пока история на экране — иначе на стыках делило экран
+>   с окном hero/builder. Не возвращать окно на каждый пункт: соседние окна частично попадали в кадр.
 > - `PortalLight.tsx` — живой свет портала: `PortalAtmosphere` (дальний план), `PortalGlow`
 >   (светящаяся матта `portal-light` на самом кадре — дышит и несёт «ток» по дугам, всегда
 >   в регистре с фото), `PortalAir` (филаменты + блум), `WindowHalo` (свет портала переходит
 >   в окно на handoff). Только CSS-keyframes `portal-*` (transform/opacity) + MotionValue акта;
 >   без rAF. Слои `portal-light`/`portal-atmo` выводятся скриптом `extract-ref-assets.mjs`.
 > - `window-pages.tsx` — пять сцен услуг, каждая читает один `open` (0..1): в закреплённом акте
->   это отрезок прогресса скролла, в стеке — in-view часы (`useInView` + `animate`, не `useScroll`).
->   Web: blueprint → реальный сайт → адаптив; SEO: реальные title/meta/h1 клиента и счётчики
->   символов; E-shop (`ShopScene`): витрина + корзина из кропов реальных фото; Branding: сборка
+>   это отрезок прогресса скролла, в стеке — часы `WindowStory` (`animate` при первой активации, не `useScroll`).
+>   Web: blueprint → реальный сайт → адаптив; SEO: реальные title/meta/h1, outline h1/h2, lang,
+>   canonical и JSON-LD-типы клиента (`client-work.tsx` → `structure`) и счётчики символов; E-shop (`ShopScene`): витрина + корзина из кропов реальных фото; Branding: сборка
 >   айдентики ELEVATE; Apps: поток трёх экранов.
 > - `window-nav.tsx` — навигация окна (`NavLayer`, `CutText`, `useLoadBar`); `client-work.tsx` —
 >   статичные захваты четырёх реальных клиентских сайтов (`scripts/capture-client-work.mjs`).

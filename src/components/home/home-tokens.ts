@@ -40,12 +40,12 @@ export const stopStart = (i: number) => INTRO_VP + i * STOP_VP;
 /**
  * One navigation of the window, in viewports relative to the moment the new
  * page begins: the address changes (hard cut, the way a real bar does), the load
- * bar runs, the old page blanks, the new one paints top-down.
+ * bar runs, and the new page rises over the old one (`window-nav.tsx`).
  *
- * Deliberately SHORT. At paint 0.14 / swap 0.05 the independent review landed
- * on a half-painted window at three sampled positions and read it as a page
- * that had failed to load — 26% of every stop. A real browser's blank is
- * ~80ms; reproducing its duration faithfully is the one piece of fidelity
- * worth dropping. The paint is now ~63px of scroll at 900px tall.
+ * The first build blanked the window and painted top-down; even shortened to
+ * ~63px of scroll the review still caught a blank / half-painted window. The
+ * rise has no such frame — both layers are always whole pages — so it can
+ * afford a travel long enough to read as a movement, not a flicker: ~110px of
+ * scroll at 900px tall.
  */
-export const NAV = { lead: 0.06, swap: 0.02, paint: 0.07 } as const;
+export const NAV = { lead: 0.06, swap: 0.02, paint: 0.12 } as const;

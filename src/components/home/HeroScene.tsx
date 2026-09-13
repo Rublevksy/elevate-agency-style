@@ -466,7 +466,6 @@ export function HeroScene() {
                               p={p}
                               swap={swapAt(i)}
                               painted={at(stopStart(i) + NAV.paint)}
-                              blank={i === 1 || i === 2 ? "bg-white" : undefined}
                             >
                               {page}
                             </NavLayer>
@@ -661,11 +660,14 @@ export function HeroScene() {
                 the arch (wider than the phone, centred on it) and the window
                 stands inside it at three-quarter width, so the arcs read around
                 it instead of disappearing behind it. */}
-            <div className="relative order-1 -mx-6 aspect-[10/9] overflow-hidden sm:aspect-[16/10] md:order-2 md:mx-0 md:aspect-[4/3.2]">
+            <div className="relative order-1 -mx-6 aspect-[10/9] overflow-hidden sm:aspect-[16/10] md:order-2 md:mx-0 md:aspect-[4/3.2] md:overflow-visible">
               {/* One wrapper carries the crop, the translate and the mask, and
                   both the plate and its light fill it — so the breathing light
-                  stays registered to the photographed arcs at every width. */}
-              <div className="absolute inset-y-0 left-1/2 w-[178%] -translate-x-[57%] sm:w-full sm:-translate-x-1/2 md:[mask-image:radial-gradient(closest-side_at_50%_55%,#000_62%,transparent_100%)]">
+                  stays registered to the photographed arcs at every width.
+                  From md the plate is wider than its column and bleeds into the
+                  gutter and past the screen edge: held inside the column, the
+                  window covered the arch and the mask left one faint arc. */}
+              <div className="pointer-events-none absolute inset-y-0 left-1/2 w-[178%] -translate-x-[57%] sm:w-full sm:-translate-x-1/2 md:inset-y-[-14%] md:w-[190%] md:-translate-x-[52%] md:[mask-image:radial-gradient(42%_54%_at_50%_50%,#000_64%,transparent_100%)]">
                 <SceneImage
                   name="portal"
                   alt=""
@@ -684,10 +686,10 @@ export function HeroScene() {
               </div>
               <div
                 aria-hidden
-                className="absolute inset-0 bg-[linear-gradient(to_bottom,#0A0D13_0%,#0A0D1300_28%,#0A0D1300_70%,#0A0D13_100%)]"
+                className="absolute inset-0 bg-[linear-gradient(to_bottom,#0A0D13_0%,#0A0D1300_28%,#0A0D1300_70%,#0A0D13_100%)] md:hidden"
               />
-              <div className="absolute inset-x-0 bottom-[17%] flex justify-center px-6">
-                <div className="relative w-[74%] max-w-[22rem]">
+              <div className="absolute inset-x-0 bottom-[17%] flex justify-center px-6 md:bottom-[10%] md:px-0">
+                <div className="relative w-[74%] max-w-[22rem] md:w-[80%] md:max-w-[26rem]">
                   <BrowserWindow compact address={current.domain}>
                     <div className="relative aspect-[16/10] overflow-hidden bg-white">
                       <div className="absolute inset-0 isolate">{cycleLayers}</div>
@@ -707,7 +709,7 @@ export function HeroScene() {
               </div>
             </div>
 
-            <div className="order-2 mt-2 md:order-1 md:mt-0">
+            <div className="relative z-10 order-2 mt-2 md:order-1 md:mt-0">
               <p className="label-micro text-white/70">{t.hero.sceneKicker}</p>
               <h1 className="heading-scene mt-3 text-[clamp(1.9rem,1.2rem+2.4vw,3.25rem)] text-white uppercase">
                 {t.hero.sceneLine1}
