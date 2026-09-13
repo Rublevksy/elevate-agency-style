@@ -209,6 +209,10 @@ function SiteShell() {
   // production chrome to fight with while it's being judged on its own.
   const isProto = pathname.startsWith("/proto");
   const isIsolated = isDesignExplore || isBench || isProto;
+  // The AI Project Builder is itself the lead flow and has its own sticky action
+  // bar: the floating CTA, chat bubble and exit-intent popup would cover it and
+  // interrupt a brief in progress.
+  const isBuilder = pathname.startsWith("/builder");
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
@@ -223,13 +227,13 @@ function SiteShell() {
         </CinematicStage>
       </main>
       {!isIsolated && <Footer />}
-      {!isIsolated && pathname !== "/contact" && <FloatingCta />}
-      {!isIsolated && <ContactWidget />}
+      {!isIsolated && pathname !== "/contact" && !isBuilder && <FloatingCta />}
+      {!isIsolated && !isBuilder && <ContactWidget />}
       {/* Not on "/": the modal shows "Děkujeme, brzy se ozveme" while sending
           nothing (it only sets local state), and the homepage carries the real
           lead form — the project builder. Site-wide defect reported in
           docs/creative-rebuild/FINAL_GATE.md for an owner decision. */}
-      {!isIsolated && pathname !== "/" && <ExitIntentModal />}
+      {!isIsolated && pathname !== "/" && !isBuilder && <ExitIntentModal />}
       {!isIsolated && <CookieBanner />}
       <PageLoader />
     </div>

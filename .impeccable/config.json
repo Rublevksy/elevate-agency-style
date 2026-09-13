@@ -18,6 +18,42 @@
         "value": "space grotesk",
         "createdAt": "2026-08-18T12:40:44.531Z",
         "reason": "acknowledged real finding, not fixed: Space Grotesk chosen for V3 deliberately as a geometric/product-register face distinct from V1 (Inter) and V2 (Newsreader serif) — differentiation across V1-V4 leans primarily on composition/interaction/motion, not typeface novelty alone; ticket already reviewed and committed, will flag as an honest trade-off in the final report rather than reopen for a font swap"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#000000",
+        "files": [
+          "src/components/builder/renderer/Visual.tsx"
+        ],
+        "createdAt": "2026-09-13T11:42:13.427Z",
+        "reason": "Concept renderer draws client design directions from a validated DesignSpec, not ELEVATE's own UI; shadow/scrim black is part of that depiction"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "999px",
+        "files": [
+          "src/components/builder/renderer/Visual.tsx"
+        ],
+        "createdAt": "2026-09-13T11:42:13.455Z",
+        "reason": "Concept renderer: pill/arch shapes belong to the rendered client concept, not ELEVATE's radius scale"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "src/lib/builder/fixtures.dev.ts"
+        ],
+        "createdAt": "2026-09-13T11:48:00.351Z",
+        "reason": "Dev-only fixture data: client concept palettes for a fictional brief, not ELEVATE UI"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "*",
+        "files": [
+          "scripts/check-builder-spec.ts"
+        ],
+        "createdAt": "2026-09-13T11:48:00.380Z",
+        "reason": "Test data: deliberately unreadable palettes to verify contrast repair"
       }
     ]
   }

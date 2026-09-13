@@ -704,3 +704,53 @@
     }
   }
 }
+
+/*
+ * AI Project Builder — the analysis state's two movements. Both are
+ * INDETERMINATE by design: they say "working", never "n% done", because the
+ * model call reports no progress and inventing some would be a lie.
+ * Transform/opacity only; stilled under prefers-reduced-motion.
+ */
+@layer utilities {
+  .builder-working {
+    position: relative;
+    overflow: hidden;
+  }
+  .builder-working::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, oklch(0.78 0.16 250 / 0.95), transparent);
+    animation: builderWorking 2.4s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  }
+  @keyframes builderWorking {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(260%);
+    }
+  }
+  .builder-draft {
+    animation: builderDraft 3.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+  }
+  @keyframes builderDraft {
+    0%,
+    100% {
+      opacity: 0.35;
+    }
+    50% {
+      opacity: 0.9;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .builder-working::after,
+    .builder-draft {
+      animation: none;
+    }
+    .builder-working::after {
+      opacity: 0;
+    }
+  }
+}

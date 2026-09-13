@@ -81,6 +81,19 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 >   статичные захваты четырёх реальных клиентских сайтов (`scripts/capture-client-work.mjs`).
 > - Далее по странице: `PricingSection`, `CaseShowcase` (второй акт `cases`), `ProjectBuilder`,
 >   `ClosingCta`. История решений и гейты: `docs/creative-rebuild/HOMEPAGE_BUILD.md`, `FINAL_GATE.md`.
+>
+> **AI Project Builder — `/builder`** (`src/components/builder/`, `src/lib/builder/`, docs в `docs/builder/`).
+> Архитектурный закон: **LLM не пишет разметку.** brief → server fn (`ai.functions.ts`, один
+> принудительный tool call) → `spec.ts` (zod → проверка цифр/claims → санитайз → ремонт контраста →
+> проверка различимости пяти концептов; один repair-ход, иначе честная ошибка) → `DesignSpec` из
+> закрытых enum → `renderer/ConceptRenderer.tsx` (свои компоненты, адаптив по container query).
+> Ни одно значение spec не превращается в class name/HTML; имя и отрасль в превью — из брифа.
+> Ключ `ANTHROPIC_API_KEY` только на сервере (в репо его нет → генерация честно падает с
+> `AI_UNAVAILABLE`); `ELEVATE_AI_MODEL`, `ANTHROPIC_BASE_URL` — опционально. Хранение в этой фазе —
+> `localStorage` (Supabase без таблиц), отправка — через существующий `sendContactToTelegram`.
+> `/builder?fixture=1` — только в DEV (`fixtures.dev.ts` вырезается из прод-сборки). Проверки
+> границы доверия: `node scripts/check-builder-spec.ts`. Admin не построен — контракт в
+> `docs/builder/DATA_CONTRACT.md`.
 
 
 **Мастер-таймлайн — один на страницу (ADR 0013).** Позицию скролла читает
