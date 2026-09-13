@@ -238,7 +238,7 @@ export function ProjectBuilder() {
             {t.cta.subtitle}
           </p>
 
-          <div className="mt-10 flex items-baseline gap-4 border-t border-white/10 pt-8">
+          <div className="mt-7 flex items-baseline gap-4 border-t border-white/10 pt-6">
             <p className="label-micro flex items-center gap-3 text-white/60">
               <span aria-hidden className="size-[5px] rounded-full bg-primary" />
               {f.stepLabel} {Math.min(step + 1, steps.length)} / {steps.length}
@@ -458,7 +458,7 @@ function OptionList({
               role={multi ? "checkbox" : "radio"}
               aria-checked={on}
               onClick={() => onPick(i)}
-              className="group flex w-full items-center gap-4 rounded-sm py-3.5 text-left focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-[#0A0D13] focus-visible:outline-none"
+              className="group flex w-full items-center gap-4 rounded-sm py-3 text-left focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-4 focus-visible:ring-offset-[#0A0D13] focus-visible:outline-none"
             >
               <span
                 aria-hidden

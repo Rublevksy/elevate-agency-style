@@ -45,8 +45,13 @@ export function ProjectBlueprint({
     animate: on ? { opacity: 1, scale: 1, y: 0 } : { opacity: 0, scale: 0.94, y: 6 },
     transition: { duration: reduced ? 0 : 0.55, delay: reduced ? 0 : delay, ease: EASE },
   });
-  const tag = (label: string) => (
-    <span className="absolute -top-[1.5cqw] left-[1cqw] z-10 max-w-[calc(100%-2cqw)] truncate rounded-[0.4cqw] bg-primary px-[1cqw] py-[0.45cqw] text-[1.7cqw] leading-none font-medium text-white shadow-[0_0.6cqw_1.6cqw_-0.6cqw_oklch(0.65_0.18_255/0.9)]">
+  // `right` anchors a tag to its module's right edge and lets it run left: the
+  // language switch is two small pills, and a left-anchored, width-capped tag
+  // truncated "Vícejazyčnost" to "V…".
+  const tag = (label: string, anchor: "left" | "right" = "left") => (
+    <span
+      className={`absolute -top-[1.5cqw] z-10 ${anchor === "right" ? "right-0 whitespace-nowrap" : "left-[1cqw] max-w-[calc(100%-2cqw)] truncate"} rounded-[0.4cqw] bg-primary px-[1cqw] py-[0.45cqw] text-[1.7cqw] leading-none font-medium text-white shadow-[0_0.6cqw_1.6cqw_-0.6cqw_oklch(0.65_0.18_255/0.9)]`}
+    >
       {label}
     </span>
   );
@@ -93,7 +98,7 @@ export function ProjectBlueprint({
               <div key={k} className={`h-[0.8cqw] w-[5cqw] rounded-full ${ink} opacity-70`} />
             ))}
             <motion.div {...pop(has(2))} className="relative flex gap-[0.5cqw]">
-              {has(2) && tag(featureLabels[2])}
+              {has(2) && tag(featureLabels[2], "right")}
               {["CZ", "EN"].map((l) => (
                 <span
                   key={l}

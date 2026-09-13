@@ -181,7 +181,7 @@ export function WebServicePage({ open }: { open: MotionValue<number> }) {
                 kind="desktop"
                 alt=""
                 className="absolute inset-0 block h-full w-full"
-                imgClassName="h-full w-full object-cover object-top"
+                imgClassName="h-full w-full object-cover object-left-top"
               />
             </div>
           </div>

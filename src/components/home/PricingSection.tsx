@@ -247,7 +247,7 @@ export function PricingSection() {
           <p className="text-[0.9375rem] text-white/70">
             <Link
               to="/services/design"
-              className="font-medium text-white underline-offset-8 transition-colors hover:text-[oklch(0.78_0.19_253)] hover:underline"
+              className="inline-flex min-h-11 items-center font-medium text-white underline-offset-8 transition-colors hover:text-[oklch(0.78_0.19_253)] hover:underline"
             >
               {t.services.items[3].title}
             </Link>

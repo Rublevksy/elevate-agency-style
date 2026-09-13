@@ -65,7 +65,9 @@ export function CutText({
   className?: string;
   children: React.ReactNode;
 }) {
-  const opacity = useTransform(p, [from - EDGE, from, to, to + EDGE], [0, 1, 1, 0]);
+  // Ends one EDGE before `to`, where the next address begins — the two used to
+  // share a 2*EDGE window and a paused scroll caught both addresses drawn at once.
+  const opacity = useTransform(p, [from - EDGE, from, to - EDGE, to], [0, 1, 1, 0]);
   return (
     <motion.span style={{ opacity }} className={className}>
       {children}

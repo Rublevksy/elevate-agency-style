@@ -208,7 +208,9 @@ export function Nav() {
       </div>
 
       {/* Mobile dropdown menu — slides down from header */}
-      <div className="lg:hidden" aria-hidden={!mobileOpen}>
+      {/* `inert` while closed: the collapsed panel's links were tab stops at
+          opacity 0 inside an aria-hidden wrapper (final gate, 2026-09-13). */}
+      <div className="lg:hidden" aria-hidden={!mobileOpen} inert={!mobileOpen}>
         {/* Backdrop below the panel — dims hero but keeps content visible */}
         <div
           onClick={() => setMobileOpen(false)}

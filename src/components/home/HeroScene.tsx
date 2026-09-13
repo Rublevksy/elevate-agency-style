@@ -98,6 +98,12 @@ export function HeroScene() {
   const [scrolled, setScrolled] = useState(false);
   const [hovered, setHovered] = useState(false);
   const [activeStop, setActiveStop] = useState(-1);
+  // Keyboard focus on the (still faded) service rail shows it: its buttons are
+  // tab stops from the top of the page, and focus must never land on nothing.
+  const [railFocused, setRailFocused] = useState(false);
+  // Once the visitor picks a client site, the cycle stops for good — the
+  // pause mechanism an auto-advancing slideshow owes them (WCAG 2.2.2).
+  const [picked, setPicked] = useState(false);
 
   useMotionValueEvent(p, "change", (v) => {
     setScrolled(v > 0.004);
@@ -114,7 +120,7 @@ export function HeroScene() {
   };
 
   useEffect(() => {
-    if (reduced || scrolled || hovered) return;
+    if (reduced || scrolled || hovered || picked) return;
     const id = window.setInterval(() => {
       if (document.hidden) return;
       setSite((cur) => {
@@ -123,7 +129,7 @@ export function HeroScene() {
       });
     }, CYCLE_MS);
     return () => window.clearInterval(id);
-  }, [reduced, scrolled, hovered]);
+  }, [reduced, scrolled, hovered, picked]);
 
   const current = CLIENT_SITES[site];
   const currentProject = projects.find((x) => x.slug === current.slug);
@@ -259,7 +265,10 @@ export function HeroScene() {
           <button
             key={c.slug}
             type="button"
-            onClick={() => go(i)}
+            onClick={() => {
+              go(i);
+              setPicked(true);
+            }}
             aria-label={c.name}
             aria-pressed={i === site}
             className="group relative flex h-11 min-w-11 items-center justify-center"
@@ -376,17 +385,18 @@ export function HeroScene() {
                           >
                             {current.tabTitle}
                           </motion.span>
-                          {tabs.map((tab, i) => (
-                            <CutText
-                              key={i}
-                              p={p}
-                              from={swapAt(i)}
-                              to={swapAt(i + 1)}
-                              className="absolute inset-0 truncate"
-                            >
-                              {tab}
-                            </CutText>
-                          ))}
+                          {!reduced &&
+                            tabs.map((tab, i) => (
+                              <CutText
+                                key={i}
+                                p={p}
+                                from={swapAt(i)}
+                                to={swapAt(i + 1)}
+                                className="absolute inset-0 truncate"
+                              >
+                                {tab}
+                              </CutText>
+                            ))}
                         </>
                       }
                       address={
@@ -394,17 +404,18 @@ export function HeroScene() {
                           <motion.span style={{ opacity: heroAddr }} className="absolute inset-0">
                             {current.domain}
                           </motion.span>
-                          {STOP_ADDRESS.map((addr, i) => (
-                            <CutText
-                              key={addr}
-                              p={p}
-                              from={swapAt(i)}
-                              to={swapAt(i + 1)}
-                              className="absolute inset-0"
-                            >
-                              {addr}
-                            </CutText>
-                          ))}
+                          {!reduced &&
+                            STOP_ADDRESS.map((addr, i) => (
+                              <CutText
+                                key={addr}
+                                p={p}
+                                from={swapAt(i)}
+                                to={swapAt(i + 1)}
+                                className="absolute inset-0"
+                              >
+                                {addr}
+                              </CutText>
+                            ))}
                         </>
                       }
                     >
@@ -412,7 +423,13 @@ export function HeroScene() {
                         {/* The client cycle is its own stacking context, below
                             every page the window navigates to. */}
                         <div className="absolute inset-0 isolate">{cycleLayers}</div>
+                        {/* Not under reduced motion: there is no pinned stage
+                            then, so `progress` still advances as the hero
+                            scrolls past and the window swapped to service pages
+                            under a caption naming a client (final gate). The
+                            stacked ServicesShowcase carries the services. */}
                         {armed &&
+                          !reduced &&
                           pages.map((page, i) => (
                             <NavLayer
                               key={i}
@@ -477,7 +494,7 @@ export function HeroScene() {
               {/* Which client this is — under the window it describes. */}
               <motion.div
                 style={{ opacity: captionFade }}
-                className="absolute top-full right-0 mt-7 flex justify-end"
+                className="absolute top-full right-0 mt-16 flex justify-end"
               >
                 {workCaption}
               </motion.div>
@@ -565,7 +582,11 @@ export function HeroScene() {
           {/* ---- The service rail: where you are, and a way to jump ------- */}
           <motion.nav
             aria-label={t.nav.services}
-            style={{ opacity: railFade }}
+            style={{ opacity: railFocused ? 1 : railFade }}
+            onFocus={() => setRailFocused(true)}
+            onBlur={(e) => {
+              if (!e.currentTarget.contains(e.relatedTarget as Node)) setRailFocused(false);
+            }}
             className="absolute inset-x-0 bottom-0 z-20 motion-reduce:hidden"
           >
             <div className="container-luxe">
@@ -610,7 +631,7 @@ export function HeroScene() {
                 the arch (wider than the phone, centred on it) and the window
                 stands inside it at three-quarter width, so the arcs read around
                 it instead of disappearing behind it. */}
-            <div className="relative order-1 -mx-6 aspect-[10/9] overflow-hidden sm:aspect-[16/10] md:order-2 md:mx-0 md:aspect-[4/3.2]">
+            <div className="relative order-1 -mx-6 aspect-[10/9] overflow-hidden sm:aspect-[16/10] md:order-2 md:mx-0 md:aspect-[4/3.2] md:[mask-image:radial-gradient(72%_72%_at_55%_58%,#000_52%,transparent_100%)]">
               <SceneImage
                 name="portal"
                 alt=""
@@ -663,7 +684,7 @@ export function HeroScene() {
                 </Link>
                 <a
                   href="#work"
-                  className="text-sm font-medium text-white/75 underline-offset-8 hover:underline"
+                  className="inline-flex min-h-11 items-center text-sm font-medium text-white/75 underline-offset-8 hover:underline"
                 >
                   {t.hero.cta2}
                 </a>

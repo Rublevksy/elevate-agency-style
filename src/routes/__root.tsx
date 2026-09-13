@@ -225,7 +225,11 @@ function SiteShell() {
       {!isIsolated && <Footer />}
       {!isIsolated && pathname !== "/contact" && <FloatingCta />}
       {!isIsolated && <ContactWidget />}
-      {!isIsolated && <ExitIntentModal />}
+      {/* Not on "/": the modal shows "Děkujeme, brzy se ozveme" while sending
+          nothing (it only sets local state), and the homepage carries the real
+          lead form — the project builder. Site-wide defect reported in
+          docs/creative-rebuild/FINAL_GATE.md for an owner decision. */}
+      {!isIsolated && pathname !== "/" && <ExitIntentModal />}
       {!isIsolated && <CookieBanner />}
       <PageLoader />
     </div>

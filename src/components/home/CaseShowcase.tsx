@@ -43,8 +43,10 @@ const VIEWPORTS = PINNED_VP + 1;
 const PIN = PINNED_VP / VIEWPORTS;
 const at = (vp: number) => vp / PINNED_VP;
 const caseStart = (i: number) => INTRO_VP + i * CASE_VP;
-const SWAP = 0.06;
-const PAINT = 0.16;
+// Same short navigation as the hero (home-tokens NAV): at 0.06 / 0.16 each
+// client change left a blank white window and an empty column for ~0.3 viewport.
+const SWAP = 0.02;
+const PAINT = 0.08;
 const swapAt = (i: number) => (i < COUNT ? at(caseStart(i) - SWAP) : 2);
 
 export function CaseShowcase() {
@@ -77,7 +79,7 @@ export function CaseShowcase() {
   const bar = useLoadBar(
     p,
     Array.from({ length: COUNT - 1 }, (_, k): [number, number] => [
-      at(caseStart(k + 1) - 0.1),
+      at(caseStart(k + 1) - 0.06),
       at(caseStart(k + 1) + PAINT),
     ]),
     reduced,
@@ -202,8 +204,8 @@ export function CaseShowcase() {
                     <NavLayer
                       key={site.slug}
                       p={p}
-                      swap={swapAt(i) + at(0.03)}
-                      painted={at(caseStart(i) + PAINT + 0.05)}
+                      swap={swapAt(i)}
+                      painted={at(caseStart(i) + PAINT)}
                       blank="bg-white"
                     >
                       {img}
@@ -370,10 +372,10 @@ function CaseSlot({
   children: React.ReactNode;
 }) {
   const last = i === COUNT - 1;
-  const inA = i === 0 ? -1 : at(caseStart(i) + 0.02);
-  const inB = i === 0 ? -0.5 : at(caseStart(i) + 0.16);
-  const outA = last ? 2 : at(caseStart(i + 1) - 0.16);
-  const outB = last ? 2.1 : at(caseStart(i + 1) - SWAP - 0.01);
+  const inA = i === 0 ? -1 : at(caseStart(i) - 0.02);
+  const inB = i === 0 ? -0.5 : at(caseStart(i) + 0.06);
+  const outA = last ? 2 : at(caseStart(i + 1) - 0.1);
+  const outB = last ? 2.1 : at(caseStart(i + 1) - 0.04);
   const y = useTransform(p, [inA, inB, outA, outB], [reduced ? 0 : 40, 0, 0, reduced ? 0 : -40]);
   const opacity = useTransform(p, [inA, inB, outA, outB], [0, 1, 1, 0]);
   const pointerEvents = useTransform(p, (v) => (v > inA && v < outB ? "auto" : "none"));
