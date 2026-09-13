@@ -631,13 +631,13 @@ export function HeroScene() {
                 the arch (wider than the phone, centred on it) and the window
                 stands inside it at three-quarter width, so the arcs read around
                 it instead of disappearing behind it. */}
-            <div className="relative order-1 -mx-6 aspect-[10/9] overflow-hidden sm:aspect-[16/10] md:order-2 md:mx-0 md:aspect-[4/3.2] md:[mask-image:radial-gradient(72%_72%_at_55%_58%,#000_52%,transparent_100%)]">
+            <div className="relative order-1 -mx-6 aspect-[10/9] overflow-hidden sm:aspect-[16/10] md:order-2 md:mx-0 md:aspect-[4/3.2]">
               <SceneImage
                 name="portal"
                 alt=""
                 priority
                 sizes="100vw"
-                className="absolute inset-y-0 left-1/2 block h-full w-[178%] -translate-x-[57%] sm:w-full sm:-translate-x-1/2"
+                className="absolute inset-y-0 left-1/2 block h-full w-[178%] -translate-x-[57%] sm:w-full sm:-translate-x-1/2 md:[mask-image:radial-gradient(closest-side_at_50%_55%,#000_62%,transparent_100%)]"
                 imgClassName="h-full w-full object-cover"
               />
               <div
