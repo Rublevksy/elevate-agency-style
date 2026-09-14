@@ -83,18 +83,26 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 >   `ClosingCta`. История решений и гейты: `docs/creative-rebuild/HOMEPAGE_BUILD.md`, `FINAL_GATE.md`.
 >
 > **AI Project Builder — `/builder`** (`src/components/builder/`, `src/lib/builder/`, docs в `docs/builder/`).
-> Архитектурный закон: **LLM не пишет разметку.** brief → server fn (`ai.functions.ts`, один
-> принудительный tool call) → `spec.ts` (zod → проверка цифр/claims → санитайз → ремонт контраста →
-> проверка различимости пяти концептов; один repair-ход, иначе честная ошибка) → `DesignSpec` из
-> закрытых enum → `renderer/ConceptRenderer.tsx` (свои компоненты, адаптив по container query).
-> Ни одно значение spec не превращается в class name/HTML; имя и отрасль в превью — из брифа.
-> Ключ `ANTHROPIC_API_KEY` только на сервере (в репо его нет → генерация честно падает с
-> `AI_UNAVAILABLE`); `ELEVATE_AI_MODEL`, `ANTHROPIC_BASE_URL` — опционально. Хранение в этой фазе —
-> `localStorage` (Supabase без таблиц), отправка — через существующий `sendContactToTelegram`.
-> `/builder?fixture=1` (набор A, CZ) и `?fixture=b` (набор B, UA — покрывает все варианты
-> рендерера) — только в DEV (`fixtures.dev.ts` вырезается из прод-сборки). Проверки
-> границы доверия: `node scripts/check-builder-spec.ts`. Admin не построен — контракт в
-> `docs/builder/DATA_CONTRACT.md`.
+> Архитектурный закон: **LLM не пишет разметку.** brief → server fn (`builder.functions.ts` →
+> `service.server.ts` → `ai.server.ts`, один принудительный tool call через `@anthropic-ai/sdk`) →
+> `spec.ts` (zod → проверка цифр/claims → санитайз → ремонт контраста → проверка различимости пяти
+> концептов; один repair-ход, иначе честная ошибка) → `DesignSpec` из закрытых enum →
+> `renderer/ConceptRenderer.tsx`. Ни одно значение spec не превращается в class name/HTML.
+> **Запись — только сервер:** Supabase-миграция `supabase/migrations/20260914120000_builder_leads.sql`
+> (RLS без политик, гранты только `service_role`, всё через функции `builder_*`); браузер владеет
+> лидом через httpOnly-cookie `elevate_builder_session`, в БД хранится только SHA-256 токена; id,
+> ревизии и lifecycle назначает БД, lead id из тела запроса не принимается. `storage.ts` — только
+> кэш (переживает офлайн/сбой БД), не запись. Миграция **ещё не применена** владельцем → без неё
+> сохранение честно падает `PERSISTENCE_UNAVAILABLE`. Статусы: `lifecycle` (прогресс посетителя) ≠
+> `status` NEW…ARCHIVED (только Admin). Rate limit — общий, в таблице `builder_rate_limits`.
+> Telegram (`sendContactToTelegram`, не менялся) — только уведомление, исход пишется в
+> `notification_status`. Env (сервер): `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`,
+> `ANTHROPIC_API_KEY` (дефолт-модель `claude-opus-5`, `ELEVATE_AI_MODEL`/`ANTHROPIC_BASE_URL` опционально).
+> `*.server.ts` не попадают в клиентский бандл. `/builder?fixture=1` / `?fixture=b` — только DEV,
+> без сервера. Проверки: `node scripts/check-builder-spec.ts`;
+> `node --import ./scripts/lib/ts-hooks.mjs scripts/check-builder-db.ts` и `…/check-builder-service.ts`
+> (реальная миграция в PGlite). Локальная БД для браузерного QA: `node scripts/builder-dev-db.ts`.
+> Admin не построен — контракт в `docs/builder/DATA_CONTRACT.md`.
 
 
 **Мастер-таймлайн — один на страницу (ADR 0013).** Позицию скролла читает
@@ -211,7 +219,7 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 - `src/routeTree.gen.ts`, `vite.config.ts`, всё под `src/integrations/supabase/`, `src/lib/*.functions.ts` (`telegram.functions.ts`/`audit.functions.ts`), SEO/structured data (`STRUCTURED_DATA` в `src/routes/__root.tsx`, `head()` в маршрутах, `src/routes/sitemap[.]xml.ts`) — не редактировать без прямой необходимости.
 - `/references/` — исходные постеры, **целиком или кропом** в прод не попадают ни при каких обстоятельствах: вшитый чешский текст ломает четырёхъязычность и дублирует H1, а на экранах сервисных сцен вшиты выдуманные метрики (+220% / +180% / +150%, «+2 482 users», «2 499 Kč» — `PRODUCT.md` принцип 5) и чужой товарный знак (Nike). Единственный разрешённый путь: `references/generated/*-master.png` → `scripts/extract-ref-assets.mjs` → `src/assets/refs/` → `SceneImage`. Раньше плиты нарезались прямо из постеров — это была временная заглушка, она снята (см. ADR 0011).
 - Мастера в `references/generated/` намеренно **без логотипа** на крышке ноутбука и на экране телефона. Не «дорисовывать» знак генерацией: модель делает искажённый ELEVATE. Если знак понадобится на устройстве — это DOM-слой поверх, и он обязан следовать за перспективой клипа, иначе развалится на повороте.
-- Нет тестового раннера (`vitest`/`jest`) — «зелёный набор» это `tsc --noEmit` + `eslint` + `vite build` + ручной просмотр.
+- Нет тестового раннера (`vitest`/`jest`) — «зелёный набор» это `tsc --noEmit` + `eslint` + `vite build` + скрипты `scripts/check-builder-*.ts` + ручной просмотр. Node-скрипты, импортирующие `src/`, запускаются с `--import ./scripts/lib/ts-hooks.mjs` (резолв `@/` и импортов без расширения; Node type-stripping не поддерживает parameter properties в конструкторах).
 - `google-chrome --headless=new --screenshot --window-size=W,H` на этой машине ненадёжен для узких (~390px, mobile) ширин — реально отдаёт то ~500px, то ~980px вместо запрошенной, PNG обрезается, а не масштабируется. Для мобильных скриншотов нужен CDP: `--remote-debugging-port` + `Emulation.setDeviceMetricsOverride` через WebSocket (`require('ws')` уже доступен как транзитивная зависимость в `node_modules`, ставить не нужно). Для десктопа CDP тоже подходит и на текущем hero (`HeroScene`) отрабатывает корректно: `Emulation.setDeviceMetricsOverride` + `window.scrollTo` + пауза ~1.4с даёт верный кадр шот-листа, а `Emulation.setEmulatedMedia` с `prefers-reduced-motion: reduce` проверяет ветку без клипа. Ещё два факта про headless-съёмку:
   - `--force-prefers-reduced-motion` **обязателен**, иначе кадр снимается на загрузочном экране приложения и выходит пустым;
   - полностраничный CDP-захват с `captureBeyondViewport: true` **не триггерит lazy-загрузку** картинок ниже сгиба — они выходят пустыми прямоугольниками и выглядят как баг вёрстки. Чтобы проверить такие секции, нужен реальный `window.scrollTo` + пауза, а не полностраничный кадр.

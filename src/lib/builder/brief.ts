@@ -7,7 +7,7 @@
  * is trusted). Imports only zod and `spec.ts`.
  */
 import { z } from "zod";
-import { DesignSpecSchema, type DesignSpec } from "./spec";
+import type { DesignSpec } from "./spec";
 
 export const PROJECT_TYPES = ["web", "eshop", "app", "branding"] as const;
 export type ProjectType = (typeof PROJECT_TYPES)[number];
@@ -100,23 +100,43 @@ export const EMPTY_BRIEF: BriefDraft = {
 /* Lead                                                                      */
 /* ------------------------------------------------------------------------ */
 
-export const LEAD_STATUSES = [
+/**
+ * Where the visitor is in the Builder — `builder_lifecycle` in the database.
+ * Not to be confused with the Admin pipeline status (`builder_lead_status`:
+ * NEW … ARCHIVED), which the public Builder never reads or writes.
+ */
+export const LIFECYCLES = [
   "draft", // brief in progress
   "concepts_ready", // five validated concepts exist
   "direction_selected", // one concept chosen
-  "submitted", // the real contact pipeline accepted it
+  "submitted", // the database accepted the final brief
+] as const;
+export type Lifecycle = (typeof LIFECYCLES)[number];
+
+/** Admin pipeline status — `builder_lead_status`. Listed here for the contract only. */
+export const LEAD_STATUSES = [
+  "NEW",
+  "REVIEW",
+  "CONTACTED",
+  "PROPOSAL",
+  "IN_PROGRESS",
+  "COMPLETED",
+  "ARCHIVED",
 ] as const;
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
-export const RevisionSchema = z.object({
-  id: z.string(),
-  conceptId: z.string(),
-  feedback: z.string().max(600),
-  before: DesignSpecSchema,
-  after: DesignSpecSchema,
-  createdAt: z.string(),
-});
-export type Revision = z.infer<typeof RevisionSchema> & { before: DesignSpec; after: DesignSpec };
+export type Revision = {
+  id: string;
+  conceptId: string;
+  /** Assigned by the database: `before` is revision - 1, `after` is revision. */
+  revision: number;
+  kind: "refine" | "restore";
+  feedback: string;
+  restoredFrom: number | null;
+  before: DesignSpec;
+  after: DesignSpec;
+  createdAt: string;
+};
 
 export const ContactSchema = z.object({
   name: line(1, 100),
@@ -132,22 +152,18 @@ export const ContactSchema = z.object({
 });
 export type Contact = z.infer<typeof ContactSchema>;
 
-export const LeadSchema = z.object({
-  id: z.string().uuid(),
-  schemaVersion: z.literal(1),
-  status: z.enum(LEAD_STATUSES),
-  lang: z.enum(LANGS),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  brief: BriefDraftSchema,
-  concepts: z.array(DesignSpecSchema).max(5),
-  selectedConceptId: z.string().nullable(),
-  revisions: z.array(RevisionSchema).max(60),
-  contact: ContactSchema.nullable(),
-  submittedAt: z.string().nullable(),
-});
-
-export type Lead = Omit<z.infer<typeof LeadSchema>, "concepts" | "revisions"> & {
+/** The Builder's view of a lead: the server snapshot, validated (`snapshot.ts`). */
+export type Lead = {
+  id: string;
+  schemaVersion: 2;
+  lifecycle: Lifecycle;
+  lang: (typeof LANGS)[number];
+  createdAt: string;
+  updatedAt: string;
+  brief: BriefDraft;
   concepts: DesignSpec[];
+  selectedConceptId: string | null;
+  generationCount: number;
   revisions: Revision[];
+  submittedAt: string | null;
 };

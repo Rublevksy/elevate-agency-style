@@ -1,77 +1,160 @@
-# Builder → Admin data contract
+# Builder data contract
 
-The single source of truth for the shapes is code: `src/lib/builder/brief.ts` (`LeadSchema`,
-`BriefSchema`, `BriefDraftSchema`, `ContactSchema`, `RevisionSchema`) and
-`src/lib/builder/spec.ts` (`DesignSpecSchema`). This document explains them for the Admin
-phase and records what is and is not persisted today.
+The authoritative record of every Builder lead lives in Supabase Postgres, in the tables of
+`supabase/migrations/20260914120000_builder_leads.sql`. Shapes are defined twice, on purpose:
+in code (`src/lib/builder/brief.ts`, `spec.ts` — zod, checked before anything is written) and
+in the database (enums, length checks, foreign keys — checked again on write).
 
-## 1. Persistence today (Phase 1) — and why
+**Applying the migration is an owner step** (Lovable Cloud / Supabase migrations), followed by
+regenerating `src/integrations/supabase/types.ts`. Until it is applied, every Builder save
+fails honestly with `PERSISTENCE_UNAVAILABLE` and the browser keeps the work in its cache.
 
-Inspection of the repository found Supabase connected (`src/integrations/supabase/*`) but
-**no tables** (`types.ts` has `Tables: never`), **no migrations**, and **no service-role key**
-in the local environment; the integration files are generated and protected. There is
-therefore no trustworthy server-side place to write a lead yet, and this phase does not
-invent one.
+## 1. Ownership
 
-| What | Where | Lifetime |
+| Data | Owner (writes) | Readers |
 |---|---|---|
-| Whole `Lead` (brief, 5 concepts, revisions, selection) + contact draft | browser `localStorage` key `elevate-builder-lead-v1`, re-validated on load | until the visitor starts over or clears storage |
-| Submitted lead | existing `sendContactToTelegram` pipeline: structured summary led by `lead <uuid>` | Telegram chat |
+| Lead, brief, concepts, revisions, selection, contact | the visitor, **only through server functions** (`builder.functions.ts` → `service.server.ts` → `builder_*` functions, service role) | the visitor's own session; Admin (future, service role) |
+| `status` (NEW … ARCHIVED) and its audit trail | Admin (future) via `builder_set_status` | Admin |
+| `notification_status` | the server, after trying Telegram | Admin |
+| Rate-limit counters | the server | the server |
+| Browser cache (`localStorage` `elevate-builder-cache-v2`) | the browser | the browser; never trusted by the server |
 
-The Telegram message carries: lead id, company + industry, project type, deadline, budget
-label, goal, audience, chosen direction (name, archetype, revision, refinement count), its
-system (display face, hero layout, mode, background + accent), message, offering, visual
-preferences, reference URLs and notes (truncated to the pipeline's 2000-character limit).
-**The full DesignSpecs and revision history are not sent** — they exceed the protected
-contract (`message` ≤ 2000) and are the reason the Admin phase needs a table.
+The browser never holds a database credential, never sends a lead id, and cannot address a
+row. Its only capability is the session cookie (§5).
 
-## 2. Lead (schemaVersion 1)
+## 2. Schema
+
+### `builder_leads` — one row per Builder session that saved anything
+
+| Column | Type | Notes |
+|---|---|---|
+| `id` | uuid pk | `gen_random_uuid()` — assigned by the database |
+| `access_token_hash` | text | SHA-256 hex of the session token; the token itself is never stored |
+| `lifecycle` | `builder_lifecycle` | `draft` → `concepts_ready` → `direction_selected` → `submitted` (visitor progress) |
+| `status` | `builder_lead_status` | `NEW` `REVIEW` `CONTACTED` `PROPOSAL` `IN_PROGRESS` `COMPLETED` `ARCHIVED` (ELEVATE pipeline, default `NEW`) |
+| `lang` | `builder_lang` | CZ / EN / RU / UA — language of the UI and generated copy |
+| `project_type` | `builder_project_type` | web / eshop / app / branding |
+| `company`, `industry`, `offering`, `audience`, `goal` | text | brief, length-checked (80/80/600/300/300) |
+| `visual_style`, `visual_mood`, `visual_colors`, `visual_typography`, `visual_notes` | text | visual preferences (300/200/200/200/800) |
+| `brief_references` | jsonb | `{ urls: string[≤5], notes ≤800 }` — flexible (image references later) |
+| `selected_concept_id` | uuid | composite FK `(selected_concept_id, id)` → `builder_concepts (id, lead_id)`: can only point at this lead's concept |
+| `generation_count` | int | concept sets generated (cap enforced in the function) |
+| `contact_name`, `contact_email`, `contact_company` | text | set only by `builder_submit` |
+| `budget_index` | smallint 0–4 | index into `t.contact.form.budgets` |
+| `budget_czk` | int | `BUDGET_VALUES[budget_index]` (0 = "not sure") |
+| `deadline` | `builder_deadline` | asap / 1m / 1-3m / 3m+ / unsure |
+| `contact_message` | text ≤1200 | |
+| `notification_status` | `builder_notification_status` | null until submitted; then `sent` or `failed` — never assumed |
+| `notification_attempts`, `notified_at` | | |
+| `created_at`, `updated_at`, `submitted_at` | timestamptz | `updated_at` by trigger |
+
+Check `builder_leads_submitted_is_complete`: a `submitted` row always has selection, contact,
+budget, deadline, project type and `submitted_at`.
+
+### `builder_concepts` — every concept ever generated for a lead
+
+| Column | Notes |
+|---|---|
+| `id` uuid pk | assigned by the database; this is `DesignSpec.id` |
+| `lead_id` | FK, cascade |
+| `generation`, `position` 1–5 | unique `(lead_id, generation, position)` — a set is always exactly five |
+| `source` | `ai` (stored straight from generation) or `resync` (generated while the database was unreachable, saved later after re-validation) |
+| `name`, `archetype` | copied out of the spec for Admin lists |
+| `revision` | current revision, assigned by the database |
+| `original_spec` jsonb | the spec as generated (revision 0) |
+| `spec` jsonb | current DesignSpec draft (without `id`/`revision`, which live in columns) |
+| `superseded_at` | set when a newer generation replaced the set — **superseded concepts are kept** |
+
+### `builder_revisions` — refinement history
+
+`concept_id` + `lead_id` (composite FK: a revision cannot reference another lead's concept),
+`revision` ≥1 (unique per concept, assigned by the database), `kind` `refine` | `restore`,
+`feedback` (≥3 chars for refine), `restored_from` (for restore: target revision, 0 = original),
+`spec_before`, `spec_after` jsonb, `created_at`.
+
+### `builder_status_events` — pipeline audit
+
+Written by trigger on insert and on every `status` change: `from_status`, `to_status`, `note`
+(from `builder_set_status`), `created_at`.
+
+### `builder_rate_limits`
+
+`(bucket, window_start)` pk, `hits`. Buckets contain hashed client keys and lead ids, never
+raw IP addresses. Old windows are removed opportunistically.
+
+### JSONB vs columns
+
+Columns for everything Admin filters, sorts or searches on (status, lifecycle, project type,
+company, dates, budget, deadline, selection). JSONB only where the shape is genuinely a
+document: DesignSpecs (validated by `spec.ts`, rendered as a whole) and references.
+
+### Indexes
+
+`builder_leads`: `status`, `lifecycle`, `created_at desc`, `project_type`,
+`selected_concept_id`, `submitted_at desc` (partial). `builder_concepts`: `(lead_id, position)`
+where current, `lead_id`. `builder_revisions`: `(concept_id, revision)`, `(lead_id, created_at)`.
+`builder_status_events`: `(lead_id, created_at)`. `builder_rate_limits`: `window_start`.
+
+## 3. Database functions (the only write path)
+
+All are `plpgsql`, `search_path = public, pg_temp`, executable by `service_role` only, and
+raise `BUILDER:<CODE>` errors that the server maps to UI codes.
+
+| Function | Does |
+|---|---|
+| `builder_create_lead(token_hash, lang)` | new draft lead → snapshot |
+| `builder_get_lead(lead, token_hash)` | snapshot, or null on mismatch (no oracle) |
+| `builder_save_brief(lead, token_hash, brief, lang)` | brief columns; `LEAD_LOCKED` once submitted |
+| `builder_store_concepts(lead, token_hash, specs[5], source, max_generations)` | new generation, previous set superseded, selection cleared; `GENERATION_LIMIT` |
+| `builder_get_concept(lead, token_hash, concept)` | current spec + revision (the server refines from this, not from the browser) |
+| `builder_store_refinement(lead, token_hash, concept, feedback, spec, expected_revision, max_revisions)` | next revision; `REVISION_CONFLICT` if the concept moved on; `REVISION_LIMIT` |
+| `builder_restore_revision(lead, token_hash, concept, target, max_revisions)` | earlier version (0 = original) as the next revision |
+| `builder_select_concept(lead, token_hash, concept \| null)` | selection + lifecycle |
+| `builder_submit(lead, token_hash, concept, contact, budget_czk)` | contact, lifecycle `submitted`, lock; idempotent (`alreadySubmitted`); `NO_SELECTION` |
+| `builder_mark_notification(lead, token_hash, delivered)` | `sent` / `failed` + attempt count |
+| `builder_set_status(lead, status, note)` | Admin only — not reachable from any Builder server function |
+| `builder_consume_rate_limit(bucket, limit, window_seconds)` | `{ allowed, hits, retryAfterSeconds }` |
+| `builder_purge_stale_drafts(older_than)` | deletes never-generated drafts (not scheduled) |
+
+Every lead-scoped function first calls `builder_lead_for_update(lead, token_hash)`, which locks
+the row and raises `LEAD_NOT_FOUND` when the id/hash pair does not match — so concurrent
+requests for one lead serialise, and a wrong token looks exactly like a missing lead.
+
+### Snapshot (`builder_snapshot`) — what the visitor's session may see
 
 ```ts
-Lead {
-  id: uuid                         // generated in the browser; appears in the Telegram message
-  schemaVersion: 1
-  status: "draft" | "concepts_ready" | "direction_selected" | "submitted"
-  lang: "CZ" | "EN" | "RU" | "UA"  // language of the UI and of generated copy
-  createdAt: ISO string
-  updatedAt: ISO string
-  brief: BriefDraft                // strict Brief at the moment of generation (see below)
-  concepts: DesignSpec[]           // 0 or 5
-  selectedConceptId: string | null // DesignSpec.id
-  revisions: Revision[]            // ≤ 60, oldest first, all concepts
-  contact: Contact | null          // set only on successful submission
-  submittedAt: ISO string | null   // set only on successful submission
-}
-
-Brief {
-  projectType: "web" | "eshop" | "app" | "branding"
-  project:    { company 1–80, industry 2–80, offering 10–600, audience 3–300, goal 3–300 }
-  visual:     { style ≤300, mood ≤200, colors ≤200, typography ≤200, notes ≤800 }   // free text, optional
-  references: { urls: http(s) URL[] ≤5, notes ≤800 }
-}
-
-Contact {
-  name 1–100, email, company 1–80,
-  budgetIndex 0–4   // index into t.contact.form.budgets; CZK value via BUDGET_VALUES [20000, 50000, 100000, 150000, 0]
-  deadline: "asap" | "1m" | "1-3m" | "3m+" | "unsure"
-  message ≤1200
-}
-
-Revision {
-  id: uuid
-  conceptId: string
-  feedback: string ≤600            // "" = restore of an earlier version
-  before: DesignSpec
-  after: DesignSpec                // after.revision = before.revision + 1
-  createdAt: ISO string
+{
+  lead: { id, lifecycle, lang, brief: BriefDraft, selectedConceptId, generationCount,
+          createdAt, updatedAt, submittedAt },
+  concepts:  [{ id, position, revision, source, spec, createdAt }],   // current set only
+  revisions: [{ id, conceptId, revision, kind, feedback, restoredFrom, before, after, createdAt }],
 }
 ```
 
-## 3. DesignSpec
+Excluded on purpose: `access_token_hash`, `status`, contact fields, notification fields,
+superseded concepts. The server converts it to the Builder's `Lead` (`snapshot.ts`), and the
+browser validates that again (`parseLead`).
+
+## 4. Application shapes
+
+```ts
+Lead {                               // browser view of the record (brief.ts)
+  id: uuid; schemaVersion: 2; lifecycle; lang; createdAt; updatedAt
+  brief: BriefDraft; concepts: DesignSpec[] (0 or 5); selectedConceptId: uuid | null
+  generationCount: number; revisions: Revision[]; submittedAt: string | null
+}
+Brief     { projectType; project { company 1–80, industry 2–80, offering 10–600, audience 3–300, goal 3–300 };
+            visual { style ≤300, mood ≤200, colors ≤200, typography ≤200, notes ≤800 };
+            references { urls http(s)[≤5], notes ≤800 } }
+Contact   { name 1–100, email, company 1–80, budgetIndex 0–4, deadline, message ≤1200 }
+Revision  { id, conceptId, revision ≥1, kind: "refine"|"restore", feedback, restoredFrom, before, after, createdAt }
+```
+
+### DesignSpec (unchanged)
 
 ```ts
 DesignSpec {
-  id: string /^[a-z0-9-]{4,64}$/   // assigned by the server, stable across revisions
+  id: string                       // database uuid (fixtures: c-fixture-…)
   revision: int ≥0                 // 0 = as generated
   mode: "light" | "dark"           // derived from background, not taken from the model
   name ≤40, archetype, positioning ≤200, rationale ≤360, keywords[2–4] ≤22
@@ -93,52 +176,51 @@ DesignSpec {
 }
 ```
 
-Admin can render any stored spec with `ConceptRenderer` exactly as the client saw it — the
-renderer is deterministic (placeholder compositions are seeded by `id` + slot).
+**Rule for every consumer, Admin included:** a spec read from the database is untrusted. Pass
+it through `parseStoredSpec` / `parseDraft` before rendering with `ConceptRenderer`, as the
+Builder does. The renderer is deterministic (placeholders are seeded by `id` + slot), so Admin
+sees exactly what the client saw.
 
-**Rule for every consumer:** a spec read from storage is untrusted. Pass it through
-`parseStoredSpec` before rendering, as the Builder does.
+## 5. Session and security
 
-## 4. Proposed table for the Admin phase (not applied)
+- **Session cookie** `elevate_builder_session` = `<leadId>.<token>`; token = 32 random bytes
+  (base64url). `httpOnly`, `SameSite=Lax`, `Secure` on https, `Path=/`, 180 days. JavaScript
+  cannot read it; it is the only thing that ties a browser to a lead.
+- The database stores `sha256(token)` only. A stolen database row does not grant a session.
+- RLS is enabled on all five tables with **no policies**, and all table and function
+  privileges are revoked from `public`, `anon` and `authenticated`. The publishable key in the
+  client bundle can read nothing and call nothing. Verified in `scripts/check-builder-db.ts`,
+  including after a deliberately stray grant.
+- The public Builder cannot: list leads (no such function), read another lead (hash check),
+  modify another lead or concept (hash check + composite FKs), change `status`
+  (`builder_set_status` is not exposed by any server function), or see contact/status fields
+  (not in the snapshot).
+- Secrets (`SUPABASE_SERVICE_ROLE_KEY`, `ANTHROPIC_API_KEY`, Telegram) exist only in server
+  environment variables; none is written to a record, a spec, or a log line.
 
-Applying this requires the owner to decide on Supabase usage, add a migration, regenerate
-`types.ts`, and configure `SUPABASE_SERVICE_ROLE_KEY` for server functions. Leads are written
-**only** by a server function (service role), never from the browser.
+## 6. Status model
 
-```sql
-create table public.builder_leads (
-  id                  uuid primary key,
-  schema_version      smallint not null default 1,
-  status              text not null check (status in ('draft','concepts_ready','direction_selected','submitted')),
-  lang                text not null check (lang in ('CZ','EN','RU','UA')),
-  project_type        text not null check (project_type in ('web','eshop','app','branding')),
-  company             text not null,
-  brief               jsonb not null,         -- Brief
-  concepts            jsonb not null default '[]',   -- DesignSpec[]
-  selected_concept_id text,
-  revisions           jsonb not null default '[]',   -- Revision[]
-  contact             jsonb,                  -- Contact (PII)
-  budget_czk          integer,
-  deadline            text,
-  admin_status        text not null default 'new'
-                      check (admin_status in ('new','contacted','qualified','proposal','won','lost','spam')),
-  admin_notes         text,
-  created_at          timestamptz not null default now(),
-  updated_at          timestamptz not null default now(),
-  submitted_at        timestamptz
-);
-alter table public.builder_leads enable row level security;
--- No policies for anon/authenticated: only the service role (server functions) reads/writes.
-create index builder_leads_submitted_at on public.builder_leads (submitted_at desc);
-create index builder_leads_admin_status on public.builder_leads (admin_status);
-```
+Two separate axes — they answer different questions and must not be merged:
 
-Admin needs, in addition to the Builder's own `status`: an `admin_status` pipeline, notes,
-and access control (Supabase Auth or equivalent) — none of which the Builder writes.
+| Axis | Values | Set by |
+|---|---|---|
+| `lifecycle` | `draft` `concepts_ready` `direction_selected` `submitted` | database functions, as the visitor progresses |
+| `status` | `NEW` `REVIEW` `CONTACTED` `PROPOSAL` `IN_PROGRESS` `COMPLETED` `ARCHIVED` | Admin only (`builder_set_status`), audited in `builder_status_events` |
 
-## 5. What Admin will consume
+Postgres enums reject any other string (`INVALID_INPUT`).
 
-- List: `id, company, project_type, status, admin_status, budget_czk, deadline, submitted_at`.
-- Detail: brief, the selected concept rendered with `ConceptRenderer`, the other four concepts,
-  revision timeline (feedback → before/after), contact.
-- Matching legacy Telegram leads: the message's first line `AI Builder · lead <uuid>`.
+## 7. Team notification (Telegram)
+
+After `builder_submit` succeeds, the server sends the existing `sendContactToTelegram` payload
+(unchanged contract; first line `AI Builder · lead <uuid>`) and records the outcome with
+`builder_mark_notification`. A failed send leaves `notification_status = 'failed'` — the lead
+is still saved and the visitor sees success, because the submission *was* received; the UI
+never says the message was delivered. Admin should list `failed` notifications.
+
+## 8. What Admin will consume
+
+- List: `id, company, project_type, lifecycle, status, budget_czk, deadline, created_at, submitted_at, notification_status`.
+- Detail: brief columns + references, current five concepts (and superseded generations),
+  selected concept rendered with `ConceptRenderer`, revision timeline (feedback → before/after),
+  contact, status history.
+- Writes: `builder_set_status` only (plus future notes), behind Admin authentication.

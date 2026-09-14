@@ -10,6 +10,7 @@
  * promise, no counts, no guarantees.
  */
 import type { Lang } from "@/lib/i18n";
+import type { BuilderErrorCode } from "./errors";
 
 type Field = { label: string; placeholder: string; hint?: string };
 
@@ -79,16 +80,18 @@ export type BuilderCopy = {
     activities: [string, string, string, string];
     note: string;
   };
-  errors: Record<
-    | "AI_UNAVAILABLE"
-    | "AI_BUSY"
-    | "AI_TIMEOUT"
-    | "AI_INVALID"
-    | "RATE_LIMITED"
-    | "INVALID_INPUT"
-    | "UNKNOWN",
-    string
-  >;
+  errors: Record<BuilderErrorCode | "UNKNOWN", string>;
+  sync: {
+    saving: string;
+    saved: string;
+    unsaved: string;
+    retry: string;
+    unsavedConcepts: string;
+    saveConcepts: string;
+    savingConcepts: string;
+    refineNeedsSave: string;
+    actionFailed: string;
+  };
   failure: { title: string; retry: string; editBrief: string; direct: string; kept: string };
   concepts: {
     eyebrow: string;
@@ -260,13 +263,37 @@ const CZ: BuilderCopy = {
   },
   errors: {
     AI_UNAVAILABLE:
-      "Generování konceptů je teď nedostupné. Nic se nevytvořilo a nic nezobrazujeme — zkuste to prosím později.",
+      "Generování konceptů je teď nedostupné. Nic nového se nevytvořilo — zkuste to prosím později.",
     AI_BUSY: "Služba pro generování je momentálně přetížená. Zkuste to za chvíli znovu.",
     AI_TIMEOUT: "Generování trvalo příliš dlouho a bylo přerušeno. Zkuste to znovu.",
     AI_INVALID: "Návrhy neprošly naší kontrolou kvality, proto je nezobrazujeme. Zkuste to znovu.",
     RATE_LIMITED: "Dosáhli jste limitu generování. Zkuste to prosím za několik minut.",
     INVALID_INPUT: "Některé údaje v zadání nejsou platné. Zkontrolujte je prosím.",
+    AI_REFUSED: "Tento požadavek nelze zpracovat. Upravte prosím zadání a zkuste to znovu.",
+    PERSISTENCE_UNAVAILABLE:
+      "Zadání teď nelze uložit na server. Nic se neztratilo — zůstává v tomto prohlížeči a zkusíme to znovu.",
+    LEAD_NOT_FOUND:
+      "Uložené zadání se nepodařilo najít. Vaše údaje zůstávají v prohlížeči a uloží se jako nové zadání.",
+    LEAD_LOCKED: "Toto zadání už bylo odesláno a nelze ho měnit. Pro nový projekt začněte znovu.",
+    CONCEPT_NOT_FOUND: "Tento koncept už není aktuální. Obnovte prosím stránku.",
+    GENERATION_LIMIT:
+      "Pro toto zadání jste vyčerpali počet generování. Vyberte jeden ze směrů, nebo nás kontaktujte přímo.",
+    REVISION_LIMIT: "Pro toto zadání jste vyčerpali počet úprav.",
+    REVISION_CONFLICT:
+      "Koncept se mezitím změnil (možná v jiném okně). Načetli jsme aktuální verzi — zkuste úpravu znovu.",
+    NO_SELECTION: "Nejdřív vyberte jeden směr.",
     UNKNOWN: "Něco se nepovedlo. Zkuste to prosím znovu.",
+  },
+  sync: {
+    saving: "Ukládám…",
+    saved: "Uloženo",
+    unsaved: "Neuloženo",
+    retry: "Zkusit znovu",
+    unsavedConcepts: "Koncepty jsou zatím jen v tomto prohlížeči — uložení na server se nezdařilo.",
+    saveConcepts: "Uložit koncepty",
+    savingConcepts: "Ukládám koncepty…",
+    refineNeedsSave: "Nejdřív uložte koncepty, pak je můžete upravovat.",
+    actionFailed: "Změnu se nepodařilo uložit.",
   },
   failure: {
     title: "Koncepty se nepodařilo vytvořit",
@@ -450,14 +477,40 @@ const EN: BuilderCopy = {
   },
   errors: {
     AI_UNAVAILABLE:
-      "Concept generation is unavailable right now. Nothing was generated and nothing is shown — please try again later.",
+      "Concept generation is unavailable right now. Nothing new was generated — please try again later.",
     AI_BUSY: "The generation service is busy at the moment. Please try again shortly.",
     AI_TIMEOUT: "Generation took too long and was stopped. Please try again.",
     AI_INVALID:
       "The proposals did not pass our quality checks, so we are not showing them. Please try again.",
     RATE_LIMITED: "You have reached the generation limit. Please try again in a few minutes.",
     INVALID_INPUT: "Some details in the brief are not valid. Please check them.",
+    AI_REFUSED: "This request can't be processed. Please adjust the brief and try again.",
+    PERSISTENCE_UNAVAILABLE:
+      "Your brief can't be saved to the server right now. Nothing is lost — it stays in this browser and we'll try again.",
+    LEAD_NOT_FOUND:
+      "Your saved brief could not be found. Your details stay in this browser and will be saved as a new brief.",
+    LEAD_LOCKED:
+      "This brief has already been sent and can't be changed. Start over for a new project.",
+    CONCEPT_NOT_FOUND: "This concept is no longer current. Please reload the page.",
+    GENERATION_LIMIT:
+      "You've used all generations for this brief. Choose one of the directions, or contact us directly.",
+    REVISION_LIMIT: "You've used all refinements for this brief.",
+    REVISION_CONFLICT:
+      "The concept changed in the meantime (perhaps in another window). We've loaded the current version — please try the refinement again.",
+    NO_SELECTION: "Select one direction first.",
     UNKNOWN: "Something went wrong. Please try again.",
+  },
+  sync: {
+    saving: "Saving…",
+    saved: "Saved",
+    unsaved: "Not saved",
+    retry: "Try again",
+    unsavedConcepts:
+      "These concepts exist only in this browser so far — saving them to the server failed.",
+    saveConcepts: "Save concepts",
+    savingConcepts: "Saving concepts…",
+    refineNeedsSave: "Save the concepts first, then you can refine them.",
+    actionFailed: "The change could not be saved.",
   },
   failure: {
     title: "The concepts could not be created",
@@ -651,14 +704,41 @@ const RU: BuilderCopy = {
   },
   errors: {
     AI_UNAVAILABLE:
-      "Генерация концепций сейчас недоступна. Ничего не создано и ничего не показано — попробуйте позже.",
+      "Генерация концепций сейчас недоступна. Ничего нового не создано — попробуйте позже.",
     AI_BUSY: "Сервис генерации сейчас перегружен. Попробуйте ещё раз чуть позже.",
     AI_TIMEOUT: "Генерация заняла слишком много времени и была прервана. Попробуйте ещё раз.",
     AI_INVALID:
       "Предложения не прошли нашу проверку качества, поэтому мы их не показываем. Попробуйте ещё раз.",
     RATE_LIMITED: "Достигнут лимит генераций. Попробуйте через несколько минут.",
     INVALID_INPUT: "Некоторые данные брифа некорректны. Проверьте их, пожалуйста.",
+    AI_REFUSED:
+      "Этот запрос не может быть обработан. Измените, пожалуйста, бриф и попробуйте снова.",
+    PERSISTENCE_UNAVAILABLE:
+      "Сейчас не удаётся сохранить бриф на сервере. Ничего не потеряно — он остаётся в этом браузере, и мы попробуем снова.",
+    LEAD_NOT_FOUND:
+      "Сохранённый бриф не найден. Ваши данные остаются в браузере и будут сохранены как новый бриф.",
+    LEAD_LOCKED:
+      "Этот бриф уже отправлен и не может быть изменён. Для нового проекта начните заново.",
+    CONCEPT_NOT_FOUND: "Эта концепция уже неактуальна. Обновите, пожалуйста, страницу.",
+    GENERATION_LIMIT:
+      "Для этого брифа исчерпан лимит генераций. Выберите одно из направлений или свяжитесь с нами напрямую.",
+    REVISION_LIMIT: "Для этого брифа исчерпан лимит доработок.",
+    REVISION_CONFLICT:
+      "Концепция тем временем изменилась (возможно, в другом окне). Мы загрузили актуальную версию — попробуйте доработку снова.",
+    NO_SELECTION: "Сначала выберите одно направление.",
     UNKNOWN: "Что-то пошло не так. Попробуйте ещё раз.",
+  },
+  sync: {
+    saving: "Сохраняю…",
+    saved: "Сохранено",
+    unsaved: "Не сохранено",
+    retry: "Попробовать снова",
+    unsavedConcepts:
+      "Эти концепции пока есть только в этом браузере — сохранить их на сервере не удалось.",
+    saveConcepts: "Сохранить концепции",
+    savingConcepts: "Сохраняю концепции…",
+    refineNeedsSave: "Сначала сохраните концепции, затем их можно дорабатывать.",
+    actionFailed: "Не удалось сохранить изменение.",
   },
   failure: {
     title: "Не удалось создать концепции",
@@ -850,14 +930,39 @@ const UA: BuilderCopy = {
   },
   errors: {
     AI_UNAVAILABLE:
-      "Генерація концепцій зараз недоступна. Нічого не створено й нічого не показано — спробуйте пізніше.",
+      "Генерація концепцій зараз недоступна. Нічого нового не створено — спробуйте пізніше.",
     AI_BUSY: "Сервіс генерації зараз перевантажений. Спробуйте ще раз трохи згодом.",
     AI_TIMEOUT: "Генерація тривала надто довго й була перервана. Спробуйте ще раз.",
     AI_INVALID:
       "Пропозиції не пройшли нашу перевірку якості, тому ми їх не показуємо. Спробуйте ще раз.",
     RATE_LIMITED: "Досягнуто ліміту генерацій. Спробуйте за кілька хвилин.",
     INVALID_INPUT: "Деякі дані брифу некоректні. Перевірте їх, будь ласка.",
+    AI_REFUSED: "Цей запит не може бути оброблено. Змініть, будь ласка, бриф і спробуйте знову.",
+    PERSISTENCE_UNAVAILABLE:
+      "Зараз не вдається зберегти бриф на сервері. Нічого не втрачено — він залишається в цьому браузері, і ми спробуємо знову.",
+    LEAD_NOT_FOUND:
+      "Збережений бриф не знайдено. Ваші дані залишаються в браузері й будуть збережені як новий бриф.",
+    LEAD_LOCKED: "Цей бриф уже надіслано, його не можна змінити. Для нового проєкту почніть знову.",
+    CONCEPT_NOT_FOUND: "Ця концепція вже неактуальна. Оновіть, будь ласка, сторінку.",
+    GENERATION_LIMIT:
+      "Для цього брифу вичерпано ліміт генерацій. Оберіть один із напрямів або зв'яжіться з нами напряму.",
+    REVISION_LIMIT: "Для цього брифу вичерпано ліміт доопрацювань.",
+    REVISION_CONFLICT:
+      "Концепція тим часом змінилася (можливо, в іншому вікні). Ми завантажили актуальну версію — спробуйте доопрацювання знову.",
+    NO_SELECTION: "Спершу оберіть один напрям.",
     UNKNOWN: "Щось пішло не так. Спробуйте ще раз.",
+  },
+  sync: {
+    saving: "Зберігаю…",
+    saved: "Збережено",
+    unsaved: "Не збережено",
+    retry: "Спробувати знову",
+    unsavedConcepts:
+      "Ці концепції поки що є лише в цьому браузері — зберегти їх на сервері не вдалося.",
+    saveConcepts: "Зберегти концепції",
+    savingConcepts: "Зберігаю концепції…",
+    refineNeedsSave: "Спершу збережіть концепції, потім їх можна доопрацьовувати.",
+    actionFailed: "Не вдалося зберегти зміну.",
   },
   failure: {
     title: "Не вдалося створити концепції",
