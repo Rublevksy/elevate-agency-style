@@ -37,6 +37,7 @@ row. Its only capability is the session cookie (§5).
 | `company`, `industry`, `offering`, `audience`, `goal` | text | brief, length-checked (80/80/600/300/300) |
 | `visual_style`, `visual_mood`, `visual_colors`, `visual_typography`, `visual_notes` | text | visual preferences (300/200/200/200/800) |
 | `brief_references` | jsonb | `{ urls: string[≤5], notes ≤800 }` — flexible (image references later) |
+| `selected_at` | timestamptz | when the current selection was made; cleared with the selection |
 | `selected_concept_id` | uuid | composite FK `(selected_concept_id, id)` → `builder_concepts (id, lead_id)`: can only point at this lead's concept |
 | `generation_count` | int | concept sets generated (cap enforced in the function) |
 | `contact_name`, `contact_email`, `contact_company` | text | set only by `builder_submit` |
@@ -44,11 +45,11 @@ row. Its only capability is the session cookie (§5).
 | `budget_czk` | int | `BUDGET_VALUES[budget_index]` (0 = "not sure") |
 | `deadline` | `builder_deadline` | asap / 1m / 1-3m / 3m+ / unsure |
 | `contact_message` | text ≤1200 | |
-| `notification_status` | `builder_notification_status` | null until submitted; then `sent` or `failed` — never assumed |
-| `notification_attempts`, `notified_at` | | |
+| `notification_status` | `builder_notification_status` | null until submitted; `pending` at submission, then `sent` or `failed` — never assumed; `pending` that stays is a stopped send |
+| `notification_attempts`, `notified_at`, `notification_last_attempt_at` | | `notified_at` only on delivery; the last attempt is dated either way |
 | `created_at`, `updated_at`, `submitted_at` | timestamptz | `updated_at` by trigger |
 
-Check `builder_leads_submitted_is_complete`: a `submitted` row always has selection, contact,
+Check `builder_leads_submitted_is_complete`: a `submitted` row always has selection (and its time), contact,
 budget, deadline, project type and `submitted_at`.
 
 ### `builder_concepts` — every concept ever generated for a lead
@@ -75,7 +76,7 @@ budget, deadline, project type and `submitted_at`.
 ### `builder_status_events` — pipeline audit
 
 Written by trigger on insert and on every `status` change: `from_status`, `to_status`, `note`
-(from `builder_set_status`), `created_at`.
+and `changed_by` (the Admin user id, both from `builder_set_status`), `created_at`.
 
 ### `builder_rate_limits`
 
@@ -112,7 +113,7 @@ raise `BUILDER:<CODE>` errors that the server maps to UI codes.
 | `builder_select_concept(lead, token_hash, concept \| null)` | selection + lifecycle |
 | `builder_submit(lead, token_hash, concept, contact, budget_czk)` | contact, lifecycle `submitted`, lock; idempotent (`alreadySubmitted`); `NO_SELECTION` |
 | `builder_mark_notification(lead, token_hash, delivered)` | `sent` / `failed` + attempt count |
-| `builder_set_status(lead, status, note)` | Admin only — not reachable from any Builder server function |
+| `builder_set_status(lead, status, actor, note)` | Admin only — not reachable from any Builder server function; actor recorded in the audit trail |
 | `builder_consume_rate_limit(bucket, limit, window_seconds)` | `{ allowed, hits, retryAfterSeconds }` |
 | `builder_purge_stale_drafts(older_than)` | deletes never-generated drafts (not scheduled) |
 
@@ -205,7 +206,7 @@ Two separate axes — they answer different questions and must not be merged:
 | Axis | Values | Set by |
 |---|---|---|
 | `lifecycle` | `draft` `concepts_ready` `direction_selected` `submitted` | database functions, as the visitor progresses |
-| `status` | `NEW` `REVIEW` `CONTACTED` `PROPOSAL` `IN_PROGRESS` `COMPLETED` `ARCHIVED` | Admin only (`builder_set_status`), audited in `builder_status_events` |
+| `status` | `NEW` `REVIEW` `CONTACTED` `PROPOSAL` `IN_PROGRESS` `COMPLETED` `ARCHIVED` | Admin only (`builder_set_status`), audited with actor in `builder_status_events` |
 
 Postgres enums reject any other string (`INVALID_INPUT`).
 
@@ -219,8 +220,7 @@ never says the message was delivered. Admin should list `failed` notifications.
 
 ## 8. What Admin will consume
 
-- List: `id, company, project_type, lifecycle, status, budget_czk, deadline, created_at, submitted_at, notification_status`.
-- Detail: brief columns + references, current five concepts (and superseded generations),
-  selected concept rendered with `ConceptRenderer`, revision timeline (feedback → before/after),
-  contact, status history.
-- Writes: `builder_set_status` only (plus future notes), behind Admin authentication.
+Specified and tested in `docs/admin/DATA_CONTRACT.md` (read model draft
+`docs/admin/admin-read-model.draft.sql`, checks in `scripts/check-admin-contract.ts`).
+Application state and verification steps for the real project:
+`docs/builder/PRODUCTION_PREFLIGHT.md`.

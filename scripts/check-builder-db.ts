@@ -7,9 +7,10 @@
  * token-hash ownership, server-assigned generations and revisions, superseded
  * concepts kept, cross-lead references refused, submission idempotency and
  * lock, controlled status enum with audit trail, the shared rate limiter, and
- * column limits.
+ * column limits, and the read-only catalog preflight used on the real project.
  */
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { FIXTURE_DRAFTS, FIXTURE_DRAFTS_B } from "../src/lib/builder/fixtures.dev.ts";
 import { asRole, createBuilderTestDb, pgliteRpc } from "./lib/builder-pglite.ts";
 
@@ -36,6 +37,7 @@ async function rejects(p: Promise<unknown>, pattern: RegExp) {
 }
 
 const H1 = "a".repeat(64);
+const ADMIN = "11111111-1111-4111-8111-111111111111";
 const H2 = "b".repeat(64);
 type Snap = {
   lead: {
@@ -106,7 +108,7 @@ await test("anon and authenticated cannot call any builder function", async () =
   const calls = [
     `select public.builder_get_lead('${A}', '${H1}')`,
     `select public.builder_create_lead('${"d".repeat(64)}', 'CZ')`,
-    `select public.builder_set_status('${A}', 'ARCHIVED')`,
+    `select public.builder_set_status('${A}', 'ARCHIVED', null)`,
     `select public.builder_consume_rate_limit('x:y', 1, 60)`,
     `select public.builder_snapshot('${A}')`,
   ];
@@ -256,12 +258,20 @@ await test("selection sets lifecycle; clearing it steps back", async () => {
   })) as Snap;
   assert.equal(s.lead.selectedConceptId, conceptA.id);
   assert.equal(s.lead.lifecycle, "direction_selected");
+  const selectedAt = async () =>
+    (
+      await db.query<{ at: string | null }>(
+        `select selected_at as at from public.builder_leads where id = '${A}'`,
+      )
+    ).rows[0].at;
+  assert.ok(await selectedAt(), "selection is dated for the Admin activity history");
   const c = (await rpc("builder_select_concept", {
     p_lead: A,
     p_token_hash: H1,
     p_concept: null,
   })) as Snap;
   assert.equal(c.lead.lifecycle, "concepts_ready");
+  assert.equal(await selectedAt(), null);
 });
 
 await test("refinements: revision assigned by the database, stale writes refused", async () => {
@@ -402,10 +412,23 @@ await test("submission: requires a concept of this lead, is idempotent, then loc
     /BUILDER:LEAD_LOCKED/,
   );
   await rpc("builder_mark_notification", { p_lead: A, p_token_hash: H1, p_delivered: false });
-  const n = await db.query<{ notification_status: string; notification_attempts: number }>(
-    `select notification_status, notification_attempts from public.builder_leads where id = '${A}'`,
+  const n = await db.query<{
+    notification_status: string;
+    notification_attempts: number;
+    attempted: boolean;
+    notified_at: string | null;
+  }>(
+    `select notification_status, notification_attempts, notified_at,
+            notification_last_attempt_at is not null as attempted
+       from public.builder_leads where id = '${A}'`,
   );
-  assert.deepEqual(n.rows[0], { notification_status: "failed", notification_attempts: 1 });
+  // A failed send is dated (Admin can see when), but never counted as delivered.
+  assert.deepEqual(n.rows[0], {
+    notification_status: "failed",
+    notification_attempts: 1,
+    attempted: true,
+    notified_at: null,
+  });
 });
 
 await test("a lead cannot be marked submitted without its contact and selection", async () => {
@@ -417,23 +440,34 @@ await test("a lead cannot be marked submitted without its contact and selection"
 
 await test("status: controlled enum, Admin-only function, audit trail", async () => {
   await rejects(
-    rpc("builder_set_status", { p_lead: A, p_status: "WON", p_note: null }),
+    rpc("builder_set_status", { p_lead: A, p_status: "WON", p_actor: ADMIN, p_note: null }),
     /invalid input value for enum/,
   );
-  await rpc("builder_set_status", { p_lead: A, p_status: "REVIEW", p_note: "first look" });
-  await rpc("builder_set_status", { p_lead: A, p_status: "CONTACTED", p_note: null });
-  const ev = await db.query<{ from_status: string | null; to_status: string; note: string | null }>(
-    `select from_status, to_status, note from public.builder_status_events where lead_id = '${A}' order by id`,
+  await rpc("builder_set_status", {
+    p_lead: A,
+    p_status: "REVIEW",
+    p_actor: ADMIN,
+    p_note: "first look",
+  });
+  await rpc("builder_set_status", { p_lead: A, p_status: "CONTACTED", p_actor: ADMIN, p_note: null });
+  const ev = await db.query<{
+    from_status: string | null;
+    to_status: string;
+    note: string | null;
+    changed_by: string | null;
+  }>(
+    `select from_status, to_status, note, changed_by from public.builder_status_events where lead_id = '${A}' order by id`,
   );
   assert.deepEqual(ev.rows, [
-    { from_status: null, to_status: "NEW", note: null },
-    { from_status: "NEW", to_status: "REVIEW", note: "first look" },
-    { from_status: "REVIEW", to_status: "CONTACTED", note: null },
+    { from_status: null, to_status: "NEW", note: null, changed_by: null },
+    { from_status: "NEW", to_status: "REVIEW", note: "first look", changed_by: ADMIN },
+    { from_status: "REVIEW", to_status: "CONTACTED", note: null, changed_by: ADMIN },
   ]);
   await rejects(
     rpc("builder_set_status", {
       p_lead: "00000000-0000-4000-8000-000000000000",
       p_status: "REVIEW",
+      p_actor: ADMIN,
       p_note: null,
     }),
     /BUILDER:LEAD_NOT_FOUND/,
@@ -499,6 +533,24 @@ await test("stale empty drafts can be purged; leads with concepts are kept", asy
     null,
   );
   assert.ok(await rpc("builder_get_lead", { p_lead: B, p_token_hash: H2 }));
+});
+
+await test("preflight SQL (scripts/sql/builder-preflight.sql) passes, and catches a stray grant", async () => {
+  const sql = readFileSync(new URL("./sql/builder-preflight.sql", import.meta.url), "utf8");
+  type Row = { check: string; ok: boolean; detail: string };
+  const run = async () => (await db.query<Row>(sql)).rows;
+  const clean = await run();
+  assert.equal(clean.length, 12);
+  for (const row of clean) assert.equal(row.ok, true, `${row.check}: ${row.detail}`);
+  await db.exec(`grant select on public.builder_leads to anon`);
+  try {
+    const leaky = await run();
+    const privileges = leaky.find((r) => r.check.startsWith("anon/authenticated hold no privilege"))!;
+    assert.equal(privileges.ok, false);
+    assert.match(privileges.detail, /anon on builder_leads/);
+  } finally {
+    await db.exec(`revoke select on public.builder_leads from anon`);
+  }
 });
 
 console.log(`\n${passed} database checks passed`);

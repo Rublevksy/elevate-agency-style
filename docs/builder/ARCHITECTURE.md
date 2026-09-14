@@ -230,9 +230,14 @@ level/signature and is off in thumbnails and under reduced motion.
 
 ```
 node scripts/check-builder-spec.ts                                         # 11 checks
-node --import ./scripts/lib/ts-hooks.mjs scripts/check-builder-db.ts       # 15 checks
+node --import ./scripts/lib/ts-hooks.mjs scripts/check-builder-db.ts       # 16 checks (incl. preflight SQL)
 node --import ./scripts/lib/ts-hooks.mjs scripts/check-builder-service.ts  # 19 checks
+node --import ./scripts/lib/ts-hooks.mjs scripts/check-admin-contract.ts   # 9 checks (Admin read model draft)
+node scripts/verify-builder-remote.ts          # read-only check of the real project (uses .env / env keys)
 ```
+
+On the real project, after applying the migration, run `scripts/sql/builder-preflight.sql` in
+the SQL editor (read-only catalog checks). Current state: `PRODUCTION_PREFLIGHT.md`.
 
 The database and service checks run the real migration in PGlite (Postgres 17, WASM) inside a
 Supabase-shaped role setup, so RLS and grants are exercised as they would be in the project.

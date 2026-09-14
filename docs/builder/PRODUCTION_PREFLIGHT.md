@@ -1,0 +1,155 @@
+# Builder production backend preflight
+
+Date: 2026-09-14. Scope: make the Builder data layer usable by Admin. Nothing was deployed.
+Everything below says whether it was **verified** or **could not be verified** from this
+repository and machine.
+
+## 1. Supabase project and configuration (verified)
+
+| Item | Finding |
+|---|---|
+| Project | `supabase/config.toml` → `project_id = "jgfkhayytzpitkgvvyzl"`; `.env` `SUPABASE_URL` / `SUPABASE_PROJECT_ID` point at the same project (Lovable Cloud) |
+| Local credentials | `.env` (git-ignored) holds only `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` and their `VITE_` copies. **No** `SUPABASE_SERVICE_ROLE_KEY`, no `SUPABASE_ACCESS_TOKEN`, no database password or connection string |
+| Tooling | No Supabase CLI, no `psql`, no `bun` on this machine |
+| Migrations | `supabase/migrations/20260914120000_builder_leads.sql` is the **only** migration in the repository's history; the remote migration history could not be read |
+| Generated types | `src/integrations/supabase/types.ts`: `Tables`, `Functions`, `Enums` are all `never` |
+| Clients | `client.ts` (publishable key, browser + SSR), `client.server.ts` (`supabaseAdmin`, service role, lazy, throws `Missing Supabase environment variable(s)` when unset), `auth-middleware.ts` / `auth-attacher.ts` (Supabase Auth bearer verification — generated, **not used anywhere**; there is no `src/start.ts`) |
+| Remote state | Read-only probe with the publishable key (`node scripts/verify-builder-remote.ts`): all five tables answer `PGRST205` (not in schema) and `builder_get_lead` answers `PGRST202`. **The migration is not applied.** |
+
+### Migration review
+
+Read end to end and exercised by `scripts/check-builder-db.ts` (16 checks) and
+`scripts/check-builder-service.ts` (19 checks) on Postgres 17 (PGlite). Internally consistent:
+every function referenced exists, every lead-scoped function goes through
+`builder_lead_for_update`, enums match `brief.ts`, the final grant loop covers every
+`builder_*` function.
+
+Changes made in this preflight (the migration had never been applied, so no data is
+affected), all needed by Admin and covered by tests:
+
+| Change | Why |
+|---|---|
+| `builder_leads.selected_at` (set on select, cleared on regeneration/deselect, kept on submit; required when submitted) | Admin activity needs *when* a direction was chosen; nothing recorded it |
+| `builder_leads.notification_last_attempt_at` | a failed Telegram send had no timestamp — Admin could not say when delivery failed |
+| `builder_status_events.changed_by uuid` + `builder_set_status(p_lead, p_status, p_actor, p_note)` | the status audit trail recorded what changed but not who changed it |
+
+Requirement: **Postgres ≥ 15** (`on delete set null (selected_concept_id)`). Supabase projects
+created since 2023 run 15 or 17; the real version is checked by the preflight SQL (check 1)
+and could not be read from here.
+
+## 2. Applying the migration — NOT applied
+
+Nothing in this environment can write schema to the project:
+
+- no Supabase CLI and no `SUPABASE_ACCESS_TOKEN` → `supabase link` / `supabase db push` impossible;
+- no database connection string / password → `psql` impossible;
+- no service-role key (and PostgREST cannot run DDL anyway).
+
+The project is managed by Lovable Cloud. Whether Lovable applies a migration file that
+arrives through GitHub sync automatically could not be verified from here. Safe ways to apply,
+in order of preference:
+
+1. **Through Lovable** (it owns the project): ask Lovable to apply
+   `supabase/migrations/20260914120000_builder_leads.sql` as a migration, unchanged.
+2. **Supabase CLI** by someone with project access:
+   `supabase link --project-ref jgfkhayytzpitkgvvyzl` → `supabase db push`.
+3. **SQL editor** of the project: run the file once, as one transaction.
+
+Do not apply `docs/admin/admin-read-model.draft.sql` — it is a design draft for the Admin phase.
+
+After applying:
+
+1. Run `scripts/sql/builder-preflight.sql` in the SQL editor — all 12 rows must be `ok = true`
+   (tables, indexes, RLS on, no policies, no anon/authenticated privileges on tables or
+   functions, service_role access, status enum, PG version, selection FK). Read-only.
+2. Run `node scripts/verify-builder-remote.ts` with `SUPABASE_SERVICE_ROLE_KEY` exported in the
+   shell (never written to `.env` in the repo). Read-only: publishable key refused on every
+   table and function; service role reaches every table; unknown lead returns null.
+3. Regenerate types (below).
+4. One manual end-to-end pass on the deployed preview: brief → generate → select → submit.
+
+Write-path behaviour — ownership by token hash, ignored lead ids, server-assigned revisions,
+superseded generations kept, status constrained — is proven against the identical SQL in
+PGlite. It is deliberately **not** exercised on the real project by a script, because that
+would create data there.
+
+## 3. Types — NOT regenerated
+
+`types.ts` is generated by Lovable Cloud / `supabase gen types typescript --project-id
+jgfkhayytzpitkgvvyzl`. It must be regenerated **from the real schema after the migration is
+applied**; writing it by hand would claim tables that do not exist. Until then the Builder's
+store calls `supabaseAdmin.rpc` through an untyped cast (`builder.functions.ts`), which keeps
+working after regeneration. Expected in the regenerated file: `builder_leads`,
+`builder_concepts`, `builder_revisions`, `builder_status_events`, `builder_rate_limits`; the
+`builder_*` functions; enums `builder_project_type`, `builder_lifecycle`,
+`builder_lead_status`, `builder_lang`, `builder_deadline`, `builder_revision_kind`,
+`builder_concept_source`, `builder_notification_status`.
+
+## 4. AI environment
+
+**`ANTHROPIC_API_KEY` is not configured** — not in `.env`, not in the process environment of
+this machine. Production secrets in Lovable Cloud cannot be inspected from here. No real model
+call was made.
+
+Verified in code and in the production build (`vite build`, then a search of `dist/client`):
+
+| Check | Result |
+|---|---|
+| Key read only at call time, server-side | `ai-provider.server.ts` (`process.env.ANTHROPIC_API_KEY`); `*.server.ts` is blocked from client bundles by TanStack import protection |
+| Model from server env | `ELEVATE_AI_MODEL` → default `claude-opus-5`; `ANTHROPIC_BASE_URL` optional |
+| Client bundle | 0 files contain `ANTHROPIC_API_KEY`, `ELEVATE_AI_MODEL`, `@anthropic-ai`, the system prompt, prompt builders, `SUPABASE_SERVICE_ROLE_KEY`, `TELEGRAM_BOT_TOKEN`, `api.telegram.org`, any `builder_*` RPC name or the rate-limit key prefix |
+| Missing key | `AI_UNAVAILABLE`, nothing stored, brief kept (service check "AI unavailable"; browser run with the model stopped) |
+
+## 5. Telegram
+
+`TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` are not configured locally; production values could
+not be inspected. `sendContactToTelegram` (unchanged, protected) throws `SEND_FAILED` when they
+are missing or Telegram rejects the message.
+
+| Guarantee | Where verified |
+|---|---|
+| Lead saved independently of Telegram | `builder_submit` commits before the send; service check "submit with notify failure"; browser run without credentials |
+| Failure recorded | `builder_mark_notification(false)` → `notification_status = 'failed'`, attempts +1, `notification_last_attempt_at` (DB check) |
+| Delivery never assumed | `notified_at` only on success; the success screen never mentions Telegram |
+| Admin can find problems | `failed`, and `pending` older than 15 minutes (server stopped between save and send) — `builder_admin_dashboard.notificationProblems`, `builder_admin_list_leads(p_notification)` (admin contract checks) |
+
+Not built: a resend. `builder_mark_notification` requires the visitor's token hash, so an Admin
+resend needs its own function in the Admin phase.
+
+## 6. Stale-draft cleanup — function exists, NOT scheduled
+
+`builder_purge_stale_drafts(p_older_than interval)` deletes leads that are still `draft`, never
+generated concepts, and were not updated for the given interval; the cascade removes only their
+initial `NEW` status event (such leads have no concepts or revisions). It returns the number
+deleted. Rate-limit windows older than two
+days are already removed opportunistically on ~2% of limiter calls.
+
+No scheduler exists in this repository: no `pg_cron` usage, no Cloudflare `triggers.crons` in
+`wrangler.jsonc`, no scheduled server entry (the Worker entry is
+`@tanstack/react-start/server-entry`). Whether `pg_cron` is enabled on the project could not be
+checked. Nothing was scheduled.
+
+To schedule later (owner decisions first: the interval, and whether unsubmitted leads **with**
+concepts should also expire — today they are kept indefinitely, as are submitted leads):
+
+- **pg_cron** (preferred; runs inside the database, no new secret):
+  enable the extension (Supabase Integrations → Cron), then
+  `select cron.schedule('builder-purge-stale-drafts', '17 3 * * *', $$select public.builder_purge_stale_drafts(interval '30 days')$$);`
+- **External cron** calling a server function protected by its own secret — only if pg_cron is
+  unavailable; needs a new secret and an endpoint, so it is an Admin-phase task.
+
+## 7. Package manager
+
+| Fact | Evidence |
+|---|---|
+| The repository is set up for **Bun** | `bun.lockb` tracked since the initial commit; `bunfig.toml` `saveTextLockfile = false` (keep the binary lockfile); CLAUDE.md commands use `bun`; Lovable projects install with Bun |
+| `package-lock.json` is tracked too | also since the initial commit — both lockfiles coexist |
+| This machine has no Bun | work here used `node_modules` installed by npm |
+| Drift | a46bc36 added `@anthropic-ai/sdk` (dependency) and `@electric-sql/pglite` (devDependency) to `package.json` and updated `package-lock.json`; **`bun.lockb` does not contain `@anthropic-ai/sdk`** |
+
+Consequence: `bun install --frozen-lockfile` fails on the stale lockfile; plain `bun install`
+resolves the new packages and rewrites `bun.lockb`. Which one Lovable runs could not be
+verified. Required action: run `bun install` once with Bun (locally, or let Lovable do it) and
+commit the updated binary `bun.lockb`. It was not regenerated here: without Bun, the only way
+would be a different tool writing Bun's lockfile, which is worse than a lockfile that is visibly
+one commit behind.

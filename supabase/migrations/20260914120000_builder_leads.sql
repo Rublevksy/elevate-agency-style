@@ -74,6 +74,7 @@ create table public.builder_leads (
                        ),
 
   selected_concept_id  uuid,
+  selected_at          timestamptz,
   generation_count     integer not null default 0 check (generation_count >= 0),
 
   -- Contact: set only by builder_submit.
@@ -89,6 +90,7 @@ create table public.builder_leads (
   notification_status  public.builder_notification_status,
   notification_attempts integer not null default 0 check (notification_attempts >= 0),
   notified_at          timestamptz,
+  notification_last_attempt_at timestamptz,
 
   created_at           timestamptz not null default now(),
   updated_at           timestamptz not null default now(),
@@ -97,7 +99,7 @@ create table public.builder_leads (
   constraint builder_leads_submitted_is_complete check (
     lifecycle <> 'submitted'
     or (
-      submitted_at is not null and selected_concept_id is not null
+      submitted_at is not null and selected_concept_id is not null and selected_at is not null
       and contact_name is not null and contact_email is not null and contact_company is not null
       and budget_index is not null and deadline is not null and project_type is not null
     )
@@ -161,6 +163,10 @@ create table public.builder_status_events (
   from_status  public.builder_lead_status,
   to_status    public.builder_lead_status not null,
   note         text check (char_length(note) <= 500),
+  -- Who made the change: the Admin user id (auth.users.id) passed to
+  -- builder_set_status. Null only for the initial NEW written on insert.
+  -- No FK: this migration does not depend on the auth schema.
+  changed_by   uuid,
   created_at   timestamptz not null default now()
 );
 
@@ -211,8 +217,10 @@ begin
   if tg_op = 'INSERT' then
     insert into public.builder_status_events (lead_id, from_status, to_status) values (new.id, null, new.status);
   elsif new.status is distinct from old.status then
-    insert into public.builder_status_events (lead_id, from_status, to_status, note)
-    values (new.id, old.status, new.status, nullif(current_setting('builder.status_note', true), ''));
+    insert into public.builder_status_events (lead_id, from_status, to_status, note, changed_by)
+    values (new.id, old.status, new.status,
+            nullif(current_setting('builder.status_note', true), ''),
+            nullif(current_setting('builder.status_actor', true), '')::uuid);
   end if;
   return new;
 end $$;
@@ -378,7 +386,7 @@ begin
   end if;
   v_generation := v_lead.generation_count + 1;
 
-  update public.builder_leads set selected_concept_id = null where id = p_lead;
+  update public.builder_leads set selected_concept_id = null, selected_at = null where id = p_lead;
   update public.builder_concepts set superseded_at = now()
    where lead_id = p_lead and superseded_at is null;
 
@@ -512,6 +520,7 @@ begin
   end if;
   update public.builder_leads
      set selected_concept_id = p_concept,
+         selected_at = case when p_concept is not null then now() end,
          lifecycle = case
            when p_concept is not null then 'direction_selected'::public.builder_lifecycle
            when generation_count > 0 then 'concepts_ready'::public.builder_lifecycle
@@ -543,6 +552,8 @@ begin
   end if;
   update public.builder_leads set
     selected_concept_id = p_concept,
+    selected_at         = case when v_lead.selected_concept_id = p_concept
+                               then coalesce(v_lead.selected_at, now()) else now() end,
     contact_name        = p_contact ->> 'name',
     contact_email       = p_contact ->> 'email',
     contact_company     = p_contact ->> 'company',
@@ -566,16 +577,21 @@ begin
      set notification_status = case when p_delivered then 'sent'::public.builder_notification_status
                                     else 'failed'::public.builder_notification_status end,
          notification_attempts = notification_attempts + 1,
+         notification_last_attempt_at = now(),
          notified_at = case when p_delivered then now() else notified_at end
    where id = p_lead;
 end $$;
 
--- Admin (future): the only way to move a lead through the pipeline.
-create function public.builder_set_status(p_lead uuid, p_status public.builder_lead_status, p_note text default null)
+-- Admin (future): the only way to move a lead through the pipeline. p_actor is
+-- the signed-in Admin user's id, recorded in the audit trail; the Admin server
+-- function supplies it from the verified session, never from the request body.
+create function public.builder_set_status(
+  p_lead uuid, p_status public.builder_lead_status, p_actor uuid, p_note text default null)
 returns void
 language plpgsql set search_path = public, pg_temp as $$
 begin
   perform set_config('builder.status_note', coalesce(left(p_note, 500), ''), true);
+  perform set_config('builder.status_actor', coalesce(p_actor::text, ''), true);
   update public.builder_leads set status = p_status where id = p_lead;
   if not found then
     raise exception 'BUILDER:LEAD_NOT_FOUND';

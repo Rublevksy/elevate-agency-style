@@ -102,7 +102,11 @@ Marketing site for ELEVATE, a Prague-based digital studio (websites, e-shops, br
 > без сервера. Проверки: `node scripts/check-builder-spec.ts`;
 > `node --import ./scripts/lib/ts-hooks.mjs scripts/check-builder-db.ts` и `…/check-builder-service.ts`
 > (реальная миграция в PGlite). Локальная БД для браузерного QA: `node scripts/builder-dev-db.ts`.
-> Admin не построен — контракт в `docs/builder/DATA_CONTRACT.md`.
+> Состояние прод-проекта (миграция не применена, типы не перегенерированы, `bun.lockb` отстаёт) и
+> шаги владельца — `docs/builder/PRODUCTION_PREFLIGHT.md`; read-only проверки: `scripts/sql/builder-preflight.sql`
+> (SQL editor) и `node scripts/verify-builder-remote.ts`. Admin не построен — архитектура и контракт в
+> `docs/admin/`; read-model — **черновик** `docs/admin/admin-read-model.draft.sql` (не миграция, не применять),
+> проверяется `scripts/check-admin-contract.ts`. Admin обязан быть изолирован от `SiteShell` (nav, GA4/Clarity).
 
 
 **Мастер-таймлайн — один на страницу (ADR 0013).** Позицию скролла читает
