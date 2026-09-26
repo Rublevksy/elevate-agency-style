@@ -1,4 +1,4 @@
-import { motion, useTransform, type MotionValue } from "framer-motion";
+import { motion, useMotionValue, useTransform, type MotionValue } from "framer-motion";
 import { PROJECT_MAP_POINTS } from "@/lib/project-map";
 import type { ProjectSlug } from "@/lib/projects";
 
@@ -23,9 +23,11 @@ export function PragueMapScene({
   onSelect?: (slug: ProjectSlug) => void;
   label: string;
 }) {
-  const cameraX = useTransform(progress ?? STATIC_PROGRESS, [0, 0.25, 0.5, 0.75, 1], ["0%", "4%", "-3%", "3%", "0%"]);
-  const cameraY = useTransform(progress ?? STATIC_PROGRESS, [0, 0.25, 0.5, 0.75, 1], ["0%", "2%", "-2%", "1%", "0%"]);
-  const cameraScale = useTransform(progress ?? STATIC_PROGRESS, [0, 0.18, 0.48, 0.78, 1], [0.96, 1.04, 1.08, 1.05, 0.98]);
+  const staticProgress = useMotionValue(0);
+  const source = progress ?? staticProgress;
+  const cameraX = useTransform(source, [0, 0.25, 0.5, 0.75, 1], ["0%", "4%", "-3%", "3%", "0%"]);
+  const cameraY = useTransform(source, [0, 0.25, 0.5, 0.75, 1], ["0%", "2%", "-2%", "1%", "0%"]);
+  const cameraScale = useTransform(source, [0, 0.18, 0.48, 0.78, 1], [0.96, 1.04, 1.08, 1.05, 0.98]);
 
   return (
     <div className="prague-scene" role={interactive ? "group" : undefined} aria-label={interactive ? label : undefined} aria-hidden={interactive ? undefined : true}>
@@ -79,5 +81,3 @@ export function PragueMapScene({
     </div>
   );
 }
-
-const STATIC_PROGRESS = { get: () => 0, on: () => () => {} } as unknown as MotionValue<number>;
