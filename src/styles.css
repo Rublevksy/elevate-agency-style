@@ -754,3 +754,114 @@
     }
   }
 }
+
+@layer components {
+  .prague-scene {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    background:
+      radial-gradient(circle at 52% 48%, color-mix(in oklab, var(--primary) 16%, transparent), transparent 48%),
+      linear-gradient(to bottom, color-mix(in oklab, var(--surface) 74%, transparent), var(--background));
+    perspective: 1400px;
+  }
+  .prague-scene__haze {
+    position: absolute;
+    inset: 16% 8% 8%;
+    background: radial-gradient(ellipse, color-mix(in oklab, var(--primary-glow) 16%, transparent), transparent 66%);
+    filter: blur(28px);
+  }
+  .prague-scene__camera {
+    position: absolute;
+    inset: 4% -4% -8%;
+    transform-style: preserve-3d;
+  }
+  .prague-scene__map {
+    position: absolute;
+    inset: 8% 4% 4%;
+    transform: rotateX(58deg) rotateZ(-8deg);
+    transform-style: preserve-3d;
+    border: 1px solid color-mix(in oklab, var(--foreground) 7%, transparent);
+    background-image:
+      linear-gradient(color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in oklab, var(--foreground) 5%, transparent) 1px, transparent 1px);
+    background-size: 34px 34px;
+    box-shadow: 0 70px 120px -42px color-mix(in oklab, var(--primary) 34%, transparent);
+  }
+  .prague-scene__river {
+    position: absolute;
+    inset: -10% 39%;
+    width: 18%;
+    transform: rotate(17deg);
+    border-inline: 1px solid color-mix(in oklab, var(--primary-glow) 36%, transparent);
+    background: linear-gradient(90deg, transparent, color-mix(in oklab, var(--primary) 18%, transparent), transparent);
+    filter: drop-shadow(0 0 18px color-mix(in oklab, var(--primary) 36%, transparent));
+  }
+  .prague-scene__roads {
+    position: absolute;
+    inset: 10%;
+    border: 1px solid color-mix(in oklab, var(--foreground) 10%, transparent);
+    clip-path: polygon(0 18%, 36% 0, 100% 14%, 82% 51%, 100% 84%, 57% 100%, 17% 84%, 0 52%);
+  }
+  .prague-scene__route {
+    position: absolute;
+    inset: 18% 13%;
+    border: 2px solid color-mix(in oklab, var(--primary-glow) 70%, transparent);
+    clip-path: polygon(0 14%, 58% 0, 100% 72%, 16% 100%);
+    filter: drop-shadow(0 0 9px color-mix(in oklab, var(--primary) 72%, transparent));
+  }
+  .prague-scene__building {
+    position: absolute;
+    display: block;
+    border: 1px solid color-mix(in oklab, var(--foreground) 12%, transparent);
+    background: linear-gradient(135deg, var(--surface-elevated), var(--surface));
+    box-shadow:
+      calc((var(--building-order) + 2) * 0.4px)
+      calc((var(--building-order) + 2) * 0.7px)
+      0 color-mix(in oklab, var(--background) 88%, transparent),
+      0 18px 24px color-mix(in oklab, var(--background) 82%, transparent);
+    transform: translateZ(calc((var(--building-order) % 4 + 1) * 8px));
+  }
+  .prague-marker {
+    position: absolute;
+    z-index: 20;
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    translate: -50% -50%;
+    place-items: center;
+    border: 0;
+    border-radius: 999px;
+    background: transparent;
+    color: var(--primary-foreground);
+    cursor: pointer;
+  }
+  .prague-marker__pulse {
+    position: absolute;
+    inset: 0.35rem;
+    border: 1px solid color-mix(in oklab, var(--primary-glow) 64%, transparent);
+    border-radius: inherit;
+    opacity: 0.4;
+    transform: scale(0.75);
+    transition: transform 400ms cubic-bezier(0.22, 1, 0.36, 1), opacity 400ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .prague-marker__core {
+    position: relative;
+    display: grid;
+    width: 1.65rem;
+    height: 1.65rem;
+    place-items: center;
+    border: 1px solid color-mix(in oklab, var(--primary-glow) 82%, transparent);
+    border-radius: inherit;
+    background: var(--primary-strong);
+    box-shadow: 0 0 20px color-mix(in oklab, var(--primary) 56%, transparent);
+    font-size: 0.58rem;
+    font-weight: 700;
+  }
+  .prague-marker[data-active="true"] .prague-marker__pulse,
+  .prague-marker:hover .prague-marker__pulse,
+  .prague-marker:focus-visible .prague-marker__pulse {
+    opacity: 1;
+    transform: scale(1.25);
+  }
+}

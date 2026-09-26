@@ -51,7 +51,7 @@ export function ServicesShowcase() {
     <section
       id="services"
       aria-label={t.nav.services}
-      className="relative bg-[#0A0D13] pt-20 pb-8 xl:hidden motion-reduce:xl:block motion-reduce:xl:pt-32"
+      className="relative bg-background pt-20 pb-8 xl:pt-28 xl:pb-20"
     >
       <div className="container-luxe">
         <p className="label-micro flex items-center gap-4 text-white/60">
