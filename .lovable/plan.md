@@ -1,53 +1,146 @@
-# Plán implementace
+# План реализации кинематографичной карты-портфолио ELEVATE
 
-Rozsah je velký (30+ úkolů). Rozdělím to do logických bloků a aplikuji v jednom průchodu, ale chci nejprve potvrzení – některé úkoly bych řešil pragmatičtěji než doslovně.
+## Результат аудита
 
-## Část 1 — Jazyk (kritické)
+Текущая production-главная собирается в `src/routes/index.tsx` из `HeroScene`, `ServicesShowcase`, `PricingSection`, `CaseShowcase`, `ProjectBuilder` и `ClosingCta`. Портфолио на главной — `src/components/home/CaseShowcase.tsx`; `src/components/sections/Portfolio.tsx` относится к отдельной legacy-подаче и не должен случайно стать базой новой сцены.
 
-Stávající i18n infrastruktura **už existuje a je technicky správná**: `src/lib/i18n.ts` má kompletní překlady ve 4 jazycích, `LangProvider` používá React Context + `useState` + localStorage. Všechny komponenty volají `useT()`. setState v contextu re-renderuje konzumenty.
+В проекте уже есть единая scroll-архитектура: `CinematicStage` + `useAct`. Она обеспечивает синхронное обратное проигрывание при скролле вверх. Новая сцена не должна создавать собственный `useScroll`, независимый таймер или необратимую state-машину.
 
-**Plán:** Místo přepisování od nuly (zahodil bych 825 řádků překladů) ověřím přímo v prohlížeči, kde je skutečný defekt. Pravděpodobné příčiny:
-- `useReveal` hook může cachovat `is-visible` na DOM elementech a blokovat re-render textu uvnitř,
-- nebo některé komponenty mají hardcoded řetězce mimo `t.*`.
+Для четырех проектов есть проверенные домены и полные статические desktop/mobile captures в `src/assets/work/`. Одновременно legacy-портфолио использует внешние WordPress mShots; это ненадежный и визуально несогласованный второй источник.
 
-Opravím konkrétní příčinu, ne celý systém. Pokud trváš na novém `src/i18n/translations.ts` s flat keys (`nav_services` atd.), znamená to přepsat **všechny** komponenty, sekce a routes – cca půl dne práce a 100% riziko regresí. Nedoporučuji.
+Структурированных адресов и координат в проекте нет. Найден только текстовый адрес Biodent: `Uruguayská 344/13, 120 00 Praha 2`; он не подтвержден владельцем как нужная точка проекта. Адреса Exclusive Beauty, INHOME Praha и EuroMotors неизвестны. Их нельзя придумывать или определять только по названию сайта.
 
-## Část 2 — Routing blank pages
+В доступных ассетах найден единый мультяшный 3D-персонаж в нескольких креативах (`src/assets/hero/character-seo.jpg` и загруженные концепты). Подтвержденного реалистичного портрета владельца и готового отдельного персонажа с прозрачным фоном не найдено. Эти стили нельзя смешивать. Официальный логотип ELEVATE уже корректно централизован через `src/components/Logo.tsx` и сохраняется.
 
-- Hlavní pages mají `key={pathname}` na `<main>` (už je tam) a `useReveal` re-init (už opraveno).
-- Přidám 600ms safety fallback pro `.reveal` prvky (pokud chybí), ověřím že `/services` a `/projects` se renderují i bez F5.
-- TanStack Router – `<Route path="*">` syntaxe z React Routeru NEPLATÍ. Catch-all 404 už řeší `notFoundComponent` v `__root.tsx`.
+Контактные формы вызывают `src/lib/telegram.functions.ts`, но локально отсутствуют `TELEGRAM_BOT_TOKEN` и `TELEGRAM_CHAT_ID`; production secrets недоступны для проверки. Поэтому backend нельзя считать работающим до реальной end-to-end отправки в production.
 
-## Část 3 — Nové revenue features
+## Рекомендуемый frontend-подход
 
-- **3A Exit-intent popup** – nová komponenta `ExitIntentModal`, mountována v `__root.tsx`, sessionStorage flag, jen desktop (mobile nemá `mouseleave` nahoru).
-- **3B Urgency badge** – nová komponenta `CapacityBadge` s dynamickým měsícem, vložím na `/contact` a `/pricing/*`.
-- **3C Detailní 4krokový proces** – upravím `Process` sekci pro `/services/web`, `/services/eshop`, `/services/branding` (texty z promptu).
-- **3D FAQ sekce** – `Faq` už existuje. Přidám ji na `/pricing/web`, `/pricing/eshop`, `/services` s otázkami z promptu (4 jazyky).
-- **3E Tech stack badges** – nová `TechStack` sekce na home mezi Services a Portfolio.
-- **3F WhatsApp widget** – fixed FAB vpravo dole, nad existující CTA. Použiju placeholder `+420000000000`.
-- **3G Case study Výzva→Řešení→Výsledek** – přidám sekci do `projects/$slug` (data v `lib/projects.tsx`).
+Сделать не географический SDK и не тяжелый WebGL-мир, а художественную 2.5D-сцену: один оптимизированный фон/набор слоев города + SVG/HTML-маршруты, интерактивные DOM-точки и карточки. Анимацию вести существующим Framer Motion через `useAct`.
 
-## Část 4 — Polish
+Это лучше текущей архитектуре, потому что:
+- не добавляет Mapbox/Three.js, токены, тайлы и большой runtime;
+- сохраняет SSR, доступность и предсказуемую производительность;
+- позволяет data-driven добавление точек без перестройки композиции;
+- легко дает полноценные `motion` и `still` варианты;
+- не нарушает правило одного master timeline.
 
-- 4A fade-in už je (`animate-fade-in` na `<main key={pathname}>`).
-- 4B aktivní nav link už funguje (`activeProps`), zvýrazním víc.
-- 4C `<html lang>` – `LangProvider` už nastavuje `documentElement.lang`. Přidám meta description per-language přes head().
-- 4D 404 page – už existuje `NotFoundComponent`, přidám překlad a hlavičku/patičku.
-- 4E Cookie banner – nová komponenta `CookieBanner` v `__root.tsx`, localStorage.
-- 4F Smooth scroll – přidám `scroll-behavior: smooth` do CSS.
-- 4G OG image – stáhnu R2 URL do `public/og-image.png`.
+Настоящий WebGL допустим только после отдельного решения и нового ADR, потому что он конфликтует с действующим отказом от Three.js и потребует отдельного бюджета на модели, оптимизацию и fallback.
 
-## Část 5 — Existing fixes (většinou už hotovo)
+## Предлагаемая структура данных
 
-- 5A duplicate stats /about – zkontroluji.
-- 5B `N◆PaCORVEX` – už opraveno minule.
-- 5C `/services/design` – stránka existuje, nechám.
-- 5D testimonials – už odstraněno minule.
-- 5E form validation + toast – `Contact` už má validaci a toast, ověřím červené zvýraznění.
+Расширить единый источник проектов, а не хранить географию внутри JSX:
 
-## Otázky před spuštěním
+```text
+Project
+├── id / slug / name / url
+├── categoryId
+├── localizedCopy
+├── media
+│   ├── desktop
+│   ├── mobile
+│   └── optionalBrandMark
+└── location
+    ├── verifiedAddress
+    ├── lat / lng
+    ├── sceneX / sceneY
+    └── labelAnchor
+```
 
-1. **Jazyk:** Můžu opravit konkrétní bug místo přepisu celé i18n architektury? (Ušetří cca 80% práce, žádné regrese.)
-2. **WhatsApp číslo:** Použít placeholder `+420 000 000 000`, nebo máš reálné?
-3. **Rozsah teď:** Mám projít všech 30+ úkolů v jednom průchodu (riziko regresí), nebo prioritizovat jazyk + routing + 3A/3B/3F/4E (rychlé win) a zbytek v dalším kole?
+`lat/lng` описывают реальные данные; `sceneX/sceneY` — нормализованное положение на художественной карте. Компонент строит точки и карточки через `map()`, поэтому пятый проект добавляется одной записью. Траектория маршрута вычисляется из массива точек; ручная верстка каждой новой карточки не нужна.
+
+До реализации владелец должен подтвердить для каждого проекта: точный адрес, связь точки с выполненным проектом, допустимость публичного показа и при необходимости координаты. Если реальная география не должна раскрывать клиента, использовать честную альтернативу: районы/обобщенные точки с явной подписью, а не выдуманные адреса.
+
+## Этапы реализации
+
+### 1. Зафиксировать входные материалы
+- Составить таблицу четырех проектов: имя, URL, подтвержденный адрес, координаты, категория, услуги, разрешенный результат, desktop/mobile capture.
+- Выбрать один стиль персонажа: существующий мультяшный 3D или подтвержденный реалистичный портрет. Не смешивать их в одной сцене.
+- Получить/подтвердить отдельный production-ready ассет персонажа; текущий `character-seo.jpg` содержит текст и окружение, поэтому не подходит как чистый foreground-слой.
+- Подтвердить, является ли первый кадр концепт-коллажа только moodboard или готовым лицензированным слоем. Reference-файлы напрямую в production не переносить.
+
+### 2. Нормализовать проектные данные
+Затронуть:
+- `src/lib/projects.tsx`
+- `src/lib/projects-i18n.ts`
+- новый `src/lib/project-locations.ts` либо типизированный модуль рядом с текущими проектами
+- `src/lib/client-work.tsx`
+
+Действия:
+- перенести industry/category из локальных map-объектов в единый типизированный источник;
+- сделать статические captures каноническими и убрать mShots из новой сцены;
+- хранить адреса и координаты только после подтверждения;
+- удалить из публичной подачи неподтвержденные KPI Biodent/Exclusive Beauty либо снабдить источником и датой;
+- сохранить CZ/EN/RU/UA тексты без смешения языков.
+
+### 3. Создать изолированный прототип
+Новые компоненты ориентировочно:
+- `src/components/city/PraguePortfolioScene.tsx`
+- `src/components/city/CityLayers.tsx`
+- `src/components/city/ProjectRoute.tsx`
+- `src/components/city/ProjectMarker.tsx`
+- `src/components/city/ProjectCard.tsx`
+- `src/components/city/OwnerForeground.tsx`
+- `src/components/city/PraguePortfolioFallback.tsx`
+- изолированный route в `src/routes/` по уже существующему prototype-паттерну
+
+Сначала собрать сцену вне production-главной: масштаб, глубина, точки, карточки, персонаж, фокус-состояния и мобильный вариант. Логотип использовать через существующий `Logo`, не перерисовывать.
+
+### 4. Интегрировать в master timeline
+- Зарегистрировать один новый act через `useAct`.
+- Все camera/scale/opacity/route-progress значения вывести как чистые transform-функции от `act.progress`.
+- Не применять независимый scroll listener, таймер, spring-накопление или Three.js clock.
+- Проверить каждый переход вперед и назад: маркер, карточка, маршрут и фокусный проект обязаны восстанавливаться симметрично.
+- Не вмешиваться в текущий объединенный hero/services act; новая карта должна быть самостоятельной секцией между подходящими блоками.
+
+### 5. Desktop, mobile и reduced motion
+- Desktop/cinematic: 2.5D параллакс, мягкая смена фокуса между четырьмя точками, одна спокойная карточка за раз.
+- Tablet/motion: статичная перспектива карты, укороченные переходы, без тяжелого параллакса.
+- Mobile: не уменьшенная desktop-сцена, а вертикальная карта/маршрут с последовательными карточками и крупными touch targets; без захвата нативного скролла.
+- Reduced motion: статичная overview-карта и обычный список проектов; никакой обязательной анимации для доступа к контенту.
+- На смене breakpoint/ориентации не терять выбранный проект и не создавать layout jump.
+
+### 6. Связать портфолио, услуги и CTA
+- `CaseShowcase` заменить новой сценой только после прохождения prototype-gate; старую реализацию не удалять до визуального и функционального подтверждения.
+- В карточке оставить минимум: проект, отрасль, услуги, короткий проверяемый результат, ссылка на кейс/сайт.
+- Переход из карты к услугам и `ProjectBuilder` сделать смысловым, без добавления лишних CTA.
+- `ServicesShowcase`, `PricingSection`, `ProjectBuilder`, `ClosingCta` и страницы проектов не редизайнить; только выровнять handoff/spacing, если новая высота сцены требует этого.
+
+### 7. Контактная форма
+Затронуть только после подтверждения backend:
+- `src/components/home/ProjectBuilder.tsx`
+- `src/components/sections/Contact.tsx`
+- `src/lib/telegram.functions.ts`
+
+Проверить production secrets и выполнить реальную тестовую отправку. Добавить наблюдаемое server-side логирование/alerting ошибки доставки; не обещать пользователю успешную отправку до ответа Telegram. Honeypot оставить, отдельно оценить rate limiting. Не менять бизнес-логику формы ради визуальной сцены.
+
+### 8. Доступность и производительность
+- Все точки — настоящие `button`/`a` с доступным именем, focus-visible и клавиатурным выбором.
+- Добавить/проверить skip link и основной `main` landmark.
+- Декоративные слои скрыть от accessibility tree; маршрут не должен быть единственным носителем смысла.
+- Задать размеры изображений, responsive `srcset`, lazy loading ниже fold и async decoding.
+- Не загружать desktop city layers на mobile/still режиме.
+- Проверить контраст поверх карты, 44px touch targets, zoom 200%, screen reader и клавиатуру.
+
+## Проверки перед заменой production-секции
+
+1. Визуальная приемка прототипа владельцем на 1440, 1280, 1024, 768, 390 и 360 px.
+2. Полный forward/reverse scroll без скачков и рассинхронизации.
+3. `prefers-reduced-motion`, Save-Data, coarse pointer и слабое устройство.
+4. Keyboard-only: навигация, маркеры, карточки, CTA и возврат фокуса.
+5. Lighthouse/WebPageTest и network audit: LCP/CLS/INP, вес сцены, отсутствие mShots/тайлов/лишних запросов.
+6. Все четыре проекта показывают правильные домены, изображения, локализованный текст и только подтвержденные результаты.
+7. Реальная production-отправка обеих контактных форм; при отсутствии Telegram secrets релиз не маркировать как полностью готовый к сбору лидов.
+8. После успешной приемки заменить `CaseShowcase` в `src/routes/index.tsx`, проверить `/projects`, `/projects/$slug`, `/contact` и все четыре языка.
+
+## Риски и блокеры
+
+- Неизвестны три адреса из четырех; адрес Biodent тоже требует подтверждения владельца.
+- Нет подтвержденных координат ни для одного проекта.
+- Не найден отдельный чистый ассет персонажа владельца; текущий мультяшный образ встроен в рекламные композиции.
+- Не найден подтвержденный реалистичный портрет; смешение реалистичного JPEG и мультяшного 3D запрещено.
+- Часть KPI в localized case data не подтверждена источниками.
+- Production-конфигурация Telegram неизвестна, резервного канала доставки лидов нет.
+- Полноценный WebGL изменит архитектуру, payload и ADR; без отдельного решения его не начинать.
+
+Реализация начинается только после подтверждения этого плана, адресов/координат и выбранного ассета персонажа.
