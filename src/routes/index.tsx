@@ -35,30 +35,20 @@ export const Route = createFileRoute("/")({
 });
 
 /**
- * The homepage: one website experience built around one object — THE WINDOW,
- * a real browser window (see `BrowserWindow.tsx`). ELEVATE builds websites, so
- * the website experience itself is the showcase.
+ * The homepage opens on a schematic miniature Prague: ELEVATE's four real
+ * projects form one visual route through the city, while the existing service,
+ * pricing, builder and closing sections retain their verified content.
  *
- *   hero + services   HeroScene          the window stands in the portal showing
- *                                        the studio's real client sites, then
- *                                        navigates through the five services
- *                     ServicesShowcase   the same five, stacked — phones, and
- *                                        desktop under prefers-reduced-motion
+ *   hero              HeroScene          miniature Prague and the studio promise
+ *   services          ServicesShowcase   the existing five-service story
  *   pricing           PricingSection     the real prices, all visible at once
- *   cases             CaseShowcase       the window scrolls each real client site
+ *   cases             CaseShowcase       four project points on one city route
  *   builder           ProjectBuilder     the window draws the visitor's project
  *   closing           ClosingCta         back to the portal; the window is ELEVATE's
  *
- * Hero and services are ONE pinned act on purpose: two pinned sections always
- * had a frame with two windows at their seam (PROTO_GATE.md, condition 2).
- * Everything is real: client captures of the live sites, `t.*` / `usePages`
- * copy, `pricingPages` prices, the untouched Telegram contact pipeline. No
- * metrics are shown anywhere on the page (PRODUCT.md §33).
- *
- * Unmounted and kept (recoverable, not deleted): StudioManifesto,
- * HeroCameraPlate, HeroLightField and the camera clips in /public/media — the
- * previous "camera into a lit screen" hero. The tag checkpoint/pre-homepage-rebuild
- * marks the last commit with that homepage.
+ * Project positions are deliberately schematic until exact addresses and
+ * coordinates are confirmed. Existing client captures remain the only project
+ * imagery; no unverified metrics are shown on the homepage.
  */
 function Home() {
   return (

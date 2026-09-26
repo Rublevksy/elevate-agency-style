@@ -23,14 +23,14 @@ export function PragueMapScene({
   onSelect?: (slug: ProjectSlug) => void;
   label: string;
 }) {
-  const cameraX = useTransform(progress ?? STATIC_PROGRESS, [0, 0.25, 0.5, 0.75, 1], [0, 4, -3, 3, 0]);
-  const cameraY = useTransform(progress ?? STATIC_PROGRESS, [0, 0.25, 0.5, 0.75, 1], [0, 2, -2, 1, 0]);
+  const cameraX = useTransform(progress ?? STATIC_PROGRESS, [0, 0.25, 0.5, 0.75, 1], ["0%", "4%", "-3%", "3%", "0%"]);
+  const cameraY = useTransform(progress ?? STATIC_PROGRESS, [0, 0.25, 0.5, 0.75, 1], ["0%", "2%", "-2%", "1%", "0%"]);
   const cameraScale = useTransform(progress ?? STATIC_PROGRESS, [0, 0.18, 0.48, 0.78, 1], [0.96, 1.04, 1.08, 1.05, 0.98]);
 
   return (
     <div className="prague-scene" role={interactive ? "group" : undefined} aria-label={interactive ? label : undefined} aria-hidden={interactive ? undefined : true}>
       <div className="prague-scene__haze" />
-      <motion.div className="prague-scene__camera" style={{ x: `${cameraX}%`, y: `${cameraY}%`, scale: cameraScale }}>
+      <motion.div className="prague-scene__camera" style={{ x: cameraX, y: cameraY, scale: cameraScale }}>
         <div className="prague-scene__map">
           <div className="prague-scene__river" />
           <div className="prague-scene__roads" />
