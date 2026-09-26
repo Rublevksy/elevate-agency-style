@@ -52,13 +52,13 @@ export const Route = createFileRoute("/")({
  */
 function Home() {
   return (
-    <>
+    <div className="overflow-x-clip">
       <HeroScene />
       <ServicesShowcase />
       <PricingSection />
       <CaseShowcase />
       <ProjectBuilder />
       <ClosingCta />
-    </>
+    </div>
   );
 }

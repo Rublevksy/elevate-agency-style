@@ -1,7 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { ArrowDownRight, ArrowRight } from "lucide-react";
 import { motion, useTransform } from "framer-motion";
-import character from "@/assets/refs/svc-seo.webp";
 import { BEAT, EASE, useAct, useMotionCapability } from "@/components/cinematic";
 import { useT } from "@/lib/i18n";
 import { PragueMapScene } from "./PragueMapScene";
@@ -16,8 +15,6 @@ export function HeroScene() {
   const copyY = useTransform(act.progress, [0, 1], [0, reduced ? 0 : -72]);
   const copyOpacity = useTransform(act.progress, [0, 0.72, 1], [1, 1, reduced ? 1 : 0]);
   const sceneY = useTransform(act.progress, [0, 1], [0, reduced ? 0 : -34]);
-  const characterX = useTransform(act.progress, [0, 1], [0, reduced ? 0 : 44]);
-  const characterOpacity = useTransform(act.progress, [0, 0.72, 1], [1, 1, reduced ? 1 : 0.35]);
 
   return (
     <section
@@ -77,21 +74,6 @@ export function HeroScene() {
               ))}
             </ul>
           </div>
-        </motion.div>
-
-        <motion.div
-          style={{ x: characterX, opacity: characterOpacity }}
-          className="pointer-events-none absolute right-[-3rem] bottom-0 z-10 hidden h-[82%] w-[43%] max-w-[43rem] xl:block"
-        >
-          <img
-            src={character}
-            alt=""
-            width={736}
-            height={1146}
-            fetchPriority="high"
-            className="h-full w-full object-cover object-[58%_42%] [mask-image:linear-gradient(to_right,transparent_0%,black_18%,black_100%)]"
-          />
-          <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_58%,var(--background)_100%)]" />
         </motion.div>
 
         <div className="pointer-events-none absolute inset-x-0 bottom-0 z-30 h-24 bg-gradient-to-t from-background to-transparent" />
