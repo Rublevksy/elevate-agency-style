@@ -280,6 +280,9 @@ export const translations = {
       homeWorkEyebrow: "Vybrané projekty",
       homeWorkTitle: "Práce, která přináší výsledky",
       homeWorkViewAll: "Zobrazit všechny projekty",
+      mapSceneLabel: "Schematická mapa vybraných projektů v Praze",
+      mapSchematic: "Čtyři skutečné projekty propojené v jedné pražské digitální trase.",
+      mapLocationPending: "Přesná adresa čeká na potvrzení",
       homeServiceCards: [
         { title: "Weby, které přivádí klienty", desc: "Rychlé weby zaměřené na konverzi a růst." },
         { title: "E-shopy, které vydělávají", desc: "Optimalizované pro nákup od první návštěvy." },
@@ -579,6 +582,9 @@ export const translations = {
       homeWorkEyebrow: "Selected projects",
       homeWorkTitle: "Work that delivers results",
       homeWorkViewAll: "View all projects",
+      mapSceneLabel: "Schematic map of selected projects in Prague",
+      mapSchematic: "Four real projects connected through one Prague digital route.",
+      mapLocationPending: "Exact address awaiting confirmation",
       homeServiceCards: [
         { title: "Websites that attract clients", desc: "Fast sites focused on conversion and growth." },
         { title: "E-shops that earn", desc: "Optimised to sell from the first visit." },
@@ -877,6 +883,9 @@ export const translations = {
       homeWorkEyebrow: "Избранные проекты",
       homeWorkTitle: "Работа, приносящая результат",
       homeWorkViewAll: "Все проекты",
+      mapSceneLabel: "Схематичная карта избранных проектов в Праге",
+      mapSchematic: "Четыре реальных проекта объединены одним цифровым маршрутом по Праге.",
+      mapLocationPending: "Точный адрес ожидает подтверждения",
       homeServiceCards: [
         { title: "Сайты, которые приводят клиентов", desc: "Быстрые сайты, нацеленные на конверсию и рост." },
         { title: "Магазины, которые приносят прибыль", desc: "Оптимизированы для продажи с первого визита." },
@@ -1175,6 +1184,9 @@ export const translations = {
       homeWorkEyebrow: "Обрані проєкти",
       homeWorkTitle: "Робота, що дає результат",
       homeWorkViewAll: "Усі проєкти",
+      mapSceneLabel: "Схематична карта обраних проєктів у Празі",
+      mapSchematic: "Чотири реальні проєкти поєднані одним цифровим маршрутом Прагою.",
+      mapLocationPending: "Точна адреса очікує підтвердження",
       homeServiceCards: [
         { title: "Сайти, що приводять клієнтів", desc: "Швидкі сайти, націлені на конверсію та зростання." },
         { title: "Магазини, що заробляють", desc: "Оптимізовані для продажу з першого візиту." },
