@@ -28,7 +28,10 @@ export function CaseShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
 
   useMotionValueEvent(act.progress, "change", (value) => {
-    const next = Math.min(COUNT - 1, Math.max(0, Math.floor((value * PINNED_VP - INTRO_VP + CASE_VP * 0.35) / CASE_VP)));
+    const next = Math.min(
+      COUNT - 1,
+      Math.max(0, Math.floor((value * PINNED_VP - INTRO_VP + CASE_VP * 0.35) / CASE_VP)),
+    );
     setActiveIndex(next);
   });
 
@@ -37,7 +40,10 @@ export function CaseShowcase() {
     const section = act.ref.current;
     if (index < 0 || !section) return;
     const top = section.getBoundingClientRect().top + window.scrollY;
-    window.scrollTo({ top: top + (caseStart(index) + 0.22) * window.innerHeight, behavior: reduced ? "auto" : "smooth" });
+    window.scrollTo({
+      top: top + (caseStart(index) + 0.22) * window.innerHeight,
+      behavior: reduced ? "auto" : "smooth",
+    });
   };
 
   const header = (
@@ -63,7 +69,9 @@ export function CaseShowcase() {
       style={{ "--cases-track": `${VIEWPORTS * 100}svh` } as React.CSSProperties}
       className="relative isolate bg-background xl:h-[var(--cases-track)] motion-reduce:xl:h-auto"
     >
-      <h2 id="work-title" className="sr-only">{t.ui.homeWorkEyebrow}</h2>
+      <h2 id="work-title" className="sr-only">
+        {t.ui.homeWorkEyebrow}
+      </h2>
       <div className="hidden overflow-hidden xl:sticky xl:top-0 xl:block xl:h-[100svh] motion-reduce:xl:hidden">
         <div className="container-luxe grid h-full grid-cols-[0.78fr_1.22fr] items-center gap-14 pt-24 pb-20">
           <div className="relative z-20">
@@ -74,8 +82,18 @@ export function CaseShowcase() {
                 const site = CLIENT_SITES.find((item) => item.slug === point.slug);
                 if (!project || !site) return null;
                 return (
-                  <ProjectBeat key={point.slug} progress={act.progress} index={index} reduced={reduced}>
-                    <ProjectCard project={project} site={site} index={index} pendingLabel={t.ui.mapLocationPending} />
+                  <ProjectBeat
+                    key={point.slug}
+                    progress={act.progress}
+                    index={index}
+                    reduced={reduced}
+                  >
+                    <ProjectCard
+                      project={project}
+                      site={site}
+                      index={index}
+                      pendingLabel={t.ui.mapLocationPending}
+                    />
                   </ProjectBeat>
                 );
               })}
@@ -104,35 +122,79 @@ export function CaseShowcase() {
             const site = CLIENT_SITES.find((item) => item.slug === point.slug);
             if (!project || !site) return null;
             return (
-              <article key={point.slug} className="grid gap-6 border-t border-border pt-6 md:grid-cols-[0.9fr_1.1fr] md:items-center">
-                <ProjectCard project={project} site={site} index={index} pendingLabel={t.ui.mapLocationPending} />
+              <article
+                key={point.slug}
+                className="grid gap-6 border-t border-border pt-6 md:grid-cols-[0.9fr_1.1fr] md:items-center"
+              >
+                <ProjectCard
+                  project={project}
+                  site={site}
+                  index={index}
+                  pendingLabel={t.ui.mapLocationPending}
+                />
                 <div className="relative aspect-[16/10] overflow-hidden bg-surface shadow-ambient">
-                  <WorkImage site={site} kind="desktop" alt={`${site.name} — ${site.domain}`} sizes="(min-width: 768px) 52vw, 100vw" className="absolute inset-0 block h-full w-full" imgClassName="h-full w-full object-cover object-top" />
+                  <WorkImage
+                    site={site}
+                    kind="desktop"
+                    alt={`${site.name} — ${site.domain}`}
+                    sizes="(min-width: 768px) 52vw, 100vw"
+                    className="absolute inset-0 block h-full w-full"
+                    imgClassName="h-full w-full object-cover object-top"
+                  />
                 </div>
               </article>
             );
           })}
         </div>
-        <Link to="/projects" className="mt-14 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-          {t.ui.homeWorkViewAll}<ArrowRight className="size-4" aria-hidden />
+        <Link
+          to="/projects"
+          className="mt-14 inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+        >
+          {t.ui.homeWorkViewAll}
+          <ArrowRight className="size-4" aria-hidden />
         </Link>
       </div>
     </section>
   );
 }
 
-function ProjectBeat({ progress, index, reduced, children }: { progress: MotionValue<number>; index: number; reduced: boolean; children: React.ReactNode }) {
+function ProjectBeat({
+  progress,
+  index,
+  reduced,
+  children,
+}: {
+  progress: MotionValue<number>;
+  index: number;
+  reduced: boolean;
+  children: React.ReactNode;
+}) {
   const start = at(caseStart(index));
   const end = at(caseStart(index) + CASE_VP);
   const previous = index === 0 ? -0.1 : start - at(0.14);
   const next = index === COUNT - 1 ? 1.1 : end - at(0.08);
   const opacity = useTransform(progress, [previous, start, next, end], [0, 1, 1, 0]);
-  const y = useTransform(progress, [previous, start, next, end], [reduced ? 0 : 30, 0, 0, reduced ? 0 : -26]);
-  const visibility = useTransform(progress, (value) => value >= previous && value <= end ? "visible" : "hidden");
-  return <motion.div style={{ opacity, y, visibility }} className="absolute inset-0">{children}</motion.div>;
+  const y = useTransform(
+    progress,
+    [previous, start, next, end],
+    [reduced ? 0 : 30, 0, 0, reduced ? 0 : -26],
+  );
+  const visibility = useTransform(progress, (value) =>
+    value >= previous && value <= end ? "visible" : "hidden",
+  );
+  return (
+    <motion.div style={{ opacity, y, visibility }} className="absolute inset-0">
+      {children}
+    </motion.div>
+  );
 }
 
-function ProjectCard({ project, site, index, pendingLabel }: {
+function ProjectCard({
+  project,
+  site,
+  index,
+  pendingLabel,
+}: {
   project: ReturnType<typeof useProjects>[number];
   site: (typeof CLIENT_SITES)[number];
   index: number;
@@ -146,15 +208,29 @@ function ProjectCard({ project, site, index, pendingLabel }: {
         <span aria-hidden className="h-px w-8 bg-border" />
         {project.category}
       </p>
-      <h3 className="heading-scene mt-4 text-[clamp(2rem,3.5vw,3.8rem)] text-foreground">{site.name}</h3>
-      <p className="mt-4 max-w-[34rem] text-base leading-relaxed text-muted-foreground">{project.description}</p>
+      <h3 className="heading-scene mt-4 text-[clamp(2rem,3.5vw,3.8rem)] text-foreground">
+        {site.name}
+      </h3>
+      <p className="mt-4 max-w-[34rem] text-base leading-relaxed text-muted-foreground">
+        {project.description}
+      </p>
       <p className="mt-5 flex items-center gap-2 text-xs text-muted-foreground">
-        <MapPin className="size-4 text-primary" aria-hidden />{pendingLabel}
+        <MapPin className="size-4 text-primary" aria-hidden />
+        {pendingLabel}
       </p>
       <div className="mt-7 flex flex-wrap items-center gap-x-7 gap-y-4">
-        <Link to="/projects/$slug" params={{ slug: site.slug }} className="btn-primary">{t.ui.casesOpen}<ArrowRight className="size-4" aria-hidden /></Link>
-        <a href={site.url} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-          {site.domain}<ArrowUpRight className="size-4" aria-hidden />
+        <Link to="/projects/$slug" params={{ slug: site.slug }} className="btn-primary">
+          {t.ui.casesOpen}
+          <ArrowRight className="size-4" aria-hidden />
+        </Link>
+        <a
+          href={site.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+        >
+          {site.domain}
+          <ArrowUpRight className="size-4" aria-hidden />
         </a>
       </div>
     </div>

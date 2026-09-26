@@ -47,7 +47,10 @@ export function HeroScene() {
               <span aria-hidden className="h-px w-10 bg-primary/70" />
               {t.hero.sceneKicker}
             </motion.p>
-            <h1 id="home-title" className="heading-scene mt-6 text-[clamp(2.35rem,5vw,5rem)] uppercase text-foreground">
+            <h1
+              id="home-title"
+              className="heading-scene mt-6 text-[clamp(2.35rem,5vw,5rem)] uppercase text-foreground"
+            >
               <span className="block">{t.hero.sceneLine1}</span>
               <span className="block">{t.hero.sceneLine2}</span>
               <span className="block text-primary">{t.hero.sceneAccent}</span>
@@ -57,14 +60,21 @@ export function HeroScene() {
             </p>
             <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
               <Link to="/contact" className="btn-primary">
-                {t.hero.cta1}<ArrowRight className="size-4" aria-hidden />
+                {t.hero.cta1}
+                <ArrowRight className="size-4" aria-hidden />
               </Link>
-              <a href="#work" className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground">
-                {t.hero.cta2}<ArrowDownRight className="size-4" aria-hidden />
+              <a
+                href="#work"
+                className="inline-flex min-h-11 items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground"
+              >
+                {t.hero.cta2}
+                <ArrowDownRight className="size-4" aria-hidden />
               </a>
             </div>
             <ul className="label-micro mt-10 flex flex-wrap gap-x-4 gap-y-2 text-muted-foreground">
-              {t.hero.sceneDisciplines.map((item) => <li key={item}>{item}</li>)}
+              {t.hero.sceneDisciplines.map((item) => (
+                <li key={item}>{item}</li>
+              ))}
             </ul>
           </div>
         </motion.div>
@@ -73,7 +83,14 @@ export function HeroScene() {
           style={{ x: characterX, opacity: characterOpacity }}
           className="pointer-events-none absolute right-[-3rem] bottom-0 z-10 hidden h-[82%] w-[43%] max-w-[43rem] xl:block"
         >
-          <img src={character} alt="" width={736} height={1146} fetchPriority="high" className="h-full w-full object-cover object-[58%_42%] [mask-image:linear-gradient(to_right,transparent_0%,black_18%,black_100%)]" />
+          <img
+            src={character}
+            alt=""
+            width={736}
+            height={1146}
+            fetchPriority="high"
+            className="h-full w-full object-cover object-[58%_42%] [mask-image:linear-gradient(to_right,transparent_0%,black_18%,black_100%)]"
+          />
           <div className="absolute inset-0 bg-[linear-gradient(to_bottom,transparent_58%,var(--background)_100%)]" />
         </motion.div>
 

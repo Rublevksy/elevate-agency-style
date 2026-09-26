@@ -53,12 +53,20 @@ const buildServiceDetails = (
 
 export const translations = {
   CZ: {
-    nav: { home: "Domů", services: "Služby", work: "Projekty", pricing: "Ceník", about: "O nás", contact: "Kontakt" },
+    nav: {
+      home: "Domů",
+      services: "Služby",
+      work: "Projekty",
+      pricing: "Ceník",
+      about: "O nás",
+      contact: "Kontakt",
+    },
     hero: {
       tag: "Nezávislé digitální studio · Praha",
       title1: "Digitální produkty,",
       title2: "které posouvají byznys.",
-      subtitle: "Strategie, UX a vývoj v jednom týmu. Pro firmy, které berou web jako investici, ne jako náklad.",
+      subtitle:
+        "Strategie, UX a vývoj v jednom týmu. Pro firmy, které berou web jako investici, ne jako náklad.",
       cta1: "Domluvit konzultaci",
       cta2: "Vybrané projekty",
       /* Scene hero — copy split exactly as 01_HOME_DESKTOP_HERO.png sets it:
@@ -66,11 +74,17 @@ export const translations = {
       sceneLine1: "Digitální řešení,",
       sceneLine2: "která posouvají",
       sceneAccent: "vaše podnikání.",
-      sceneSubtitle: "Tvoříme moderní weby, e-shopy a aplikace, které spojují design, výkon a výsledky.",
+      sceneSubtitle:
+        "Tvoříme moderní weby, e-shopy a aplikace, které spojují design, výkon a výsledky.",
       sceneDisciplines: ["Design", "Výkon", "Strategie", "Výsledky"],
       sceneKicker: "Digitální studio z Prahy",
     },
-    trust: { years: "4+ let zkušeností", projects: "50+ projektů", clients: "Klienti v EU", response: "Odpověď do 24 hodin" },
+    trust: {
+      years: "4+ let zkušeností",
+      projects: "50+ projektů",
+      clients: "Klienti v EU",
+      response: "Odpověď do 24 hodin",
+    },
     about: {
       eyebrow: "O nás",
       title: "Digitální agentura zaměřená na výkon.",
@@ -90,7 +104,10 @@ export const translations = {
       eyebrow: "Záruky",
       title: "Co od nás můžete čekat",
       items: [
-        { t: "Odpověď do 24 hodin", d: "Nikdy nezůstanete bez odpovědi déle než jeden pracovní den." },
+        {
+          t: "Odpověď do 24 hodin",
+          d: "Nikdy nezůstanete bez odpovědi déle než jeden pracovní den.",
+        },
         { t: "Individuální přístup", d: "Žádné šablony. Každý projekt řešíme od nuly." },
         { t: "Řešení na míru", d: "Stavíme přesně to, co váš byznys potřebuje." },
       ],
@@ -153,9 +170,21 @@ export const translations = {
       custom: "na míru",
       cta: "Získat nabídku",
       plans: [
-        { name: "START", price: "10 000 Kč", features: ["Jednostránkový web", "Responzivní design", "Základní SEO"] },
-        { name: "BUSINESS", price: "25 000 Kč", features: ["Vícestránkový web", "CMS", "Pokročilé SEO", "Analytika"] },
-        { name: "PRO", price: "", features: ["E-shop / komplexní řešení", "Integrace", "Dlouhodobá podpora"] },
+        {
+          name: "START",
+          price: "10 000 Kč",
+          features: ["Jednostránkový web", "Responzivní design", "Základní SEO"],
+        },
+        {
+          name: "BUSINESS",
+          price: "25 000 Kč",
+          features: ["Vícestránkový web", "CMS", "Pokročilé SEO", "Analytika"],
+        },
+        {
+          name: "PRO",
+          price: "",
+          features: ["E-shop / komplexní řešení", "Integrace", "Dlouhodobá podpora"],
+        },
       ],
     },
     testimonials: {
@@ -171,10 +200,22 @@ export const translations = {
       eyebrow: "FAQ",
       title: "Časté dotazy",
       items: [
-        { q: "Kolik stojí web?", a: "Ceny začínají od 5 000 Kč web. Komplexní řešení tvoříme na míru po konzultaci." },
-        { q: "Jak dlouho trvá vývoj?", a: "Standardní web 2–4 týdny, e-shop 4–8 týdnů. Termín vždy potvrdíme předem." },
-        { q: "Co od vás potřebuji dodat?", a: "Stačí představa o cílech a obsahu. Vše ostatní (texty, fotky, strategii) zvládneme společně." },
-        { q: "Pracujete i po spuštění?", a: "Ano, nabízíme dlouhodobou podporu, údržbu a růstové úpravy." },
+        {
+          q: "Kolik stojí web?",
+          a: "Ceny začínají od 5 000 Kč web. Komplexní řešení tvoříme na míru po konzultaci.",
+        },
+        {
+          q: "Jak dlouho trvá vývoj?",
+          a: "Standardní web 2–4 týdny, e-shop 4–8 týdnů. Termín vždy potvrdíme předem.",
+        },
+        {
+          q: "Co od vás potřebuji dodat?",
+          a: "Stačí představa o cílech a obsahu. Vše ostatní (texty, fotky, strategii) zvládneme společně.",
+        },
+        {
+          q: "Pracujete i po spuštění?",
+          a: "Ano, nabízíme dlouhodobou podporu, údržbu a růstové úpravy.",
+        },
       ] as FaqItem[],
     },
     contact: {
@@ -193,13 +234,38 @@ export const translations = {
       form: {
         stepLabel: "Krok",
         stepOf: "ze 3",
-        stepTitles: ["Jaký projekt řešíte?", "Co má projekt umět?", "Kontaktní údaje", "Jaký je přibližný rozpočet?"],
+        stepTitles: [
+          "Jaký projekt řešíte?",
+          "Co má projekt umět?",
+          "Kontaktní údaje",
+          "Jaký je přibližný rozpočet?",
+        ],
         featuresLabel: "Jaké funkce potřebujete?",
-        features: ["Online platby", "Rezervační systém", "Vícejazyčnost", "Blog / obsah", "Napojení na CRM", "Mobilní aplikace", "Nejsem si jistý"],
+        features: [
+          "Online platby",
+          "Rezervační systém",
+          "Vícejazyčnost",
+          "Blog / obsah",
+          "Napojení na CRM",
+          "Mobilní aplikace",
+          "Nejsem si jistý",
+        ],
         goalLabel: "Jaký je váš hlavní cíl?",
         goalPlaceholder: "Např. víc poptávek, rychlejší web, nový branding…",
-        projectTypes: ["Firemní web", "E-shop", "Webová aplikace", "Redesign webu", "Nejsem si jistý"],
-        budgets: ["Do 20 000 Kč", "20 000 – 50 000 Kč", "50 000 – 100 000 Kč", "100 000 Kč+", "Nejsem si jistý"],
+        projectTypes: [
+          "Firemní web",
+          "E-shop",
+          "Webová aplikace",
+          "Redesign webu",
+          "Nejsem si jistý",
+        ],
+        budgets: [
+          "Do 20 000 Kč",
+          "20 000 – 50 000 Kč",
+          "50 000 – 100 000 Kč",
+          "100 000 Kč+",
+          "Nejsem si jistý",
+        ],
         budgetHelp: "Pomůže nám to navrhnout řešení v rámci vašich možností. Bez závazku.",
         namePlaceholder: "Jan Novák",
         emailPlaceholder: "jan@firma.cz",
@@ -227,7 +293,12 @@ export const translations = {
         },
       },
     },
-    footer: { nav: "Navigace", contact: "Kontakt", follow: "Sledujte nás", rights: "Všechna práva vyhrazena." },
+    footer: {
+      nav: "Navigace",
+      contact: "Kontakt",
+      follow: "Sledujte nás",
+      rights: "Všechna práva vyhrazena.",
+    },
     ui: {
       serviceStage: [
         { title: "Weby, které prodávají", tag: "Rychlé, konverzní, na míru" },
@@ -290,7 +361,12 @@ export const translations = {
       ],
       heroBadgeMobile: "🚀 Získat nabídku",
       servicesHover: "Zobrazit službu",
-      serviceResultHeadlines: ["Weby, které přivádí klienty", "E-shopy, které vydělávají", "Značka, kterou si lidé zapamatují", "Vizuály, které prodávají"],
+      serviceResultHeadlines: [
+        "Weby, které přivádí klienty",
+        "E-shopy, které vydělávají",
+        "Značka, kterou si lidé zapamatují",
+        "Vizuály, které prodávají",
+      ],
       portfolioSubtitle: "Reálné ukázky práce, problémů a výsledků",
       portfolioWork: "Práce",
       portfolioResults: "Výsledky",
@@ -320,14 +396,18 @@ export const translations = {
       projectSolutionTitle: "Jak jsme to postavili",
       projectWorkTitle: "UX, vývoj a optimalizace",
       projectCtaTitle: "Chcete podobný výsledek?",
-      projectCtaDesc: "Popište nám projekt a navrhneme nejrychlejší cestu k webu, e-shopu nebo značce, která bude fungovat.",
+      projectCtaDesc:
+        "Popište nám projekt a navrhneme nejrychlejší cestu k webu, e-shopu nebo značce, která bude fungovat.",
       projectCtaBtn: "Chci podobný web",
       aboutApproachEyebrow: "Náš přístup",
-      aboutApproachP1: "Spojujeme strategii, design a technologii do jednoho celku, který pracuje pro vaše podnikání. Nejde nám o líbivý vizuál — jde nám o měřitelné výsledky.",
-      aboutApproachP2: "Pracujeme s klienty z různých oborů — od profesionálních služeb a B2B firem až po e-commerce značky. Každý projekt začíná pochopením byznysu, ne výběrem barev.",
+      aboutApproachP1:
+        "Spojujeme strategii, design a technologii do jednoho celku, který pracuje pro vaše podnikání. Nejde nám o líbivý vizuál — jde nám o měřitelné výsledky.",
+      aboutApproachP2:
+        "Pracujeme s klienty z různých oborů — od profesionálních služeb a B2B firem až po e-commerce značky. Každý projekt začíná pochopením byznysu, ne výběrem barev.",
       aboutLimitedEyebrow: "Limitovaná spolupráce",
       aboutLimitedTitle: "Pracujeme pouze s omezeným počtem klientů.",
-      aboutLimitedDesc: "Abychom každému projektu mohli věnovat maximální pozornost, přijímáme jen několik nových spoluprací měsíčně.",
+      aboutLimitedDesc:
+        "Abychom každému projektu mohli věnovat maximální pozornost, přijímáme jen několik nových spoluprací měsíčně.",
       aboutChip1: "Odpovíme do 24 hodin",
       aboutChip2: "Nezávazná konzultace zdarma",
       aboutChip3: "Individuální přístup",
@@ -340,7 +420,10 @@ export const translations = {
       sub: "Pošlete URL — dostanete strukturovaný report s pohledem na UX, výkon a konverzní potenciál. Žádné generické PDF, žádný sales hovor, pokud o něj nepožádáte.",
       perksTitle: "Co v auditu řešíme",
       perks: [
-        { t: "UX a vizuální audit", d: "Hierarchie, CTA flow, čitelnost a důvěra na první pohled." },
+        {
+          t: "UX a vizuální audit",
+          d: "Hierarchie, CTA flow, čitelnost a důvěra na první pohled.",
+        },
         { t: "Výkon a SEO", d: "Rychlost, Core Web Vitals, technické SEO základy." },
         { t: "Konverzní příležitosti", d: "Konkrétní místa, kde web ztrácí návštěvníky a peníze." },
         { t: "Výsledek do 48 hodin", d: "Strukturovaný report s prioritizovanými doporučeními." },
@@ -382,22 +465,36 @@ export const translations = {
     },
   },
   EN: {
-    nav: { home: "Home", services: "Services", work: "Projects", pricing: "Pricing", about: "About", contact: "Contact" },
+    nav: {
+      home: "Home",
+      services: "Services",
+      work: "Projects",
+      pricing: "Pricing",
+      about: "About",
+      contact: "Contact",
+    },
     hero: {
       tag: "Independent digital studio · Prague",
       title1: "Digital products",
       title2: "that move business forward.",
-      subtitle: "Strategy, UX and engineering in one team. For companies that treat a website as an investment, not a cost.",
+      subtitle:
+        "Strategy, UX and engineering in one team. For companies that treat a website as an investment, not a cost.",
       cta1: "Book a consultation",
       cta2: "Selected work",
       sceneLine1: "Digital solutions",
       sceneLine2: "that move",
       sceneAccent: "your business forward.",
-      sceneSubtitle: "We build modern websites, e-shops and apps that bring design, performance and results together.",
+      sceneSubtitle:
+        "We build modern websites, e-shops and apps that bring design, performance and results together.",
       sceneDisciplines: ["Design", "Performance", "Strategy", "Results"],
       sceneKicker: "Digital studio from Prague",
     },
-    trust: { years: "4+ years of experience", projects: "50+ projects", clients: "EU clients", response: "Reply within 24 hours" },
+    trust: {
+      years: "4+ years of experience",
+      projects: "50+ projects",
+      clients: "EU clients",
+      response: "Reply within 24 hours",
+    },
     about: {
       eyebrow: "About",
       title: "A digital agency focused on performance.",
@@ -460,7 +557,9 @@ export const translations = {
     },
     process: { title: "Process", steps: ["Consultation", "Proposal", "Development", "Launch"] },
     portfolio: {
-      title: "Portfolio", subtitle: "Selected projects", view: "View project",
+      title: "Portfolio",
+      subtitle: "Selected projects",
+      view: "View project",
       items: [
         { name: "Nordic Store", tag: "E-commerce", result: "+120% conversion" },
         { name: "Corvex", tag: "Web", result: "New brand launch" },
@@ -469,32 +568,69 @@ export const translations = {
       ],
     },
     pricing: {
-      title: "Pricing", subtitle: "Transparent prices", from: "from", custom: "custom", cta: "Get a quote",
+      title: "Pricing",
+      subtitle: "Transparent prices",
+      from: "from",
+      custom: "custom",
+      cta: "Get a quote",
       plans: [
-        { name: "START", price: "10 000 CZK", features: ["One-page website", "Responsive design", "Basic SEO"] },
-        { name: "BUSINESS", price: "25 000 CZK", features: ["Multi-page website", "CMS", "Advanced SEO", "Analytics"] },
-        { name: "PRO", price: "", features: ["E-commerce / complex", "Integrations", "Long-term support"] },
+        {
+          name: "START",
+          price: "10 000 CZK",
+          features: ["One-page website", "Responsive design", "Basic SEO"],
+        },
+        {
+          name: "BUSINESS",
+          price: "25 000 CZK",
+          features: ["Multi-page website", "CMS", "Advanced SEO", "Analytics"],
+        },
+        {
+          name: "PRO",
+          price: "",
+          features: ["E-commerce / complex", "Integrations", "Long-term support"],
+        },
       ],
     },
     testimonials: {
       title: "Testimonials",
       items: [],
     },
-    cta: { title: "Got a project?", subtitle: "Let's talk it through — a few quick questions, not a boring form.", btn: "Free consultation" },
+    cta: {
+      title: "Got a project?",
+      subtitle: "Let's talk it through — a few quick questions, not a boring form.",
+      btn: "Free consultation",
+    },
     faq: {
       eyebrow: "FAQ",
       title: "Frequently asked questions",
       items: [
-        { q: "How much does a website cost?", a: "Prices start at 5 000 CZK for a simple website. Complex projects are quoted after a consultation." },
-        { q: "How long does development take?", a: "A standard website takes 2–4 weeks, an e-shop 4–8 weeks. Timeline is always confirmed up front." },
-        { q: "What do you need from us?", a: "Just an idea of your goals and content. We'll handle copy, photography and strategy together." },
-        { q: "Do you support the site after launch?", a: "Yes, we offer long-term support, maintenance and growth iterations." },
+        {
+          q: "How much does a website cost?",
+          a: "Prices start at 5 000 CZK for a simple website. Complex projects are quoted after a consultation.",
+        },
+        {
+          q: "How long does development take?",
+          a: "A standard website takes 2–4 weeks, an e-shop 4–8 weeks. Timeline is always confirmed up front.",
+        },
+        {
+          q: "What do you need from us?",
+          a: "Just an idea of your goals and content. We'll handle copy, photography and strategy together.",
+        },
+        {
+          q: "Do you support the site after launch?",
+          a: "Yes, we offer long-term support, maintenance and growth iterations.",
+        },
       ] as FaqItem[],
     },
     contact: {
-      title: "Contact", subtitle: "Get in touch",
-      name: "Name", email: "Email", phone: "Phone (optional)",
-      service: "Service type", budget: "Budget", message: "Message",
+      title: "Contact",
+      subtitle: "Get in touch",
+      name: "Name",
+      email: "Email",
+      phone: "Phone (optional)",
+      service: "Service type",
+      budget: "Budget",
+      message: "Message",
       submit: "Send inquiry",
       services: ["Web", "E-shop", "Logo", "Design"],
       budgets: ["up to 20k", "20–50k", "50k+"],
@@ -502,13 +638,38 @@ export const translations = {
       form: {
         stepLabel: "Step",
         stepOf: "of 3",
-        stepTitles: ["What project are you planning?", "What should the project do?", "Contact details", "What's your approximate budget?"],
+        stepTitles: [
+          "What project are you planning?",
+          "What should the project do?",
+          "Contact details",
+          "What's your approximate budget?",
+        ],
         featuresLabel: "Which features do you need?",
-        features: ["Online payments", "Booking system", "Multilingual support", "Blog / content", "CRM integration", "Mobile app", "Not sure yet"],
+        features: [
+          "Online payments",
+          "Booking system",
+          "Multilingual support",
+          "Blog / content",
+          "CRM integration",
+          "Mobile app",
+          "Not sure yet",
+        ],
         goalLabel: "What's your main goal?",
         goalPlaceholder: "E.g. more leads, a faster site, a new brand…",
-        projectTypes: ["Company website", "E-shop", "Web application", "Website redesign", "Not sure yet"],
-        budgets: ["Up to 20,000 CZK", "20,000 – 50,000 CZK", "50,000 – 100,000 CZK", "100,000 CZK+", "Not sure yet"],
+        projectTypes: [
+          "Company website",
+          "E-shop",
+          "Web application",
+          "Website redesign",
+          "Not sure yet",
+        ],
+        budgets: [
+          "Up to 20,000 CZK",
+          "20,000 – 50,000 CZK",
+          "50,000 – 100,000 CZK",
+          "100,000 CZK+",
+          "Not sure yet",
+        ],
         budgetHelp: "Helps us tailor a solution to your budget. No commitment.",
         namePlaceholder: "John Smith",
         emailPlaceholder: "john@company.com",
@@ -536,7 +697,12 @@ export const translations = {
         },
       },
     },
-    footer: { nav: "Navigation", contact: "Contact", follow: "Follow us", rights: "All rights reserved." },
+    footer: {
+      nav: "Navigation",
+      contact: "Contact",
+      follow: "Follow us",
+      rights: "All rights reserved.",
+    },
     ui: {
       serviceStage: [
         { title: "Websites that sell", tag: "Fast, conversion-focused, custom-built" },
@@ -586,13 +752,21 @@ export const translations = {
       mapSchematic: "Four real projects connected through one Prague digital route.",
       mapLocationPending: "Exact address awaiting confirmation",
       homeServiceCards: [
-        { title: "Websites that attract clients", desc: "Fast sites focused on conversion and growth." },
+        {
+          title: "Websites that attract clients",
+          desc: "Fast sites focused on conversion and growth.",
+        },
         { title: "E-shops that earn", desc: "Optimised to sell from the first visit." },
         { title: "Branding", desc: "A brand people remember." },
       ],
       heroBadgeMobile: "🚀 Get a quote",
       servicesHover: "View service",
-      serviceResultHeadlines: ["Websites that attract clients", "E-shops that earn", "A brand people remember", "Visuals that sell"],
+      serviceResultHeadlines: [
+        "Websites that attract clients",
+        "E-shops that earn",
+        "A brand people remember",
+        "Visuals that sell",
+      ],
       portfolioSubtitle: "Real examples of work, problems and results",
       portfolioWork: "Work",
       portfolioResults: "Results",
@@ -622,14 +796,18 @@ export const translations = {
       projectSolutionTitle: "How we built it",
       projectWorkTitle: "UX, development & optimization",
       projectCtaTitle: "Want a similar result?",
-      projectCtaDesc: "Tell us about your project and we'll propose the fastest path to a website, e-shop or brand that works.",
+      projectCtaDesc:
+        "Tell us about your project and we'll propose the fastest path to a website, e-shop or brand that works.",
       projectCtaBtn: "I want a similar site",
       aboutApproachEyebrow: "Our approach",
-      aboutApproachP1: "We combine strategy, design and technology into one system that works for your business. We don't aim for a pretty visual — we aim for measurable results.",
-      aboutApproachP2: "We work with clients across industries — from professional services and B2B to e-commerce brands. Every project starts by understanding the business, not picking colours.",
+      aboutApproachP1:
+        "We combine strategy, design and technology into one system that works for your business. We don't aim for a pretty visual — we aim for measurable results.",
+      aboutApproachP2:
+        "We work with clients across industries — from professional services and B2B to e-commerce brands. Every project starts by understanding the business, not picking colours.",
       aboutLimitedEyebrow: "Limited engagements",
       aboutLimitedTitle: "We only work with a limited number of clients.",
-      aboutLimitedDesc: "So we can give every project our full attention, we take on only a few new engagements each month.",
+      aboutLimitedDesc:
+        "So we can give every project our full attention, we take on only a few new engagements each month.",
       aboutChip1: "Reply within 24 hours",
       aboutChip2: "Free, no-obligation consultation",
       aboutChip3: "Individual approach",
@@ -644,7 +822,10 @@ export const translations = {
       perks: [
         { t: "UX & visual audit", d: "Hierarchy, CTA flow, readability and instant trust." },
         { t: "Performance & SEO", d: "Speed, Core Web Vitals, technical SEO basics." },
-        { t: "Conversion opportunities", d: "Exact places where the site loses visitors and revenue." },
+        {
+          t: "Conversion opportunities",
+          d: "Exact places where the site loses visitors and revenue.",
+        },
         { t: "Delivered in 48 hours", d: "Structured report with prioritised recommendations." },
       ],
       sideTitle: "Audit not a fit? Let's just talk.",
@@ -664,7 +845,8 @@ export const translations = {
         sending: "Sending…",
         privacy: "No spam. Your data is used only to answer this request.",
         successTitle: "Thank you.",
-        successDesc: "We'll send your audit within 48 hours to the email provided (usually sooner).",
+        successDesc:
+          "We'll send your audit within 48 hours to the email provided (usually sooner).",
       },
       navLink: "Free audit",
     },
@@ -684,22 +866,36 @@ export const translations = {
     },
   },
   RU: {
-    nav: { home: "Главная", services: "Услуги", work: "Проекты", pricing: "Цены", about: "О нас", contact: "Контакты" },
+    nav: {
+      home: "Главная",
+      services: "Услуги",
+      work: "Проекты",
+      pricing: "Цены",
+      about: "О нас",
+      contact: "Контакты",
+    },
     hero: {
       tag: "Независимая цифровая студия · Прага",
       title1: "Цифровые продукты,",
       title2: "которые двигают бизнес вперёд.",
-      subtitle: "Стратегия, UX и разработка в одной команде. Для компаний, для которых сайт — инвестиция, а не расход.",
+      subtitle:
+        "Стратегия, UX и разработка в одной команде. Для компаний, для которых сайт — инвестиция, а не расход.",
       cta1: "Записаться на консультацию",
       cta2: "Избранные работы",
       sceneLine1: "Цифровые решения,",
       sceneLine2: "которые двигают",
       sceneAccent: "ваш бизнес вперёд.",
-      sceneSubtitle: "Создаём современные сайты, интернет-магазины и приложения, в которых сходятся дизайн, скорость и результат.",
+      sceneSubtitle:
+        "Создаём современные сайты, интернет-магазины и приложения, в которых сходятся дизайн, скорость и результат.",
       sceneDisciplines: ["Дизайн", "Скорость", "Стратегия", "Результат"],
       sceneKicker: "Цифровая студия из Праги",
     },
-    trust: { years: "4+ года опыта", projects: "50+ проектов", clients: "Клиенты в ЕС", response: "Ответ в течение 24 часов" },
+    trust: {
+      years: "4+ года опыта",
+      projects: "50+ проектов",
+      clients: "Клиенты в ЕС",
+      response: "Ответ в течение 24 часов",
+    },
     about: {
       eyebrow: "О нас",
       title: "Цифровое агентство, ориентированное на результат.",
@@ -725,7 +921,8 @@ export const translations = {
       ],
     },
     services: {
-      title: "Услуги", subtitle: "Что мы можем сделать для вас",
+      title: "Услуги",
+      subtitle: "Что мы можем сделать для вас",
       learnMore: "Подробнее",
       items: [
         { title: "Веб-сайты", desc: "Современные и быстрые сайты под ключ" },
@@ -761,7 +958,9 @@ export const translations = {
     },
     process: { title: "Процесс", steps: ["Консультация", "Решение", "Разработка", "Запуск"] },
     portfolio: {
-      title: "Портфолио", subtitle: "Избранные проекты", view: "Смотреть проект",
+      title: "Портфолио",
+      subtitle: "Избранные проекты",
+      view: "Смотреть проект",
       items: [
         { name: "Nordic Store", tag: "E-commerce", result: "+120% конверсии" },
         { name: "Corvex", tag: "Web", result: "Запуск нового бренда" },
@@ -770,32 +969,69 @@ export const translations = {
       ],
     },
     pricing: {
-      title: "Цены", subtitle: "Прозрачные цены", from: "от", custom: "по запросу", cta: "Получить предложение",
+      title: "Цены",
+      subtitle: "Прозрачные цены",
+      from: "от",
+      custom: "по запросу",
+      cta: "Получить предложение",
       plans: [
-        { name: "START", price: "10 000 CZK", features: ["Одностраничный сайт", "Адаптивный дизайн", "Базовое SEO"] },
-        { name: "BUSINESS", price: "25 000 CZK", features: ["Многостраничный сайт", "CMS", "Расширенное SEO", "Аналитика"] },
-        { name: "PRO", price: "", features: ["Магазин / сложные решения", "Интеграции", "Долгосрочная поддержка"] },
+        {
+          name: "START",
+          price: "10 000 CZK",
+          features: ["Одностраничный сайт", "Адаптивный дизайн", "Базовое SEO"],
+        },
+        {
+          name: "BUSINESS",
+          price: "25 000 CZK",
+          features: ["Многостраничный сайт", "CMS", "Расширенное SEO", "Аналитика"],
+        },
+        {
+          name: "PRO",
+          price: "",
+          features: ["Магазин / сложные решения", "Интеграции", "Долгосрочная поддержка"],
+        },
       ],
     },
     testimonials: {
       title: "Отзывы",
       items: [],
     },
-    cta: { title: "Есть проект?", subtitle: "Обсудим — пара вопросов, никакой скучной анкеты.", btn: "Бесплатная консультация" },
+    cta: {
+      title: "Есть проект?",
+      subtitle: "Обсудим — пара вопросов, никакой скучной анкеты.",
+      btn: "Бесплатная консультация",
+    },
     faq: {
       eyebrow: "FAQ",
       title: "Частые вопросы",
       items: [
-        { q: "Сколько стоит сайт?", a: "Цены начинаются от 5 000 CZK за простой сайт. Сложные проекты — после консультации." },
-        { q: "Сколько занимает разработка?", a: "Стандартный сайт 2–4 недели, магазин 4–8 недель. Сроки подтверждаем заранее." },
-        { q: "Что нужно от вас?", a: "Понимание целей и контента. Тексты, фото и стратегию проработаем вместе." },
-        { q: "Поддерживаете сайт после запуска?", a: "Да, предлагаем долгосрочную поддержку и развитие." },
+        {
+          q: "Сколько стоит сайт?",
+          a: "Цены начинаются от 5 000 CZK за простой сайт. Сложные проекты — после консультации.",
+        },
+        {
+          q: "Сколько занимает разработка?",
+          a: "Стандартный сайт 2–4 недели, магазин 4–8 недель. Сроки подтверждаем заранее.",
+        },
+        {
+          q: "Что нужно от вас?",
+          a: "Понимание целей и контента. Тексты, фото и стратегию проработаем вместе.",
+        },
+        {
+          q: "Поддерживаете сайт после запуска?",
+          a: "Да, предлагаем долгосрочную поддержку и развитие.",
+        },
       ] as FaqItem[],
     },
     contact: {
-      title: "Контакты", subtitle: "Свяжитесь с нами",
-      name: "Имя", email: "Email", phone: "Телефон (необязательно)",
-      service: "Тип услуги", budget: "Бюджет", message: "Сообщение",
+      title: "Контакты",
+      subtitle: "Свяжитесь с нами",
+      name: "Имя",
+      email: "Email",
+      phone: "Телефон (необязательно)",
+      service: "Тип услуги",
+      budget: "Бюджет",
+      message: "Сообщение",
       submit: "Отправить запрос",
       services: ["Веб", "Магазин", "Логотип", "Дизайн"],
       budgets: ["до 20k", "20–50k", "50k+"],
@@ -803,13 +1039,38 @@ export const translations = {
       form: {
         stepLabel: "Шаг",
         stepOf: "из 3",
-        stepTitles: ["Какой проект вы планируете?", "Что должен уметь проект?", "Контактные данные", "Какой ориентировочный бюджет?"],
+        stepTitles: [
+          "Какой проект вы планируете?",
+          "Что должен уметь проект?",
+          "Контактные данные",
+          "Какой ориентировочный бюджет?",
+        ],
         featuresLabel: "Какие функции вам нужны?",
-        features: ["Онлайн-оплата", "Система бронирования", "Многоязычность", "Блог / контент", "Интеграция с CRM", "Мобильное приложение", "Пока не уверен"],
+        features: [
+          "Онлайн-оплата",
+          "Система бронирования",
+          "Многоязычность",
+          "Блог / контент",
+          "Интеграция с CRM",
+          "Мобильное приложение",
+          "Пока не уверен",
+        ],
         goalLabel: "Какова ваша главная цель?",
         goalPlaceholder: "Например, больше заявок, более быстрый сайт, новый брендинг…",
-        projectTypes: ["Корпоративный сайт", "Магазин", "Веб-приложение", "Редизайн сайта", "Пока не уверен"],
-        budgets: ["До 20 000 Kč", "20 000 – 50 000 Kč", "50 000 – 100 000 Kč", "100 000 Kč+", "Пока не уверен"],
+        projectTypes: [
+          "Корпоративный сайт",
+          "Магазин",
+          "Веб-приложение",
+          "Редизайн сайта",
+          "Пока не уверен",
+        ],
+        budgets: [
+          "До 20 000 Kč",
+          "20 000 – 50 000 Kč",
+          "50 000 – 100 000 Kč",
+          "100 000 Kč+",
+          "Пока не уверен",
+        ],
         budgetHelp: "Поможет подобрать решение в рамках вашего бюджета. Без обязательств.",
         namePlaceholder: "Иван Иванов",
         emailPlaceholder: "ivan@company.com",
@@ -837,7 +1098,12 @@ export const translations = {
         },
       },
     },
-    footer: { nav: "Навигация", contact: "Контакты", follow: "Соцсети", rights: "Все права защищены." },
+    footer: {
+      nav: "Навигация",
+      contact: "Контакты",
+      follow: "Соцсети",
+      rights: "Все права защищены.",
+    },
     ui: {
       serviceStage: [
         { title: "Сайты, которые продают", tag: "Быстро, конверсионно, под ключ" },
@@ -887,13 +1153,24 @@ export const translations = {
       mapSchematic: "Четыре реальных проекта объединены одним цифровым маршрутом по Праге.",
       mapLocationPending: "Точный адрес ожидает подтверждения",
       homeServiceCards: [
-        { title: "Сайты, которые приводят клиентов", desc: "Быстрые сайты, нацеленные на конверсию и рост." },
-        { title: "Магазины, которые приносят прибыль", desc: "Оптимизированы для продажи с первого визита." },
+        {
+          title: "Сайты, которые приводят клиентов",
+          desc: "Быстрые сайты, нацеленные на конверсию и рост.",
+        },
+        {
+          title: "Магазины, которые приносят прибыль",
+          desc: "Оптимизированы для продажи с первого визита.",
+        },
         { title: "Брендинг", desc: "Бренд, который запоминают." },
       ],
       heroBadgeMobile: "🚀 Получить предложение",
       servicesHover: "Открыть услугу",
-      serviceResultHeadlines: ["Сайты, которые приводят клиентов", "Магазины, которые приносят прибыль", "Бренд, который запоминают", "Визуалы, которые продают"],
+      serviceResultHeadlines: [
+        "Сайты, которые приводят клиентов",
+        "Магазины, которые приносят прибыль",
+        "Бренд, который запоминают",
+        "Визуалы, которые продают",
+      ],
       portfolioSubtitle: "Реальные примеры работ, задач и результатов",
       portfolioWork: "Работы",
       portfolioResults: "Результаты",
@@ -923,14 +1200,18 @@ export const translations = {
       projectSolutionTitle: "Как мы это сделали",
       projectWorkTitle: "UX, разработка и оптимизация",
       projectCtaTitle: "Хотите похожий результат?",
-      projectCtaDesc: "Опишите проект, и мы предложим самый быстрый путь к сайту, магазину или бренду, который работает.",
+      projectCtaDesc:
+        "Опишите проект, и мы предложим самый быстрый путь к сайту, магазину или бренду, который работает.",
       projectCtaBtn: "Хочу похожий сайт",
       aboutApproachEyebrow: "Наш подход",
-      aboutApproachP1: "Мы объединяем стратегию, дизайн и технологии в систему, которая работает на ваш бизнес. Мы не делаем красиво ради красоты — мы делаем ради измеримого результата.",
-      aboutApproachP2: "Работаем с клиентами из разных отраслей — от профессиональных услуг и B2B до e-commerce брендов. Каждый проект начинается с понимания бизнеса, а не выбора цветов.",
+      aboutApproachP1:
+        "Мы объединяем стратегию, дизайн и технологии в систему, которая работает на ваш бизнес. Мы не делаем красиво ради красоты — мы делаем ради измеримого результата.",
+      aboutApproachP2:
+        "Работаем с клиентами из разных отраслей — от профессиональных услуг и B2B до e-commerce брендов. Каждый проект начинается с понимания бизнеса, а не выбора цветов.",
       aboutLimitedEyebrow: "Ограниченное сотрудничество",
       aboutLimitedTitle: "Мы работаем только с ограниченным числом клиентов.",
-      aboutLimitedDesc: "Чтобы уделять каждому проекту максимум внимания, мы берём лишь несколько новых клиентов в месяц.",
+      aboutLimitedDesc:
+        "Чтобы уделять каждому проекту максимум внимания, мы берём лишь несколько новых клиентов в месяц.",
       aboutChip1: "Ответим в течение 24 часов",
       aboutChip2: "Бесплатная консультация без обязательств",
       aboutChip3: "Индивидуальный подход",
@@ -943,9 +1224,15 @@ export const translations = {
       sub: "Пришлите URL — получите структурированный отчёт по UX, производительности и конверсионному потенциалу. Без шаблонного PDF и без звонков, если сами не попросите.",
       perksTitle: "Что входит в аудит",
       perks: [
-        { t: "UX и визуальный аудит", d: "Иерархия, CTA-флоу, читаемость и доверие с первого взгляда." },
+        {
+          t: "UX и визуальный аудит",
+          d: "Иерархия, CTA-флоу, читаемость и доверие с первого взгляда.",
+        },
         { t: "Производительность и SEO", d: "Скорость, Core Web Vitals, технические основы SEO." },
-        { t: "Точки роста конверсии", d: "Конкретные места, где сайт теряет посетителей и деньги." },
+        {
+          t: "Точки роста конверсии",
+          d: "Конкретные места, где сайт теряет посетителей и деньги.",
+        },
         { t: "Результат за 48 часов", d: "Структурированный отчёт с приоритетами." },
       ],
       sideTitle: "Аудит не подходит? Просто поговорим.",
@@ -985,22 +1272,36 @@ export const translations = {
     },
   },
   UA: {
-    nav: { home: "Головна", services: "Послуги", work: "Проєкти", pricing: "Ціни", about: "Про нас", contact: "Контакти" },
+    nav: {
+      home: "Головна",
+      services: "Послуги",
+      work: "Проєкти",
+      pricing: "Ціни",
+      about: "Про нас",
+      contact: "Контакти",
+    },
     hero: {
       tag: "Незалежна цифрова студія · Прага",
       title1: "Цифрові продукти,",
       title2: "що рухають бізнес уперед.",
-      subtitle: "Стратегія, UX і розробка в одній команді. Для компаній, для яких сайт — інвестиція, а не витрата.",
+      subtitle:
+        "Стратегія, UX і розробка в одній команді. Для компаній, для яких сайт — інвестиція, а не витрата.",
       cta1: "Записатися на консультацію",
       cta2: "Вибрані роботи",
       sceneLine1: "Цифрові рішення,",
       sceneLine2: "що рухають",
       sceneAccent: "ваш бізнес уперед.",
-      sceneSubtitle: "Створюємо сучасні сайти, інтернет-магазини та застосунки, у яких поєднані дизайн, швидкість і результат.",
+      sceneSubtitle:
+        "Створюємо сучасні сайти, інтернет-магазини та застосунки, у яких поєднані дизайн, швидкість і результат.",
       sceneDisciplines: ["Дизайн", "Швидкість", "Стратегія", "Результат"],
       sceneKicker: "Цифрова студія з Праги",
     },
-    trust: { years: "4+ роки досвіду", projects: "50+ проєктів", clients: "Клієнти в ЄС", response: "Відповідь протягом 24 годин" },
+    trust: {
+      years: "4+ роки досвіду",
+      projects: "50+ проєктів",
+      clients: "Клієнти в ЄС",
+      response: "Відповідь протягом 24 годин",
+    },
     about: {
       eyebrow: "Про нас",
       title: "Цифрова агенція, орієнтована на результат.",
@@ -1026,7 +1327,8 @@ export const translations = {
       ],
     },
     services: {
-      title: "Послуги", subtitle: "Що ми можемо зробити для вас",
+      title: "Послуги",
+      subtitle: "Що ми можемо зробити для вас",
       learnMore: "Деталі",
       items: [
         { title: "Веб-сайти", desc: "Сучасні та швидкі сайти під ключ" },
@@ -1062,7 +1364,9 @@ export const translations = {
     },
     process: { title: "Процес", steps: ["Консультація", "Рішення", "Розробка", "Запуск"] },
     portfolio: {
-      title: "Портфоліо", subtitle: "Вибрані проєкти", view: "Дивитись проєкт",
+      title: "Портфоліо",
+      subtitle: "Вибрані проєкти",
+      view: "Дивитись проєкт",
       items: [
         { name: "Nordic Store", tag: "E-commerce", result: "+120% конверсії" },
         { name: "Corvex", tag: "Web", result: "Запуск нового бренду" },
@@ -1071,32 +1375,69 @@ export const translations = {
       ],
     },
     pricing: {
-      title: "Ціни", subtitle: "Прозорі ціни", from: "від", custom: "за запитом", cta: "Отримати пропозицію",
+      title: "Ціни",
+      subtitle: "Прозорі ціни",
+      from: "від",
+      custom: "за запитом",
+      cta: "Отримати пропозицію",
       plans: [
-        { name: "START", price: "10 000 CZK", features: ["Односторінковий сайт", "Адаптивний дизайн", "Базове SEO"] },
-        { name: "BUSINESS", price: "25 000 CZK", features: ["Багатосторінковий сайт", "CMS", "Розширене SEO", "Аналітика"] },
-        { name: "PRO", price: "", features: ["Магазин / складні рішення", "Інтеграції", "Довгострокова підтримка"] },
+        {
+          name: "START",
+          price: "10 000 CZK",
+          features: ["Односторінковий сайт", "Адаптивний дизайн", "Базове SEO"],
+        },
+        {
+          name: "BUSINESS",
+          price: "25 000 CZK",
+          features: ["Багатосторінковий сайт", "CMS", "Розширене SEO", "Аналітика"],
+        },
+        {
+          name: "PRO",
+          price: "",
+          features: ["Магазин / складні рішення", "Інтеграції", "Довгострокова підтримка"],
+        },
       ],
     },
     testimonials: {
       title: "Відгуки",
       items: [],
     },
-    cta: { title: "Маєш проєкт?", subtitle: "Обговоримо — кілька запитань, жодної нудної анкети.", btn: "Безкоштовна консультація" },
+    cta: {
+      title: "Маєш проєкт?",
+      subtitle: "Обговоримо — кілька запитань, жодної нудної анкети.",
+      btn: "Безкоштовна консультація",
+    },
     faq: {
       eyebrow: "FAQ",
       title: "Часті питання",
       items: [
-        { q: "Скільки коштує сайт?", a: "Ціни починаються від 5 000 CZK за простий сайт. Складні — після консультації." },
-        { q: "Скільки триває розробка?", a: "Стандартний сайт 2–4 тижні, магазин 4–8 тижнів. Терміни підтверджуємо заздалегідь." },
-        { q: "Що потрібно від вас?", a: "Розуміння цілей і контенту. Тексти, фото та стратегію опрацюємо разом." },
-        { q: "Підтримуєте сайт після запуску?", a: "Так, пропонуємо довгострокову підтримку і розвиток." },
+        {
+          q: "Скільки коштує сайт?",
+          a: "Ціни починаються від 5 000 CZK за простий сайт. Складні — після консультації.",
+        },
+        {
+          q: "Скільки триває розробка?",
+          a: "Стандартний сайт 2–4 тижні, магазин 4–8 тижнів. Терміни підтверджуємо заздалегідь.",
+        },
+        {
+          q: "Що потрібно від вас?",
+          a: "Розуміння цілей і контенту. Тексти, фото та стратегію опрацюємо разом.",
+        },
+        {
+          q: "Підтримуєте сайт після запуску?",
+          a: "Так, пропонуємо довгострокову підтримку і розвиток.",
+        },
       ] as FaqItem[],
     },
     contact: {
-      title: "Контакти", subtitle: "Напишіть нам",
-      name: "Імʼя", email: "Email", phone: "Телефон (необовʼязково)",
-      service: "Тип послуги", budget: "Бюджет", message: "Повідомлення",
+      title: "Контакти",
+      subtitle: "Напишіть нам",
+      name: "Імʼя",
+      email: "Email",
+      phone: "Телефон (необовʼязково)",
+      service: "Тип послуги",
+      budget: "Бюджет",
+      message: "Повідомлення",
       submit: "Надіслати запит",
       services: ["Веб", "Магазин", "Логотип", "Дизайн"],
       budgets: ["до 20k", "20–50k", "50k+"],
@@ -1104,13 +1445,38 @@ export const translations = {
       form: {
         stepLabel: "Крок",
         stepOf: "з 3",
-        stepTitles: ["Який проєкт ви плануєте?", "Що має вміти проєкт?", "Контактні дані", "Який орієнтовний бюджет?"],
+        stepTitles: [
+          "Який проєкт ви плануєте?",
+          "Що має вміти проєкт?",
+          "Контактні дані",
+          "Який орієнтовний бюджет?",
+        ],
         featuresLabel: "Які функції вам потрібні?",
-        features: ["Онлайн-оплата", "Система бронювання", "Багатомовність", "Блог / контент", "Інтеграція з CRM", "Мобільний застосунок", "Поки не впевнений"],
+        features: [
+          "Онлайн-оплата",
+          "Система бронювання",
+          "Багатомовність",
+          "Блог / контент",
+          "Інтеграція з CRM",
+          "Мобільний застосунок",
+          "Поки не впевнений",
+        ],
         goalLabel: "Яка ваша головна мета?",
         goalPlaceholder: "Наприклад, більше заявок, швидший сайт, новий брендинг…",
-        projectTypes: ["Корпоративний сайт", "Магазин", "Вебзастосунок", "Редизайн сайту", "Поки не впевнений"],
-        budgets: ["До 20 000 Kč", "20 000 – 50 000 Kč", "50 000 – 100 000 Kč", "100 000 Kč+", "Поки не впевнений"],
+        projectTypes: [
+          "Корпоративний сайт",
+          "Магазин",
+          "Вебзастосунок",
+          "Редизайн сайту",
+          "Поки не впевнений",
+        ],
+        budgets: [
+          "До 20 000 Kč",
+          "20 000 – 50 000 Kč",
+          "50 000 – 100 000 Kč",
+          "100 000 Kč+",
+          "Поки не впевнений",
+        ],
         budgetHelp: "Допоможе підібрати рішення в межах вашого бюджету. Без зобовʼязань.",
         namePlaceholder: "Іван Іванов",
         emailPlaceholder: "ivan@company.com",
@@ -1138,7 +1504,12 @@ export const translations = {
         },
       },
     },
-    footer: { nav: "Навігація", contact: "Контакти", follow: "Соцмережі", rights: "Усі права захищені." },
+    footer: {
+      nav: "Навігація",
+      contact: "Контакти",
+      follow: "Соцмережі",
+      rights: "Усі права захищені.",
+    },
     ui: {
       serviceStage: [
         { title: "Сайти, які продають", tag: "Швидко, конверсійно, під ключ" },
@@ -1188,13 +1559,21 @@ export const translations = {
       mapSchematic: "Чотири реальні проєкти поєднані одним цифровим маршрутом Прагою.",
       mapLocationPending: "Точна адреса очікує підтвердження",
       homeServiceCards: [
-        { title: "Сайти, що приводять клієнтів", desc: "Швидкі сайти, націлені на конверсію та зростання." },
+        {
+          title: "Сайти, що приводять клієнтів",
+          desc: "Швидкі сайти, націлені на конверсію та зростання.",
+        },
         { title: "Магазини, що заробляють", desc: "Оптимізовані для продажу з першого візиту." },
         { title: "Брендинг", desc: "Бренд, який запам'ятовують." },
       ],
       heroBadgeMobile: "🚀 Отримати пропозицію",
       servicesHover: "Відкрити послугу",
-      serviceResultHeadlines: ["Сайти, що приводять клієнтів", "Магазини, що заробляють", "Бренд, який запам'ятовують", "Візуали, що продають"],
+      serviceResultHeadlines: [
+        "Сайти, що приводять клієнтів",
+        "Магазини, що заробляють",
+        "Бренд, який запам'ятовують",
+        "Візуали, що продають",
+      ],
       portfolioSubtitle: "Реальні приклади робіт, задач і результатів",
       portfolioWork: "Роботи",
       portfolioResults: "Результати",
@@ -1224,14 +1603,18 @@ export const translations = {
       projectSolutionTitle: "Як ми це зробили",
       projectWorkTitle: "UX, розробка та оптимізація",
       projectCtaTitle: "Хочете схожий результат?",
-      projectCtaDesc: "Опишіть проєкт, і ми запропонуємо найшвидший шлях до сайту, магазину чи бренду, який працює.",
+      projectCtaDesc:
+        "Опишіть проєкт, і ми запропонуємо найшвидший шлях до сайту, магазину чи бренду, який працює.",
       projectCtaBtn: "Хочу подібний сайт",
       aboutApproachEyebrow: "Наш підхід",
-      aboutApproachP1: "Поєднуємо стратегію, дизайн і технології в систему, що працює на ваш бізнес. Не робимо просто красиво — робимо для вимірного результату.",
-      aboutApproachP2: "Працюємо з клієнтами з різних галузей — від професійних послуг і B2B до e-commerce брендів. Кожен проєкт починається з розуміння бізнесу, а не вибору кольорів.",
+      aboutApproachP1:
+        "Поєднуємо стратегію, дизайн і технології в систему, що працює на ваш бізнес. Не робимо просто красиво — робимо для вимірного результату.",
+      aboutApproachP2:
+        "Працюємо з клієнтами з різних галузей — від професійних послуг і B2B до e-commerce брендів. Кожен проєкт починається з розуміння бізнесу, а не вибору кольорів.",
       aboutLimitedEyebrow: "Обмежена співпраця",
       aboutLimitedTitle: "Працюємо лише з обмеженою кількістю клієнтів.",
-      aboutLimitedDesc: "Щоб приділяти кожному проєкту максимум уваги, беремо лише кілька нових співпраць щомісяця.",
+      aboutLimitedDesc:
+        "Щоб приділяти кожному проєкту максимум уваги, беремо лише кілька нових співпраць щомісяця.",
       aboutChip1: "Відповімо протягом 24 годин",
       aboutChip2: "Безкоштовна консультація без зобов'язань",
       aboutChip3: "Індивідуальний підхід",
@@ -1244,7 +1627,10 @@ export const translations = {
       sub: "Надішліть URL — отримаєте структурований звіт щодо UX, продуктивності та конверсійного потенціалу. Без шаблонного PDF і без дзвінків, якщо самі не попросите.",
       perksTitle: "Що входить в аудит",
       perks: [
-        { t: "UX і візуальний аудит", d: "Ієрархія, CTA-флоу, читабельність і довіра з першого погляду." },
+        {
+          t: "UX і візуальний аудит",
+          d: "Ієрархія, CTA-флоу, читабельність і довіра з першого погляду.",
+        },
         { t: "Продуктивність і SEO", d: "Швидкість, Core Web Vitals, технічні основи SEO." },
         { t: "Точки росту конверсії", d: "Конкретні місця, де сайт втрачає відвідувачів і гроші." },
         { t: "Результат за 48 годин", d: "Структурований звіт з пріоритетами." },
@@ -1287,7 +1673,7 @@ export const translations = {
   },
 } as const;
 
-export type Dict = typeof translations["EN"];
+export type Dict = (typeof translations)["EN"];
 
 // Service detail content keyed per language
 const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
@@ -1296,12 +1682,31 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
     ["Konzultace a strategie", "Wireframe a návrh", "Vývoj a testování", "Spuštění a podpora"],
     {
       web: ["Rychlost a SEO", "Responzivní design", "CMS pro snadnou správu", "Analytika a měření"],
-      eshop: ["Vyšší konverze", "Integrace plateb a dopravy", "Správa produktů", "Marketingové nástroje"],
-      branding: ["Konzistentní identita", "Brand manuál", "Logo a typografie", "Šablony pro tisk a web"],
-      design: ["Premium vizuály", "Konzistence napříč kanály", "Šablony pro sociální sítě", "Tiskové podklady"],
+      eshop: [
+        "Vyšší konverze",
+        "Integrace plateb a dopravy",
+        "Správa produktů",
+        "Marketingové nástroje",
+      ],
+      branding: [
+        "Konzistentní identita",
+        "Brand manuál",
+        "Logo a typografie",
+        "Šablony pro tisk a web",
+      ],
+      design: [
+        "Premium vizuály",
+        "Konzistence napříč kanály",
+        "Šablony pro sociální sítě",
+        "Tiskové podklady",
+      ],
     },
     {
-      web: ["Corporate web pro Corvex", "Landing page pro SaaS Tinesort", "Portfolio web pro studio"],
+      web: [
+        "Corporate web pro Corvex",
+        "Landing page pro SaaS Tinesort",
+        "Portfolio web pro studio",
+      ],
       eshop: ["Nordic Store — fashion", "Patecura — beauty produkty", "Specializovaný B2B e-shop"],
       branding: ["Patecura — full identity", "Corvex — rebrand", "Tinesort — naming a logo"],
       design: ["Sociální kampaně", "Pitch decky pro startupy", "Tiskové brožury"],
@@ -1315,8 +1720,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
     {
       web: {
         headline: "Web, který přivádí klienty — ne jen návštěvy.",
-        problem: "Většina firemních webů vypadá hezky, ale neprodává. Pomalé načítání, slabé SEO a nejasná struktura ztrácejí denně potenciální klienty.",
-        audience: ["Firmy s ambicí růst online", "Profesionální služby a B2B", "Startupy připravené na škálování"],
+        problem:
+          "Většina firemních webů vypadá hezky, ale neprodává. Pomalé načítání, slabé SEO a nejasná struktura ztrácejí denně potenciální klienty.",
+        audience: [
+          "Firmy s ambicí růst online",
+          "Profesionální služby a B2B",
+          "Startupy připravené na škálování",
+        ],
         results: [
           { n: "+120%", l: "více poptávek" },
           { n: "<2s", l: "rychlost načítání" },
@@ -1325,8 +1735,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       eshop: {
         headline: "E-shop, který skutečně prodává.",
-        problem: "Šablonové e-shopy mají nízkou konverzi a komplikovanou správu. Zákazníci odcházejí v košíku a vy přicházíte o tržby.",
-        audience: ["Značky s vlastním produktem", "Rostoucí D2C e-shopy", "Firmy přecházející z marketplace"],
+        problem:
+          "Šablonové e-shopy mají nízkou konverzi a komplikovanou správu. Zákazníci odcházejí v košíku a vy přicházíte o tržby.",
+        audience: [
+          "Značky s vlastním produktem",
+          "Rostoucí D2C e-shopy",
+          "Firmy přecházející z marketplace",
+        ],
         results: [
           { n: "+85%", l: "konverzní poměr" },
           { n: "-40%", l: "opuštěných košíků" },
@@ -1335,7 +1750,8 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       branding: {
         headline: "Značka, kterou si zákazníci zapamatují.",
-        problem: "Bez silné identity splynete s konkurencí. Nekonzistentní vizuál snižuje důvěru a hodnotu vaší značky.",
+        problem:
+          "Bez silné identity splynete s konkurencí. Nekonzistentní vizuál snižuje důvěru a hodnotu vaší značky.",
         audience: ["Nové firmy a rebranding", "Premium značky", "Tvůrci produktů a služeb"],
         results: [
           { n: "+60%", l: "rozpoznatelnost značky" },
@@ -1345,7 +1761,8 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       design: {
         headline: "Design, který prodává a buduje důvěru.",
-        problem: "Amatérská grafika kazí dojem i u skvělého produktu. Ztrácíte pozornost dříve, než přečtou první větu.",
+        problem:
+          "Amatérská grafika kazí dojem i u skvělého produktu. Ztrácíte pozornost dříve, než přečtou první větu.",
         audience: ["Marketingové týmy", "Startupy a SaaS", "Firmy s pravidelnou komunikací"],
         results: [
           { n: "+45%", l: "engagement na sítích" },
@@ -1361,8 +1778,18 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
     {
       web: ["Speed and SEO", "Responsive design", "CMS for easy editing", "Analytics setup"],
       eshop: ["Higher conversion", "Payments & shipping", "Product management", "Marketing tools"],
-      branding: ["Consistent identity", "Brand guidelines", "Logo and typography", "Print and web templates"],
-      design: ["Premium visuals", "Cross-channel consistency", "Social templates", "Print-ready files"],
+      branding: [
+        "Consistent identity",
+        "Brand guidelines",
+        "Logo and typography",
+        "Print and web templates",
+      ],
+      design: [
+        "Premium visuals",
+        "Cross-channel consistency",
+        "Social templates",
+        "Print-ready files",
+      ],
     },
     {
       web: ["Corporate site for Corvex", "Landing page for SaaS Tinesort", "Studio portfolio site"],
@@ -1379,8 +1806,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
     {
       web: {
         headline: "A website that brings clients — not just visitors.",
-        problem: "Most corporate websites look nice but don't sell. Slow load times, weak SEO and unclear structure quietly lose you leads every day.",
-        audience: ["Companies aiming to grow online", "Professional services and B2B", "Startups ready to scale"],
+        problem:
+          "Most corporate websites look nice but don't sell. Slow load times, weak SEO and unclear structure quietly lose you leads every day.",
+        audience: [
+          "Companies aiming to grow online",
+          "Professional services and B2B",
+          "Startups ready to scale",
+        ],
         results: [
           { n: "+120%", l: "more inquiries" },
           { n: "<2s", l: "page load" },
@@ -1389,8 +1821,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       eshop: {
         headline: "An e-commerce store that actually sells.",
-        problem: "Template e-shops have low conversion and clumsy admin. Customers drop off in checkout — and you lose revenue.",
-        audience: ["Brands with their own product", "Growing D2C stores", "Companies leaving marketplaces"],
+        problem:
+          "Template e-shops have low conversion and clumsy admin. Customers drop off in checkout — and you lose revenue.",
+        audience: [
+          "Brands with their own product",
+          "Growing D2C stores",
+          "Companies leaving marketplaces",
+        ],
         results: [
           { n: "+85%", l: "conversion rate" },
           { n: "-40%", l: "cart abandonment" },
@@ -1399,7 +1836,8 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       branding: {
         headline: "A brand customers remember.",
-        problem: "Without a strong identity you blend in. Inconsistent visuals lower trust and perceived value.",
+        problem:
+          "Without a strong identity you blend in. Inconsistent visuals lower trust and perceived value.",
         audience: ["New companies and rebrands", "Premium brands", "Product and service creators"],
         results: [
           { n: "+60%", l: "brand recognition" },
@@ -1409,7 +1847,8 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       design: {
         headline: "Design that sells and builds trust.",
-        problem: "Amateur graphics ruin even a great product. You lose attention before the first sentence is read.",
+        problem:
+          "Amateur graphics ruin even a great product. You lose attention before the first sentence is read.",
         audience: ["Marketing teams", "Startups and SaaS", "Companies with regular comms"],
         results: [
           { n: "+45%", l: "social engagement" },
@@ -1424,9 +1863,24 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
     ["Консультация и стратегия", "Прототип и дизайн", "Разработка и тесты", "Запуск и поддержка"],
     {
       web: ["Скорость и SEO", "Адаптивный дизайн", "CMS для редактирования", "Настройка аналитики"],
-      eshop: ["Выше конверсия", "Оплата и доставка", "Управление товарами", "Маркетинг-инструменты"],
-      branding: ["Единый стиль", "Brand guidelines", "Лого и типографика", "Шаблоны для печати и веба"],
-      design: ["Премиум-визуал", "Единство во всех каналах", "Шаблоны для соцсетей", "Файлы для печати"],
+      eshop: [
+        "Выше конверсия",
+        "Оплата и доставка",
+        "Управление товарами",
+        "Маркетинг-инструменты",
+      ],
+      branding: [
+        "Единый стиль",
+        "Brand guidelines",
+        "Лого и типографика",
+        "Шаблоны для печати и веба",
+      ],
+      design: [
+        "Премиум-визуал",
+        "Единство во всех каналах",
+        "Шаблоны для соцсетей",
+        "Файлы для печати",
+      ],
     },
     {
       web: ["Сайт Corvex", "Лендинг SaaS Tinesort", "Портфолио студии"],
@@ -1443,8 +1897,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
     {
       web: {
         headline: "Сайт, который приводит клиентов — не просто визиты.",
-        problem: "Большинство корпоративных сайтов выглядят красиво, но не продают. Медленная загрузка, слабое SEO и нечёткая структура каждый день теряют заявки.",
-        audience: ["Компании с амбициями расти онлайн", "Профессиональные услуги и B2B", "Стартапы, готовые масштабироваться"],
+        problem:
+          "Большинство корпоративных сайтов выглядят красиво, но не продают. Медленная загрузка, слабое SEO и нечёткая структура каждый день теряют заявки.",
+        audience: [
+          "Компании с амбициями расти онлайн",
+          "Профессиональные услуги и B2B",
+          "Стартапы, готовые масштабироваться",
+        ],
         results: [
           { n: "+120%", l: "больше заявок" },
           { n: "<2с", l: "загрузка страниц" },
@@ -1453,8 +1912,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       eshop: {
         headline: "Магазин, который реально продаёт.",
-        problem: "Шаблонные магазины дают низкую конверсию и неудобную админку. Клиенты уходят на оплате — а вы теряете выручку.",
-        audience: ["Бренды с собственным продуктом", "Растущие D2C-магазины", "Компании, уходящие с маркетплейсов"],
+        problem:
+          "Шаблонные магазины дают низкую конверсию и неудобную админку. Клиенты уходят на оплате — а вы теряете выручку.",
+        audience: [
+          "Бренды с собственным продуктом",
+          "Растущие D2C-магазины",
+          "Компании, уходящие с маркетплейсов",
+        ],
         results: [
           { n: "+85%", l: "конверсия" },
           { n: "-40%", l: "брошенных корзин" },
@@ -1463,7 +1927,8 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       branding: {
         headline: "Бренд, который запоминают.",
-        problem: "Без сильной идентичности вы сливаетесь с конкурентами. Несогласованный визуал снижает доверие и ценность.",
+        problem:
+          "Без сильной идентичности вы сливаетесь с конкурентами. Несогласованный визуал снижает доверие и ценность.",
         audience: ["Новые компании и ребрендинг", "Премиум-бренды", "Создатели продуктов и услуг"],
         results: [
           { n: "+60%", l: "узнаваемость" },
@@ -1473,8 +1938,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       design: {
         headline: "Дизайн, который продаёт и формирует доверие.",
-        problem: "Любительская графика портит впечатление от любого продукта. Внимание уходит до первой строки.",
-        audience: ["Маркетинговые команды", "Стартапы и SaaS", "Компании с регулярными коммуникациями"],
+        problem:
+          "Любительская графика портит впечатление от любого продукта. Внимание уходит до первой строки.",
+        audience: [
+          "Маркетинговые команды",
+          "Стартапы и SaaS",
+          "Компании с регулярными коммуникациями",
+        ],
         results: [
           { n: "+45%", l: "вовлечённость" },
           { n: "2×", l: "быстрее производство" },
@@ -1487,9 +1957,19 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
     translations.UA.services.items as unknown as { title: string; desc: string }[],
     ["Консультація і стратегія", "Прототип і дизайн", "Розробка і тести", "Запуск і підтримка"],
     {
-      web: ["Швидкість і SEO", "Адаптивний дизайн", "CMS для редагування", "Налаштування аналітики"],
+      web: [
+        "Швидкість і SEO",
+        "Адаптивний дизайн",
+        "CMS для редагування",
+        "Налаштування аналітики",
+      ],
       eshop: ["Вища конверсія", "Оплата і доставка", "Керування товарами", "Маркетинг-інструменти"],
-      branding: ["Єдиний стиль", "Brand guidelines", "Лого і типографіка", "Шаблони для друку і веба"],
+      branding: [
+        "Єдиний стиль",
+        "Brand guidelines",
+        "Лого і типографіка",
+        "Шаблони для друку і веба",
+      ],
       design: ["Преміум-візуал", "Єдність у каналах", "Шаблони для соцмереж", "Файли для друку"],
     },
     {
@@ -1507,8 +1987,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
     {
       web: {
         headline: "Сайт, який приводить клієнтів — не просто візити.",
-        problem: "Більшість корпоративних сайтів виглядають гарно, але не продають. Повільне завантаження, слабке SEO та нечітка структура щодня втрачають заявки.",
-        audience: ["Компанії з амбіціями зростати онлайн", "Професійні послуги і B2B", "Стартапи, готові масштабуватись"],
+        problem:
+          "Більшість корпоративних сайтів виглядають гарно, але не продають. Повільне завантаження, слабке SEO та нечітка структура щодня втрачають заявки.",
+        audience: [
+          "Компанії з амбіціями зростати онлайн",
+          "Професійні послуги і B2B",
+          "Стартапи, готові масштабуватись",
+        ],
         results: [
           { n: "+120%", l: "більше заявок" },
           { n: "<2с", l: "завантаження" },
@@ -1517,8 +2002,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       eshop: {
         headline: "Магазин, який реально продає.",
-        problem: "Шаблонні магазини мають низьку конверсію та незручну адмінку. Клієнти йдуть на оплаті — а ви втрачаєте виручку.",
-        audience: ["Бренди з власним продуктом", "D2C-магазини, що ростуть", "Компанії, що йдуть з маркетплейсів"],
+        problem:
+          "Шаблонні магазини мають низьку конверсію та незручну адмінку. Клієнти йдуть на оплаті — а ви втрачаєте виручку.",
+        audience: [
+          "Бренди з власним продуктом",
+          "D2C-магазини, що ростуть",
+          "Компанії, що йдуть з маркетплейсів",
+        ],
         results: [
           { n: "+85%", l: "конверсія" },
           { n: "-40%", l: "покинутих кошиків" },
@@ -1527,7 +2017,8 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       branding: {
         headline: "Бренд, який запам'ятовують.",
-        problem: "Без сильної ідентичності ви зливаєтесь з конкурентами. Неузгоджений візуал знижує довіру та цінність.",
+        problem:
+          "Без сильної ідентичності ви зливаєтесь з конкурентами. Неузгоджений візуал знижує довіру та цінність.",
         audience: ["Нові компанії та ребрендинг", "Преміум-бренди", "Творці продуктів і послуг"],
         results: [
           { n: "+60%", l: "впізнаваність" },
@@ -1537,8 +2028,13 @@ const SERVICE_DETAILS_DATA: Record<Lang, ServiceDetail[]> = {
       },
       design: {
         headline: "Дизайн, який продає та формує довіру.",
-        problem: "Аматорська графіка псує враження від будь-якого продукту. Увага зникає до першого речення.",
-        audience: ["Маркетингові команди", "Стартапи і SaaS", "Компанії з регулярними комунікаціями"],
+        problem:
+          "Аматорська графіка псує враження від будь-якого продукту. Увага зникає до першого речення.",
+        audience: [
+          "Маркетингові команди",
+          "Стартапи і SaaS",
+          "Компанії з регулярними комунікаціями",
+        ],
         results: [
           { n: "+45%", l: "залученість" },
           { n: "2×", l: "швидше виробництво" },
